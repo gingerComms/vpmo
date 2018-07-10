@@ -1,0 +1,48 @@
+<div class="container">
+    <div class="row valign-wrapper">
+        <div class="col s6 offset-s3 valign">
+            <div class="card darken-1">
+                <div class="card-content">
+                  <span class="card-title">
+                      register as a new user
+                  </span>
+                  <form class="col s12 white" #userRegistratoinForm="ngForm" (ngSubmit)="OnSubmit(userRegistratoinForm)">
+                      <div class="row">
+                        <div class="input-field col s12">
+                          <input class="validate" type="text" name="email" #email="ngModel" [(ngModel)]="user.email" [pattern]="emailPattern" required>
+                          <label data-error="Invalid Email!">User Email</label>
+                        </div>
+                        <div class="input-field col s12">
+                          <input class="validate" type="password" name="password" #password="ngModel" [(ngModel)]="user.password" required minlength="8">
+                          <label [attr.data-error]="password.errors!=null? (password.errors.required?'Required field':'Minimum 8 characters needed'):''">Password</label>
+                        </div>
+
+                        <div class="input-field col s12">
+                          <input class="validate" type="text" name="username" #username="ngModel" [(ngModel)]="user.username" required minlength="4">
+                          <label [attr.data-error]="username.errors!=null? (username.errors.required?'Required field':'Minimum 4 characters needed'):''">Username</label>
+                        </div>
+
+                        <div class="input-field col s12">
+                          <input type="text" name="fullname" #fullname="ngModel" [(ngModel)]="user.fullname">
+                          <label >Full Name</label>
+                        </div>
+
+                      </div>
+                      <div class="row center">
+                        <div class="input-field col s12">
+                          <button [disabled]="!userRegistratoinForm.valid" class="btn-large waves-effect waves-light teal lighten-1 btn-submit" type="submit">Submit</button>
+                        </div>
+                      </div>
+                  </form>
+        
+        Angular: {{ userRegistratoinForm.value | json }}
+        {{diagnostic}}
+
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+  <!-- <div *ngIF "message!==null;then createdMessage">ignore</div>
+  <ng-template #createdMessage>{{message}} was created</ng-template> -->
+ 
