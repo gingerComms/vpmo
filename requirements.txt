@@ -1,0 +1,12 @@
+dataclasses==0.6
+Django==2.0.7
+django-cors-headers==2.4.0
+django-guardian==1.4.9
+djangorestframework==3.8.2
+djangorestframework-jwt==1.11.0
+djongo==1.2.29
+PyJWT==1.6.4
+pymongo==3.7.1
+pytz==2018.5
+six==1.11.0
+sqlparse==0.2.4

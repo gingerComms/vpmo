@@ -6,19 +6,25 @@
 # )
 from __future__ import unicode_literals
 # from django.db import models
-from djongo import models
-from djongo.models import forms
+from django.conf import settings
+if settings.DEBUG:
+    from django.db import models
+    from django import forms
+else:
+    from djongo import models
+    from djongo.models import forms
 from django.contrib.auth.base_user import AbstractBaseUser
-from django.contrib.auth.models import PermissionsMixin
+from django.contrib.auth.models import PermissionsMixin, Group
 from django.core.mail import send_mail
 from .managers import MyUserManager
+import guardian.mixins
 
 # to add a field to mongodb collection after adding it to model
 # 1- connect to mongodb via shell
 # 2- use cluster0
 # 3- db.[collection name].update({},{$set : {"field_name":null}},false,true)
 
-class MyUser(AbstractBaseUser):
+class MyUser(AbstractBaseUser, guardian.mixins.GuardianUserMixin):
     id = models.IntegerField
     email = models.EmailField(
         verbose_name='email address',
@@ -32,11 +38,12 @@ class MyUser(AbstractBaseUser):
     updated_at = models.DateTimeField(auto_now=True)
     fullname = models.CharField(max_length=100, null=True)
     username = models.CharField(max_length=100, unique=True)
-    
+    groups = models.ManyToManyField(Group, related_name="groups")
+
     objects = MyUserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['username']
 
     def __str__(self):
         return self.username
@@ -90,6 +97,13 @@ class Team(models.Model):
     name = models.CharField(max_length=50)
     # owner = models.ReferenceField(User)
 
+    class Meta:
+        permissions = (
+            ('created_obj', 'Admin Level Permissions',),
+            ('contribute_obj', "Contributor Level Permissions",),
+            ('read_obj', 'Read Level Permissions')
+        )
+
     def __str__(self):
         return '%s' % (self.name)
 
@@ -113,6 +127,6 @@ class Project(models.Model):
 
     class Meta:
         ordering = ('projectname',)
-
-    objects = models.DjongoManager()
+    if not settings.DEBUG:
+        objects = models.DjongoManager()
 

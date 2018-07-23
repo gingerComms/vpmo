@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from guardian.admin import GuardedModelAdmin
 
 # Register your models here.
 
@@ -10,7 +11,13 @@ from .models import Team, Project
 from .models import MyUser
 
 admin.site.register(Project)
-admin.site.register(Team)
+
+
+class TeamAdmin(GuardedModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
+
+admin.site.register(Team, TeamAdmin)
 
 
 class UserCreationForm(forms.ModelForm):

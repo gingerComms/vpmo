@@ -1,7 +1,7 @@
-from rest_framework import permissions, viewsets
+from rest_framework import permissions, viewsets, generics
 from vpmoapp.models import Account
 from vpmoapp.permissions import IsAccountOwner
-from vpmoapp.serializers import AccountSerializer
+from vpmoapp.serializers import AccountSerializer, TeamSerializer
 
 
 # class AccountViewSet(viewsets.ModelViewSet):
