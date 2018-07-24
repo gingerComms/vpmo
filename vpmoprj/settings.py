@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'k3xrb+p%cw%7r@8$el#$7hd6_zqp93-(ue(acl^jx-okpzo643'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
 
@@ -46,7 +46,7 @@ INSTALLED_APPS = [
 
 
 AUTHENTICATION_BACKENDS = (
-    'vpmoapp.auth_backend.AuthBackend', # this is default
+    'vpmoapp.auth_backend.AuthBackend', # this is default from vpmo
     'guardian.backends.ObjectPermissionBackend',
 )
 
@@ -121,7 +121,7 @@ WSGI_APPLICATION = 'vpmoprj.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 
-if DEBUG:
+if not DEBUG:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',

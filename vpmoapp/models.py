@@ -7,7 +7,7 @@
 from __future__ import unicode_literals
 # from django.db import models
 from django.conf import settings
-if settings.DEBUG:
+if not settings.DEBUG:
     from django.db import models
     from django import forms
 else:
