@@ -109,7 +109,7 @@ class Team(models.Model):
 
 
 class Project(models.Model):
-    projectname = models.CharField(max_length=50, verbose_name="Project Name")
+    projectname = models.CharField(max_length=50, verbose_name="Project Name", default="Project Name - Default")
     description = models.TextField(blank=True, null=True)
     # comments = models.ArrayModelField(
     #     model_container=Comment,
@@ -117,7 +117,7 @@ class Project(models.Model):
     #     null=True
     # )
     start = models.DateField(null=True)
-    owner = models.ForeignKey(MyUser, on_delete=models.CASCADE)
+    owner = models.ForeignKey(MyUser, on_delete=models.CASCADE, null=True)
 
     # organisation = models.ReferenceField(Organisation)
     # owner = models.ReferenceField(User)
