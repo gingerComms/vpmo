@@ -1,4 +1,8 @@
-from django import forms
+from django.conf import settings
+if not settings.DEBUG:
+    from django import forms
+else:
+    from djongo.models import forms
 from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
