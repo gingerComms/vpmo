@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 
 AUTHENTICATION_BACKENDS = (
     'vpmoapp.auth_backend.AuthBackend', # this is default from vpmo
+    'django.contrib.auth.backends.ModelBackend', # The default
     'guardian.backends.ObjectPermissionBackend',
 )
 

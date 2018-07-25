@@ -7,7 +7,6 @@ from rest_framework import authentication
 class AuthBackend(authentication.BaseAuthentication):
 	""" Used to authenticate users i.e. Login """
 	def authenticate(self, request, email=None, password=None):
-		print(email, password)
 		try:
 			user = MyUser.objects.get(email=email)
 		except MyUser.DoesNotExist:
