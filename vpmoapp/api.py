@@ -5,7 +5,8 @@ from rest_framework.generics import (
     CreateAPIView,
     UpdateAPIView,
     RetrieveAPIView,
-    DestroyAPIView)
+    DestroyAPIView,
+    RetrieveUpdateAPIView)
 from rest_framework.mixins import (
     UpdateModelMixin,
     DestroyModelMixin
@@ -19,7 +20,7 @@ from .serializers import (
         AllUsersSerializer,
         UserDetailsSerializer
         )
-from .models import Team, Project
+from .models import Team, Project, MyUser
 from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 from rest_framework.request import Request
@@ -30,6 +31,7 @@ from rest_framework import filters
 from vpmoprj.settings import SECRET_KEY
 from vpmoapp.permissions import TeamPermissions
 from vpmoapp.filters import TeamListFilter
+from guardian import shortcuts
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
@@ -41,6 +43,29 @@ class AllTeamsView(ListAPIView):
     permission_classes = [IsAuthenticated, TeamPermissions]
     queryset = Team.objects.all()
     filter_backends = (TeamListFilter,)
+
+
+class UserPermissionsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        """ Returns a list of permissions held by the input User for the input Team """
+        user = MyUser.objects.get(id=request.query_params.get("user", None))
+        team = Team.objects.get(id=request.query_params.get("team", None))
+
+        return Response(shortcuts.get_perms(user, team))
+
+    def post(self, request):
+        """ Adds input permission for input team to input user """
+        assert request.data.get("permission", None) in ["read_obj", "contribute_obj", "created_obj"]
+
+        user = MyUser.objects.get(id=request.data.get("user", None))
+        team = Team.objects.get(id=request.data.get("team", None))
+
+        shortcuts.assign_perm(request.data["permission"], user, team)
+
+        return Response(shortcuts.get_perms(user, team))
+
 
 
 class AllProjectsView(ListAPIView):

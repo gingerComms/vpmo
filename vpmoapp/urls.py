@@ -2,7 +2,8 @@ from django.conf.urls import url, include
 from rest_framework import routers
 
 from .api import (AllTeamsView, AllUserView, AllProjectsView, CreateUserView,
-                  LoginUserView, CreateProjectView, UserUpdateView, UserDetailsView)
+                  LoginUserView, CreateProjectView, UserUpdateView, UserDetailsView,
+                  UserPermissionsView)
 
 
 
@@ -33,6 +34,8 @@ urlpatterns = (
     url(r'^api/organisations$', AllTeamsView.as_view()),
     url(r'^api/projects$', AllProjectsView.as_view()),
     url(r'^api/projects/add', CreateProjectView.as_view()),
+
+    url(r"^api/user_perms/$", UserPermissionsView.as_view()),
 
     url(r'^(?P<path>.*\..*)$', RedirectView.as_view(url='/static/%(path)s')),
     url(r'^', TemplateView.as_view(template_name='angular/index.html')),
