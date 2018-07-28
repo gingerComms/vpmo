@@ -46,8 +46,8 @@ class AllTeamsView(ListAPIView):
 
 
 class UserPermissionsView(APIView):
-    permission_classes = [IsAuthenticated]
-
+    # permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     def get(self, request):
         """ Returns a list of permissions held by the input User for the input Team """
         user = MyUser.objects.get(id=request.query_params.get("user", None))

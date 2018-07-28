@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MongoConfiguration">
+    <option name="shellPath" value="mongo &quot;mongodb://cluster0-shard-00-00-6qb6a.mongodb.net:27017,cluster0-shard-00-01-6qb6a.mongodb.net:27017,cluster0-shard-00-02-6qb6a.mongodb.net:27017/test?replicaSet=Cluster0-shard-0&quot; --ssl --authenticationDatabase admin --username vpmoadmin --password .Y&amp;?L.?V,Kf," />
+  </component>
+</project>
