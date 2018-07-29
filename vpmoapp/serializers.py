@@ -31,7 +31,8 @@ class AllUsersSerializer(ModelSerializer):
             'email',
             'password',
             'fullname',
-            'username'
+            'username',
+            'id'
         )
 
 

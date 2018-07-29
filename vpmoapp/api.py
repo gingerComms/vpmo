@@ -25,7 +25,7 @@ from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework_jwt.settings import api_settings
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 from rest_framework import filters
 from vpmoprj.settings import SECRET_KEY
@@ -46,8 +46,8 @@ class AllTeamsView(ListAPIView):
 
 
 class UserPermissionsView(APIView):
-    # permission_classes = [IsAuthenticated]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+    # permission_classes = [AllowAny]
     def get(self, request):
         """ Returns a list of permissions held by the input User for the input Team """
         user = MyUser.objects.get(id=request.query_params.get("user", None))
@@ -67,17 +67,22 @@ class UserPermissionsView(APIView):
         return Response(shortcuts.get_perms(user, team))
 
 
-
 class AllProjectsView(ListAPIView):
     serializer_class = ProjectSerializer
-    # permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+    queryset = Project.objects.all()
+
+
+class AllTeamsView(ListAPIView):
+    serializer_class = TeamSerializer
+    permission_classes = [IsAuthenticated]
     queryset = Project.objects.all()
 
 
 class AllUserView(ListAPIView):
     queryset = get_user_model().objects.all()
     serializer_class = AllUsersSerializer
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
 
 
 class UserUpdateView(UpdateModelMixin, RetrieveAPIView):
