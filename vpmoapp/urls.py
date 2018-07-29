@@ -3,7 +3,7 @@ from rest_framework import routers
 
 from .api import (AllTeamsView, AllUserView, AllProjectsView, CreateUserView,
                   LoginUserView, CreateProjectView, UserUpdateView, UserDetailsView,
-                  UserPermissionsView)
+                  UserPermissionsView, FilteredTeamsView)
 
 
 
@@ -32,6 +32,7 @@ urlpatterns = (
     url(r'^api/users/(?P<id>\d+)/$', UserDetailsView.as_view()),
     url(r'^api/users/(?P<id>\d+)/update$', UserUpdateView.as_view()),
     url(r'^api/organisations$', AllTeamsView.as_view()),
+    url(r'^api/filtered_organisations$', FilteredTeamsView.as_view()),
     url(r'^api/projects$', AllProjectsView.as_view()),
     url(r'^api/projects/add', CreateProjectView.as_view()),
 

@@ -38,7 +38,7 @@ jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 import jwt
 
 
-class AllTeamsView(ListAPIView):
+class FilteredTeamsView(ListAPIView):
     serializer_class = TeamSerializer
     permission_classes = [IsAuthenticated, TeamPermissions]
     queryset = Team.objects.all()

@@ -9,12 +9,15 @@ class IsAccountOwner(permissions.BasePermission):
 
 
 class TeamPermissions(permissions.BasePermission):
+	""" Custom DRF Permissions that returns True or False based on
+		the permissions a user has for a given object.
+	"""
 	def has_permission(self, request, view):
 		return True
 
 	def has_object_permission(self, request, view, obj):
-		return True
-		print(request.user, obj)
+		""" This method only comes into effect for a Detail Endpoint """
+		# Retrieving all permissions a user has for the object
 		perms = shortcuts.get_user_perms(request.user, obj)
 
 		if request.method in permissions.SAFE_METHODS:
