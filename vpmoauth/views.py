@@ -1,36 +1,16 @@
-from rest_framework import viewsets
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.generics import (
-    ListAPIView,
-    CreateAPIView,
-    UpdateAPIView,
-    RetrieveAPIView,
-    DestroyAPIView,
-    RetrieveUpdateAPIView)
-from rest_framework.mixins import (
-    UpdateModelMixin,
-    DestroyModelMixin
-    )
-from django.contrib.auth import authenticate
+from django.shortcuts import render
+from django.contrib.auth import authenticate, get_user_model
+from django.conf import settings
+from vpmoapp.models import Team
+from vpmoauth.models import MyUser
+from vpmoauth.serializers import *
 
-from .serializers import (
-        TeamSerializer,
-        UserDeserializer,
-        ProjectSerializer,
-        AllUsersSerializer,
-        UserDetailsSerializer
-        )
-from .models import Team, Project, MyUser
-from django.contrib.auth import get_user_model
+from rest_framework import generics, permissions, mixins
 from rest_framework.response import Response
 from rest_framework.request import Request
-from rest_framework_jwt.settings import api_settings
-from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
-from rest_framework import filters
-from vpmoprj.settings import SECRET_KEY
-from vpmoapp.permissions import TeamPermissions
-from vpmoapp.filters import TeamListFilter
+from rest_framework_jwt.settings import api_settings
+
 from guardian import shortcuts
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -38,15 +18,11 @@ jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 import jwt
 
 
-class FilteredTeamsView(ListAPIView):
-    serializer_class = TeamSerializer
-    permission_classes = [IsAuthenticated, TeamPermissions]
-    queryset = Team.objects.all()
-    filter_backends = (TeamListFilter,)
 
+# Create your views here.
 
 class UserPermissionsView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     # permission_classes = [AllowAny]
     def get(self, request):
         """ Returns a list of permissions held by the input User for the input Team """
@@ -67,26 +43,14 @@ class UserPermissionsView(APIView):
         return Response(shortcuts.get_perms(user, team))
 
 
-class AllProjectsView(ListAPIView):
-    serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticated]
-    queryset = Project.objects.all()
-
-
-class AllTeamsView(ListAPIView):
-    serializer_class = TeamSerializer
-    permission_classes = [IsAuthenticated]
-    queryset = Project.objects.all()
-
-
-class AllUserView(ListAPIView):
+class AllUserView(generics.ListAPIView):
     queryset = get_user_model().objects.all()
     serializer_class = AllUsersSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated,)
 
 
-class UserUpdateView(UpdateModelMixin, RetrieveAPIView):
-    permission_classes = [AllowAny]
+class UserUpdateView(mixins.UpdateModelMixin, generics.RetrieveAPIView):
+    permission_classes = [permissions.AllowAny]
     queryset = get_user_model().objects.filter(id__gte=0)
     serializer_class = UserDetailsSerializer
     lookup_field = 'id'
@@ -95,35 +59,25 @@ class UserUpdateView(UpdateModelMixin, RetrieveAPIView):
         return self.update(request, *args, **kwargs)
 
 
-class UserDetailsView(RetrieveAPIView):
-    permission_classes = [AllowAny]
+class UserDetailsView(generics.RetrieveAPIView):
+    permission_classes = [permissions.AllowAny]
     queryset = get_user_model().objects.all()
     serializer_class = UserDetailsSerializer
     lookup_field = 'id'
     # lookup_url_kwarg = 'user'
 
 
-
-# class CreateUserView(CreateAPIView):
-#     # CreateAPIView provide only Post method
-#     model = get_user_model()
-#     # set permission as AllowAny user to Register
-#     permission_classes = (AllowAny,)
-#     # queryset = get_user_model().object().all
-#     serializer_class = UserSerializer
-
-
-class CreateUserView(CreateAPIView):
+class CreateUserView(generics.CreateAPIView):
     # CreateAPIView provide only Post method
     model = get_user_model()
     # set permission as AllowAny user to Register
-    permission_classes = (AllowAny,)
+    permission_classes = (permissions.AllowAny,)
     # queryset = get_user_model().object().all
     serializer_class = UserDeserializer
 
 
 class LoginUserView(APIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (permissions.AllowAny,)
     # serializer_class = UserSerializer
     def post(self, request, *args, **kwargs):
         email = request.data.get('email')
@@ -134,7 +88,7 @@ class LoginUserView(APIView):
             currentUser = get_user_model().objects.get(email=email)
             payload = jwt_payload_handler(user)
             token = {
-                'token': jwt.encode(payload, SECRET_KEY),
+                'token': jwt.encode(payload, settings.SECRET_KEY),
                 'status': 'success',
                 'fullname': currentUser.fullname,
                 'username': currentUser.username,
@@ -147,9 +101,3 @@ class LoginUserView(APIView):
               {'error': 'Invalid credentials',
               'status': 'failed'},
             )
-
-
-class CreateProjectView(CreateAPIView):
-    model = Project
-    serializer_class = ProjectSerializer
-    permission_classes = (AllowAny,)

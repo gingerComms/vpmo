@@ -41,12 +41,13 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'vpmoapp',
+    'vpmoauth',
     'guardian',
 ]
 
 
 AUTHENTICATION_BACKENDS = (
-    'vpmoapp.auth_backend.AuthBackend', # this is default from vpmo
+    'vpmoauth.auth_backend.AuthBackend', # this is default from vpmo
     'django.contrib.auth.backends.ModelBackend', # The default
     'guardian.backends.ObjectPermissionBackend',
 )
@@ -133,7 +134,7 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'djongo',
-            'NAME': 'cluster1',# Changing from cluster0
+            'NAME': 'cluster2',# Changing from cluster0
             'HOST':
             'mongodb://vpmoadmin:.Y&?L.?V,Kf,@cluster0-shard-00-00-6qb6a.mongodb.net:27017,cluster0-shard-00-01-6qb6a.mongodb.net:27017,cluster0-shard-00-02-6qb6a.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true'
         }
@@ -217,4 +218,4 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # look in the app and find a model named Account
-AUTH_USER_MODEL = 'vpmoapp.MyUser'
+AUTH_USER_MODEL = 'vpmoauth.MyUser'

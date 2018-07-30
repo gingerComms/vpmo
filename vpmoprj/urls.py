@@ -21,4 +21,5 @@ from rest_framework_jwt.views import obtain_jwt_token
 urlpatterns = [
     path(r'admin/', admin.site.urls),
     path(r'vpmoapp/', include('vpmoapp.urls')),
+    path(r'vpmoauth/', include("vpmoauth.urls")),
 ]

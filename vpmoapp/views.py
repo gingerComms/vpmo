@@ -1,32 +1,50 @@
-from rest_framework import permissions, viewsets, generics
-from vpmoapp.models import Account
-from vpmoapp.permissions import IsAccountOwner
-from vpmoapp.serializers import AccountSerializer, TeamSerializer
+from rest_framework import viewsets
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.generics import ListAPIView, CreateAPIView
+from rest_framework.response import Response
+from rest_framework.request import Request
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework import filters
+
+from vpmoauth.models import MyUser
+
+from vpmoapp.models import Team, Project
+from vpmoapp.serializers import TeamSerializer, ProjectSerializer
+from vpmoapp.permissions import TeamPermissions
+from vpmoapp.filters import TeamListFilter
 
 
-# class AccountViewSet(viewsets.ModelViewSet):
-#     lookup_field = 'username'
-#     queryset = Account.objects.all()
-#     serializer_class = AccountSerializer
-#
-#     def get_permissions(self):
-#         if self.request.method in permissions.SAFE_METHODS:
-#             return (permissions.AllowAny(),)
-#
-#         if self.request.method == 'POST':
-#             return (permissions.AllowAny(),)
-#
-#         return (permissions.IsAuthenticated(), IsAccountOwner(),)
-#
-#     def create(self, request):
-#         serializer = self.serializer_class(data=request.data)
-#
-#         if serializer.is_valid():
-#             Account.objects.create_user(**serializer.validated_data)
-#
-#             return Response(serializer.validated_data, status=status.HTTP_201_CREATED)
-#
-#         return Response({
-#             'status': 'Bad request',
-#             'message': 'Account could not be created with received data.'
-#         }, status=status.HTTP_400_BAD_REQUEST)
+
+class FilteredTeamsView(ListAPIView):
+    serializer_class = TeamSerializer
+    permission_classes = [IsAuthenticated, TeamPermissions]
+    queryset = Team.objects.all()
+    filter_backends = (TeamListFilter,)
+
+
+class AllProjectsView(ListAPIView):
+    serializer_class = ProjectSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = Project.objects.all()
+
+
+class AllTeamsView(ListAPIView):
+    serializer_class = TeamSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = Project.objects.all()
+
+
+
+# class CreateUserView(CreateAPIView):
+#     # CreateAPIView provide only Post method
+#     model = get_user_model()
+#     # set permission as AllowAny user to Register
+#     permission_classes = (AllowAny,)
+#     # queryset = get_user_model().object().all
+#     serializer_class = UserSerializer
+
+
+class CreateProjectView(CreateAPIView):
+    model = Project
+    serializer_class = ProjectSerializer
+    permission_classes = (AllowAny,)
