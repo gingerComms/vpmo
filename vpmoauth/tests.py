@@ -18,7 +18,7 @@ class UserPermissionsTestCase(TestCase):
 		}
 		self.user = MyUser.objects.create(**user_creds)
 		# Random password created on each iteration
-		self.password = os.urand(12).encode('hex')
+		self.password = os.urandom(12).encode('hex')
 		self.user.set_password(self.password)
 
 		# Team used for testing
@@ -26,6 +26,10 @@ class UserPermissionsTestCase(TestCase):
 
 		# Creating the request factory
 		self.factory = APIRequestFactory()
+
+	def tearDown(self):
+		self.user.delete()
+		self.team.delete()
 
 	def test_user_permissions(self):
 		""" Testing the GET and POST methods of the UserPermissionsView """
@@ -35,6 +39,6 @@ class UserPermissionsTestCase(TestCase):
 		force_authenticate(request, user=self.user)
 		response = self.view(request)
 
-		self.assertEqual(response, [])
+		self.assertEqual(response.data, [])
 
 
