@@ -46,6 +46,11 @@ INSTALLED_APPS = [
 ]
 
 
+MIGRATION_MODULES = {
+    "guardian": None # Skipping the migrations from guardian
+}
+
+
 AUTHENTICATION_BACKENDS = (
     'vpmoauth.auth_backend.AuthBackend', # this is default from vpmo
     'django.contrib.auth.backends.ModelBackend', # The default
