@@ -47,4 +47,10 @@ class AllTeamsView(ListAPIView):
 class CreateProjectView(CreateAPIView):
     model = Project
     serializer_class = ProjectSerializer
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
+
+
+class CreateTeamView(CreateAPIView):
+    model = Team
+    serializer_class = TeamSerializer
+    permission_classes = (IsAuthenticated,)
