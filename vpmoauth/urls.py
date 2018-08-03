@@ -19,5 +19,5 @@ urlpatterns = [
     url(r'^api/users/(?P<id>\d+)/$', UserDetailsView.as_view()),
     url(r'^api/users/(?P<id>\d+)/update$', UserUpdateView.as_view()),
     # User Permission Views
-    url(r"^api/user_perms/$", UserPermissionsView.as_view()),
+    url(r"^api/user_perms/$", UserPermissionsView.as_view(), name="user-perms"),
 ]
