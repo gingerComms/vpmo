@@ -6,57 +6,27 @@
 # )
 from __future__ import unicode_literals
 # from django.db import models
-from djongo import models
-from djongo.models import forms
-from django.contrib.auth.base_user import AbstractBaseUser
-from django.contrib.auth.models import PermissionsMixin
+from django.db.models.signals import pre_save, post_save
+from django.dispatch import receiver
+from django.conf import settings
+from django.template.defaultfilters import slugify
+if not settings.DEBUG:
+    from django.db import models
+    from django import forms
+else:
+    from djongo import models
+    from djongo.models import forms
+from vpmoauth.models import MyUser
 from django.core.mail import send_mail
-from .managers import MyUserManager
+import guardian.mixins
 
 # to add a field to mongodb collection after adding it to model
 # 1- connect to mongodb via shell
 # 2- use cluster0
 # 3- db.[collection name].update({},{$set : {"field_name":null}},false,true)
 
-class MyUser(AbstractBaseUser):
-    id = models.IntegerField
-    email = models.EmailField(
-        verbose_name='email address',
-        max_length=255,
-        unique=True,
-    )
-    is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    fullname = models.CharField(max_length=100, null=True)
-    username = models.CharField(max_length=100, unique=True)
-    
-    objects = MyUserManager()
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
 
-    def __str__(self):
-        return self.username
-
-    def has_perm(self, perm, obj=None):
-        "Does the user have a specific permission?"
-        # Simplest possible answer: Yes, always
-        return True
-
-    def has_module_perms(self, app_label):
-        "Does the user have permissions to view the app `app_label`?"
-        # Simplest possible answer: Yes, always
-        return True
-
-    @property
-    def is_staff(self):
-        "Is the user a member of staff?"
-        # Simplest possible answer: All admins are staff
-        return self.is_admin
-    
 
 class Comment(models.Model):
     content = models.TextField(blank=True, null=True)
@@ -89,13 +59,20 @@ class CommentForm(forms.ModelForm):
 class Team(models.Model):
     name = models.CharField(max_length=50)
     # owner = models.ReferenceField(User)
+    user_linked = models.BooleanField(default=False)
+    class Meta:
+        permissions = (
+            ('created_obj', 'Admin Level Permissions',),
+            ('contribute_obj', "Contributor Level Permissions",),
+            ('read_obj', 'Read Level Permissions')
+        )
 
     def __str__(self):
         return '%s' % (self.name)
 
 
 class Project(models.Model):
-    projectname = models.CharField(max_length=50, verbose_name="Project Name")
+    projectname = models.CharField(max_length=50, verbose_name="Project Name", default="Project Name - Default")
     description = models.TextField(blank=True, null=True)
     # comments = models.ArrayModelField(
     #     model_container=Comment,
@@ -103,7 +80,7 @@ class Project(models.Model):
     #     null=True
     # )
     start = models.DateField(null=True)
-    owner = models.ForeignKey(MyUser, on_delete=models.CASCADE)
+    owner = models.ForeignKey(MyUser, on_delete=models.CASCADE, null=True)
 
     # organisation = models.ReferenceField(Organisation)
     # owner = models.ReferenceField(User)
@@ -113,6 +90,17 @@ class Project(models.Model):
 
     class Meta:
         ordering = ('projectname',)
+    if not settings.DEBUG:
+        objects = models.DjongoManager()
 
-    objects = models.DjongoManager()
+
+# @receiver(pre_save, sender=Team)
+# def my_callback(sender, instance, username, *args, **kwargs):
+#     instance._id = slugify(instance.name) + '@' + username
+
+
+@receiver(post_save, sender=MyUser)
+def create_user_team(sender, instance, **kwargs):
+    Team.objects.create(_id='team@' + sender.__str__, name = 'userTeam')
+    print('user-team was created')
 

@@ -25,6 +25,7 @@ SECRET_KEY = 'k3xrb+p%cw%7r@8$el#$7hd6_zqp93-(ue(acl^jx-okpzo643'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -35,17 +36,24 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'werkzeug_debugger_runserver',
+    #'werkzeug_debugger_runserver',
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
     'vpmoapp',
+    'vpmoauth',
     'guardian',
 ]
 
 
+MIGRATION_MODULES = {
+    "guardian": None # Skipping the migrations from guardian
+}
+
+
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend', # this is default
+    'vpmoauth.auth_backend.AuthBackend', # this is default from vpmo
+    'django.contrib.auth.backends.ModelBackend', # The default
     'guardian.backends.ObjectPermissionBackend',
 )
 
@@ -119,14 +127,24 @@ WSGI_APPLICATION = 'vpmoprj.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'cluster0',
-        'HOST':
-        'mongodb://vpmoadmin:.Y&?L.?V,Kf,!@cluster0-shard-00-00-6qb6a.mongodb.net:27017,cluster0-shard-00-01-6qb6a.mongodb.net:27017,cluster0-shard-00-02-6qb6a.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin'
+
+if not DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'djongo',
+            'NAME': 'cluster2',# Changing from cluster0
+            'HOST':
+            'mongodb://vpmoadmin:.Y&?L.?V,Kf,@cluster0-shard-00-00-6qb6a.mongodb.net:27017,cluster0-shard-00-01-6qb6a.mongodb.net:27017,cluster0-shard-00-02-6qb6a.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true'
+        }
+    }
+
 
 TEST_MONGO_DATABASE = {
     'db': 'test-example',
@@ -164,8 +182,8 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
     ),
 }
 
@@ -205,4 +223,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # look in the app and find a model named Account
-AUTH_USER_MODEL = 'vpmoapp.MyUser'
+AUTH_USER_MODEL = 'vpmoauth.MyUser'
+
