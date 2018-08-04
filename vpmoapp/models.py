@@ -102,4 +102,5 @@ class Project(models.Model):
 @receiver(post_save, sender=MyUser)
 def create_user_team(sender, instance, **kwargs):
     Team.objects.create(_id='team@' + sender.__str__, name = 'userTeam')
+    print('user-team was created')
 

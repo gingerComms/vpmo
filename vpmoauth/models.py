@@ -1,19 +1,19 @@
 from django.db import models
 from django.conf import settings
-
+from django.db.models.signals import pre_save, post_save
+from django.dispatch import receiver
 if not settings.DEBUG:
     from django.db import models
     from django import forms
 else:
     from djongo import models
     from djongo.models import forms
-
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin, Group
-
 from vpmoauth.managers import MyUserManager
-
 from guardian.mixins import GuardianUserMixin
+
+
 
 # Create your models here.
 
@@ -61,3 +61,5 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
+
+
