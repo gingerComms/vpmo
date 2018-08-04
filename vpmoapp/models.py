@@ -6,7 +6,10 @@
 # )
 from __future__ import unicode_literals
 # from django.db import models
+from django.db.models.signals import pre_save, post_save
+from django.dispatch import receiver
 from django.conf import settings
+from django.template.defaultfilters import slugify
 if not settings.DEBUG:
     from django.db import models
     from django import forms
@@ -21,7 +24,9 @@ import guardian.mixins
 # 1- connect to mongodb via shell
 # 2- use cluster0
 # 3- db.[collection name].update({},{$set : {"field_name":null}},false,true)
-    
+
+
+
 
 class Comment(models.Model):
     content = models.TextField(blank=True, null=True)
@@ -54,7 +59,7 @@ class CommentForm(forms.ModelForm):
 class Team(models.Model):
     name = models.CharField(max_length=50)
     # owner = models.ReferenceField(User)
-
+    user_linked = models.BooleanField(default=False)
     class Meta:
         permissions = (
             ('created_obj', 'Admin Level Permissions',),
@@ -87,4 +92,14 @@ class Project(models.Model):
         ordering = ('projectname',)
     if not settings.DEBUG:
         objects = models.DjongoManager()
+
+
+# @receiver(pre_save, sender=Team)
+# def my_callback(sender, instance, username, *args, **kwargs):
+#     instance._id = slugify(instance.name) + '@' + username
+
+
+@receiver(post_save, sender=MyUser)
+def create_user_team(sender, instance, **kwargs):
+    Team.objects.create(_id='team@' + sender.__str__, name = 'userTeam')
 
