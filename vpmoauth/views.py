@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate, get_user_model
 from django.conf import settings
+from rest_framework.permissions import AllowAny
+
 from vpmoapp.models import Team
 from vpmoauth.models import MyUser
 from vpmoauth.serializers import *
@@ -46,11 +48,12 @@ class UserPermissionsView(APIView):
 class AllUserView(generics.ListAPIView):
     queryset = get_user_model().objects.all()
     serializer_class = AllUsersSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = [permissions.IsAuthenticated,]
+    # permission_classes = [AllowAny]
 
 
 class UserUpdateView(mixins.UpdateModelMixin, generics.RetrieveAPIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
     queryset = get_user_model().objects.filter(id__gte=0)
     serializer_class = UserDetailsSerializer
     lookup_field = 'id'

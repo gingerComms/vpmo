@@ -1,7 +1,5 @@
 from django.db import models
 from django.conf import settings
-from django.db.models.signals import pre_save, post_save
-from django.dispatch import receiver
 if not settings.DEBUG:
     from django.db import models
     from django import forms

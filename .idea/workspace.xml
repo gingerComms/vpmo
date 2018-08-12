@@ -2,398 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="153d1d65-6603-446d-a34b-77334a354c69" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/mongoSettings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/give_perms_to_user.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vpmoapp/filters.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vpmoapp/migrations/0002_project_owner.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vpmoapp/migrations/0003_team_user_linked.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vpmoauth/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vpmoauth/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vpmoauth/auth_backend.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vpmoauth/managers.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vpmoauth/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vpmoauth/migrations/0002_myuser_email2.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vpmoauth/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vpmoauth/serializers.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vpmoauth/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vpmoauth/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vpmoprj.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vpmoprj.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vpmoapp/signals.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/manage.py" beforeDir="false" afterPath="$PROJECT_DIR$/manage.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/.editorconfig" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/.npmrc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/.vscode/launch.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/angular.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/e2e/protractor.conf.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/e2e/src/app.e2e-spec.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/e2e/src/app.po.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/e2e/tsconfig.e2e.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/animations/index.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/confirm-dialog/confirm-dialog.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/confirm-dialog/confirm-dialog.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoauth/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/confirm-dialog/confirm-dialog.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/confirm-dialog/confirm-dialog.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/countdown/countdown.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/countdown/countdown.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/countdown/countdown.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/countdown/countdown.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/demo/demo-content/demo-content.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/demo/demo-content/demo-content.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoauth/migrations/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/demo/demo-content/demo-content.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/demo/demo-sidenav/demo-sidenav.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/demo/demo-sidenav/demo-sidenav.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/demo/demo-sidenav/demo-sidenav.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/demo/demo.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/highlight/highlight.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/highlight/highlight.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/highlight/highlight.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/highlight/prism-languages.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/index.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/material-color-picker/material-color-picker.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/material-color-picker/material-color-picker.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/material-color-picker/material-color-picker.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/material-color-picker/material-color-picker.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/navigation/horizontal/nav-collapse/nav-horizontal-collapse.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/navigation/horizontal/nav-collapse/nav-horizontal-collapse.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/navigation/horizontal/nav-collapse/nav-horizontal-collapse.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/navigation/horizontal/nav-item/nav-horizontal-item.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/navigation/horizontal/nav-item/nav-horizontal-item.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/navigation/horizontal/nav-item/nav-horizontal-item.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/navigation/navigation.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/navigation/navigation.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/navigation/navigation.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/navigation/navigation.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/navigation/navigation.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/navigation/vertical/nav-collapse/nav-vertical-collapse.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/navigation/vertical/nav-collapse/nav-vertical-collapse.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/navigation/vertical/nav-collapse/nav-vertical-collapse.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/navigation/vertical/nav-group/nav-vertical-group.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/navigation/vertical/nav-group/nav-vertical-group.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/navigation/vertical/nav-group/nav-vertical-group.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/navigation/vertical/nav-item/nav-vertical-item.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/navigation/vertical/nav-item/nav-vertical-item.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/navigation/vertical/nav-item/nav-vertical-item.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/search-bar/search-bar.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/search-bar/search-bar.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/search-bar/search-bar.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/search-bar/search-bar.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/shortcuts/shortcuts.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/shortcuts/shortcuts.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/shortcuts/shortcuts.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/shortcuts/shortcuts.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/sidebar/sidebar.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/sidebar/sidebar.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/sidebar/sidebar.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/sidebar/sidebar.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/sidebar/sidebar.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/theme-options/theme-options.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/theme-options/theme-options.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/theme-options/theme-options.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/theme-options/theme-options.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/widget/widget-toggle.directive.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/widget/widget.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/widget/widget.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/widget/widget.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/components/widget/widget.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/directives/directives.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/directives/fuse-if-on-dom/fuse-if-on-dom.directive.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/directives/fuse-mat-sidenav/fuse-mat-sidenav.directive.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/directives/fuse-mat-sidenav/fuse-mat-sidenav.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/fuse.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/mat-colors/index.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/pipes/camelCaseToDash.pipe.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/pipes/filter.pipe.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/pipes/getById.pipe.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/pipes/htmlToPlaintext.pipe.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/pipes/keys.pipe.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/pipes/pipes.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/core.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/fuse.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/mixins/_breakpoints.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/partials/_angular-material-fix.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/partials/_cards.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/partials/_colors.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/partials/_forms.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/partials/_global.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/partials/_helpers.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/partials/_icons.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/partials/_material.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/partials/_navigation.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/partials/_normalize.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/partials/_page-layouts.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/partials/_print.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/partials/_reset.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/partials/_scrollbars.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/partials/_toolbar.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/partials/_typography.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/partials/plugins/_ng-pick-datetime.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/partials/plugins/_ngx-color-picker.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/partials/plugins/_ngx-datatable.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/partials/plugins/_perfect-scrollbar.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/partials/plugins/_plugins.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/partials/plugins/_prism.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/scss/theming.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/services/config.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/services/copier.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/services/match-media.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/services/splash-screen.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/services/translation-loader.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/shared.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/@fuse/utils/index.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/_directives/alert.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/_directives/alert.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/_directives/index.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/_guards/auth.guard.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/_guards/index.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/_helpers/error.interceptor.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/_helpers/index.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/_helpers/jwt.interceptor.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/_services/alert.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/_services/authentication.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/_services/cache.interceptor.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/_services/http-cache.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/_services/index.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/app.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/app.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/app.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/app.config.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/app.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/error/error.component.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/error/error.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/error/error.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/fuse-config.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/home/home.component.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/home/home.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/home/home.component.spec.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/home/home.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/home/homeOldCopy.component..html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/content/content.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/content/content.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/content/content.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/content/content.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/content/sample/i18n/en.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/content/sample/i18n/tr.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/content/sample/sample.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/content/sample/sample.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/content/sample/sample.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/content/sample/sample.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/footer/footer.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/footer/footer.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/footer/footer.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/footer/footer.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/main.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/main.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/main.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/main.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/navbar/navbar.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/navbar/navbar.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/navbar/navbar.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/navbar/navbar.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/quick-panel/quick-panel.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/quick-panel/quick-panel.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/quick-panel/quick-panel.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/quick-panel/quick-panel.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/toolbar/toolbar.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/toolbar/toolbar.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/toolbar/toolbar.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/main/toolbar/toolbar.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/navigation/i18n/en.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/navigation/i18n/tr.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/navigation/navigation.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/project/project-add.component.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/project/project-add.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/project/project-add.component.spec.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/project/project-add.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/project/project-list.component.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/project/project-list.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/project/project-list.component.spec.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/project/project-list.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/project/project.component.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/project/project.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/project/project.component.spec.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/project/project.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/project/project.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/project/project.service.spec.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/project/project.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/project/project.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/shared/app.routing.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/shared/images/inventions.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/shared/message.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/shared/myTheme.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/shared/navbar.component.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/shared/navbar.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/shared/navbar.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/user/dashboard/dashboard.component.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/user/dashboard/dashboard.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/user/dashboard/dashboard.component.spec.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/user/dashboard/dashboard.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/user/login-2/login.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/user/login-2/login.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/user/login-2/login.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/user/login-2/login.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/user/login/login.component.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/user/login/login.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/user/login/login.component.spec.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/user/login/login.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/user/login/loginOriginal.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/user/profile/userProfile.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/user/profile/userProfile.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/user/signUp/sign-up.component.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/user/signUp/sign-up.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/user/signUp/sign-up.component.spec.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/user/signUp/sign-up.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/user/user.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/user/user.module.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/user/user.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/app/user/user.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/.gitkeep" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/icons/meteocons/Read Me.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/icons/meteocons/demo-files/demo.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/icons/meteocons/demo-files/demo.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/icons/meteocons/demo.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/icons/meteocons/fonts/meteocons.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/icons/meteocons/fonts/meteocons.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/icons/meteocons/fonts/meteocons.woff" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/icons/meteocons/selection.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/icons/meteocons/style.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Abbott.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Arnold.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Barrera.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Blair.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Boyle.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Christy.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Copeland.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Estes.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Harper.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Helen.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Henderson.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Josefina.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Katina.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Lily.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Mai.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Nancy.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Nora.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Odessa.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Reyna.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Shauna.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Shepard.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Tillman.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Trevino.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Tyson.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/Velazquez.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/alice.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/andrew.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/carl.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/danielle.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/garry.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/james.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/jane.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/joyce.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/katherine.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/profile.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/avatars/vincent.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/backgrounds/autumn.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/backgrounds/dark-material-bg.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/backgrounds/header-bg.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/backgrounds/spring.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/backgrounds/summer.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/backgrounds/winter.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/beach.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/cards/card1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/cards/card2-large.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/cards/card2-medium.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/cards/card2-small.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/cards/card2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/cards/card3-square.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/cards/card3.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/ecommerce/product-image-placeholder.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/etc/air-balloons.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/etc/alice-cooper-poison.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/etc/avenue.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/etc/cactus.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/etc/early-sunrise.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/etc/fallout.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/etc/flowers-thumb.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/etc/mountain-lake.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/etc/mountain-sunset.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/etc/road-trip.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/etc/sample-file-preview.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/etc/snow-thumb.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/etc/snow.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/etc/sunrise-thumb.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/etc/tropical-beach.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/flags/es.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/flags/tr.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/flags/us.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/logos/android.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/logos/angular-material.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/logos/angular.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/logos/browsersync.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/logos/fallout.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/logos/fuse.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/logos/google.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/logos/gulp.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/logos/jasmine.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/logos/karma.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/logos/node-sass.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/logos/protractor.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/logos/yeoman.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/patterns/drop-grey.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/patterns/drop.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/patterns/rain-grey.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/patterns/rain.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/scrumboard/calendar.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/scrumboard/header-1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/scrumboard/header-2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/scrumboard/mail.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/theme-options/content-only.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/theme-options/content-with-toolbar.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/theme-options/horizontal-nav.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/theme-options/vertical-nav-with-full-toolbar-2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/theme-options/vertical-nav-with-full-toolbar.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/assets/images/theme-options/vertical-nav.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/browserslist" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/environments/environment.hmr.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/environments/environment.prod.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/environments/environment.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/favicon.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/hmr.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/karma.conf.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/main.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/polyfills.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/styles.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/test.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/tsconfig.app.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/tsconfig.spec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/src/tslint.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/tsconfig.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoFuse/tslint.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoapp/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoapp/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoapp/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoauth/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoapp/managers.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoapp/managers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoapp/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoapp/migrations/0001_initial.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoapp/migrations/0002_auto_20180307_0647.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoapp/migrations/0003_auto_20180327_0636.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vpmoapp/apps.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoapp/apps.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vpmoapp/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoapp/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoapp/permissions.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoapp/permissions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoapp/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoapp/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoapp/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoapp/tests.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoapp/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoapp/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoapp/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoapp/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vpmoauth/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoauth/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vpmoauth/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoauth/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vpmoprj/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoprj/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoprj/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoprj/urls.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -404,11 +19,50 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="settings.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/vpmoprj/settings.py">
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/vpmoauth/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="26" column="12" lean-forward="true" selection-start-line="26" selection-start-column="12" selection-end-line="26" selection-end-column="12" />
+            <state relative-caret-position="323">
+              <caret line="19" column="30" lean-forward="true" selection-start-line="19" selection-start-column="30" selection-end-line="19" selection-end-column="30" />
+              <folding>
+                <element signature="e#0#28#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/vpmoapp/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="561">
+              <caret line="66" lean-forward="true" selection-start-line="66" selection-end-line="66" />
+              <folding>
+                <element signature="e#347#386#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/vpmoauth/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="663">
+              <caret line="65" column="47" lean-forward="true" selection-start-line="65" selection-start-column="47" selection-end-line="65" selection-end-column="47" />
+              <folding>
+                <element signature="e#0#35#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="urls.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/vpmoauth/urls.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="136">
+              <caret line="8" column="15" lean-forward="true" selection-start-line="8" selection-start-column="15" selection-end-line="8" selection-end-column="15" />
+              <folding>
+                <element signature="e#0#41#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -432,6 +86,8 @@
       <find>REST_FRAMEWORK</find>
       <find>Project</find>
       <find>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</find>
+      <find>Team.objects.create</find>
+      <find>jwt</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -449,18 +105,21 @@
         <option value="$PROJECT_DIR$/vpmoapp/urls.py" />
         <option value="$PROJECT_DIR$/vpmoapp/filters.py" />
         <option value="$PROJECT_DIR$/vpmoapp/managers.py" />
-        <option value="$PROJECT_DIR$/vpmoauth/models.py" />
-        <option value="$PROJECT_DIR$/vpmoapp/models.py" />
         <option value="$PROJECT_DIR$/vpmoauth/managers.py" />
+        <option value="$PROJECT_DIR$/vpmoauth/models.py" />
+        <option value="$PROJECT_DIR$/vpmoapp/apps.py" />
+        <option value="$PROJECT_DIR$/vpmoapp/signals.py" />
+        <option value="$PROJECT_DIR$/vpmoapp/models.py" />
         <option value="$PROJECT_DIR$/vpmoprj/settings.py" />
+        <option value="$PROJECT_DIR$/vpmoauth/views.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="320" />
-    <option name="y" value="62" />
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="456" />
+    <option name="y" value="259" />
     <option name="width" value="1232" />
-    <option name="height" value="1029" />
+    <option name="height" value="991" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -483,6 +142,12 @@
               <item name="vpmo_pc" type="b2602c69:ProjectViewProjectNode" />
               <item name="vpmo_pc" type="462c0819:PsiDirectoryNode" />
               <item name="vpmoauth" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="vpmo_pc" type="b2602c69:ProjectViewProjectNode" />
+              <item name="vpmo_pc" type="462c0819:PsiDirectoryNode" />
+              <item name="vpmoauth" type="462c0819:PsiDirectoryNode" />
+              <item name="migrations" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="vpmo_pc" type="b2602c69:ProjectViewProjectNode" />
@@ -541,12 +206,12 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="320" y="62" width="1232" height="1029" extended-state="0" />
+    <frame x="-8" y="-8" width="1874" height="1096" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2631579" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1722282" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" weight="0.23404256" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.22492401" />
       <window_info anchor="bottom" id="Python Console" order="9" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.4505618" />
@@ -678,9 +343,6 @@
     <entry file="file://$PROJECT_DIR$/vpmoapp/migrations/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/vpmoprj/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/vpmoapp/admin.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
@@ -741,30 +403,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/vpmoprj/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="23" column="19" selection-start-line="23" selection-start-column="11" selection-end-line="23" selection-end-column="19" />
-          <folding>
-            <element signature="e#631#663#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/vpmoapp/serializers.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="16" column="20" lean-forward="true" selection-start-line="16" selection-start-column="20" selection-end-line="16" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vpmoauth/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="279">
-          <caret line="83" column="47" lean-forward="true" selection-start-line="83" selection-start-column="47" selection-end-line="83" selection-end-column="47" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -774,26 +416,6 @@
           <caret line="8" column="7" lean-forward="true" selection-start-line="8" selection-start-column="7" selection-end-line="8" selection-end-column="7" />
           <folding>
             <element signature="e#0#34#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vpmoauth/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="36" lean-forward="true" selection-start-line="19" selection-start-column="36" selection-end-line="19" selection-end-column="36" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vpmoapp/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="20" column="53" lean-forward="true" selection-start-line="20" selection-start-column="53" selection-end-line="20" selection-end-column="53" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -835,18 +457,6 @@
     <entry file="file://$PROJECT_DIR$/vpmoapp/managers.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/vpmoapp/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="224">
-          <caret line="81" column="24" selection-start-line="81" selection-start-column="24" selection-end-line="81" selection-end-column="24" />
-          <folding>
-            <element signature="e#347#386#0" expanded="true" />
-            <element signature="e#938#1319#0" />
-            <element signature="e#1362#1449#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/vpmoauth/managers.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
@@ -854,20 +464,110 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/vpmoauth/models.py">
+    <entry file="file://$PROJECT_DIR$/vpmoauth/apps.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vpmoapp/migrations/0003_team_user_linked.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="804">
-          <caret line="65" selection-start-line="65" selection-end-line="65" />
+        <state relative-caret-position="136">
+          <caret line="8" column="36" selection-start-line="8" selection-start-column="36" selection-end-line="8" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vpmoapp/migrations/0004_team_userteam.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vpmoapp/apps.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vpmoapp/signals.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret lean-forward="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vpmoapp/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="20" column="53" lean-forward="true" selection-start-line="20" selection-start-column="53" selection-end-line="20" selection-end-column="53" />
           <folding>
-            <element signature="e#0#28#0" expanded="true" />
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vpmoauth/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vpmoprj/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vpmoapp/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vpmoapp/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="561">
+          <caret line="66" lean-forward="true" selection-start-line="66" selection-end-line="66" />
+          <folding>
+            <element signature="e#347#386#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/vpmoprj/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="26" column="12" lean-forward="true" selection-start-line="26" selection-start-column="12" selection-end-line="26" selection-end-column="12" />
+        <state relative-caret-position="30">
+          <caret line="182" column="33" selection-start-line="182" selection-start-column="33" selection-end-line="182" selection-end-column="33" />
+          <folding>
+            <element signature="e#307#322#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vpmoauth/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="19" column="30" lean-forward="true" selection-start-line="19" selection-start-column="30" selection-end-line="19" selection-end-column="30" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vpmoauth/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="663">
+          <caret line="65" column="47" lean-forward="true" selection-start-line="65" selection-start-column="47" selection-end-line="65" selection-end-column="47" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vpmoprj/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="18" selection-start-line="15" selection-start-column="18" selection-end-line="15" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vpmoauth/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="15" lean-forward="true" selection-start-line="8" selection-start-column="15" selection-end-line="8" selection-end-column="15" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

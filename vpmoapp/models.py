@@ -6,10 +6,10 @@
 # )
 from __future__ import unicode_literals
 # from django.db import models
-from django.db.models.signals import pre_save, post_save
-from django.dispatch import receiver
 from django.conf import settings
+from django.db.models.signals import post_save
 from django.template.defaultfilters import slugify
+from guardian import shortcuts
 if not settings.DEBUG:
     from django.db import models
     from django import forms
@@ -17,6 +17,7 @@ else:
     from djongo import models
     from djongo.models import forms
 from vpmoauth.models import MyUser
+
 from django.core.mail import send_mail
 import guardian.mixins
 
@@ -60,6 +61,10 @@ class Team(models.Model):
     name = models.CharField(max_length=50)
     # owner = models.ReferenceField(User)
     user_linked = models.BooleanField(default=False)
+    userTeam = models.CharField(max_length=151, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     class Meta:
         permissions = (
             ('created_obj', 'Admin Level Permissions',),
@@ -68,7 +73,7 @@ class Team(models.Model):
         )
 
     def __str__(self):
-        return '%s' % (self.name)
+        return '%s' % (self.userTeam)
 
 
 class Project(models.Model):
@@ -99,8 +104,21 @@ class Project(models.Model):
 #     instance._id = slugify(instance.name) + '@' + username
 
 
-@receiver(post_save, sender=MyUser)
-def create_user_team(sender, instance, **kwargs):
-    Team.objects.create(_id='team@' + sender.__str__, name = 'userTeam')
-    print('user-team was created')
+def create_user_team(sender, instance, created, **kwargs):
+    if created:
+        # create a team Linked to the user
+        team = Team.objects.create(
+                                    name=instance.username + "'s team",
+                                    userTeam="team@" + instance.username,
+                                    user_linked=True
+                                )
+        # User authentication
 
+        # give the user created_obj permission against this team
+        shortcuts.assign_perm("created_obj", instance, team)
+        # consider not to give any other user created_obj permission against this team
+
+        print('user-team was created')
+
+
+post_save.connect(create_user_team, sender=MyUser)
