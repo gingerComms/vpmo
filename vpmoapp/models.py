@@ -126,7 +126,7 @@ class Project(TreeStructure):
     start = models.DateField(null=True)
     owner = models.ForeignKey(MyUser, on_delete=models.CASCADE, null=True)
 
-    # One to many to both Teams and other Projects; one will always be null
+    # Many to One to both Teams and other Projects; one will always be null
     team = models.ForeignKey(Team, null=True, on_delete=models.CASCADE)
     parent_project = models.ForeignKey("self", null=True, on_delete=models.CASCADE)
 
