@@ -10,12 +10,10 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.template.defaultfilters import slugify
 from guardian import shortcuts
-if not settings.DEBUG:
-    from django.db import models
-    from django import forms
-else:
-    from djongo import models
-    from djongo.models import forms
+
+from djongo import models
+from django import forms
+
 from vpmoauth.models import MyUser
 
 from django.core.mail import send_mail
@@ -57,7 +55,46 @@ class CommentForm(forms.ModelForm):
         )
 
 
-class Team(models.Model):
+class TreeStructure(models.Model):
+    """ An implementation of Model Tree Structures with Materialized Paths in Django """
+    path = models.CharField(null=False, max_length=4048)
+
+    def get_element_path(self, elem=None):
+        if elem is None:
+            elem = self
+        return str(elem._id)+"-{}".format(type(elem).__name__)
+
+    def save(self, *args, **kwargs):
+        # If instance is a Team, just make sure the path is top level
+        if isinstance(self, Team):
+            self.path = ","+self.get_element_path()+","
+
+            # Getting top level projects
+            projects = Project.objects.filter(team___id=self._id)
+
+            sub_projects = []
+
+            while len(projects):
+                for project in projects:
+                    # If project has a team parent, extend that path, otherwise use the project parent
+                    if project.team is not None:
+                        project.path = project.team.path + "{},".format(self.get_element_path(elem=project))
+                    elif project.parent_project is not None:
+                        project.path = project.parent_project.path + "{},".format(self.get_element_path(elem=project))
+                    project.save()
+                # Projects for the next loop
+                # NOTE - Limit of recursion from MongoDB is 20! Do not create inheritances that exceed 20 levels!
+                projects = Project.objects.filter(parent_project__in=projects)
+
+        super(TreeStructure, self).save(*args, **kwargs)
+
+    class Meta:
+        abstract = True
+
+
+class Team(TreeStructure):
+    _id = models.ObjectIdField()
+
     name = models.CharField(max_length=50)
     # owner = models.ReferenceField(User)
     user_linked = models.BooleanField(default=False)
@@ -76,7 +113,9 @@ class Team(models.Model):
         return '%s' % (self.userTeam)
 
 
-class Project(models.Model):
+class Project(TreeStructure):
+    _id = models.ObjectIdField()
+
     projectname = models.CharField(max_length=50, verbose_name="Project Name", default="Project Name - Default")
     description = models.TextField(blank=True, null=True)
     # comments = models.ArrayModelField(
@@ -87,6 +126,10 @@ class Project(models.Model):
     start = models.DateField(null=True)
     owner = models.ForeignKey(MyUser, on_delete=models.CASCADE, null=True)
 
+    # One to many to both Teams and other Projects; one will always be null
+    team = models.ForeignKey(Team, null=True, on_delete=models.CASCADE)
+    parent_project = models.ForeignKey("self", null=True, on_delete=models.CASCADE)
+
     # organisation = models.ReferenceField(Organisation)
     # owner = models.ReferenceField(User)
 
@@ -95,8 +138,7 @@ class Project(models.Model):
 
     class Meta:
         ordering = ('projectname',)
-    if not settings.DEBUG:
-        objects = models.DjongoManager()
+        # objects = models.DjongoManager()
 
 
 # @receiver(pre_save, sender=Team)
@@ -108,10 +150,10 @@ def create_user_team(sender, instance, created, **kwargs):
     if created:
         # create a team Linked to the user
         team = Team.objects.create(
-                                    name=instance.username + "'s team",
-                                    userTeam="team@" + instance.username,
-                                    user_linked=True
-                                )
+                name=instance.username + "'s team",
+                userTeam="team@" + instance.username,
+                user_linked=True
+            )
         # User authentication
 
         # give the user created_obj permission against this team

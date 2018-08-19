@@ -1,11 +1,9 @@
 from django.db import models
 from django.conf import settings
-if not settings.DEBUG:
-    from django.db import models
-    from django import forms
-else:
-    from djongo import models
-    from djongo.models import forms
+
+from djongo import models
+from django import forms
+
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin, Group
 from vpmoauth.managers import MyUserManager

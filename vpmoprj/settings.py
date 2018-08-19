@@ -45,11 +45,11 @@ INSTALLED_APPS = [
     'guardian',
 ]
 
-
+"""
 MIGRATION_MODULES = {
     "guardian": None # Skipping the migrations from guardian
 }
-
+"""
 
 AUTHENTICATION_BACKENDS = (
     'vpmoauth.auth_backend.AuthBackend', # this is default from vpmo
@@ -127,12 +127,13 @@ WSGI_APPLICATION = 'vpmoprj.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-
-if not DEBUG:
+if DEBUG:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        "default": {
+            "ENGINE": "djongo",
+            "NAME": "test-example",
+            "host": "localhost",
+            "port": 27017
         }
     }
 else:
