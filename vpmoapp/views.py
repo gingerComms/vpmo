@@ -96,7 +96,7 @@ class TeamTreeView(RetrieveUpdateAPIView):
 
 
     def update(self, request, team_id):
-        """ Updates the models based on the input heirarchy """
+        """ Updates the models based on the input heirarchy; takes a dictionary starting from a single team as input """
 
         data = request.data
 

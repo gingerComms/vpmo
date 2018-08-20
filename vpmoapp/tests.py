@@ -1,5 +1,5 @@
 from django.test import TestCase
-from vpmoapp.models import Team
+from vpmoapp.models import Team, Project, Deliverable
 from vpmoauth.models import MyUser
 import test_addons
 from vpmoapp import views
@@ -86,3 +86,54 @@ class TeamPermissionsTestCase(TestCase):
 
 class TreeStructureTestCase(TestCase):
     """ Tests the TeamTreeView for correct inherit structures """
+    def setUp(self):
+    """ Creates the models required to test the tree structure """
+        self.view = views.TeamTreeView.as_view()
+        # MyUser Credentials used for the testing
+        user_creds = {
+            "username": "TestUser",
+            "email": "TestUser@vpmotest.com",
+            "fullname": "Test User"
+        }
+        self.user = MyUser.objects.create(**user_creds)
+        # Random password created on each iteration
+        self.password = binascii.hexlify(os.urandom(12))
+        self.user.set_password(self.password)
+
+        self.team = Team.objects.create(name="Test Team")
+        self.team.save()
+
+        self.project = Project.objects.create(name="Test Proj", team=self.team)
+        self.project.save()
+
+        self.project_2 = Project.objects.create(name="Test Proj 2", team=self.team)
+        self.project_2.save()
+
+        self.topic = Deliverable.objects.create(name="Test Del", project=self.project)
+        self.topic.save()
+
+        # Creating the request factory
+        self.factory = APIRequestFactory()
+
+    def tearDown(self):
+        self.user.delete()
+        self.project.delete()
+        self.project_2.delete()
+        self.topic.delete()
+
+    def test_tree_structure_get(self):
+        """ Makes the necessary requests and asserts to test the TeamTreeView """
+        url  = reverse("team_tree_view")
+        # GET on url to get the correct tree structure
+        request = self.factory.get(url)
+        force_authenticate(request, user=self.user)
+        first_response = self.view(request)
+
+        self.topic.project = self.project_2
+        self.topic.save()
+
+        request = self.factory.get(url)
+        force_authenticate(request, user=self.user)
+        second_response = self.view(request)
+
+        self.assertNotEqual(first_response, second_response)
