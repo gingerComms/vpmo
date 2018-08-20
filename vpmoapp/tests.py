@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.test import Client
 from vpmoapp.models import Team, Project, Deliverable
 from vpmoauth.models import MyUser
 import test_addons
@@ -87,6 +88,8 @@ class TeamPermissionsTestCase(TestCase):
 
 class TreeStructureTestCase(TestCase):
     """ Tests the TeamTreeView for correct inherit structures """
+    client = Client()
+
     def setUp(self):
         """ Creates the models required to test the tree structure """
         self.view = views.TeamTreeView.as_view()
@@ -101,6 +104,7 @@ class TreeStructureTestCase(TestCase):
         # Random password created on each iteration
         self.password = binascii.hexlify(os.urandom(12))
         self.user.set_password(self.password)
+        self.user.save()
 
         self.team = Team.objects.create(name="Test Team")
         self.team.save()
@@ -115,7 +119,7 @@ class TreeStructureTestCase(TestCase):
         self.topic.save()
 
         # Creating the request factory
-        self.factory = APIRequestFactory()
+        logged_in = self.client.force_login(self.user, backend="vpmoauth.auth_backend.AuthBackend")
 
     def tearDown(self):
         self.user.delete()
@@ -125,37 +129,28 @@ class TreeStructureTestCase(TestCase):
 
     def test_tree_structure_get(self):
         """ Makes the necessary requests and asserts to test the GET TeamTreeView """
-        url = reverse("team_tree_view", kwargs={"team_id": self.team._id})
+        url = reverse("team_tree_view", kwargs={"team_id": str(self.team._id)})
         # GET on url to get the current tree structure
-        request = self.factory.get(url)
-        force_authenticate(request, user=self.user)
-        first_response = self.view(request).data
+        first_response = self.client.get(url).json()
 
         self.topic.project = self.project_2
         self.topic.save()
 
-        request = self.factory.get(url)
-        force_authenticate(request, user=self.user)
-        second_response = self.view(request).data
+        second_response = self.client.get(url).json()
 
         self.assertNotEqual(first_response, second_response)
 
 
     def test_tree_structure_post(self):
         """ Makes the necessary requests and asserts to test the POST TeamTreeView """
-        url = reverse("team_tree_view", kwargs={"team_id": self.team._id})
+        url = reverse("team_tree_view", kwargs={"team_id": str(self.team._id)})
         # GET on url to get the current tree structure
-        request = self.factory.get(url)
-        force_authenticate(request, user=self.user)
-        first_response = self.view(request).data
-        print(first_response)
+        first_response = self.client.get(url).json()
 
         new_d = copy(first_response)
-        proj = new_d["children"].pop(1)
-        new_d["children"].insert(0, proj)
+        proj = new_d["projects"].pop(1)
+        new_d["projects"].insert(0, proj)
 
-        request = self.factory.put(url, data=new_d)
-        force_authenticate(request, user=self.user)
-        second_response = self.view(request).data
+        second_response = self.client.put(url, new_d).json()
 
         self.assertNotEqual(first_response, second_response)
