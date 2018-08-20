@@ -65,15 +65,19 @@ class TreeStructure(models.Model):
         return str(elem._id)+"-{}".format(type(elem).__name__)
 
     def save(self, *args, **kwargs):
+        # NOTE - Limit of recursion from MongoDB is 20! Do not create inheritances that exceed 20 levels!
         # If instance is a Team, just make sure the path is top level
         if isinstance(self, Team):
             self.path = ","+self.get_element_path()+","
 
+            """ Commented to try single model based approach
+            # We set all children paths in the Team save, because we might not be able to guarantee the order otherwise
             # Getting top level projects
             projects = Project.objects.filter(team___id=self._id)
 
             sub_projects = []
 
+            # Iterate over children projects until no more children are found
             while len(projects):
                 for project in projects:
                     # If project has a team parent, extend that path, otherwise use the project parent
@@ -83,8 +87,17 @@ class TreeStructure(models.Model):
                         project.path = project.parent_project.path + "{},".format(self.get_element_path(elem=project))
                     project.save()
                 # Projects for the next loop
-                # NOTE - Limit of recursion from MongoDB is 20! Do not create inheritances that exceed 20 levels!
                 projects = Project.objects.filter(parent_project__in=projects)
+            """
+        # If instance is a Project, set the path to parent's path + project_path
+        elif isinstance(self, Project):
+            if self.team is not None:
+                self.path = self.team.path + "{},".format(self.get_element_path())
+            elif self.parent_project is not None:
+                self.path = self.parent_project.path + "{},".format(self.get_element_path())
+        # Otherwise, just set path to parent project's path + current elem
+        else:
+            self.path = self.project.path + "{},".format(self.get_element_path())
 
         super(TreeStructure, self).save(*args, **kwargs)
 
@@ -139,6 +152,11 @@ class Project(TreeStructure):
     class Meta:
         ordering = ('projectname',)
         # objects = models.DjongoManager()
+
+
+class Topic(TreeStructure):
+    class Meta:
+        abstract = True
 
 
 # @receiver(pre_save, sender=Team)
