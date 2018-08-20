@@ -57,6 +57,7 @@ class CommentForm(forms.ModelForm):
 
 class TreeStructure(models.Model):
     """ An implementation of Model Tree Structures with Materialized Paths in Django """
+    _id = models.ObjectIdField()
     path = models.CharField(null=False, max_length=4048)
 
     def get_element_path(self, elem=None):
@@ -107,8 +108,6 @@ class TreeStructure(models.Model):
 
 
 class Team(TreeStructure):
-    _id = models.ObjectIdField()
-
     name = models.CharField(max_length=50)
     # owner = models.ReferenceField(User)
     user_linked = models.BooleanField(default=False)
@@ -128,8 +127,6 @@ class Team(TreeStructure):
 
 
 class Project(TreeStructure):
-    _id = models.ObjectIdField()
-
     projectname = models.CharField(max_length=50, verbose_name="Project Name", default="Project Name - Default")
     description = models.TextField(blank=True, null=True)
     # comments = models.ArrayModelField(
@@ -156,7 +153,6 @@ class Project(TreeStructure):
 
 
 class Topic(TreeStructure):
-    _id = models.ObjectIdField()
     name = models.CharField(max_length=240, default="N/A", unique=False)
     project = models.ForeignKey(Project, null=True, on_delete=models.CASCADE)
 

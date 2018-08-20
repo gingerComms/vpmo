@@ -16,3 +16,11 @@ class TeamSerializer(ModelSerializer):
     class Meta:
         model = Team
         fields = '__all__'
+
+
+
+class TeamTreeSerializer(ModelSerializer):
+
+    class Meta:
+        model = Team
+        fields = '__all__'
