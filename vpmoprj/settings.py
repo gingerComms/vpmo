@@ -131,7 +131,7 @@ if DEBUG:
     DATABASES = {
         "default": {
             "ENGINE": "djongo",
-            "NAME": "test-example",
+            "NAME": "test-example-4",
             "host": "localhost",
             "port": 27017
         }

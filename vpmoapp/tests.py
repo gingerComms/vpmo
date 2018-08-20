@@ -82,3 +82,7 @@ class TeamPermissionsTestCase(TestCase):
         response = self.view(request)
         
         self.assertEqual(response.data, [{"id": 1, "name": "testCaseTeam"}])
+
+
+class TreeStructureTestCase(TestCase):
+    """ Tests the TeamTreeView for correct inherit structures """

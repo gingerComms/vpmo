@@ -59,6 +59,7 @@ class TreeStructure(models.Model):
     """ An implementation of Model Tree Structures with Materialized Paths in Django """
     _id = models.ObjectIdField()
     path = models.CharField(null=False, max_length=4048)
+    index = models.IntegerField(default=0, null=False)
 
     def get_element_path(self, elem=None):
         if elem is None:

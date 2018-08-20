@@ -64,7 +64,7 @@ class TeamTreeView(RetrieveUpdateAPIView):
         except Team.DoesNotExist:
             return None
 
-    def handle_children(self, child, last_model=None):
+    def handle_children(self, child, last_model=None, index=0):
         class_name = child["obj_type"]
         next_children = child.get("children", [])
 
@@ -79,16 +79,18 @@ class TeamTreeView(RetrieveUpdateAPIView):
                 project.parent_project = last_model
                 project.team = None
             # The path gets updated here
+            project.index = index
             project.save()
 
             # Moving on to next children
-            for next_child in next_children:
-                self.handle_children(next_child, project)
+            for num, next_child in enumerate(next_children):
+                self.handle_children(next_child, project, num)
         # The child must be a subclass from Topic if it isn't a Project
         else:
             topic = self.topics[class_name].objects.get(_id=child["_id"])
             # Since topics always have a project parent
             topic.project = last_model
+            topic.index = index
             # The path gets updated here
             topic.save()
 
@@ -101,8 +103,8 @@ class TeamTreeView(RetrieveUpdateAPIView):
         initial_children = data["projects"]
         team = Team.objects.get(_id=data["_id"])
 
-        for child in initial_children:
-            self.handle_children(child, team)
+        for num, child in enumerate(initial_children):
+            self.handle_children(child, team, num)
 
         team.save()
         return Response(TeamTreeSerializer(team).data)

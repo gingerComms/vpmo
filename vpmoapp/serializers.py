@@ -30,7 +30,7 @@ class DeliverableSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Deliverable
-        fields = ["_id", "name", "obj_type", "path"]
+        fields = ["_id", "name", "obj_type", "path", "index"]
 
 
 class ProjectTreeSerializer(serializers.ModelSerializer):
@@ -50,11 +50,12 @@ class ProjectTreeSerializer(serializers.ModelSerializer):
         data += ProjectTreeSerializer(Project.objects.filter(parent_project=instance), many=True).data
         data += DeliverableSerializer(Deliverable.objects.filter(project=instance), many=True).data
 
+        data = sorted(data, key=lambda x: x["index"])
         return data
 
     class Meta:
         model = Project
-        fields = ["_id", "projectname", "description", "obj_type", "children", "path"]
+        fields = ["_id", "projectname", "description", "obj_type", "children", "path", "index"]
 
 
 class TeamTreeSerializer(serializers.ModelSerializer):
@@ -70,8 +71,10 @@ class TeamTreeSerializer(serializers.ModelSerializer):
 
     def get_projects(self, instance):
         """ Returns all children projects """
-        return ProjectTreeSerializer(Project.objects.filter(team=instance), many=True).data
+        data = ProjectTreeSerializer(Project.objects.filter(team=instance), many=True).data
+        data = sorted(data, key=lambda x: x["index"])
+        return data
 
     class Meta:
         model = Team
-        fields = ["_id", "name", "obj_type", "projects", "path"]
+        fields = ["_id", "name", "obj_type", "projects", "path", "index"]
