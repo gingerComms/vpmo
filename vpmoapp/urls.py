@@ -20,7 +20,7 @@ urlpatterns = (
     url(r'^api/projects/add', CreateProjectView.as_view()),
     url(r'^api/teams/add', CreateTeamView.as_view()),
 
-    url(r"^api/teams_tree/(?P<id>[0-9]+)/$", TeamTreeView.as_view(), name="team_tree_view"),
+    url(r"^api/teams_tree/(?P<team_id>\w+)/$", TeamTreeView.as_view(), name="team_tree_view"),
 
     url(r'^(?P<path>.*\..*)$', RedirectView.as_view(url='/static/%(path)s')),
     url(r'^', TemplateView.as_view(template_name='angular/index.html')),
