@@ -59,6 +59,7 @@ class TeamTreeView(RetrieveUpdateAPIView):
     def get_object(self):
         """ Returns the team obuject from the url id arg """
         try:
+            print("Input ID", self.kwargs.get("team_id", None))
             team = Team.objects.get(_id=self.kwargs.get("team_id", None))
             return team
         except Team.DoesNotExist:

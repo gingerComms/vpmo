@@ -8,6 +8,7 @@ from guardian.shortcuts import assign_perm
 from rest_framework.test import APIRequestFactory, force_authenticate
 import os, json
 import binascii
+from copy import copy
 
 # Create your tests here.
 
@@ -87,12 +88,13 @@ class TeamPermissionsTestCase(TestCase):
 class TreeStructureTestCase(TestCase):
     """ Tests the TeamTreeView for correct inherit structures """
     def setUp(self):
-    """ Creates the models required to test the tree structure """
+        """ Creates the models required to test the tree structure """
         self.view = views.TeamTreeView.as_view()
         # MyUser Credentials used for the testing
         user_creds = {
             "username": "TestUser",
             "email": "TestUser@vpmotest.com",
+            "email2": "test2@vpmotest.com",
             "fullname": "Test User"
         }
         self.user = MyUser.objects.create(**user_creds)
@@ -103,10 +105,10 @@ class TreeStructureTestCase(TestCase):
         self.team = Team.objects.create(name="Test Team")
         self.team.save()
 
-        self.project = Project.objects.create(name="Test Proj", team=self.team)
+        self.project = Project.objects.create(projectname="Test Proj", team=self.team)
         self.project.save()
 
-        self.project_2 = Project.objects.create(name="Test Proj 2", team=self.team)
+        self.project_2 = Project.objects.create(projectname="Test Proj 2", team=self.team)
         self.project_2.save()
 
         self.topic = Deliverable.objects.create(name="Test Del", project=self.project)
@@ -122,18 +124,38 @@ class TreeStructureTestCase(TestCase):
         self.topic.delete()
 
     def test_tree_structure_get(self):
-        """ Makes the necessary requests and asserts to test the TeamTreeView """
-        url  = reverse("team_tree_view")
-        # GET on url to get the correct tree structure
+        """ Makes the necessary requests and asserts to test the GET TeamTreeView """
+        url = reverse("team_tree_view", kwargs={"team_id": self.team._id})
+        # GET on url to get the current tree structure
         request = self.factory.get(url)
         force_authenticate(request, user=self.user)
-        first_response = self.view(request)
+        first_response = self.view(request).data
 
         self.topic.project = self.project_2
         self.topic.save()
 
         request = self.factory.get(url)
         force_authenticate(request, user=self.user)
-        second_response = self.view(request)
+        second_response = self.view(request).data
+
+        self.assertNotEqual(first_response, second_response)
+
+
+    def test_tree_structure_post(self):
+        """ Makes the necessary requests and asserts to test the POST TeamTreeView """
+        url = reverse("team_tree_view", kwargs={"team_id": self.team._id})
+        # GET on url to get the current tree structure
+        request = self.factory.get(url)
+        force_authenticate(request, user=self.user)
+        first_response = self.view(request).data
+        print(first_response)
+
+        new_d = copy(first_response)
+        proj = new_d["children"].pop(1)
+        new_d["children"].insert(0, proj)
+
+        request = self.factory.put(url, data=new_d)
+        force_authenticate(request, user=self.user)
+        second_response = self.view(request).data
 
         self.assertNotEqual(first_response, second_response)
