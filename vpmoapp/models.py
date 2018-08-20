@@ -97,7 +97,8 @@ class TreeStructure(models.Model):
                 self.path = self.parent_project.path + "{},".format(self.get_element_path())
         # Otherwise, just set path to parent project's path + current elem
         else:
-            self.path = self.project.path + "{},".format(self.get_element_path())
+            if getattr(self, "project", None):
+                self.path = self.project.path + "{},".format(self.get_element_path())
 
         super(TreeStructure, self).save(*args, **kwargs)
 
@@ -155,8 +156,19 @@ class Project(TreeStructure):
 
 
 class Topic(TreeStructure):
+    _id = models.ObjectIdField()
+    name = models.CharField(max_length=240, default="N/A", unique=False)
+    project = models.ForeignKey(Project, null=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "{name} - {type}".format(name=self.name, type=type(self).__name__)
+
     class Meta:
         abstract = True
+
+
+class Deliverable(Topic):
+    due_date = models.DateTimeField(auto_now=False, auto_now_add=False)
 
 
 # @receiver(pre_save, sender=Team)
