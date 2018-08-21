@@ -21,6 +21,7 @@ class TeamSerializer(serializers.ModelSerializer):
 class DeliverableSerializer(serializers.ModelSerializer):
     obj_type = serializers.SerializerMethodField(required=False)
     _id = serializers.SerializerMethodField()
+    children = serializers.SerializerMethodField(required=False)
 
     def get__id(self, instance):
         return str(instance._id)
@@ -28,9 +29,16 @@ class DeliverableSerializer(serializers.ModelSerializer):
     def get_obj_type(self, instance):
         return "Deliverable"
 
+    def get_children(self, instance):
+        """ Gets all children (can only have topic children) """
+        data = DeliverableSerializer(Deliverable.objects.filter(parent_topic=instance), many=True).data
+        # NOTE - To increase this to more models, you'll be looping through a list of all those other models
+        #   And added the XSerializer(TopicModel.objects.filter(parent_topic=instance, many=True)).data to the data list that is returned here
+        return data
+
     class Meta:
         model = Deliverable
-        fields = ["_id", "name", "obj_type", "path", "index"]
+        fields = ["_id", "name", "obj_type", "path", "index", "children"]
 
 
 class ProjectTreeSerializer(serializers.ModelSerializer):

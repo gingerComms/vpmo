@@ -78,10 +78,12 @@ class TreeStructure(models.Model):
                 self.path = self.team.path + "{},".format(self.get_element_path())
             elif self.parent_project is not None:
                 self.path = self.parent_project.path + "{},".format(self.get_element_path())
-        # Otherwise, just set path to parent project's path + current elem
+        # Otherwise, just set path to parent project's (or parent topic's) path + current elem
         else:
             if getattr(self, "project", None):
                 self.path = self.project.path + "{},".format(self.get_element_path())
+            else:
+                self.path = self.parent_topic.path + "{},".format(self.get_element_path())
 
         super(TreeStructure, self).save(*args, **kwargs)
 
@@ -137,6 +139,7 @@ class Project(TreeStructure):
 class Topic(TreeStructure):
     name = models.CharField(max_length=240, default="N/A", unique=False)
     project = models.ForeignKey(Project, null=True, on_delete=models.CASCADE)
+    parent_topic = models.ForeignKey("self", null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return "{name} - {type}".format(name=self.name, type=type(self).__name__)

@@ -83,17 +83,22 @@ class TeamTreeView(RetrieveUpdateAPIView):
             project.index = index
             project.save()
 
-            # Moving on to next children
-            for num, next_child in enumerate(next_children):
-                self.handle_children(next_child, project, num)
         # The child must be a subclass from Topic if it isn't a Project
         else:
             topic = self.topics[class_name].objects.get(_id=child["_id"])
-            # Since topics always have a project parent
-            topic.project = last_model
+            # Set parent to Project/Topic based on parent class
+            if isinstance(last_model, Project):
+                topic.project = last_model
+                topic.parent_topic = None
+            else:
+                topic.parent_topic = last_model
+                topic.project = None
+            # Updating the index and the path
             topic.index = index
-            # The path gets updated here
             topic.save()
+        # Moving on to next children
+        for num, next_child in enumerate(next_children):
+            self.handle_children(next_child, project, num)
 
 
     def update(self, request, team_id):
