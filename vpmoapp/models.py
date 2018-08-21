@@ -59,6 +59,7 @@ class TreeStructure(models.Model):
     """ An implementation of Model Tree Structures with Materialized Paths in Django """
     _id = models.ObjectIdField()
     path = models.CharField(null=False, max_length=4048)
+    # The index field is for tracking the location of an object within the heirarchy
     index = models.IntegerField(default=0, null=False)
 
     def get_element_path(self, elem=None):
@@ -71,26 +72,6 @@ class TreeStructure(models.Model):
         # If instance is a Team, just make sure the path is top level
         if isinstance(self, Team):
             self.path = ","+self.get_element_path()+","
-
-            """ Commented to try single model based approach
-            # We set all children paths in the Team save, because we might not be able to guarantee the order otherwise
-            # Getting top level projects
-            projects = Project.objects.filter(team___id=self._id)
-
-            sub_projects = []
-
-            # Iterate over children projects until no more children are found
-            while len(projects):
-                for project in projects:
-                    # If project has a team parent, extend that path, otherwise use the project parent
-                    if project.team is not None:
-                        project.path = project.team.path + "{},".format(self.get_element_path(elem=project))
-                    elif project.parent_project is not None:
-                        project.path = project.parent_project.path + "{},".format(self.get_element_path(elem=project))
-                    project.save()
-                # Projects for the next loop
-                projects = Project.objects.filter(parent_project__in=projects)
-            """
         # If instance is a Project, set the path to parent's path + project_path
         elif isinstance(self, Project):
             if self.team is not None:

@@ -65,6 +65,7 @@ class TeamTreeView(RetrieveUpdateAPIView):
             return None
 
     def handle_children(self, child, last_model=None, index=0):
+        """ Used to update the heirarchical format of team-project-project/topics """
         class_name = child["obj_type"]
         next_children = child.get("children", [])
 
@@ -100,9 +101,11 @@ class TeamTreeView(RetrieveUpdateAPIView):
 
         data = request.data
 
+        # The top most element is always a team, so second level is always projects
         initial_children = data["projects"]
         team = Team.objects.get(_id=data["_id"])
 
+        # Starts off the nested loop from the second level
         for num, child in enumerate(initial_children):
             self.handle_children(child, team, num)
 
