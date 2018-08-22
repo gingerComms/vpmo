@@ -20,11 +20,11 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
         max_length=255,
         unique=True,
     )
-    email2 = models.EmailField(
-        verbose_name='confirm email address',
-        max_length=255,
-        unique=True,
-    )
+    # email2 = models.EmailField(
+    #     verbose_name='confirm email address',
+    #     max_length=255,
+    #     unique=True,
+    # )
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
