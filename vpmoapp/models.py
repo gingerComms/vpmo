@@ -165,6 +165,7 @@ def create_user_team(sender, instance, created, **kwargs):
                 userTeam="team@" + instance.username,
                 user_linked=True
             )
+        team.save()
         # User authentication
 
         # give the user created_obj permission against this team
