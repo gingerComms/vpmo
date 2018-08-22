@@ -4,6 +4,10 @@ from .models import Team, Project, Deliverable
 
 
 class ProjectSerializer(serializers.ModelSerializer):
+    _id = serializers.SerializerMethodField()
+
+    def get__id(self, instance):
+        return str(instance._id)
 
     class Meta:
         model = Project
@@ -12,6 +16,10 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 class TeamSerializer(serializers.ModelSerializer):
     # projects = ProjectSerializer(read_only=True, many=True)
+    _id = serializers.SerializerMethodField()
+
+    def get__id(self, instance):
+        return str(instance._id)
 
     class Meta:
         model = Team
