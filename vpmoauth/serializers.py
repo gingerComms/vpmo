@@ -48,14 +48,14 @@ class UserDetailsSerializer(serializers.ModelSerializer):
 
 
 class UserDeserializer(serializers.ModelSerializer):
-    email2 = serializers.EmailField(label='Confirm Email')
+    # email2 = serializers.EmailField(label='Confirm Email')
     password = serializers.CharField(write_only=True)
 
     class Meta:
         model = get_user_model()
-        fields = ('email', 'email2', 'password', 'fullname', 'username')
+        fields = ('email', 'password', 'fullname', 'username')
 
-    def validate_email2(self, value):
+    def validate_email(self, value):
         data = self.get_initial()
         email1 = data.get('email')
         email2 = value
