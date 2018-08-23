@@ -15,6 +15,9 @@ from djongo import models
 from django import forms
 
 from vpmoauth.models import MyUser
+from vpmoprj.settings import AUTH_USER_MODEL
+
+
 
 from django.core.mail import send_mail
 import guardian.mixins
@@ -61,6 +64,8 @@ class TreeStructure(models.Model):
     path = models.CharField(null=False, max_length=4048)
     # The index field is for tracking the location of an object within the heirarchy
     index = models.IntegerField(default=0, null=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def get_element_path(self, elem=None):
         if elem is None:
@@ -72,6 +77,8 @@ class TreeStructure(models.Model):
         # If instance is a Team, just make sure the path is top level
         if isinstance(self, Team):
             self.path = ","+self.get_element_path()+","
+            username = request.user.username
+            self.userTeam = request.user.username
         # If instance is a Project, set the path to parent's path + project_path
         elif isinstance(self, Project):
             if self.team is not None:
@@ -93,11 +100,11 @@ class TreeStructure(models.Model):
 
 class Team(TreeStructure):
     name = models.CharField(max_length=50)
-    # owner = models.ReferenceField(User)
+
+    # user_linked specifies whether the team is the default against user
+    # created at the registration time
     user_linked = models.BooleanField(default=False)
     userTeam = models.CharField(max_length=151, unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         permissions = (
@@ -172,7 +179,7 @@ def create_user_team(sender, instance, created, **kwargs):
         shortcuts.assign_perm("created_obj", instance, team)
         # consider not to give any other user created_obj permission against this team
 
-        print('user-team was created')
+        # print('user-team was created')
 
 
 post_save.connect(create_user_team, sender=MyUser)

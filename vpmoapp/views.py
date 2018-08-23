@@ -6,7 +6,6 @@ from rest_framework.request import Request
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework import filters
 from rest_framework import status
-
 from vpmoauth.models import MyUser
 
 from vpmoapp.models import *
