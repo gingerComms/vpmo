@@ -11,7 +11,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = '__all__'
+        fields = ["_id", "projectname", "description", "start", "owner", "team", "parent_project"]
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -23,7 +23,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Team
-        fields = '__all__'
+        fields = ["_id", "name", "user_linked", "created_at", "updated_at", "userTeam"]
 
 
 class DeliverableSerializer(serializers.ModelSerializer):

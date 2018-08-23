@@ -97,7 +97,6 @@ class TreeStructureTestCase(TestCase):
         user_creds = {
             "username": "TestUser",
             "email": "TestUser@vpmotest.com",
-            "email2": "test2@vpmotest.com",
             "fullname": "Test User"
         }
         self.user = MyUser.objects.create(**user_creds)
