@@ -4,7 +4,7 @@ from .models import Team, Project, Deliverable
 
 
 class ProjectSerializer(serializers.ModelSerializer):
-    _id = serializers.SerializerMethodField()
+    _id = serializers.SerializerMethodField(required=False)
 
     def get__id(self, instance):
         return str(instance._id)
@@ -16,7 +16,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 class TeamSerializer(serializers.ModelSerializer):
     # projects = ProjectSerializer(read_only=True, many=True)
-    _id = serializers.SerializerMethodField()
+    _id = serializers.SerializerMethodField(required=False)
 
     def get__id(self, instance):
         return str(instance._id)
@@ -28,7 +28,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
 class DeliverableSerializer(serializers.ModelSerializer):
     obj_type = serializers.SerializerMethodField(required=False)
-    _id = serializers.SerializerMethodField()
+    _id = serializers.SerializerMethodField(required=False)
     children = serializers.SerializerMethodField(required=False)
 
     def get__id(self, instance):
@@ -52,7 +52,7 @@ class DeliverableSerializer(serializers.ModelSerializer):
 class ProjectTreeSerializer(serializers.ModelSerializer):
     obj_type = serializers.SerializerMethodField(required=False)
     children = serializers.SerializerMethodField(required=False)
-    _id = serializers.SerializerMethodField()
+    _id = serializers.SerializerMethodField(required=False)
 
     def get__id(self, instance):
         return str(instance._id)
@@ -77,7 +77,7 @@ class ProjectTreeSerializer(serializers.ModelSerializer):
 class TeamTreeSerializer(serializers.ModelSerializer):
     obj_type = serializers.SerializerMethodField(required=False)
     projects = serializers.SerializerMethodField(required=False)
-    _id = serializers.SerializerMethodField()
+    _id = serializers.SerializerMethodField(required=False)
 
     def get__id(self, instance):
         return str(instance._id)

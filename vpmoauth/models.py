@@ -59,3 +59,8 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
         return self.is_admin
 
 
+    def get_email2(self):
+        """ Arbitrary method used in the UserDeserializer for email validation """
+        return "Email field for validation of email"
+
+

@@ -77,8 +77,6 @@ class TreeStructure(models.Model):
         # If instance is a Team, just make sure the path is top level
         if isinstance(self, Team):
             self.path = ","+self.get_element_path()+","
-            username = request.user.username
-            self.userTeam = request.user.username
         # If instance is a Project, set the path to parent's path + project_path
         elif isinstance(self, Project):
             if self.team is not None:
@@ -120,20 +118,13 @@ class Team(TreeStructure):
 class Project(TreeStructure):
     projectname = models.CharField(max_length=50, verbose_name="Project Name", default="Project Name - Default")
     description = models.TextField(blank=True, null=True)
-    # comments = models.ArrayModelField(
-    #     model_container=Comment,
-    #     model_form_class=CommentForm,
-    #     null=True
-    # )
+
     start = models.DateField(null=True)
     owner = models.ForeignKey(MyUser, on_delete=models.CASCADE, null=True)
 
     # Many to One to both Teams and other Projects; one will always be null
     team = models.ForeignKey(Team, null=True, on_delete=models.CASCADE)
     parent_project = models.ForeignKey("self", null=True, on_delete=models.CASCADE)
-
-    # organisation = models.ReferenceField(Organisation)
-    # owner = models.ReferenceField(User)
 
     def __str__(self):
         return '%s' % (self.projectname)
@@ -157,11 +148,6 @@ class Topic(TreeStructure):
 
 class Deliverable(Topic):
     due_date = models.DateTimeField(auto_now=False, auto_now_add=False)
-
-
-# @receiver(pre_save, sender=Team)
-# def my_callback(sender, instance, username, *args, **kwargs):
-#     instance._id = slugify(instance.name) + '@' + username
 
 
 def create_user_team(sender, instance, created, **kwargs):

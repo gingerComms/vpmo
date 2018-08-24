@@ -12,6 +12,7 @@ from vpmoapp.models import *
 from vpmoapp.serializers import TeamSerializer, ProjectSerializer, TeamTreeSerializer
 from vpmoapp.permissions import TeamPermissions
 from vpmoapp.filters import TeamListFilter
+from guardian import shortcuts
 
 
 
@@ -44,6 +45,21 @@ class CreateTeamView(CreateAPIView):
     model = Team
     serializer_class = TeamSerializer
     permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        """ Handles creation of the team through the TeamSerializer """
+        data = request.data.copy()
+        data["userTeam"] = "team@"+request.user.username
+        data["user_linked"] = True
+        serializer = TeamSerializer(data=data)
+        if serializer.is_valid():
+            team = serializer.save()
+            shortcuts.assign_perm("created_obj", request.user, team)
+            request.user.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 class TeamTreeView(RetrieveUpdateAPIView):
