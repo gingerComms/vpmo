@@ -49,8 +49,8 @@ class CreateTeamView(CreateAPIView):
     def post(self, request, *args, **kwargs):
         """ Handles creation of the team through the TeamSerializer """
         data = request.data.copy()
-        data["userTeam"] = "team@"+request.user.username
-        data["user_linked"] = True
+        data["userTeam"] = request.data["name"] + "@" +request.user.username
+        data["user_linked"] = False
         serializer = TeamSerializer(data=data)
         if serializer.is_valid():
             team = serializer.save()
@@ -72,7 +72,7 @@ class TeamTreeView(RetrieveUpdateAPIView):
     }
 
     def get_object(self):
-        """ Returns the team obuject from the url id arg """
+        """ Returns the team object from the url id arg """
         try:
             team = Team.objects.get(_id=self.kwargs.get("team_id", None))
             return team
@@ -80,7 +80,7 @@ class TeamTreeView(RetrieveUpdateAPIView):
             return None
 
     def handle_children(self, child, last_model=None, index=0):
-        """ Used to update the heirarchical format of team-project-project/topics """
+        """ Used to update the hierarchical format of team-project-project/topics """
         class_name = child["obj_type"]
         next_children = child.get("children", [])
 
@@ -117,7 +117,7 @@ class TeamTreeView(RetrieveUpdateAPIView):
 
 
     def update(self, request, team_id):
-        """ Updates the models based on the input heirarchy; takes a dictionary starting from a single team as input """
+        """ Updates the models based on the input hierarchy; takes a dictionary starting from a single team as input """
 
         data = request.data
 

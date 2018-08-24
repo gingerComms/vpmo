@@ -17,7 +17,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 class TeamSerializer(serializers.ModelSerializer):
     # projects = ProjectSerializer(read_only=True, many=True)
     _id = serializers.SerializerMethodField(required=False)
-
+    # args = {'user': request.user}
     def get__id(self, instance):
         return str(instance._id)
 

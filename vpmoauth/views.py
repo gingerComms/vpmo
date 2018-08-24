@@ -29,7 +29,7 @@ class UserPermissionsView(APIView):
     def get(self, request):
         """ Returns a list of permissions held by the input User for the input Team """
         user = MyUser.objects.get(id=request.query_params.get("user", None))
-        team = Team.objects.get(id=request.query_params.get("team", None))
+        team = Team.objects.get(_id=request.query_params.get("team", None))
 
         return Response(shortcuts.get_perms(user, team))
 
@@ -38,7 +38,7 @@ class UserPermissionsView(APIView):
         assert request.data.get("permission", None) in ["read_obj", "contribute_obj", "created_obj"]
 
         user = MyUser.objects.get(id=request.data.get("user", None))
-        team = Team.objects.get(id=request.data.get("team", None))
+        team = Team.objects.get(_id=request.data.get("team", None))
 
         shortcuts.assign_perm(request.data["permission"], user, team)
 
@@ -104,3 +104,8 @@ class LoginUserView(APIView):
               {'error': 'Invalid credentials',
               'status': 'failed'},
             )
+
+
+def profile(request):
+    arg = {'user': request.user}
+    return Response(arg)

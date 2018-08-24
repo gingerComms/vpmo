@@ -1,0 +1,251 @@
+[1mdiff --git a/.idea/workspace.xml b/.idea/workspace.xml[m
+[1mindex 42ab8ff..4ad06f7 100644[m
+[1m--- a/.idea/workspace.xml[m
+[1m+++ b/.idea/workspace.xml[m
+[36m@@ -3,16 +3,9 @@[m
+   <component name="ChangeListManager">[m
+     <list default="true" id="153d1d65-6603-446d-a34b-77334a354c69" name="Default" comment="">[m
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />[m
+[31m-      <change beforePath="$PROJECT_DIR$/vpmoapp/managers.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoapp/managers.py" afterDir="false" />[m
+[31m-      <change beforePath="$PROJECT_DIR$/vpmoapp/migrations/0001_initial.py" beforeDir="false" />[m
+[31m-      <change beforePath="$PROJECT_DIR$/vpmoapp/migrations/0002_auto_20180820_1722.py" beforeDir="false" />[m
+[31m-      <change beforePath="$PROJECT_DIR$/vpmoapp/migrations/0003_deliverable_parent_team.py" beforeDir="false" />[m
+[31m-      <change beforePath="$PROJECT_DIR$/vpmoapp/migrations/0004_auto_20180821_2030.py" beforeDir="false" />[m
+[31m-      <change beforePath="$PROJECT_DIR$/vpmoapp/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoapp/models.py" afterDir="false" />[m
+[32m+[m[32m      <change beforePath="$PROJECT_DIR$/vpmoapp/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoapp/serializers.py" afterDir="false" />[m
+       <change beforePath="$PROJECT_DIR$/vpmoapp/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoapp/views.py" afterDir="false" />[m
+[31m-      <change beforePath="$PROJECT_DIR$/vpmoauth/managers.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoauth/managers.py" afterDir="false" />[m
+[31m-      <change beforePath="$PROJECT_DIR$/vpmoauth/migrations/0001_initial.py" beforeDir="false" />[m
+[31m-      <change beforePath="$PROJECT_DIR$/vpmoauth/migrations/0002_remove_myuser_email2.py" beforeDir="false" />[m
+[32m+[m[32m      <change beforePath="$PROJECT_DIR$/vpmoauth/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoauth/views.py" afterDir="false" />[m
+     </list>[m
+     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />[m
+     <option name="TRACKING_ENABLED" value="true" />[m
+[36m@@ -26,8 +19,8 @@[m
+       <file leaf-file-name="models.py" pinned="false" current-in-tab="false">[m
+         <entry file="file://$PROJECT_DIR$/vpmoapp/models.py">[m
+           <provider selected="true" editor-type-id="text-editor">[m
+[31m-            <state relative-caret-position="1071">[m
+[31m-              <caret line="63" column="56" lean-forward="true" selection-start-line="63" selection-start-column="56" selection-end-line="63" selection-end-column="56" />[m
+[32m+[m[32m            <state relative-caret-position="1047">[m
+[32m+[m[32m              <caret line="118" column="27" lean-forward="true" selection-start-line="118" selection-start-column="27" selection-end-line="118" selection-end-column="27" />[m
+               <folding>[m
+                 <element signature="e#347#386#0" expanded="true" />[m
+               </folding>[m
+[36m@@ -35,44 +28,50 @@[m
+           </provider>[m
+         </entry>[m
+       </file>[m
+[31m-      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">[m
+[31m-        <entry file="file://$PROJECT_DIR$/vpmoapp/views.py">[m
+[32m+[m[32m      <file leaf-file-name="serializers.py" pinned="false" current-in-tab="false">[m
+[32m+[m[32m        <entry file="file://$PROJECT_DIR$/vpmoapp/serializers.py">[m
+           <provider selected="true" editor-type-id="text-editor">[m
+[31m-            <state relative-caret-position="772">[m
+[31m-              <caret line="58" column="32" selection-start-line="58" selection-start-column="32" selection-end-line="58" selection-end-column="32" />[m
+[32m+[m[32m            <state relative-caret-position="221">[m
+[32m+[m[32m              <caret line="13" column="52" selection-start-line="13" selection-start-column="41" selection-end-line="13" selection-end-column="52" />[m
+               <folding>[m
+[31m-                <element signature="e#0#35#0" expanded="true" />[m
+[32m+[m[32m                <element signature="e#0#38#0" expanded="true" />[m
+               </folding>[m
+             </state>[m
+           </provider>[m
+         </entry>[m
+       </file>[m
+[31m-      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">[m
+[31m-        <entry file="file://$PROJECT_DIR$/vpmoapp/urls.py">[m
+[32m+[m[32m      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">[m
+[32m+[m[32m        <entry file="file://$PROJECT_DIR$/vpmoapp/views.py">[m
+           <provider selected="true" editor-type-id="text-editor">[m
+[31m-            <state relative-caret-position="374">[m
+[31m-              <caret line="22" column="58" selection-start-line="22" selection-start-column="46" selection-end-line="22" selection-end-column="58" />[m
+[32m+[m[32m            <state relative-caret-position="578">[m
+[32m+[m[32m              <caret line="76" column="64" selection-start-line="76" selection-start-column="57" selection-end-line="76" selection-end-column="64" />[m
+               <folding>[m
+[31m-                <element signature="e#0#41#0" expanded="true" />[m
+[32m+[m[32m                <element signature="e#0#35#0" expanded="true" />[m
+               </folding>[m
+             </state>[m
+           </provider>[m
+         </entry>[m
+       </file>[m
+[31m-      <file leaf-file-name="serializers.py" pinned="false" current-in-tab="false">[m
+[31m-        <entry file="file://$PROJECT_DIR$/vpmoapp/serializers.py">[m
+[32m+[m[32m      <file leaf-file-name="tests.py" pinned="false" current-in-tab="false">[m
+[32m+[m[32m        <entry file="file://$PROJECT_DIR$/vpmoapp/tests.py">[m
+           <provider selected="true" editor-type-id="text-editor">[m
+[31m-            <state relative-caret-position="391">[m
+[31m-              <caret line="24" column="20" lean-forward="true" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="20" />[m
+[32m+[m[32m            <state relative-caret-position="452">[m
+[32m+[m[32m              <caret line="130" column="37" selection-start-line="130" selection-start-column="23" selection-end-line="130" selection-end-column="37" />[m
+[32m+[m[32m              <folding>[m
+[32m+[m[32m                <element signature="e#0#32#0" expanded="true" />[m
+[32m+[m[32m              </folding>[m
+             </state>[m
+           </provider>[m
+         </entry>[m
+       </file>[m
+[31m-      <file leaf-file-name="managers.py" pinned="false" current-in-tab="false">[m
+[31m-        <entry file="file://$PROJECT_DIR$/vpmoauth/managers.py">[m
+[32m+[m[32m      <file leaf-file-name="urls.py" pinned="false" current-in-tab="true">[m
+[32m+[m[32m        <entry file="file://$PROJECT_DIR$/vpmoapp/urls.py">[m
+           <provider selected="true" editor-type-id="text-editor">[m
+[31m-            <state relative-caret-position="323">[m
+[31m-              <caret line="19" column="33" lean-forward="true" selection-start-line="19" selection-start-column="33" selection-end-line="19" selection-end-column="33" />[m
+[32m+[m[32m            <state relative-caret-position="170">[m
+[32m+[m[32m              <caret line="10" column="20" lean-forward="true" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />[m
+[32m+[m[32m              <folding>[m
+[32m+[m[32m                <element signature="e#0#41#0" expanded="true" />[m
+[32m+[m[32m              </folding>[m
+             </state>[m
+           </provider>[m
+         </entry>[m
+[36m@@ -98,6 +97,7 @@[m
+       <find>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</find>[m
+       <find>Team.objects.create</find>[m
+       <find>jwt</find>[m
+[32m+[m[32m      <find>get_object</find>[m
+     </findStrings>[m
+   </component>[m
+   <component name="Git.Settings">[m
+[36m@@ -119,14 +119,14 @@[m
+         <option value="$PROJECT_DIR$/vpmoapp/filters.py" />[m
+         <option value="$PROJECT_DIR$/vpmoapp/apps.py" />[m
+         <option value="$PROJECT_DIR$/vpmoapp/signals.py" />[m
+[31m-        <option value="$PROJECT_DIR$/vpmoauth/views.py" />[m
+         <option value="$PROJECT_DIR$/vpmoprj/settings.py" />[m
+         <option value="$PROJECT_DIR$/vpmoauth/models.py" />[m
+[31m-        <option value="$PROJECT_DIR$/vpmoauth/serializers.py" />[m
+         <option value="$PROJECT_DIR$/vpmoauth/managers.py" />[m
+         <option value="$PROJECT_DIR$/vpmoapp/managers.py" />[m
+[31m-        <option value="$PROJECT_DIR$/vpmoapp/serializers.py" />[m
+         <option value="$PROJECT_DIR$/vpmoapp/models.py" />[m
+[32m+[m[32m        <option value="$PROJECT_DIR$/vpmoapp/serializers.py" />[m
+[32m+[m[32m        <option value="$PROJECT_DIR$/vpmoauth/serializers.py" />[m
+[32m+[m[32m        <option value="$PROJECT_DIR$/vpmoauth/views.py" />[m
+         <option value="$PROJECT_DIR$/vpmoapp/views.py" />[m
+       </list>[m
+     </option>[m
+[36m@@ -165,12 +165,6 @@[m
+               <item name="vpmo_pc" type="462c0819:PsiDirectoryNode" />[m
+               <item name="vpmoauth" type="462c0819:PsiDirectoryNode" />[m
+             </path>[m
+[31m-            <path>[m
+[31m-              <item name="vpmo_pc" type="b2602c69:ProjectViewProjectNode" />[m
+[31m-              <item name="vpmo_pc" type="462c0819:PsiDirectoryNode" />[m
+[31m-              <item name="vpmoauth" type="462c0819:PsiDirectoryNode" />[m
+[31m-              <item name="migrations" type="462c0819:PsiDirectoryNode" />[m
+[31m-            </path>[m
+             <path>[m
+               <item name="vpmo_pc" type="b2602c69:ProjectViewProjectNode" />[m
+               <item name="vpmo_pc" type="462c0819:PsiDirectoryNode" />[m
+[36m@@ -500,54 +494,58 @@[m
+         </state>[m
+       </provider>[m
+     </entry>[m
+[31m-    <entry file="file://$PROJECT_DIR$/vpmoauth/views.py">[m
+[32m+[m[32m    <entry file="file://$PROJECT_DIR$/vpmoprj/urls.py">[m
+       <provider selected="true" editor-type-id="text-editor">[m
+[31m-        <state relative-caret-position="748">[m
+[31m-          <caret line="80" lean-forward="true" selection-start-line="80" selection-end-line="80" />[m
+[32m+[m[32m        <state relative-caret-position="391">[m
+[32m+[m[32m          <caret line="23" column="19" selection-start-line="23" selection-start-column="11" selection-end-line="23" selection-end-column="19" />[m
+           <folding>[m
+[31m-            <element signature="e#0#35#0" expanded="true" />[m
+[32m+[m[32m            <element signature="e#631#663#0" expanded="true" />[m
+           </folding>[m
+         </state>[m
+       </provider>[m
+     </entry>[m
+[31m-    <entry file="file://$PROJECT_DIR$/vpmoauth/urls.py">[m
+[32m+[m[32m    <entry file="file://$PROJECT_DIR$/vpmoauth/tests.py">[m
+       <provider selected="true" editor-type-id="text-editor">[m
+[31m-        <state relative-caret-position="272">[m
+[31m-          <caret line="16" column="11" selection-start-line="16" selection-start-column="11" selection-end-line="16" selection-end-column="29" />[m
+[31m-          <folding>[m
+[31m-            <element signature="e#0#41#0" expanded="true" />[m
+[31m-          </folding>[m
+[32m+[m[32m        <state relative-caret-position="-316" />[m
+[32m+[m[32m      </provider>[m
+[32m+[m[32m    </entry>[m
+[32m+[m[32m    <entry file="file://$PROJECT_DIR$/vpmoapp/managers.py">[m
+[32m+[m[32m      <provider selected="true" editor-type-id="text-editor">[m
+[32m+[m[32m        <state relative-caret-position="51">[m
+[32m+[m[32m          <caret line="3" selection-start-line="3" selection-end-line="3" />[m
+         </state>[m
+       </provider>[m
+     </entry>[m
+[31m-    <entry file="file://$PROJECT_DIR$/vpmoprj/urls.py">[m
+[32m+[m[32m    <entry file="file://$PROJECT_DIR$/vpmoprj/settings.py">[m
+       <provider selected="true" editor-type-id="text-editor">[m
+[31m-        <state relative-caret-position="391">[m
+[31m-          <caret line="23" column="19" selection-start-line="23" selection-start-column="11" selection-end-line="23" selection-end-column="19" />[m
+[32m+[m[32m        <state relative-caret-position="-2856">[m
+[32m+[m[32m          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />[m
+           <folding>[m
+[31m-            <element signature="e#631#663#0" expanded="true" />[m
+[32m+[m[32m            <element signature="e#307#322#0" expanded="true" />[m
+           </folding>[m
+         </state>[m
+       </provider>[m
+     </entry>[m
+[31m-    <entry file="file://$PROJECT_DIR$/vpmoauth/tests.py">[m
+[32m+[m[32m    <entry file="file://$PROJECT_DIR$/vpmoauth/managers.py">[m
+       <provider selected="true" editor-type-id="text-editor">[m
+[31m-        <state relative-caret-position="-316" />[m
+[32m+[m[32m        <state relative-caret-position="323">[m
+[32m+[m[32m          <caret line="19" column="33" lean-forward="true" selection-start-line="19" selection-start-column="33" selection-end-line="19" selection-end-column="33" />[m
+[32m+[m[32m        </state>[m
+       </provider>[m
+     </entry>[m
+[31m-    <entry file="file://$PROJECT_DIR$/vpmoapp/tests.py">[m
+[32m+[m[32m    <entry file="file://$PROJECT_DIR$/vpmoauth/models.py">[m
+       <provider selected="true" editor-type-id="text-editor">[m
+[31m-        <state relative-caret-position="520">[m
+[31m-          <caret line="116" column="55" selection-start-line="116" selection-start-column="55" selection-end-line="116" selection-end-column="55" />[m
+[32m+[m[32m        <state relative-caret-position="425">[m
+[32m+[m[32m          <caret line="25" column="22" lean-forward="true" selection-start-line="25" selection-start-column="22" selection-end-line="25" selection-end-column="22" />[m
+           <folding>[m
+[31m-            <element signature="e#0#32#0" expanded="true" />[m
+[32m+[m[32m            <element signature="e#0#28#0" expanded="true" />[m
+           </folding>[m
+         </state>[m
+       </provider>[m
+     </entry>[m
+     <entry file="file://$PROJECT_DIR$/vpmoauth/serializers.py">[m
+       <provider selected="true" editor-type-id="text-editor">[m
+[31m-        <state relative-caret-position="850">[m
+[32m+[m[32m        <state relative-caret-position="697">[m
+           <caret line="50" column="35" selection-start-line="50" selection-start-column="35" selection-end-line="50" selection-end-column="35" />[m
+           <folding>[m
+             <element signature="e#0#38#0" expanded="true" />[m
+[36m@@ -555,73 +553,72 @@[m
+         </state>[m
+       </provider>[m
+     </entry>[m
+[31m-    <entry file="file://$PROJECT_DIR$/vpmoauth/models.py">[m
+[32m+[m[32m    <entry file="file://$PROJECT_DIR$/vpmoauth/views.py">[m
+       <provider selected="true" editor-type-id="text-editor">[m
+[31m-        <state relative-caret-position="612">[m
+[31m-          <caret line="36" column="27" selection-start-line="36" selection-start-column="14" selection-end-line="36" selection-end-column="27" />[m
+[32m+[m[32m        <state relative-caret-position="357">[m
+[32m+[m[32m          <caret line="36" column="35" selection-start-line="36" selection-start-column="35" selection-end-line="36" selection-end-column="35" />[m
+           <folding>[m
+[31m-            <element signature="e#0#28#0" expanded="true" />[m
+[32m+[m[32m            <element signature="e#0#35#0" expanded="true" />[m
+           </folding>[m
+         </state>[m
+       </provider>[m
+     </entry>[m
+[31m-    <entry file="file://$PROJECT_DIR$/vpmoapp/managers.py">[m
+[31m-      <provider selected="true" editor-type-id="text-editor">[m
+[31m-        <state relative-caret-position="51">[m
+[31m-          <caret line="3" selection-start-line="3" selection-end-line="3" />[m
+[31m-        </state>[m
+[31m-      </provider>[m
+[31m-    </entry>[m
+[31m-    <entry file="file://$PROJECT_DIR$/vpmoprj/settings.py">[m
+[32m+[m[32m    <entry file="file://$PROJECT_DIR$/vpmoauth/urls.py">[m
+       <provider selected="true" editor-type-id="text-editor">[m
+[31m-        <state relative-caret-posi
