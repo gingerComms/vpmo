@@ -8,10 +8,10 @@ from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin, Group
 from vpmoauth.managers import MyUserManager
 from guardian.mixins import GuardianUserMixin
+from guardian import shortcuts
 
+from vpmotree.models import TreeStructure, NodeType
 
-
-# Create your models here.
 
 class MyUser(AbstractBaseUser, GuardianUserMixin):
     id = models.IntegerField
@@ -64,3 +64,16 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
         return "Email field for validation of email"
 
 
+    def create_user_team(self):
+        # create a TreeStructure with nodetype of Team Linked to the user
+        team = TreeStructure.objects.create(
+                name=self.username + "'s team",
+                userTeam="team@" + self.username,
+                user_linked=True,
+                nodetype=NodeType.get(name="Team")
+            )
+        team.save()
+        # User authentication
+
+        # give the user created_obj permission against this team
+        shortcuts.assign_perm("created_obj", self, team)

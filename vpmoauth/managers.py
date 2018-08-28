@@ -18,6 +18,7 @@ class MyUserManager(BaseUserManager):
         user.is_active = True
         user.set_password(password)
         user.save(using=self._db)
+        user.create_user_team()
         return user
 
     def create_superuser(self, email, password, **extra_fields):
@@ -36,4 +37,6 @@ class MyUserManager(BaseUserManager):
             **extra_fields
         )
         user.save(using=self._db)
+        user.create_user_team()
         return user
+

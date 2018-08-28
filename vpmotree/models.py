@@ -10,14 +10,12 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.template.defaultfilters import slugify
 from guardian import shortcuts
+from django.apps import AppConfig
 
 from djongo import models
 from django import forms
 
-from vpmoauth.models import MyUser
 from vpmoprj.settings import AUTH_USER_MODEL
-
-
 
 from django.core.mail import send_mail
 import guardian.mixins
@@ -28,34 +26,13 @@ import guardian.mixins
 # 3- db.[collection name].update({},{$set : {"field_name":null}},false,true)
 
 
+class NodeType(models.Model):
+    # this model identifies the whether the TreeStructure node is a Team, Project, etc.
+    _id = models.ObjectIdField()
+    name = models.CharField(max_length=50, null=False, unique=True)
 
-
-class Comment(models.Model):
-    content = models.TextField(blank=True, null=True)
-
-    # def sample_view(self):
-    #     current_user = self.user
-    #     return current_user
-
-    # author = sample_view()
-
-    # author = models.ForeignKey(
-    #     AUTH_USER_MODEL,
-    #     on_delete=models.CASCADE,
-    # )
     def __str__(self):
-        return '%s' % (self.content)
-
-    class Meta:
-        abstract = True
-
-
-class CommentForm(forms.ModelForm):
-    class Meta:
-        model = Comment
-        fields = (
-            'content',
-        )
+        return '%s' % (self.name)
 
 
 class TreeStructure(models.Model):
@@ -64,9 +41,10 @@ class TreeStructure(models.Model):
     path = models.CharField(null=False, max_length=4048)
     # The index field is for tracking the location of an object within the heirarchy
     index = models.IntegerField(default=0, null=False)
+    name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    nodetype = models.ForeignKey(NodeType, on_delete=models.PROTECT, null=False)
 
     def get_element_path(self, elem=None):
         if elem is None:
@@ -96,14 +74,15 @@ class TreeStructure(models.Model):
     class Meta:
         abstract = True
 
+    def __str__(self):
+        return '%s' % (self.name)
+
 
 class Team(TreeStructure):
-    name = models.CharField(max_length=50)
-
     # user_linked specifies whether the team is the default against user
     # created at the registration time
     user_linked = models.BooleanField(default=False)
-    userTeam = models.CharField(max_length=151, unique=True)
+    user_team = models.CharField(max_length=151, unique=True)
 
     class Meta:
         permissions = (
@@ -117,26 +96,24 @@ class Team(TreeStructure):
 
 
 class Project(TreeStructure):
-    projectname = models.CharField(max_length=50, verbose_name="Project Name", default="Project Name - Default")
     description = models.TextField(blank=True, null=True)
-
     start = models.DateField(null=True)
-    owner = models.ForeignKey(MyUser, on_delete=models.CASCADE, null=True)
+    project_owner = models.ForeignKey('vpmoauth.MyUser',
+                                      on_delete=models.PROTECT,
+                                      null=True,
+                                      related_name='%(class)s_project_owner')
 
     # Many to One to both Teams and other Projects; one will always be null
-    team = models.ForeignKey(Team, null=True, on_delete=models.CASCADE)
+    team = models.ForeignKey(Team, null=True, on_delete=models.PROTECT)
     parent_project = models.ForeignKey("self", null=True, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return '%s' % (self.projectname)
 
     class Meta:
-        ordering = ('projectname',)
+        ordering = ('name',)
         # objects = models.DjongoManager()
 
 
 class Topic(TreeStructure):
-    name = models.CharField(max_length=240, default="N/A", unique=False)
     project = models.ForeignKey(Project, null=True, on_delete=models.CASCADE)
     parent_topic = models.ForeignKey("self", null=True, on_delete=models.CASCADE)
 
@@ -149,24 +126,3 @@ class Topic(TreeStructure):
 
 class Deliverable(Topic):
     due_date = models.DateTimeField(auto_now=False, auto_now_add=False)
-
-
-def create_user_team(sender, instance, created, **kwargs):
-    if created:
-        # create a team Linked to the user
-        team = Team.objects.create(
-                name=instance.username + "'s team",
-                userTeam="team@" + instance.username,
-                user_linked=True
-            )
-        team.save()
-        # User authentication
-
-        # give the user created_obj permission against this team
-        shortcuts.assign_perm("created_obj", instance, team)
-        # consider not to give any other user created_obj permission against this team
-
-        # print('user-team was created')
-
-
-post_save.connect(create_user_team, sender=MyUser)

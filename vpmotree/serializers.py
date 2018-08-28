@@ -10,7 +10,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ["_id", "projectname", "description", "start", "owner", "team", "parent_project"]
+        fields = ["_id", "name", "description", "start", "project_owner", "team", "parent_project"]
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -70,7 +70,7 @@ class ProjectTreeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ["_id", "projectname", "description", "obj_type", "children", "path", "index"]
+        fields = ["_id", "name", "description", "obj_type", "children", "path", "index"]
 
 
 class TeamTreeSerializer(serializers.ModelSerializer):

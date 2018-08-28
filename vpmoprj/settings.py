@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'vpmoapp',
     'vpmoauth',
+    'vpmotree',
     'guardian',
 ]
 
