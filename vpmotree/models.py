@@ -49,30 +49,27 @@ class TreeStructure(models.Model):
     def get_element_path(self, elem=None):
         if elem is None:
             elem = self
-        return str(elem._id)+"-{}".format(type(elem).__name__)
+        return str(elem._id)
 
-    def save(self, *args, **kwargs):
+    # other than the Teams the rest of the nodes get created under another node
+    # this means that Team starts a null path by itself,
+    # the rest of the nodes get the path of the node above themselves
+    # e.g. the project immediately after team takes the team as its path
+    # topic takes the team and project(s) above as its path
+    # other than teams there is always a node which triggers the creation of child node
+    # the triggering node provide its path plus its own id as the path for the child node
+    def save(self, parent_path=None, *args, **kwargs):
         # NOTE - Limit of recursion from MongoDB is 20! Do not create inheritances that exceed 20 levels!
         # If instance is a Team, just make sure the path is top level
-        if isinstance(self, Team):
-            self.path = ","+self.get_element_path()+","
-        # If instance is a Project, set the path to parent's path + project_path
-        elif isinstance(self, Project):
-            if self.team is not None:
-                self.path = self.team.path + "{},".format(self.get_element_path())
-            elif self.parent_project is not None:
-                self.path = self.parent_project.path + "{},".format(self.get_element_path())
-        # Otherwise, just set path to parent project's (or parent topic's) path + current elem
+        if self.nodetype != "team":
+            self.path = None
         else:
-            if getattr(self, "project", None):
-                self.path = self.project.path + "{},".format(self.get_element_path())
-            else:
-                self.path = self.parent_topic.path + "{},".format(self.get_element_path())
+            self.path = parent_path
 
         super(TreeStructure, self).save(*args, **kwargs)
 
-    class Meta:
-        abstract = True
+    # class Meta:
+    #     abstract = True
 
     def __str__(self):
         return '%s' % (self.name)
@@ -104,7 +101,7 @@ class Project(TreeStructure):
                                       related_name='%(class)s_project_owner')
 
     # Many to One to both Teams and other Projects; one will always be null
-    team = models.ForeignKey(Team, null=True, on_delete=models.PROTECT)
+    parent_team = models.ForeignKey(Team, null=True, on_delete=models.PROTECT)
     parent_project = models.ForeignKey("self", null=True, on_delete=models.CASCADE)
 
 
@@ -114,7 +111,7 @@ class Project(TreeStructure):
 
 
 class Topic(TreeStructure):
-    project = models.ForeignKey(Project, null=True, on_delete=models.CASCADE)
+    parent_project = models.ForeignKey(Project, null=True, on_delete=models.CASCADE)
     parent_topic = models.ForeignKey("self", null=True, on_delete=models.CASCADE)
 
     def __str__(self):

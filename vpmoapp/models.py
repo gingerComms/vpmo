@@ -151,22 +151,22 @@ class Deliverable(Topic):
     due_date = models.DateTimeField(auto_now=False, auto_now_add=False)
 
 
-def create_user_team(sender, instance, created, **kwargs):
-    if created:
-        # create a team Linked to the user
-        team = Team.objects.create(
-                name=instance.username + "'s team",
-                userTeam="team@" + instance.username,
-                user_linked=True
-            )
-        team.save()
-        # User authentication
-
-        # give the user created_obj permission against this team
-        shortcuts.assign_perm("created_obj", instance, team)
-        # consider not to give any other user created_obj permission against this team
-
-        # print('user-team was created')
-
-
-post_save.connect(create_user_team, sender=MyUser)
+# def create_user_team(sender, instance, created, **kwargs):
+#     if created:
+#         # create a team Linked to the user
+#         team = Team.objects.create(
+#                 name=instance.username + "'s team",
+#                 userTeam="team@" + instance.username,
+#                 user_linked=True
+#             )
+#         team.save()
+#         # User authentication
+#
+#         # give the user created_obj permission against this team
+#         shortcuts.assign_perm("created_obj", instance, team)
+#         # consider not to give any other user created_obj permission against this team
+#
+#         # print('user-team was created')
+#
+#
+# post_save.connect(create_user_team, sender=MyUser)

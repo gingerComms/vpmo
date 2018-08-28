@@ -9,7 +9,7 @@ from rest_framework import status
 from vpmoauth.models import MyUser
 
 from vpmotree.models import *
-from vpmotree.serializers import TeamSerializer, ProjectSerializer, TeamTreeSerializer
+from vpmotree.serializers import TeamSerializer, ProjectSerializer, TeamTreeSerializer, NodeTypeSerializer
 from vpmotree.permissions import TeamPermissions
 from vpmotree.filters import TeamListFilter
 from guardian import shortcuts
@@ -48,7 +48,7 @@ class CreateTeamView(CreateAPIView):
     def post(self, request, *args, **kwargs):
         """ Handles creation of the team through the TeamSerializer """
         data = request.data.copy()
-        data["userTeam"] = request.data["name"] + "@" +request.user.username
+        data["user_team"] = request.data["name"] + "@" +request.user.username
         data["user_linked"] = False
         serializer = TeamSerializer(data=data)
         if serializer.is_valid():
@@ -128,3 +128,9 @@ class TeamTreeView(RetrieveUpdateAPIView):
 
         team.save()
         return Response(TeamTreeSerializer(team).data)
+
+
+class CreateNodeTypeView(CreateAPIView):
+    model = NodeType
+    serializer_class = NodeTypeSerializer
+    permission_classes = (IsAuthenticated,)

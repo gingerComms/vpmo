@@ -70,7 +70,7 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
                 name=self.username + "'s team",
                 userTeam="team@" + self.username,
                 user_linked=True,
-                nodetype=NodeType.get(name="Team")
+                nodetype=NodeType.objects.get(name="team")
             )
         team.save()
         # User authentication

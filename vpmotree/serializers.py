@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Team, Project, Deliverable
+from .models import Team, Project, Deliverable, NodeType
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -10,7 +10,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ["_id", "name", "description", "start", "project_owner", "team", "parent_project"]
+        fields = ["_id", "name", "description", "start", "project_owner", "parent_team", "parent_project"]
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -93,3 +93,14 @@ class TeamTreeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = ["_id", "name", "obj_type", "projects", "path", "index"]
+
+
+class NodeTypeSerializer(serializers.ModelSerializer):
+    _id = serializers.SerializerMethodField(required=False)
+
+    def get__id(self, instance):
+        return str(instance._id)
+
+    class Meta:
+        model = NodeType
+        fields = ["_id", "name"]
