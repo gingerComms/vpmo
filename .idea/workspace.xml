@@ -4,12 +4,7 @@
     <list default="true" id="153d1d65-6603-446d-a34b-77334a354c69" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vpmoapp/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoapp/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoapp/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoapp/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoauth/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoauth/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmoprj/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmoprj/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vpmotree/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmotree/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmotree/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmotree/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vpmotree/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmotree/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -32,23 +27,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/vpmotree/views.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="453">
-              <caret line="84" column="41" selection-start-line="84" selection-start-column="29" selection-end-line="84" selection-end-column="41" />
-              <folding>
-                <element signature="e#0#35#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/vpmotree/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="337">
-              <caret line="103" column="16" lean-forward="true" selection-start-line="103" selection-start-column="16" selection-end-line="103" selection-end-column="16" />
+            <state relative-caret-position="391">
+              <caret line="74" column="17" lean-forward="true" selection-start-line="74" selection-start-column="17" selection-end-line="74" selection-end-column="17" />
               <folding>
                 <element signature="e#347#386#0" expanded="true" />
               </folding>
@@ -97,6 +80,7 @@
       <find>TeamTeam</find>
       <find>get</find>
       <find>project</find>
+      <find>casc</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -124,13 +108,13 @@
         <option value="$PROJECT_DIR$/vpmoapp/serializers.py" />
         <option value="$PROJECT_DIR$/vpmoauth/managers.py" />
         <option value="$PROJECT_DIR$/vpmoprj/settings.py" />
-        <option value="$PROJECT_DIR$/vpmotree/serializers.py" />
-        <option value="$PROJECT_DIR$/vpmotree/views.py" />
         <option value="$PROJECT_DIR$/vpmoprj/urls.py" />
-        <option value="$PROJECT_DIR$/vpmoapp/admin.py" />
         <option value="$PROJECT_DIR$/vpmotree/urls.py" />
         <option value="$PROJECT_DIR$/vpmoapp/models.py" />
         <option value="$PROJECT_DIR$/vpmoauth/models.py" />
+        <option value="$PROJECT_DIR$/vpmotree/views.py" />
+        <option value="$PROJECT_DIR$/vpmotree/serializers.py" />
+        <option value="$PROJECT_DIR$/vpmoapp/admin.py" />
         <option value="$PROJECT_DIR$/vpmotree/models.py" />
       </list>
     </option>
@@ -537,52 +521,39 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/vpmoapp/admin.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vpmotree/serializers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1445">
-          <caret line="85" lean-forward="true" selection-start-line="85" selection-end-line="85" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vpmotree/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="453">
-          <caret line="84" column="41" selection-start-line="84" selection-start-column="29" selection-end-line="84" selection-end-column="41" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vpmoauth/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="181">
-          <caret line="47" column="19" lean-forward="true" selection-start-line="47" selection-start-column="19" selection-end-line="47" selection-end-column="19" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/vpmoapp/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1285">
           <caret line="127" column="60" lean-forward="true" selection-start-line="127" selection-start-column="60" selection-end-line="127" selection-end-column="60" />
           <folding>
             <element signature="e#347#386#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vpmoauth/managers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="41" selection-start-line="5" selection-start-column="33" selection-end-line="5" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vpmotree/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-775">
+          <caret line="46" lean-forward="true" selection-start-line="46" selection-end-line="46" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vpmotree/serializers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -597,17 +568,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/vpmoauth/managers.py">
+    <entry file="file://$PROJECT_DIR$/vpmoauth/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="41" selection-start-line="5" selection-start-column="33" selection-end-line="5" selection-end-column="41" />
+        <state relative-caret-position="181">
+          <caret line="47" column="19" lean-forward="true" selection-start-line="47" selection-start-column="19" selection-end-line="47" selection-end-column="19" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vpmoapp/admin.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/vpmotree/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="337">
-          <caret line="103" column="16" lean-forward="true" selection-start-line="103" selection-start-column="16" selection-end-line="103" selection-end-column="16" />
+        <state relative-caret-position="391">
+          <caret line="74" column="17" lean-forward="true" selection-start-line="74" selection-start-column="17" selection-end-line="74" selection-end-column="17" />
           <folding>
             <element signature="e#347#386#0" expanded="true" />
           </folding>

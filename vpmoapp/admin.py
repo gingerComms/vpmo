@@ -13,7 +13,7 @@ from guardian.admin import GuardedModelAdmin
 from vpmotree.models import Team, Project, NodeType, Deliverable
 from .models import MyUser
 
-admin.site.register(Project)
+# admin.site.register(Project)
 
 admin.site.register(NodeType)
 
@@ -21,7 +21,7 @@ class TeamAdmin(GuardedModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)
 
-admin.site.register(Team, TeamAdmin)
+# admin.site.register(Team, TeamAdmin)
 
 
 class UserCreationForm(forms.ModelForm):

@@ -11,6 +11,7 @@ from django.db.models.signals import post_save
 from django.template.defaultfilters import slugify
 from guardian import shortcuts
 from django.apps import AppConfig
+from django.apps import apps
 
 from djongo import models
 from django import forms
@@ -61,7 +62,10 @@ class TreeStructure(models.Model):
     def save(self, parent_path=None, *args, **kwargs):
         # NOTE - Limit of recursion from MongoDB is 20! Do not create inheritances that exceed 20 levels!
         # If instance is a Team, just make sure the path is top level
+
+        model = apps.get_model('vpmotree', self.nodetype)
         if self.nodetype != "team":
+            # create Team object
             self.path = None
         else:
             self.path = parent_path
@@ -75,7 +79,16 @@ class TreeStructure(models.Model):
         return '%s' % (self.name)
 
 
-class Team(TreeStructure):
+class Node(models.Model):
+    node = models.ForeignKey(TreeStructure, on_delete=models.CASCADE, null=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class Team(Node):
     # user_linked specifies whether the team is the default against user
     # created at the registration time
     user_linked = models.BooleanField(default=False)
@@ -92,7 +105,7 @@ class Team(TreeStructure):
         return '%s' % (self.userTeam)
 
 
-class Project(TreeStructure):
+class Project(Node):
     description = models.TextField(blank=True, null=True)
     start = models.DateField(null=True)
     project_owner = models.ForeignKey('vpmoauth.MyUser',
@@ -105,12 +118,12 @@ class Project(TreeStructure):
     parent_project = models.ForeignKey("self", null=True, on_delete=models.CASCADE)
 
 
-    class Meta:
-        ordering = ('name',)
+    # class Meta:
+    #     ordering = ('name',)
         # objects = models.DjongoManager()
 
 
-class Topic(TreeStructure):
+class Topic(Node):
     parent_project = models.ForeignKey(Project, null=True, on_delete=models.CASCADE)
     parent_topic = models.ForeignKey("self", null=True, on_delete=models.CASCADE)
 
