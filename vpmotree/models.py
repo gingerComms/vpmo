@@ -52,13 +52,15 @@ class TreeStructure(models.Model):
             elem = self
         return str(elem._id)
 
-    # other than the Teams the rest of the nodes get created under another node
+    # other than the Teams the rest of the nodes get created under (as a child)
+    # OR at the same level of another node (sibling)
     # this means that Team starts a null path by itself,
-    # the rest of the nodes get the path of the node above themselves
-    # e.g. the project immediately after team takes the team as its path
-    # topic takes the team and project(s) above as its path
-    # other than teams there is always a node which triggers the creation of child node
-    # the triggering node provide its path plus its own id as the path for the child node
+    # the rest of the nodes get the path of the parent's node + the parent's objectId
+    # OR the same path as the sibling node
+    # e.g. the project immediately after team takes the team ID as its path
+    # topic takes the team + project(s) above as its path
+    # other than teams there is always a node which triggers the creation of child or sibling node
+    # the triggering node provides its own path plus its id as the path for the new node
     def save(self, parent_path=None, *args, **kwargs):
         # NOTE - Limit of recursion from MongoDB is 20! Do not create inheritances that exceed 20 levels!
         # If instance is a Team, just make sure the path is top level
@@ -80,6 +82,7 @@ class TreeStructure(models.Model):
 
 
 class Node(models.Model):
+    _id = models.ObjectIdField()
     node = models.ForeignKey(TreeStructure, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
