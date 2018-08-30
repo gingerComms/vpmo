@@ -31,7 +31,7 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     fullname = models.CharField(max_length=100, null=True)
-    username = models.CharField(max_length=100, unique=True)
+    username = models.CharField(max_length=100, unique=True, null=False)
     groups = models.ManyToManyField(Group, related_name="groups")
 
     objects = MyUserManager()
@@ -66,11 +66,15 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
 
     def create_user_team(self):
         # create a TreeStructure with nodetype of Team Linked to the user
+        node = NodeType.objects.get(name="Team")
+        # print(node.name)
         team = TreeStructure.objects.create(
                 name=self.username + "'s team",
-                userTeam="team@" + self.username,
-                user_linked=True,
-                nodetype=NodeType.objects.get(name="team")
+                path="",
+                index=0,
+                # userTeam="team@" + self.username,
+                # user_linked=True,
+                nodetype=node
             )
         team.save()
         # User authentication

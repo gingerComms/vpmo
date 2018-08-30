@@ -39,13 +39,14 @@ class NodeType(models.Model):
 class TreeStructure(models.Model):
     """ An implementation of Model Tree Structures with Materialized Paths in Django """
     _id = models.ObjectIdField()
-    path = models.CharField(null=False, max_length=4048)
+    path = models.CharField(max_length=4048)
     # The index field is for tracking the location of an object within the heirarchy
     index = models.IntegerField(default=0, null=False)
     name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     nodetype = models.ForeignKey(NodeType, on_delete=models.PROTECT, null=False)
+    # nodetype = models.CharField(max_length=50, null=False)
 
     def get_element_path(self, elem=None):
         if elem is None:
@@ -65,11 +66,14 @@ class TreeStructure(models.Model):
         # NOTE - Limit of recursion from MongoDB is 20! Do not create inheritances that exceed 20 levels!
         # If instance is a Team, just make sure the path is top level
 
-        model = apps.get_model('vpmotree', self.nodetype)
-        if self.nodetype != "team":
+        model = apps.get_model('vpmotree', self.nodetype.name)
+        if self.nodetype.name == "Team":
             # create Team object
-            self.path = None
+            self.path = ""
         else:
+            # if the new node is a child the path is the parent_path + parent's node id
+            # if the new node is a sibling the path is the parent_path
+            # nodetype identifies what type of node should be created (e.g. project, deliverable, etc.)
             self.path = parent_path
 
         super(TreeStructure, self).save(*args, **kwargs)
