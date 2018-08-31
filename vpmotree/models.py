@@ -27,31 +27,12 @@ import guardian.mixins
 # 3- db.[collection name].update({},{$set : {"field_name":null}},false,true)
 
 
-class NodeType(models.Model):
-    # this model identifies the whether the TreeStructure node is a Team, Project, etc.
-    _id = models.ObjectIdField()
-    name = models.CharField(max_length=50, null=False, unique=True)
-
-    def __str__(self):
-        return '%s' % (self.name)
-
-
 class TreeStructure(models.Model):
     """ An implementation of Model Tree Structures with Materialized Paths in Django """
     _id = models.ObjectIdField()
-    path = models.CharField(max_length=4048)
+    path = models.CharField(max_length=4048, null=True)
     # The index field is for tracking the location of an object within the heirarchy
     index = models.IntegerField(default=0, null=False)
-    name = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    nodetype = models.ForeignKey(NodeType, on_delete=models.PROTECT, null=False)
-    # nodetype = models.CharField(max_length=50, null=False)
-
-    def get_element_path(self, elem=None):
-        if elem is None:
-            elem = self
-        return str(elem._id)
 
     # other than the Teams the rest of the nodes get created under (as a child)
     # OR at the same level of another node (sibling)
@@ -62,44 +43,21 @@ class TreeStructure(models.Model):
     # topic takes the team + project(s) above as its path
     # other than teams there is always a node which triggers the creation of child or sibling node
     # the triggering node provides its own path plus its id as the path for the new node
-    def save(self, parent_path=None, *args, **kwargs):
-        # NOTE - Limit of recursion from MongoDB is 20! Do not create inheritances that exceed 20 levels!
-        # If instance is a Team, just make sure the path is top level
-
-        model = apps.get_model('vpmotree', self.nodetype.name)
-        if self.nodetype.name == "Team":
-            # create Team object
-            self.path = ""
-        else:
-            # if the new node is a child the path is the parent_path + parent's node id
-            # if the new node is a sibling the path is the parent_path
-            # nodetype identifies what type of node should be created (e.g. project, deliverable, etc.)
-            self.path = parent_path
-
-        super(TreeStructure, self).save(*args, **kwargs)
-
-    # class Meta:
-    #     abstract = True
 
     def __str__(self):
         return '%s' % (self.name)
 
-
-class Node(models.Model):
-    _id = models.ObjectIdField()
-    node = models.ForeignKey(TreeStructure, on_delete=models.CASCADE, null=False)
+class Team(TreeStructure):
+    """ A Team is a ROOT level element in a TreeStructure; path is always None.
+        * There is no save method because path is None by default
+    """
+    name = models.CharField(max_length=150, unique=True)
+    # user_linked specifies whether the team is the default against user
+    user_linked = models.BooleanField(default=False)
+    user_team = models.CharField(max_length=150, unique=True)
+    # Created at the registration time
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        abstract = True
-
-
-class Team(Node):
-    # user_linked specifies whether the team is the default against user
-    # created at the registration time
-    user_linked = models.BooleanField(default=False)
-    user_team = models.CharField(max_length=151, unique=True)
 
     class Meta:
         permissions = (
@@ -108,11 +66,28 @@ class Team(Node):
             ('read_obj', 'Read Level Permissions')
         )
 
+
+    def get_tree(self):
+        """ Returns a nested dictionary of the TreeStructure (starting from the ROOT, self) """
+        # TODO:
+        #   Find ALL objects as x.path__contains=self._id
+        #   Loop over those objects in levels; find ones that have two elements as 2nd level (branches) then 3 levels and so on until
+        #   Leaves are reached at last level
+        #   Use the serializers in serializers.py to Help get all the other fields of the element (except children, which we create
+        #   in the nested loop)
+        pass
+
+
     def __str__(self):
-        return '%s' % (self.userTeam)
+        return '%s - %s' % (self.name, self.user_team)
 
 
-class Project(Node):
+class Project(TreeStructure):
+    """ A Project is a BRANCH level element in a TreeStructure; 
+        can have both Leaf and Branch children,
+        can have both Root and Branch parents
+    """
+    name = models.CharField(max_length=150, unique=True)
     description = models.TextField(blank=True, null=True)
     start = models.DateField(null=True)
     project_owner = models.ForeignKey('vpmoauth.MyUser',
@@ -120,22 +95,29 @@ class Project(Node):
                                       null=True,
                                       related_name='%(class)s_project_owner')
 
-    # Many to One to both Teams and other Projects; one will always be null
-    parent_team = models.ForeignKey(Team, null=True, on_delete=models.PROTECT)
-    parent_project = models.ForeignKey("self", null=True, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, parent_obj, *args, **kwargs):
+        """ A Parent object is required during the save to set the path """
+        # Since ROOT parents are valid (roots have null path), path can be defaulted to "," (if Null)
+        self.path = parent_obj.path or "," + parent_obj._id + ","
+
+        super(Project, self).save(*args, **kwargs)
 
 
-    # class Meta:
-    #     ordering = ('name',)
-        # objects = models.DjongoManager()
-
-
-class Topic(Node):
-    parent_project = models.ForeignKey(Project, null=True, on_delete=models.CASCADE)
-    parent_topic = models.ForeignKey("self", null=True, on_delete=models.CASCADE)
+class Topic(TreeStructure):
+    """ A Topic is a LEAF level element in a TreeStructure;
+        can not have ANY children, and is always parented by a BRANCH Level element (Project)
+    """
+    name = models.CharField(max_length=150, unique=True)
 
     def __str__(self):
         return "{name} - {type}".format(name=self.name, type=type(self).__name__)
+
+    def save(self, parent_obj, *args, **kwargs):
+        """ A BRANCH level Parent object is required during the save to set the path """
+        self.path = parent_obj.path + parent_obj._id + ","
 
     class Meta:
         abstract = True
