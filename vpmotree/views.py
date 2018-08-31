@@ -63,7 +63,7 @@ class CreateTeamView(CreateAPIView):
 
 class TeamTreeView(RetrieveUpdateAPIView):
     model = Team
-    serializer_class = TeamTreeSerializer
+    serializer_class = TreeStructureWithChildrenSerializer
     permission_classes = (IsAuthenticated,)
 
     def get_object(self):
@@ -75,9 +75,35 @@ class TeamTreeView(RetrieveUpdateAPIView):
             return None
 
 
+    def handle_children(self, child, parent, index):
+        """ Takes a child as input and saves it using the parent's path and
+            then moves on to the child's own children (if any)
+        """
+        next_children = child.get("children", [])
+
+        # Saves the child using the parent and index in the array
+        child = TreeStructure.objects.get(_id=child["_id"])
+        child.index = index
+        child.save(parent)
+
+        # Moves the loop onto the next children
+        for index, next_child in enumerate(next_children):
+            self.handle_children(next_child, child, index)
+
+
     def update(self, request, team_id):
         """ Updates the models based on the input hierarchy; takes a dictionary starting from a single team as input """
-        return Response(None)
+        data = request.data
+
+        # The top most element is always a team, so second level is always projects
+        initial_children = data["children"]
+        team = Team.objects.get(_id=data["_id"])
+
+        # Starting off the children loop
+        for index, child in enumerate(initial_children):
+            self.handle_children(child, team, index)
+
+        return Response(status=status.HTTP_200_OK)
 
 
 

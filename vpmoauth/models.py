@@ -10,11 +10,11 @@ from vpmoauth.managers import MyUserManager
 from guardian.mixins import GuardianUserMixin
 from guardian import shortcuts
 
-from vpmotree.models import TreeStructure, NodeType
+from vpmotree.models import Team
 
 
 class MyUser(AbstractBaseUser, GuardianUserMixin):
-    id = models.IntegerField
+    _id = models.ObjectIdField()
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -66,15 +66,10 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
 
     def create_user_team(self):
         # create a TreeStructure with nodetype of Team Linked to the user
-        node = NodeType.objects.get(name="Team")
-        # print(node.name)
-        team = TreeStructure.objects.create(
+        team = Team.objects.create(
                 name=self.username + "'s team",
-                path="",
-                index=0,
                 # userTeam="team@" + self.username,
                 # user_linked=True,
-                nodetype=node
             )
         team.save()
         # User authentication
