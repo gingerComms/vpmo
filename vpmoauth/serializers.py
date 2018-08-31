@@ -74,7 +74,6 @@ class UserDeserializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.is_active = True
         user.save()
-        user.create_user_team()
         return user
 
         # fields = '__all__'

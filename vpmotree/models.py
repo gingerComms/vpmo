@@ -98,13 +98,6 @@ class Project(TreeStructure):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def save(self, parent_obj, *args, **kwargs):
-        """ A Parent object is required during the save to set the path """
-        # Since ROOT parents are valid (roots have null path), path can be defaulted to "," (if Null)
-        self.path = parent_obj.path or "," + parent_obj._id + ","
-
-        super(Project, self).save(*args, **kwargs)
-
 
 class Topic(TreeStructure):
     """ A Topic is a LEAF level element in a TreeStructure;
@@ -114,10 +107,6 @@ class Topic(TreeStructure):
 
     def __str__(self):
         return "{name} - {type}".format(name=self.name, type=type(self).__name__)
-
-    def save(self, parent_obj, *args, **kwargs):
-        """ A BRANCH level Parent object is required during the save to set the path """
-        self.path = parent_obj.path + parent_obj._id + ","
 
     class Meta:
         abstract = True

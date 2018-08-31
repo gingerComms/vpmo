@@ -10,12 +10,10 @@ from guardian.admin import GuardedModelAdmin
 
 # Register your models here.
 
-from vpmotree.models import Team, Project, NodeType, Deliverable
+from vpmotree.models import Team, Project, Deliverable
 from .models import MyUser
 
 # admin.site.register(Project)
-
-admin.site.register(NodeType)
 
 class TeamAdmin(GuardedModelAdmin):
     list_display = ('name',)

@@ -66,13 +66,11 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
 
     def create_user_team(self):
         # create a TreeStructure with nodetype of Team Linked to the user
-        team = Team.objects.create(
+        team = Team(
                 name=self.username + "'s team",
-                # userTeam="team@" + self.username,
-                # user_linked=True,
+                user_team="team@" + self.username,
+                user_linked=True,
             )
         team.save()
-        # User authentication
-
         # give the user created_obj permission against this team
         shortcuts.assign_perm("created_obj", self, team)

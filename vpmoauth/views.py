@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, get_user_model
 from django.conf import settings
 from rest_framework.permissions import AllowAny
 
-from vpmoapp.models import Team
+from vpmotree.models import Team
 from vpmoauth.models import MyUser
 from vpmoauth.serializers import *
 
@@ -28,7 +28,7 @@ class UserPermissionsView(APIView):
     # permission_classes = [AllowAny]
     def get(self, request):
         """ Returns a list of permissions held by the input User for the input Team """
-        user = MyUser.objects.get(id=request.query_params.get("user", None))
+        user = MyUser.objects.get(_id=request.query_params.get("user", None))
         team = Team.objects.get(_id=request.query_params.get("team", None))
 
         return Response(shortcuts.get_perms(user, team))
@@ -37,7 +37,7 @@ class UserPermissionsView(APIView):
         """ Adds input permission for input team to input user """
         assert request.data.get("permission", None) in ["read_obj", "contribute_obj", "created_obj"]
 
-        user = MyUser.objects.get(id=request.data.get("user", None))
+        user = MyUser.objects.get(_id=request.data.get("user", None))
         team = Team.objects.get(_id=request.data.get("team", None))
 
         shortcuts.assign_perm(request.data["permission"], user, team)
@@ -54,9 +54,9 @@ class AllUserView(generics.ListAPIView):
 
 class UserUpdateView(mixins.UpdateModelMixin, generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    queryset = get_user_model().objects.filter(id__gte=0)
+    queryset = get_user_model().objects.all()
     serializer_class = UserDetailsSerializer
-    lookup_field = 'id'
+    lookup_field = '_id'
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
@@ -66,7 +66,7 @@ class UserDetailsView(generics.RetrieveAPIView):
     permission_classes = [permissions.AllowAny]
     queryset = get_user_model().objects.all()
     serializer_class = UserDetailsSerializer
-    lookup_field = 'id'
+    lookup_field = '_id'
     # lookup_url_kwarg = 'user'
 
 
@@ -96,7 +96,7 @@ class LoginUserView(APIView):
                 'fullname': currentUser.fullname,
                 'username': currentUser.username,
                 'email': currentUser.email,
-                'id': currentUser.id,
+                '_id': currentUser._id,
                 }
             return Response(token)
         else:

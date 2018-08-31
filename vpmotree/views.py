@@ -11,7 +11,7 @@ from rest_framework import status
 from vpmoauth.models import MyUser
 
 from vpmotree.models import *
-from vpmotree.serializers import TeamSerializer, ProjectSerializer, TeamTreeSerializer, NodeTypeSerializer, TreeStructureSerializer
+from vpmotree.serializers import *
 from vpmotree.permissions import TeamPermissions
 from vpmotree.filters import TeamListFilter
 from guardian import shortcuts
@@ -33,7 +33,7 @@ class AllProjectsView(ListAPIView):
 class AllTeamsView(ListAPIView):
     serializer_class = TeamSerializer
     permission_classes = [IsAuthenticated]
-    queryset = Project.objects.all()
+    queryset = Team.objects.all()
 
 
 class CreateProjectView(CreateAPIView):
@@ -84,7 +84,8 @@ class TeamTreeView(RetrieveUpdateAPIView):
         # Saves the child using the parent and index in the array
         child = TreeStructure.objects.get(_id=child["_id"])
         child.index = index
-        child.save(parent)
+        child.path = parent.path or "," + str(parent._id) + ","
+        child.save()
 
         # Moves the loop onto the next children
         for index, next_child in enumerate(next_children):
@@ -104,10 +105,3 @@ class TeamTreeView(RetrieveUpdateAPIView):
             self.handle_children(child, team, index)
 
         return Response(status=status.HTTP_200_OK)
-
-
-
-class CreateNodeTypeView(CreateAPIView):
-    model = NodeType
-    serializer_class = NodeTypeSerializer
-    permission_classes = (IsAuthenticated,)

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Team, Project, Deliverable, NodeType
+from .models import Team, Project, Deliverable, TreeStructure
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -72,8 +72,8 @@ class TeamTreeSerializer(serializers.ModelSerializer):
 
 class TreeStructureWithoutChildrenSerializer(serializers.Serializer):
     _id = serializers.SerializerMethodField()
-    path = serializers.CharField(max_length=4048, source="path")
-    index = serializers.IntegerField(source="index")
+    path = serializers.CharField(max_length=4048)
+    index = serializers.IntegerField()
     obj_type = serializers.SerializerMethodField()
 
 
@@ -87,8 +87,8 @@ class TreeStructureWithoutChildrenSerializer(serializers.Serializer):
 
 class TreeStructureWithChildrenSerializer(serializers.Serializer):
     _id = serializers.SerializerMethodField()
-    path = serializers.CharField(max_length=4048, source="path")
-    index = serializers.IntegerField(source="index")
+    path = serializers.CharField(max_length=4048)
+    index = serializers.IntegerField()
     children = serializers.SerializerMethodField()
     obj_type = serializers.SerializerMethodField()
 
@@ -101,7 +101,7 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
         """ Takes a branch as input and starts the loop for either the next branches (if they exist) or the leaves """
         next_level = branch_level + 1
         # Finding children on the next level with the current branch._id in the path
-        children = filter(lambda x: x["path"].count(',') == next_level and branch["_id"] in x["path"], self.all_children)
+        children = filter(lambda x: x["path"].count(',') == next_level and str(branch["_id"]) in x["path"], self.all_children)
         children = sorted(children, key=lambda x: x["index"])
         for child in children:
             child["children"] = self.get_branch_extensions(child, next_level)
@@ -115,10 +115,10 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
 
         # All objects starting from the current ROOT (Team)
         self.all_children = TreeStructureWithoutChildrenSerializer(TreeStructure.objects.filter(
-            path__startswith=","+instance._id), many=True).data
+            path__startswith=","+str(instance._id)), many=True).data
         # Finding the first branches from the root (Projects)
         top_level = 2
-        first_branches = filter(lambda x: x["path"]count(",") == top_level, self.all_children)
+        first_branches = filter(lambda x: x["path"].count(",") == top_level, self.all_children)
         first_branches = sorted(first_branches, key=lambda x: x["index"])
 
         for branch in first_branches:
