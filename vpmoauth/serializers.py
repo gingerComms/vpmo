@@ -5,6 +5,11 @@ from rest_framework.response import Response
 
 
 class AllUsersSerializer(serializers.ModelSerializer):
+    _id = serializers.SerializerMethodField(required=False)
+
+    def get__id(self, instance):
+        return str(instance._id)
+
     class Meta:
         model = get_user_model()
         fields = (
@@ -12,15 +17,20 @@ class AllUsersSerializer(serializers.ModelSerializer):
             'password',
             'fullname',
             'username',
-            'id'
+            '_id'
         )
 
 
 class UserDetailsSerializer(serializers.ModelSerializer):
+    _id = serializers.SerializerMethodField(required=False)
+
+    def get__id(self, instance):
+        return str(instance._id)
+        
     class Meta:
         model = get_user_model()
         fields = (
-                'id',
+                '_id',
                 'email',
                 # 'password',
                 'fullname',

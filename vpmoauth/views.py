@@ -96,7 +96,7 @@ class LoginUserView(APIView):
                 'fullname': currentUser.fullname,
                 'username': currentUser.username,
                 'email': currentUser.email,
-                '_id': currentUser._id,
+                '_id': str(currentUser._id),
                 }
             return Response(token)
         else:
