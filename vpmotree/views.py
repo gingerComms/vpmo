@@ -84,7 +84,10 @@ class TeamTreeView(RetrieveUpdateAPIView):
         # Saves the child using the parent and index in the array
         child = TreeStructure.objects.get(_id=child["_id"])
         child.index = index
-        child.path = parent.path or "," + str(parent._id) + ","
+        if parent.path is None:
+            child.path = "," + str(parent._id) + ","
+        else:
+            child.path = parent.path + str(parent._id) + ","
         child.save()
 
         # Moves the loop onto the next children
@@ -104,4 +107,4 @@ class TeamTreeView(RetrieveUpdateAPIView):
         for index, child in enumerate(initial_children):
             self.handle_children(child, team, index)
 
-        return Response(status=status.HTTP_200_OK)
+        return Response(TreeStructureWithChildrenSerializer(team).data)
