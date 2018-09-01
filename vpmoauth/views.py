@@ -90,6 +90,7 @@ class LoginUserView(APIView):
         if user:
             currentUser = get_user_model().objects.get(email=email)
             payload = jwt_payload_handler(user)
+            payload["user_id"] = str(payload["user_id"])
             token = {
                 'token': jwt.encode(payload, settings.SECRET_KEY),
                 'status': 'success',
