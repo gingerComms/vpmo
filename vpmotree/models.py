@@ -34,6 +34,8 @@ class TreeStructure(models.Model):
     # The index field is for tracking the location of an object within the heirarchy
     index = models.IntegerField(default=0, null=False)
 
+    node_type = models.CharField(max_length=48, default="Team")
+
     # other than the Teams the rest of the nodes get created under (as a child)
     # OR at the same level of another node (sibling)
     # this means that Team starts a null path by itself,
@@ -58,6 +60,10 @@ class Team(TreeStructure):
     # Created at the registration time
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        self.node_type = "Team"
+        super(Team, self).save(*args, **kwargs)
 
     class Meta:
         permissions = (
@@ -98,6 +104,10 @@ class Project(TreeStructure):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def save(self, *args, **kwargs):
+        self.node_type = "Project"
+        super(Project, self).save(*args, **kwargs)
+
 
 class Topic(TreeStructure):
     """ A Topic is a LEAF level element in a TreeStructure;
@@ -114,3 +124,7 @@ class Topic(TreeStructure):
 
 class Deliverable(Topic):
     due_date = models.DateTimeField(auto_now=False, auto_now_add=False)
+
+    def save(self, *args, **kwargs):
+        self.node_type = "Deliverable"
+        super(Deliverable, self).save(*args, **kwargs)

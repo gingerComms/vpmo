@@ -147,6 +147,7 @@ class TreeStructureTestCase(TestCase):
         first_response["children"].append(project_object)
 
         second_response = self.client.put(url, json.dumps(first_response), content_type='application/json').json()
+        print(json.dumps(second_response, indent=2))
 
         self.assertTrue(second_response["children"], msg="PUT response does not have any children")
         if second_response["children"]:

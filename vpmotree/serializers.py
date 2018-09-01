@@ -26,60 +26,43 @@ class TeamSerializer(serializers.ModelSerializer):
 
 
 class DeliverableSerializer(serializers.ModelSerializer):
-    obj_type = serializers.SerializerMethodField(required=False)
     _id = serializers.SerializerMethodField(required=False)
 
     def get__id(self, instance):
         return str(instance._id)
-
-    def get_obj_type(self, instance):
-        return "Deliverable"
 
     class Meta:
         model = Deliverable
-        fields = ["_id", "name", "obj_type", "path", "index"]
+        fields = ["_id", "name", "node_type", "path", "index"]
 
 
 class ProjectTreeSerializer(serializers.ModelSerializer):
-    obj_type = serializers.SerializerMethodField(required=False)
     _id = serializers.SerializerMethodField(required=False)
 
     def get__id(self, instance):
         return str(instance._id)
-
-    def get_obj_type(self, instance):
-        return "Project"
 
     class Meta:
         model = Project
-        fields = ["_id", "name", "description", "obj_type", "path", "index"]
+        fields = ["_id", "name", "description", "node_type", "path", "index"]
 
 
 class TeamTreeSerializer(serializers.ModelSerializer):
-    obj_type = serializers.SerializerMethodField(required=False)
     _id = serializers.SerializerMethodField(required=False)
 
     def get__id(self, instance):
         return str(instance._id)
 
-    def get_obj_type(self, instance):
-        return "Team"
-
     class Meta:
         model = Team
-        fields = ["_id", "name", "obj_type", "path", "index"]
+        fields = ["_id", "name", "node_type", "path", "index"]
 
 
 class TreeStructureWithoutChildrenSerializer(serializers.Serializer):
     _id = serializers.SerializerMethodField()
     path = serializers.CharField(max_length=4048)
     index = serializers.IntegerField()
-    obj_type = serializers.SerializerMethodField()
-
-
-    def get_obj_type(self, instance):
-        return type(instance).__name__
-        
+    node_type = serializers.CharField(max_length=48)      
 
     def get__id(self, instance):
         return str(instance._id)
@@ -89,12 +72,9 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
     _id = serializers.SerializerMethodField()
     path = serializers.CharField(max_length=4048)
     index = serializers.IntegerField()
+    name = serializers.CharField(max_length=150)
     children = serializers.SerializerMethodField()
-    obj_type = serializers.SerializerMethodField()
-
-
-    def get_obj_type(self, instance):
-        return type(instance).__name__
+    node_type = serializers.CharField(max_length=48)
 
 
     def get_branch_extensions(self, branch, branch_level):
