@@ -41,6 +41,19 @@ class CreateProjectView(CreateAPIView):
     serializer_class = ProjectSerializer
     permission_classes = (IsAuthenticated,)
 
+    def post(self, request, *args, **kwargs):
+        """ Handles creation of the project through the ProjectSerializer """
+        data = request.data.copy()
+        # add team_project unique value based on project name @ team unique name
+        # data["team_project"] = request.data["name"] + "@" + request.
+        serializer = ProjectSerializer(data=data)
+        if serializer.is_valid():
+            project = serializer.save()
+            shortcuts.assign_perm("created_obj", request.user, project)
+            request.user.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class CreateTeamView(CreateAPIView):
     model = Team
@@ -108,3 +121,21 @@ class TeamTreeView(RetrieveUpdateAPIView):
             self.handle_children(child, team, index)
 
         return Response(TreeStructureWithChildrenSerializer(team).data)
+
+
+class ProjectTreeView(TeamTreeView):
+    model = Project
+
+    def get_object(self):
+        """ Returns the project object from the url id arg """
+        try:
+            project = Project.objects.get(_id=self.kwargs.get("project_id", None))
+            return project
+        except Project.DoesNotExist:
+            return None
+
+
+class CreateDeliverableView(CreateAPIView):
+    model = Deliverable
+    serializer_class = DeliverableSerializer
+    permission_classes = (IsAuthenticated,)

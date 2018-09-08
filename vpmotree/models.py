@@ -53,10 +53,10 @@ class Team(TreeStructure):
     """ A Team is a ROOT level element in a TreeStructure; path is always None.
         * There is no save method because path is None by default
     """
-    name = models.CharField(max_length=150, unique=True)
+    name = models.CharField(max_length=150, unique=False)
     # user_linked specifies whether the team is the default against user
     user_linked = models.BooleanField(default=False)
-    user_team = models.CharField(max_length=150, unique=True)
+    user_team = models.CharField(max_length=251, unique=True)
     # Created at the registration time
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -93,8 +93,9 @@ class Project(TreeStructure):
         can have both Leaf and Branch children,
         can have both Root and Branch parents
     """
-    name = models.CharField(max_length=150, unique=True)
+    name = models.CharField(max_length=150, null=False)
     description = models.TextField(blank=True, null=True)
+    # team_project = models.CharField(max_length=452, null=False, unique=True, default=slugify(name) + '@')
     start = models.DateField(null=True)
     project_owner = models.ForeignKey('vpmoauth.MyUser',
                                       on_delete=models.PROTECT,
@@ -108,12 +109,18 @@ class Project(TreeStructure):
         self.node_type = "Project"
         super(Project, self).save(*args, **kwargs)
 
+    class Meta:
+        permissions = (
+            ('created_obj', 'Admin Level Permissions',),
+            ('contribute_obj', "Contributor Level Permissions",),
+            ('read_obj', 'Read Level Permissions')
+        )
 
 class Topic(TreeStructure):
     """ A Topic is a LEAF level element in a TreeStructure;
         can not have ANY children, and is always parented by a BRANCH Level element (Project)
     """
-    name = models.CharField(max_length=150, unique=True)
+    name = models.CharField(max_length=150, null=False, unique=False)
 
     def __str__(self):
         return "{name} - {type}".format(name=self.name, type=type(self).__name__)

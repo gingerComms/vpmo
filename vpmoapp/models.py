@@ -1,9 +1,4 @@
-# mongodb+srv://alifradn:mdEla45Jig!@cluster0-srrwy.mongodb.net/test
-#
-# connect(
-#     'mongodb://alifradn:mdEla45Jig!@cluster0-shard-00-00-6qb6a.mongodb.net:27017,cluster0-shard-00-01-6qb6a.mongodb.net:27017,cluster0-shard-00-02-6qb6a.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin',
-#     alias='my-atlas-app'
-# )
+
 from __future__ import unicode_literals
 # from django.db import models
 from django.conf import settings

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Team, Project, Deliverable, TreeStructure
-
+from django.apps import apps
 
 class ProjectSerializer(serializers.ModelSerializer):
     _id = serializers.SerializerMethodField(required=False)
@@ -10,7 +10,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ["_id", "name", "description", "start", "project_owner"]
+        fields = ["_id", "name", "description", "start", "project_owner", "path", "index"]
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -36,26 +36,26 @@ class DeliverableSerializer(serializers.ModelSerializer):
         fields = ["_id", "name", "node_type", "path", "index"]
 
 
-class ProjectTreeSerializer(serializers.ModelSerializer):
-    _id = serializers.SerializerMethodField(required=False)
+# class ProjectTreeSerializer(serializers.ModelSerializer):
+#     _id = serializers.SerializerMethodField(required=False)
+#
+#     def get__id(self, instance):
+#         return str(instance._id)
+#
+#     class Meta:
+#         model = Project
+#         fields = ["_id", "name", "description", "node_type", "path", "index"]
 
-    def get__id(self, instance):
-        return str(instance._id)
 
-    class Meta:
-        model = Project
-        fields = ["_id", "name", "description", "node_type", "path", "index"]
-
-
-class TeamTreeSerializer(serializers.ModelSerializer):
-    _id = serializers.SerializerMethodField(required=False)
-
-    def get__id(self, instance):
-        return str(instance._id)
-
-    class Meta:
-        model = Team
-        fields = ["_id", "name", "node_type", "path", "index"]
+# class TeamTreeSerializer(serializers.ModelSerializer):
+#     _id = serializers.SerializerMethodField(required=False)
+#
+#     def get__id(self, instance):
+#         return str(instance._id)
+#
+#     class Meta:
+#         model = Team
+#         fields = ["_id", "name", "node_type", "path", "index"]
 
 
 class TreeStructureWithoutChildrenSerializer(serializers.Serializer):
@@ -63,10 +63,15 @@ class TreeStructureWithoutChildrenSerializer(serializers.Serializer):
     path = serializers.CharField(max_length=4048)
     index = serializers.IntegerField()
     node_type = serializers.CharField(max_length=48)      
+    name = serializers.SerializerMethodField()
 
     def get__id(self, instance):
         return str(instance._id)
 
+    def get_name(self, instance):
+        model = apps.get_model('vpmotree', instance.node_type)
+        name = model.objects.get(treestructure_ptr_id=instance).name
+        return name
 
 class TreeStructureWithChildrenSerializer(serializers.Serializer):
     _id = serializers.SerializerMethodField()
@@ -93,11 +98,18 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
         """ Takes a team as input and returns the Tree it is the root of """
         children = []
 
-        # All objects starting from the current ROOT (Team)
-        self.all_children = TreeStructureWithoutChildrenSerializer(TreeStructure.objects.filter(
-            path__startswith=","+str(instance._id)), many=True).data
-        # Finding the first branches from the root (Projects)
-        top_level = 2
+        if instance.node_type == "Team":
+            # All objects starting from the current ROOT (Team)
+            self.all_children = TreeStructureWithoutChildrenSerializer(TreeStructure.objects.filter(
+                path__startswith=","+str(instance._id)).filter(node_type="Project"), many=True).data
+            # Finding the first branches from the root (Projects)
+            top_level = 2
+        else:
+            if instance.node_type == "Project":
+                self.all_children = TreeStructureWithoutChildrenSerializer(TreeStructure.objects.filter(
+                    path__contains= str(instance._id)), many=True).data
+                top_level = instance.path.count(",") + 1
+
         first_branches = filter(lambda x: x["path"].count(",") == top_level, self.all_children)
         first_branches = sorted(first_branches, key=lambda x: x["index"])
 
