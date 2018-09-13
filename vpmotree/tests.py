@@ -1,15 +1,16 @@
 from django.test import TestCase
 from django.test import Client
-from vpmoapp.models import Team, Project, Deliverable
+from vpmotree.models import Team, Project, Deliverable
 from vpmoauth.models import MyUser
 import test_addons
-from vpmoapp import views
+from vpmotree import views
 from django.shortcuts import reverse
 from guardian.shortcuts import assign_perm
 from rest_framework.test import APIRequestFactory, force_authenticate
 import os, json
 import binascii
 from copy import copy
+from vpmotree import serializers
 
 # Create your tests here.
 
@@ -108,13 +109,10 @@ class TreeStructureTestCase(TestCase):
         self.team = Team.objects.create(name="Test Team")
         self.team.save()
 
-        self.project = Project.objects.create(projectname="Test Proj", team=self.team)
+        self.project = Project.objects.create(name="Test Proj")
         self.project.save()
 
-        self.project_2 = Project.objects.create(projectname="Test Proj 2", team=self.team)
-        self.project_2.save()
-
-        self.topic = Deliverable.objects.create(name="Test Del", project=self.project)
+        self.topic = Deliverable.objects.create(name="Test Del")
         self.topic.save()
 
         # Creating the request factory
@@ -122,34 +120,35 @@ class TreeStructureTestCase(TestCase):
 
     def tearDown(self):
         self.user.delete()
+        self.team.delete()
         self.project.delete()
-        self.project_2.delete()
         self.topic.delete()
 
     def test_tree_structure_get(self):
         """ Makes the necessary requests and asserts to test the GET TeamTreeView """
         url = reverse("team_tree_view", kwargs={"team_id": str(self.team._id)})
         # GET on url to get the current tree structure
-        first_response = self.client.get(url).json()
+        response = self.client.get(url).json()
 
-        self.topic.project = self.project_2
-        self.topic.save()
-
-        second_response = self.client.get(url).json()
-
-        self.assertNotEqual(first_response, second_response)
+        expected_response = serializers.TreeStructureWithChildrenSerializer(self.team).data
+        self.assertEqual(response, expected_response)
 
 
-    def test_tree_structure_post(self):
+    def test_tree_structure_put(self):
         """ Makes the necessary requests and asserts to test the POST TeamTreeView """
         url = reverse("team_tree_view", kwargs={"team_id": str(self.team._id)})
         # GET on url to get the current tree structure
         first_response = self.client.get(url).json()
 
-        new_d = copy(first_response)
-        proj = new_d["projects"].pop(1)
-        new_d["projects"].insert(0, proj)
+        # Creating the input for the API put
+        project_object = serializers.TreeStructureWithoutChildrenSerializer(self.project).data
+        project_object["children"] = [serializers.TreeStructureWithoutChildrenSerializer(self.topic).data]
+        project_object["children"][0]["children"] = []
+        first_response["children"].append(project_object)
 
-        second_response = self.client.put(url, new_d).json()
+        second_response = self.client.put(url, json.dumps(first_response), content_type='application/json').json()
+        print(json.dumps(second_response, indent=2))
 
-        self.assertNotEqual(first_response, second_response)
+        self.assertTrue(second_response["children"], msg="PUT response does not have any children")
+        if second_response["children"]:
+        	self.assertTrue(second_response["children"][0]["children"], msg="LEAF Level children not present in PUT response")

@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import User
-from vpmoapp.models import MyUser
+from vpmoauth.models import MyUser
 from rest_framework import authentication
 
 class AuthBackend(authentication.BaseAuthentication):

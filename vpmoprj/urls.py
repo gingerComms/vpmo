@@ -20,6 +20,7 @@ from rest_framework_jwt.views import obtain_jwt_token
 
 urlpatterns = [
     path(r'admin/', admin.site.urls),
-    path(r'vpmoapp/', include('vpmoapp.urls')),
+    # /vpmoapp is now linked to vpmotree as opposed to vpmoapp - vpmoapp to be deleted on vpmotree deployment
+    path(r'vpmoapp/', include('vpmotree.urls')),
     path(r'vpmoauth/', include("vpmoauth.urls")),
 ]

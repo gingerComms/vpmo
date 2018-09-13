@@ -40,14 +40,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    'vpmoapp',
+    # 'vpmoapp',
     'vpmoauth',
+    'vpmotree',
     'guardian',
 ]
 
 """
 MIGRATION_MODULES = {
-    "guardian": None # Skipping the migrations from guardian
+    #"guardian": None # Skipping the migrations from guardian
+    "vpmoauth": None,
+    "vpmotree": None
 }
 """
 
@@ -131,7 +134,7 @@ if False and DEBUG:
     DATABASES = {
         "default": {
             "ENGINE": "djongo",
-            "NAME": "test-example-5",
+            "NAME": "test-example-11",
             "host": "localhost",
             "port": 27017
         }
@@ -192,7 +195,7 @@ REST_FRAMEWORK = {
 JWT_AUTH = {
     'JWT_VERIFY': True,
     'JWT_VERIFY_EXPIRATION': True,
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=600),
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=3000),
 }
 
 AUTH_PASSWORD_VALIDATORS = [

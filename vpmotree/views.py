@@ -1,3 +1,5 @@
+from django.db.models.functions import Length
+
 from rest_framework import viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView
@@ -8,12 +10,11 @@ from rest_framework import filters
 from rest_framework import status
 from vpmoauth.models import MyUser
 
-from vpmoapp.models import *
-from vpmoapp.serializers import TeamSerializer, ProjectSerializer, TeamTreeSerializer
-from vpmoapp.permissions import TeamPermissions
-from vpmoapp.filters import TeamListFilter
+from vpmotree.models import *
+from vpmotree.serializers import *
+from vpmotree.permissions import TeamPermissions
+from vpmotree.filters import TeamListFilter
 from guardian import shortcuts
-
 
 
 class FilteredTeamsView(ListAPIView):
@@ -32,13 +33,26 @@ class AllProjectsView(ListAPIView):
 class AllTeamsView(ListAPIView):
     serializer_class = TeamSerializer
     permission_classes = [IsAuthenticated]
-    queryset = Project.objects.all()
+    queryset = Team.objects.all()
 
 
 class CreateProjectView(CreateAPIView):
     model = Project
     serializer_class = ProjectSerializer
     permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        """ Handles creation of the project through the ProjectSerializer """
+        data = request.data.copy()
+        # add team_project unique value based on project name @ team unique name
+        # data["team_project"] = request.data["name"] + "@" + request.
+        serializer = ProjectSerializer(data=data)
+        if serializer.is_valid():
+            project = serializer.save()
+            shortcuts.assign_perm("created_obj", request.user, project)
+            request.user.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CreateTeamView(CreateAPIView):
@@ -49,7 +63,7 @@ class CreateTeamView(CreateAPIView):
     def post(self, request, *args, **kwargs):
         """ Handles creation of the team through the TeamSerializer """
         data = request.data.copy()
-        data["userTeam"] = request.data["name"] + "@" +request.user.username
+        data["user_team"] = request.data["name"] + "@" +request.user.username
         data["user_linked"] = False
         serializer = TeamSerializer(data=data)
         if serializer.is_valid():
@@ -60,16 +74,10 @@ class CreateTeamView(CreateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
 class TeamTreeView(RetrieveUpdateAPIView):
     model = Team
-    serializer_class = TeamTreeSerializer
+    serializer_class = TreeStructureWithChildrenSerializer
     permission_classes = (IsAuthenticated,)
-
-    topics = {
-        "Deliverable": Deliverable
-    }
 
     def get_object(self):
         """ Returns the team object from the url id arg """
@@ -79,55 +87,55 @@ class TeamTreeView(RetrieveUpdateAPIView):
         except Team.DoesNotExist:
             return None
 
-    def handle_children(self, child, last_model=None, index=0):
-        """ Used to update the hierarchical format of team-project-project/topics """
-        class_name = child["obj_type"]
+
+    def handle_children(self, child, parent, index):
+        """ Takes a child as input and saves it using the parent's path and
+            then moves on to the child's own children (if any)
+        """
         next_children = child.get("children", [])
 
-        if class_name == "Project":
-            project = Project.objects.get(_id=child["_id"])
-
-            # Set project's parent to last model
-            if isinstance(last_model, Team):
-                project.team = last_model
-                project.parent_project = None
-            elif isinstance(last_model, Project):
-                project.parent_project = last_model
-                project.team = None
-            # The path gets updated here
-            project.index = index
-            project.save()
-
-        # The child must be a subclass from Topic if it isn't a Project
+        # Saves the child using the parent and index in the array
+        child = TreeStructure.objects.get(_id=child["_id"])
+        child.index = index
+        if parent.path is None:
+            child.path = "," + str(parent._id) + ","
         else:
-            topic = self.topics[class_name].objects.get(_id=child["_id"])
-            # Set parent to Project/Topic based on parent class
-            if isinstance(last_model, Project):
-                topic.project = last_model
-                topic.parent_topic = None
-            else:
-                topic.parent_topic = last_model
-                topic.project = None
-            # Updating the index and the path
-            topic.index = index
-            topic.save()
-        # Moving on to next children
-        for num, next_child in enumerate(next_children):
-            self.handle_children(next_child, project, num)
+            child.path = parent.path + str(parent._id) + ","
+        child.save()
+
+        # Moves the loop onto the next children
+        for index, next_child in enumerate(next_children):
+            self.handle_children(next_child, child, index)
 
 
     def update(self, request, team_id):
         """ Updates the models based on the input hierarchy; takes a dictionary starting from a single team as input """
-
         data = request.data
 
         # The top most element is always a team, so second level is always projects
-        initial_children = data["projects"]
+        initial_children = data["children"]
         team = Team.objects.get(_id=data["_id"])
 
-        # Starts off the nested loop from the second level
-        for num, child in enumerate(initial_children):
-            self.handle_children(child, team, num)
+        # Starting off the children loop
+        for index, child in enumerate(initial_children):
+            self.handle_children(child, team, index)
 
-        team.save()
-        return Response(TeamTreeSerializer(team).data)
+        return Response(TreeStructureWithChildrenSerializer(team).data)
+
+
+class ProjectTreeView(TeamTreeView):
+    model = Project
+
+    def get_object(self):
+        """ Returns the project object from the url id arg """
+        try:
+            project = Project.objects.get(_id=self.kwargs.get("project_id", None))
+            return project
+        except Project.DoesNotExist:
+            return None
+
+
+class CreateDeliverableView(CreateAPIView):
+    model = Deliverable
+    serializer_class = DeliverableSerializer
+    permission_classes = (IsAuthenticated,)

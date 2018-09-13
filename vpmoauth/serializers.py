@@ -5,6 +5,11 @@ from rest_framework.response import Response
 
 
 class AllUsersSerializer(serializers.ModelSerializer):
+    _id = serializers.SerializerMethodField(required=False)
+
+    def get__id(self, instance):
+        return str(instance._id)
+
     class Meta:
         model = get_user_model()
         fields = (
@@ -12,15 +17,20 @@ class AllUsersSerializer(serializers.ModelSerializer):
             'password',
             'fullname',
             'username',
-            'id'
+            '_id'
         )
 
 
 class UserDetailsSerializer(serializers.ModelSerializer):
+    _id = serializers.SerializerMethodField(required=False)
+
+    def get__id(self, instance):
+        return str(instance._id)
+        
     class Meta:
         model = get_user_model()
         fields = (
-                'id',
+                '_id',
                 'email',
                 # 'password',
                 'fullname',
@@ -48,19 +58,21 @@ class UserDetailsSerializer(serializers.ModelSerializer):
 
 
 class UserDeserializer(serializers.ModelSerializer):
-    # email2 = serializers.EmailField(label='Confirm Email')
+    email2 = serializers.EmailField(label='Confirm Email', source="get_email2")
     password = serializers.CharField(write_only=True)
 
     class Meta:
         model = get_user_model()
-        fields = ('email', 'password', 'fullname', 'username')
+        fields = ('email', 'email2', 'password', 'fullname', 'username')
+        read_only_fields = ("email2",)
 
     def validate_email(self, value):
+        """ Validates email from email2 """
         data = self.get_initial()
-        email1 = data.get('email')
-        email2 = value
+        email1 = data["email"]
+        email2 = data.get("email2", None)
         if email1 != email2:
-            raise serializers.ValidationError("Emails must match")
+            raise serializers.ValidationError("Email And Email2 must match")
         return value
 
     def create(self, validated_data):

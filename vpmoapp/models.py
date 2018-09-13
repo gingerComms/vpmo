@@ -1,9 +1,4 @@
-# mongodb+srv://alifradn:mdEla45Jig!@cluster0-srrwy.mongodb.net/test
-#
-# connect(
-#     'mongodb://alifradn:mdEla45Jig!@cluster0-shard-00-00-6qb6a.mongodb.net:27017,cluster0-shard-00-01-6qb6a.mongodb.net:27017,cluster0-shard-00-02-6qb6a.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin',
-#     alias='my-atlas-app'
-# )
+
 from __future__ import unicode_literals
 # from django.db import models
 from django.conf import settings
@@ -15,6 +10,9 @@ from djongo import models
 from django import forms
 
 from vpmoauth.models import MyUser
+from vpmoprj.settings import AUTH_USER_MODEL
+
+
 
 from django.core.mail import send_mail
 import guardian.mixins
@@ -61,6 +59,9 @@ class TreeStructure(models.Model):
     path = models.CharField(null=False, max_length=4048)
     # The index field is for tracking the location of an object within the heirarchy
     index = models.IntegerField(default=0, null=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 
     def get_element_path(self, elem=None):
         if elem is None:
@@ -93,11 +94,11 @@ class TreeStructure(models.Model):
 
 class Team(TreeStructure):
     name = models.CharField(max_length=50)
-    # owner = models.ReferenceField(User)
+
+    # user_linked specifies whether the team is the default against user
+    # created at the registration time
     user_linked = models.BooleanField(default=False)
     userTeam = models.CharField(max_length=151, unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         permissions = (
@@ -113,20 +114,13 @@ class Team(TreeStructure):
 class Project(TreeStructure):
     projectname = models.CharField(max_length=50, verbose_name="Project Name", default="Project Name - Default")
     description = models.TextField(blank=True, null=True)
-    # comments = models.ArrayModelField(
-    #     model_container=Comment,
-    #     model_form_class=CommentForm,
-    #     null=True
-    # )
+
     start = models.DateField(null=True)
     owner = models.ForeignKey(MyUser, on_delete=models.CASCADE, null=True)
 
     # Many to One to both Teams and other Projects; one will always be null
     team = models.ForeignKey(Team, null=True, on_delete=models.CASCADE)
     parent_project = models.ForeignKey("self", null=True, on_delete=models.CASCADE)
-
-    # organisation = models.ReferenceField(Organisation)
-    # owner = models.ReferenceField(User)
 
     def __str__(self):
         return '%s' % (self.projectname)
@@ -152,27 +146,22 @@ class Deliverable(Topic):
     due_date = models.DateTimeField(auto_now=False, auto_now_add=False)
 
 
-# @receiver(pre_save, sender=Team)
-# def my_callback(sender, instance, username, *args, **kwargs):
-#     instance._id = slugify(instance.name) + '@' + username
-
-
-def create_user_team(sender, instance, created, **kwargs):
-    if created:
-        # create a team Linked to the user
-        team = Team.objects.create(
-                name=instance.username + "'s team",
-                userTeam="team@" + instance.username,
-                user_linked=True
-            )
-        team.save()
-        # User authentication
-
-        # give the user created_obj permission against this team
-        shortcuts.assign_perm("created_obj", instance, team)
-        # consider not to give any other user created_obj permission against this team
-
-        print('user-team was created')
-
-
-post_save.connect(create_user_team, sender=MyUser)
+# def create_user_team(sender, instance, created, **kwargs):
+#     if created:
+#         # create a team Linked to the user
+#         team = Team.objects.create(
+#                 name=instance.username + "'s team",
+#                 userTeam="team@" + instance.username,
+#                 user_linked=True
+#             )
+#         team.save()
+#         # User authentication
+#
+#         # give the user created_obj permission against this team
+#         shortcuts.assign_perm("created_obj", instance, team)
+#         # consider not to give any other user created_obj permission against this team
+#
+#         # print('user-team was created')
+#
+#
+# post_save.connect(create_user_team, sender=MyUser)

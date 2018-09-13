@@ -2,33 +2,32 @@ from rest_framework import serializers
 from .models import Team, Project, Deliverable
 
 
-
 class ProjectSerializer(serializers.ModelSerializer):
-    _id = serializers.SerializerMethodField()
+    _id = serializers.SerializerMethodField(required=False)
 
     def get__id(self, instance):
         return str(instance._id)
 
     class Meta:
         model = Project
-        fields = '__all__'
+        fields = ["_id", "projectname", "description", "start", "owner", "team", "parent_project"]
 
 
 class TeamSerializer(serializers.ModelSerializer):
     # projects = ProjectSerializer(read_only=True, many=True)
-    _id = serializers.SerializerMethodField()
+    _id = serializers.SerializerMethodField(required=False)
 
     def get__id(self, instance):
         return str(instance._id)
 
     class Meta:
         model = Team
-        fields = '__all__'
+        fields = ["_id", "name", "user_linked", "created_at", "updated_at", "userTeam"]
 
 
 class DeliverableSerializer(serializers.ModelSerializer):
     obj_type = serializers.SerializerMethodField(required=False)
-    _id = serializers.SerializerMethodField()
+    _id = serializers.SerializerMethodField(required=False)
     children = serializers.SerializerMethodField(required=False)
 
     def get__id(self, instance):
@@ -52,7 +51,7 @@ class DeliverableSerializer(serializers.ModelSerializer):
 class ProjectTreeSerializer(serializers.ModelSerializer):
     obj_type = serializers.SerializerMethodField(required=False)
     children = serializers.SerializerMethodField(required=False)
-    _id = serializers.SerializerMethodField()
+    _id = serializers.SerializerMethodField(required=False)
 
     def get__id(self, instance):
         return str(instance._id)
@@ -77,7 +76,7 @@ class ProjectTreeSerializer(serializers.ModelSerializer):
 class TeamTreeSerializer(serializers.ModelSerializer):
     obj_type = serializers.SerializerMethodField(required=False)
     projects = serializers.SerializerMethodField(required=False)
-    _id = serializers.SerializerMethodField()
+    _id = serializers.SerializerMethodField(required=False)
 
     def get__id(self, instance):
         return str(instance._id)

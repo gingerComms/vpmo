@@ -8,13 +8,13 @@ from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin, Group
 from vpmoauth.managers import MyUserManager
 from guardian.mixins import GuardianUserMixin
+from guardian import shortcuts
 
+from vpmotree.models import Team
 
-
-# Create your models here.
 
 class MyUser(AbstractBaseUser, GuardianUserMixin):
-    id = models.IntegerField
+    _id = models.ObjectIdField()
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -31,7 +31,7 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     fullname = models.CharField(max_length=100, null=True)
-    username = models.CharField(max_length=100, unique=True)
+    username = models.CharField(max_length=100, unique=True, null=False)
     groups = models.ManyToManyField(Group, related_name="groups")
 
     objects = MyUserManager()
@@ -59,3 +59,18 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
         return self.is_admin
 
 
+    def get_email2(self):
+        """ Arbitrary method used in the UserDeserializer for email validation """
+        return "Email field for validation of email"
+
+
+    def create_user_team(self):
+        # create a TreeStructure with nodetype of Team Linked to the user
+        team = Team(
+                name=self.username + "'s team",
+                user_team="team@" + self.username,
+                user_linked=True,
+            )
+        team.save()
+        # give the user created_obj permission against this team
+        shortcuts.assign_perm("created_obj", self, team)
