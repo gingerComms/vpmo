@@ -47,7 +47,7 @@ class TreeStructure(models.Model):
     # the triggering node provides its own path plus its id as the path for the new node
 
     def __str__(self):
-        return '%s' % (self.name)
+        return '%s - %s' % (self._id, self.node_type)
 
 class Team(TreeStructure):
     """ A Team is a ROOT level element in a TreeStructure; path is always None.
@@ -71,18 +71,6 @@ class Team(TreeStructure):
             ('contribute_obj', "Contributor Level Permissions",),
             ('read_obj', 'Read Level Permissions')
         )
-
-
-    def get_tree(self):
-        """ Returns a nested dictionary of the TreeStructure (starting from the ROOT, self) """
-        # TODO:
-        #   Find ALL objects as x.path__contains=self._id
-        #   Loop over those objects in levels; find ones that have two elements as 2nd level (branches) then 3 levels and so on until
-        #   Leaves are reached at last level
-        #   Use the serializers in serializers.py to Help get all the other fields of the element (except children, which we create
-        #   in the nested loop)
-        pass
-
 
     def __str__(self):
         return '%s - %s' % (self.name, self.user_team)

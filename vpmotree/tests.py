@@ -106,14 +106,21 @@ class TreeStructureTestCase(TestCase):
         self.user.set_password(self.password)
         self.user.save()
 
-        self.team = Team.objects.create(name="Test Team")
+        self.team = Team(name="Test Team")
         self.team.save()
 
-        self.project = Project.objects.create(name="Test Proj")
+        self.project = Project(name="Test Proj", index=0, path=",{},".format(self.team._id))
         self.project.save()
 
-        self.topic = Deliverable.objects.create(name="Test Del")
+        self.project_2 = Project(name="Test Proj 2", index=1, path=",{},".format(self.team._id))
+        self.project_2.save()
+
+        self.project_3 = Project(name="Test Proj 3", index=0, path=self.project.path+str(self.project._id)+",")
+        self.project_3.save()
+
+        self.topic = Deliverable(name="Test Del", path=self.project.path+str(self.project._id)+",")
         self.topic.save()
+        #print(self.project.path, self.topic.path)
 
         # Creating the request factory
         logged_in = self.client.force_login(self.user, backend="vpmoauth.auth_backend.AuthBackend")
@@ -139,14 +146,18 @@ class TreeStructureTestCase(TestCase):
         url = reverse("team_tree_view", kwargs={"team_id": str(self.team._id)})
         # GET on url to get the current tree structure
         first_response = self.client.get(url).json()
+        print(json.dumps(first_response, indent=2))
 
         # Creating the input for the API put
         project_object = serializers.TreeStructureWithoutChildrenSerializer(self.project).data
-        project_object["children"] = [serializers.TreeStructureWithoutChildrenSerializer(self.topic).data]
-        project_object["children"][0]["children"] = []
-        first_response["children"].append(project_object)
+        project_2_object = serializers.TreeStructureWithoutChildrenSerializer(self.project_2).data
+        project_object["index"] += 1
+        project_object["path"] = self.project_2.path+str(self.project_2._id)+","
+        project_2_object["index"] -= 1
 
-        second_response = self.client.put(url, json.dumps(first_response), content_type='application/json').json()
+        nodes = [project_object, project_2_object]
+
+        second_response = self.client.put(url, json.dumps(nodes), content_type='application/json').json()
         print(json.dumps(second_response, indent=2))
 
         self.assertTrue(second_response["children"], msg="PUT response does not have any children")

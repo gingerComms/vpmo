@@ -88,38 +88,70 @@ class TeamTreeView(RetrieveUpdateAPIView):
             return None
 
 
-    def handle_children(self, child, parent, index):
+    def handle_children(self, child, parent, index=None, all_children=[]):
         """ Takes a child as input and saves it using the parent's path and
             then moves on to the child's own children (if any)
         """
-        next_children = child.get("children", [])
-
-        # Saves the child using the parent and index in the array
-        child = TreeStructure.objects.get(_id=child["_id"])
-        child.index = index
+        # Update index if provided
+        if index:
+            child.index = index
+        # Set the child's path using the parent's path
         if parent.path is None:
+            # This conditional is mostly unnecessary at this point, but kept because it might come in handy
+            # In the future
             child.path = "," + str(parent._id) + ","
         else:
             child.path = parent.path + str(parent._id) + ","
         child.save()
 
+        # Fetching direct children of current child
+        if all_children is None:
+            all_children = TreeStructure.objects.filter(path__contains=child._id)
+        next_children = self.get_direct_children(child._id)
         # Moves the loop onto the next children
-        for index, next_child in enumerate(next_children):
-            self.handle_children(next_child, child, index)
+        for next_child in next_children:
+            self.handle_children(next_child, child, all_children=all_children)
+
+
+    def get_direct_children(self, node_id, all_children=None):
+        """ Returns all direct children of a node given the node _id """
+        if all_children is None:
+            all_children = TreeStructure.objects.filter(path__contains=node_id)
+
+        # A direct child is a child which has the node's _id as the last _id in its path
+        return list(filter(lambda x: str(x.path.split(",")[-2]) == str(node_id), all_children))
 
 
     def update(self, request, team_id):
         """ Updates the models based on the input hierarchy; takes a dictionary starting from a single team as input """
-        data = request.data
+        # request.data should be an array of nodes
+        nodes = request.data
+
+        if not nodes:
+            return Response({"message": "Please have at least one node in the update request"}, status=status.HTTP_400_BAD_REQUEST)
+
+        for obj in nodes:
+            node = TreeStructure.objects.get(_id=obj["_id"])
+            node.index = obj["index"]
+            node.save()
+            if obj["path"] != node.path:
+                # Since path was updated, update the node's path and all children as well
+                node.path = obj["path"]
+                node.save()
+                # Getting all direct children
+                all_children = TreeStructure.objects.filter(path__contains=node._id)
+                # All children is passed to all sub-methods to avoid having to make repeated Database queries
+                direct_children = self.get_direct_children(node._id, all_children=all_children)
+                for child in direct_children:
+                    self.handle_children(child, node, all_children=all_children)
+
 
         # The top most element is always a team, so second level is always projects
-        initial_children = data["children"]
-        team = Team.objects.get(_id=data["_id"])
-
-        # Starting off the children loop
-        for index, child in enumerate(initial_children):
-            self.handle_children(child, team, index)
-
+        if nodes[0]["path"] is not None:
+            team_id = nodes[0]["path"].split(",")[1]
+        else:
+            team_id = nodes[0]["_id"]
+        team = Team.objects.get(_id=team_id)
         return Response(TreeStructureWithChildrenSerializer(team).data)
 
 
