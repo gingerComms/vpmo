@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Team, Project, Deliverable, TreeStructure
 from django.apps import apps
 
+
 class ProjectSerializer(serializers.ModelSerializer):
     _id = serializers.SerializerMethodField(required=False)
 

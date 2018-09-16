@@ -2,7 +2,7 @@ from django.db.models.functions import Length
 
 from rest_framework import viewsets
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
@@ -167,7 +167,31 @@ class ProjectTreeView(TeamTreeView):
             return None
 
 
+class UpdateProjectView(RetrieveUpdateAPIView):
+    model = Project
+    serializers_class = ProjectSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self):
+        """ Returns the project object from the url id arg """
+        try:
+            project = Project.objects.get(_id=self.kwargs.get("Project_id", None))
+            return project
+        except Project.DoesNotExist:
+            return None
+
+
+    def update(self, request, *args, **kwargs):
+        """ Handles update to the project through the ProjectSerializer """
+        project = Project.objects.get(_id=self.kwargs.get("Project_id", None))
+        project.name = self.request.data["name"]
+        project.save()
+        return Response(ProjectSerializer(project).data)
+
+
 class CreateDeliverableView(CreateAPIView):
     model = Deliverable
     serializer_class = DeliverableSerializer
     permission_classes = (IsAuthenticated,)
+
+
