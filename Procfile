@@ -1,1 +1,1 @@
-web: gunicorn vpmoprj/wsgi.py -b 0.0.0.0:$PORT
+web: gunicorn vpmoprj.wsgi -b 0.0.0.0:$PORT
