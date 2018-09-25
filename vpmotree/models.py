@@ -109,7 +109,7 @@ class Topic(TreeStructure):
         can not have ANY children, and is always parented by a BRANCH Level element (Project)
     """
     name = models.CharField(max_length=150, null=False, unique=False)
-
+    # content = models.CharField(max_length=150, null=False, unique=False)
     def __str__(self):
         return "{name} - {type}".format(name=self.name, type=type(self).__name__)
 

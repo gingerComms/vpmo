@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="153d1d65-6603-446d-a34b-77334a354c69" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Procfile" beforeDir="false" afterPath="$PROJECT_DIR$/Procfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vpmotree/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmotree/models.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -12,60 +14,15 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/vpmotree/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="544">
-              <caret line="95" column="36" lean-forward="true" selection-start-line="95" selection-start-column="36" selection-end-line="95" selection-end-column="36" />
+            <state relative-caret-position="1021">
+              <caret line="108" column="69" lean-forward="true" selection-start-line="108" selection-start-column="69" selection-end-line="108" selection-end-column="69" />
               <folding>
                 <element signature="e#347#386#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/vpmotree/urls.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="408">
-              <caret line="24" column="50" lean-forward="true" selection-start-line="24" selection-start-column="50" selection-end-line="24" selection-end-column="50" />
-              <folding>
-                <element signature="e#0#41#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/vpmotree/views.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
-              <caret line="78" column="31" selection-start-line="78" selection-start-column="31" selection-end-line="78" selection-end-column="31" />
-              <folding>
-                <element signature="e#0#45#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="serializers.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/vpmotree/serializers.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="312">
-              <caret line="76" column="6" selection-start-line="76" selection-start-column="6" selection-end-line="76" selection-end-column="6" />
-              <folding>
-                <element signature="e#0#38#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="settings.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/vpmoprj/settings.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="347">
-              <caret line="147" column="32" selection-start-line="147" selection-start-column="23" selection-end-line="147" selection-end-column="32" />
             </state>
           </provider>
         </entry>
@@ -81,7 +38,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Team.objects.create</find>
       <find>jwt</find>
       <find>get_object</find>
       <find>path</find>
@@ -111,6 +67,7 @@
       <find>team_id</find>
       <find>treestructure_ptr_id</find>
       <find>database</find>
+      <find>static</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -146,18 +103,19 @@
         <option value="$PROJECT_DIR$/vpmotree/permissions.py" />
         <option value="$PROJECT_DIR$/vpmotree/filters.py" />
         <option value="$PROJECT_DIR$/vpmotree/utils.py" />
-        <option value="$PROJECT_DIR$/vpmoprj/settings.py" />
-        <option value="$PROJECT_DIR$/vpmotree/models.py" />
         <option value="$PROJECT_DIR$/vpmotree/serializers.py" />
         <option value="$PROJECT_DIR$/vpmotree/urls.py" />
         <option value="$PROJECT_DIR$/../vpmo/Lib/site-packages/django/contrib/sessions/backends/base.py" />
         <option value="$PROJECT_DIR$/vpmotree/views.py" />
+        <option value="$PROJECT_DIR$/requirements.txt" />
+        <option value="$PROJECT_DIR$/vpmoprj/settings.py" />
+        <option value="$PROJECT_DIR$/vpmotree/models.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="120" />
-    <option name="y" value="165" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-1165" />
+    <option name="y" value="348" />
     <option name="width" value="1271" />
     <option name="height" value="982" />
   </component>
@@ -182,18 +140,7 @@
             <path>
               <item name="vpmo_pc" type="b2602c69:ProjectViewProjectNode" />
               <item name="vpmo_pc" type="462c0819:PsiDirectoryNode" />
-              <item name="vpmoauth" type="462c0819:PsiDirectoryNode" />
-              <item name="migrations" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vpmo_pc" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vpmo_pc" type="462c0819:PsiDirectoryNode" />
               <item name="vpmoprj" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vpmo_pc" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vpmo_pc" type="462c0819:PsiDirectoryNode" />
-              <item name="vpmotree" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -252,14 +199,14 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="120" y="165" width="1271" height="982" extended-state="0" />
+    <frame x="-1288" y="293" width="1296" height="1000" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49943882" visible="true" weight="0.27888447" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49943882" visible="true" weight="0.31484374" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50078124" side_tool="true" weight="0.2772166" />
+      <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" weight="0.23404256" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.22492401" />
-      <window_info anchor="bottom" id="Python Console" order="9" sideWeight="0.49921876" weight="0.2772166" />
+      <window_info active="true" anchor="bottom" id="Python Console" order="9" visible="true" weight="0.2772166" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.4505618" />
       <window_info id="Structure" order="1" sideWeight="0.5005612" side_tool="true" weight="0.21640626" />
       <window_info anchor="bottom" id="Terminal" order="10" weight="0.32996634" />
@@ -267,36 +214,26 @@
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Mongo Explorer" order="3" />
-      <window_info anchor="bottom" id="Version Control" order="8" weight="0.22492401" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49943882" visible="true" weight="0.31484374" />
-      <window_info id="Structure" order="1" sideWeight="0.5005612" side_tool="true" weight="0.21640626" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.4505618" />
       <window_info anchor="right" id="Data View" order="3" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" weight="0.23404256" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.32996634" />
-      <window_info anchor="bottom" id="Python Console" order="9" visible="true" weight="0.2772166" />
     </layout>
     <layout-to-restore>
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21640626" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.4505618" />
       <window_info anchor="right" id="Data View" order="4" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.22492401" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.4505618" />
       <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" id="Mongo Explorer" order="3" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" weight="0.23404256" />
@@ -322,25 +259,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/vpmoauth/tests.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-316" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vpmoapp/managers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" selection-start-line="3" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vpmoapp/filters.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="7" lean-forward="true" selection-start-line="8" selection-start-column="7" selection-end-line="8" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/vpmoapp/apps.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
@@ -441,13 +359,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/vpmoauth/serializers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="287">
-          <caret line="68" column="36" lean-forward="true" selection-start-line="68" selection-start-column="36" selection-end-line="68" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/vpmoauth/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="667">
@@ -489,20 +400,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
           <caret line="21" column="25" selection-start-line="21" selection-start-column="20" selection-end-line="21" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vpmoauth/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="46" selection-start-line="11" selection-start-column="30" selection-end-line="11" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/requirements.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="17" lean-forward="true" selection-start-line="11" selection-start-column="17" selection-end-line="11" selection-end-column="17" />
         </state>
       </provider>
     </entry>
@@ -576,26 +473,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/vpmotree/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="24" column="50" lean-forward="true" selection-start-line="24" selection-start-column="50" selection-end-line="24" selection-end-column="50" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vpmotree/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="544">
-          <caret line="95" column="36" lean-forward="true" selection-start-line="95" selection-start-column="36" selection-end-line="95" selection-end-column="36" />
-          <folding>
-            <element signature="e#347#386#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/vpmotree/filters.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
@@ -610,6 +487,54 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/vpmoprj/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vpmoprj/wsgi.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/requirements.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="13" lean-forward="true" selection-start-line="1" selection-start-column="13" selection-end-line="1" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../vpmo/Lib/site-packages/rest_framework_jwt/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="710">
+          <caret line="101" selection-start-line="101" selection-end-line="101" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vpmoauth/serializers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="18" lean-forward="true" selection-start-line="14" selection-start-column="18" selection-end-line="14" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vpmoprj/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="197" column="59" selection-start-line="197" selection-start-column="59" selection-end-line="197" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vpmoauth/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="12" column="11" selection-start-line="12" selection-start-column="11" selection-end-line="12" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vpmotree/serializers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="312">
+          <caret line="76" column="6" selection-start-line="76" selection-start-column="6" selection-end-line="76" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/vpmotree/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="193">
@@ -620,20 +545,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/vpmotree/serializers.py">
+    <entry file="file://$PROJECT_DIR$/vpmotree/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="312">
-          <caret line="76" column="6" selection-start-line="76" selection-start-column="6" selection-end-line="76" selection-end-column="6" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="408">
+          <caret line="24" column="50" selection-start-line="24" selection-start-column="50" selection-end-line="24" selection-end-column="50" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/vpmoprj/settings.py">
+    <entry file="file://$PROJECT_DIR$/vpmotree/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="347">
-          <caret line="147" column="32" selection-start-line="147" selection-start-column="23" selection-end-line="147" selection-end-column="32" />
+        <state relative-caret-position="1021">
+          <caret line="108" column="69" lean-forward="true" selection-start-line="108" selection-start-column="69" selection-end-line="108" selection-end-column="69" />
+          <folding>
+            <element signature="e#347#386#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
