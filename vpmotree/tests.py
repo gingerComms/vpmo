@@ -163,3 +163,38 @@ class TreeStructureTestCase(TestCase):
         self.assertTrue(second_response["children"], msg="PUT response does not have any children")
         if second_response["children"]:
         	self.assertTrue(second_response["children"][0]["children"], msg="LEAF Level children not present in PUT response")
+
+
+class ProjectUpdateTestCase(TestCase):
+    """ TestCase for testing the Project RetreiveUpdateView """
+    client = Client()
+
+    def setUp(self):
+        self.view = views.UpdateProjectView
+
+        user_creds = {
+            "username": "TestUser",
+            "email": "TestUser@vpmotest.com",
+            "fullname": "Test User"
+        }
+        self.user = MyUser.objects.create(**user_creds)
+
+        self.project = Project(name="Test Proj", project_owner=self.user)
+        self.project.save()
+
+        logged_in = self.client.force_login(self.user, backend="vpmoauth.auth_backend.AuthBackend")
+
+
+    def test_update(self):
+        url = reverse("update_project", kwargs={"_id": str(self.project._id)})
+
+        data = {
+            "content": "Hello there!"
+        }
+
+        response = self.client.patch(url, json.dumps(data), content_type='application/json').json()
+
+        print(response)
+
+        self.assertEqual(response["content"], "Hello there!")
+

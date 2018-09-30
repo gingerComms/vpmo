@@ -22,6 +22,8 @@ urlpatterns = (
     url(r'^api/teams/add/$', CreateTeamView.as_view()),
     url(r'^api/deliverable/add/$', CreateDeliverableView.as_view()),
 
+    url(r"^api/update_project/(?P<_id>.+)/$", UpdateProjectView.as_view(), name="update_project"),
+
     url(r"^api/teams_tree/(?P<team_id>.+)/$", TeamTreeView.as_view(), name="team_tree_view"),
     url(r"^api/project_tree/(?P<project_id>.+)/$", ProjectTreeView.as_view(), name="project_tree_view"),
 
