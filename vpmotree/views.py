@@ -74,6 +74,25 @@ class CreateTeamView(CreateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class UpdateProjectView(RetrieveUpdateAPIView):
+    queryset = Project
+    serializer_class = ProjectSerializer
+    lookup_field = "_id"
+
+    def partial_update(self, request, _id, *args, **kwargs):
+        """ This method gets called on a PATCH request - partially updates the model """
+        try:
+            project = Project.objects.get(_id=_id)
+        except Project.DoesNotExist:
+            return Response({"message": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = self.serializer_class(project, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class TeamTreeView(RetrieveUpdateAPIView):
     model = Team
     serializer_class = TreeStructureWithChildrenSerializer
@@ -166,14 +185,13 @@ class ProjectTreeView(TeamTreeView):
         except Project.DoesNotExist:
             return None
 
-
+"""
 class UpdateProjectView(RetrieveUpdateAPIView):
     model = Project
     serializers_class = ProjectSerializer
     permission_classes = (IsAuthenticated,)
 
     def get_object(self):
-        """ Returns the project object from the url id arg """
         try:
             project = Project.objects.get(_id=self.kwargs.get("Project_id", None))
             return project
@@ -182,11 +200,11 @@ class UpdateProjectView(RetrieveUpdateAPIView):
 
 
     def update(self, request, *args, **kwargs):
-        """ Handles update to the project through the ProjectSerializer """
         project = Project.objects.get(_id=self.kwargs.get("Project_id", None))
         project.name = self.request.data["name"]
         project.save()
         return Response(ProjectSerializer(project).data)
+"""
 
 
 class CreateDeliverableView(CreateAPIView):

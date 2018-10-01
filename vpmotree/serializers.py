@@ -5,13 +5,19 @@ from django.apps import apps
 
 class ProjectSerializer(serializers.ModelSerializer):
     _id = serializers.SerializerMethodField(required=False)
+    project_owner = serializers.SerializerMethodField(required=False)
+
+    def get_project_owner(self, instance):
+        if instance.project_owner:
+            return str(instance.project_owner)
+        return None
 
     def get__id(self, instance):
         return str(instance._id)
 
     class Meta:
         model = Project
-        fields = ["_id", "name", "description", "start", "project_owner", "path", "index"]
+        fields = ["_id", "name", "description", "content", "start", "project_owner", "path", "index"]
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -19,6 +25,7 @@ class TeamSerializer(serializers.ModelSerializer):
     _id = serializers.SerializerMethodField(required=False)
 
     def get__id(self, instance):
+        print(str(instance._id))
         return str(instance._id)
 
     class Meta:

@@ -83,6 +83,8 @@ class Project(TreeStructure):
     """
     name = models.CharField(max_length=150, null=False)
     description = models.TextField(blank=True, null=True)
+    # content contains the WYSIWYG content coming in from the frontend
+    content = models.TextField(blank=True, null=True)
     # team_project = models.CharField(max_length=452, null=False, unique=True, default=slugify(name) + '@')
     start = models.DateField(null=True)
     project_owner = models.ForeignKey('vpmoauth.MyUser',
