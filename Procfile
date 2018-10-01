@@ -1,1 +1,1 @@
-web: python website/manage.py runserver 127.0.0.1:8000
+web: gunicorn vpmoprj.wsgi -b 0.0.0.0:$PORT
