@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'vpmoauth',
     'vpmotree',
     'guardian',
+    'channels',
 ]
 
 """
@@ -236,3 +237,5 @@ STATIC_URL = '/static/'
 # look in the app and find a model named Account
 AUTH_USER_MODEL = 'vpmoauth.MyUser'
 
+# Pointing to the routing protocols for django-channels
+ASGI_APPLICATION = "vpmoprj.routing.application"
