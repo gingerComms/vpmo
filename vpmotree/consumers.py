@@ -8,6 +8,7 @@ import json
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
         try:
+            print(self.scope["user"], self.scope["headers"])
             self.node = models.TreeStructure.objects.get(_id=self.scope["url_route"]["kwargs"]["node_id"])
             # Setting the room name for the node - is created if doesn't already exist
             # Name is not allowed to have special characters, but this works since _id is alphanumeric

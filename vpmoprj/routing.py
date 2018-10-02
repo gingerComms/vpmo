@@ -6,8 +6,9 @@ import vpmotree.routing
 
 application = ProtocolTypeRouter({
 	# Contains routing for tasks
-	"websocket": 
+	"websocket": AuthMiddlewareStack(
 		URLRouter(
 			vpmotree.routing.websocket_urlpatterns
 		)
+	),
 })
