@@ -220,10 +220,10 @@ class MessageListView(ListAPIView):
 
     def get_queryset(self):
         earlier_than = self.request.query_params.get('earlier_than', None)
-        node = self.kwargs["node"]
+        node_id = self.kwargs["node_id"]
 
         filter_d = {}
-        filter_d["path__endswith"] = str(node._id)+","
+        filter_d["path__endswith"] = node_id+","
 
         if earlier_than is not None:
             filter_d["sent_on__lte"] = dt.strptime(earlier_than, "%m-%d-%Y")

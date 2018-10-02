@@ -239,3 +239,12 @@ AUTH_USER_MODEL = 'vpmoauth.MyUser'
 
 # Pointing to the routing protocols for django-channels
 ASGI_APPLICATION = "vpmoprj.routing.application"
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
