@@ -1,5 +1,13 @@
-from channels.routing import ProtocolTypeWriter
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.auth import AuthMiddlewareStack
 
-application = ProtocolTypeWriter({
+import vpmotree.routing
+
+
+application = ProtocolTypeRouter({
 	# Contains routing for tasks
+	"websocket": 
+		URLRouter(
+			vpmotree.routing.websocket_urlpatterns
+		)
 })
