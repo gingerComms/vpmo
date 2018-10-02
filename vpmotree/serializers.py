@@ -1,6 +1,18 @@
 from rest_framework import serializers
-from .models import Team, Project, Deliverable, TreeStructure
+from .models import Team, Project, Deliverable, TreeStructure, Message
 from django.apps import apps
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    _id = serializers.SerializerMethodField(required=False)
+    author = serializers.CharField(source="author.username", required=False)
+
+    def get__id(self, instance):
+        return str(instance._id)
+
+    class Meta:
+        model = Message
+        fields = ["_id", "author", "content", "sent_on"]
 
 
 class ProjectSerializer(serializers.ModelSerializer):

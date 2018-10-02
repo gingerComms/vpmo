@@ -8,7 +8,6 @@ class ChatConsumer(WebsocketConsumer):
 		print("CONNECTING...")
 		try:
 			self.node = models.TreeStructure.objects.get(_id=self.scope["url_route"]["kwargs"]["node_id"])
-			self.chatroom = models.Chatroom.objects.get(node=node)
 			# Only accept the connection if node exists
 			self.accept()
 			print("Accepted")

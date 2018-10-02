@@ -213,3 +213,19 @@ class CreateDeliverableView(CreateAPIView):
     permission_classes = (IsAuthenticated,)
 
 
+class MessageListView(ListAPIView):
+    model = Message
+    serializer_class = MessageSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        earlier_than = self.request.query_params.get('earlier_than', None)
+        node = self.kwargs["node"]
+
+        filter_d = {}
+        filter_d["path__endswith"] = str(node._id)+","
+
+        if earlier_than is not None:
+            filter_d["sent_on__lte"] = dt.strptime(earlier_than, "%m-%d-%Y")
+
+        return Message.objects.filter(**filter_d).order_by("sent_on")[:20]
