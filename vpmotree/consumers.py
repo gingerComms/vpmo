@@ -1,11 +1,20 @@
 from channels.generic.websocket import WebsocketConsumer
+from . import models
 import json
 
 
 class ChatConsumer(WebsocketConsumer):
 	def connect(self):
 		print("CONNECTING...")
-		self.accept()
+		try:
+			self.node = models.TreeStructure.objects.get(_id=self.scope["url_route"]["kwargs"]["node_id"])
+			self.chatroom = models.Chatroom.objects.get(node=node)
+			# Only accept the connection if node exists
+			self.accept()
+			print("Accepted")
+		except TreeStructure.DoesNotExist:
+			print("Rejected")
+			self.close()
 
 
 	def disconnect(self, close_code):
@@ -16,4 +25,4 @@ class ChatConsumer(WebsocketConsumer):
 		data = json.loads(data)
 		print(data)
 
-		self.send(data=json.dumps(data))
+		self.send(text_data=json.dumps(data))

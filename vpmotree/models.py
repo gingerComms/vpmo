@@ -46,8 +46,13 @@ class TreeStructure(models.Model):
     # other than teams there is always a node which triggers the creation of child or sibling node
     # the triggering node provides its own path plus its id as the path for the new node
 
+    def save(self, *args, **kwargs):
+
+        super(TreeStructure, self).save(*args, **kwargs)
+
     def __str__(self):
         return '%s - %s' % (self._id, self.node_type)
+
 
 class Team(TreeStructure):
     """ A Team is a ROOT level element in a TreeStructure; path is always None.
@@ -125,3 +130,17 @@ class Deliverable(Topic):
     def save(self, *args, **kwargs):
         self.node_type = "Deliverable"
         super(Deliverable, self).save(*args, **kwargs)
+
+
+class Message(TreeStructure):
+    """ Represents every individual message in a Team's chatroom
+        The Path for this model is set by the socket consumer whenever a new message is recieved
+        - The index is basically set by the order the messages are received in (sent_on)
+    """
+    author = models.ForeignKey("vpmoauth.MyUser", on_delete=models.CASCADE)
+    content = models.CharField(max_length=250, null=False, unique=False)
+
+    sent_on = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return "{} - {} - {}".format(self.room.node.name, self.author.email, self.sent_on.strftime("%m-%d-%Y %H:%M"))
