@@ -16,6 +16,8 @@ from vpmotree.permissions import TeamPermissions
 from vpmotree.filters import TeamListFilter
 from guardian import shortcuts
 
+from datetime import datetime as dt
+
 
 class FilteredTeamsView(ListAPIView):
     serializer_class = TeamSerializer
@@ -226,9 +228,15 @@ class MessageListView(ListAPIView):
         try:
             filter_d["node"] = TreeStructure.objects.get(_id=node_id)
         except TreeStructure.DoesNotExist:
-            return []
+            return None
 
         if earlier_than is not None:
-            filter_d["sent_on__lte"] = dt.strptime(earlier_than, "%m-%d-%Y")
+            # TODO: Implement an order_before instead - take a message id as input and return all messages
+            # Sent before that message
+            earlier_msg = Message.objects.get(_id=earlier_than)
+            filter_d["sent_on__lt"] = earlier_msg.sent_on
 
-        return Message.objects.filter(**filter_d).order_by("sent_on")[:20]
+        messages = Message.objects.filter(**filter_d).order_by("-sent_on")[:20]
+        messages = sorted(messages, key=lambda x: x.sent_on)
+
+        return messages

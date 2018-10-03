@@ -137,6 +137,7 @@ class Message(models.Model):
         The Path for this model is set by the socket consumer whenever a new message is recieved
         - The index is basically set by the order the messages are received in (sent_on)
     """
+    _id = models.ObjectIdField()
     node = models.ForeignKey(TreeStructure, on_delete=models.CASCADE)
     author = models.ForeignKey("vpmoauth.MyUser", on_delete=models.CASCADE)
     content = models.CharField(max_length=250, null=False, unique=False)

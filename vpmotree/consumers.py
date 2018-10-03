@@ -48,6 +48,7 @@ class ChatConsumer(WebsocketConsumer):
         message = models.Message(content=data["content"], author=self.user, node=node,
             sent_on=dt.strptime(data["sent_on"], '%Y-%m-%dT%H:%M:%S.%fZ'))
         message.save()
+        data["_id"] = str(message._id)
 
         async_to_sync(self.channel_layer.group_send)(
             self.chat_group_name,
