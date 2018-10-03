@@ -223,7 +223,10 @@ class MessageListView(ListAPIView):
         node_id = self.kwargs["node_id"]
 
         filter_d = {}
-        filter_d["path__endswith"] = node_id+","
+        try:
+            filter_d["node"] = TreeStructure.objects.get(_id=node_id)
+        except TreeStructure.DoesNotExist:
+            return []
 
         if earlier_than is not None:
             filter_d["sent_on__lte"] = dt.strptime(earlier_than, "%m-%d-%Y")
