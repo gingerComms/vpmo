@@ -27,6 +27,8 @@ urlpatterns = (
     url(r"^api/teams_tree/(?P<team_id>.+)/$", TeamTreeView.as_view(), name="team_tree_view"),
     url(r"^api/project_tree/(?P<project_id>.+)/$", ProjectTreeView.as_view(), name="project_tree_view"),
 
+    url(r'^api/messages/(?P<node_id>.+)/$', MessageListView.as_view(), name="message_list"),
+
     url(r'^(?P<path>.*\..*)/$', RedirectView.as_view(url='/static/%(path)s')),
     url(r'^', TemplateView.as_view(template_name='angular/index.html')),
 )

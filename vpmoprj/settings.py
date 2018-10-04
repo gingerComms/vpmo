@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'vpmoauth',
     'vpmotree',
     'guardian',
+    'channels',
 ]
 
 """
@@ -134,7 +135,7 @@ if False and DEBUG:
     DATABASES = {
         "default": {
             "ENGINE": "djongo",
-            "NAME": "test-example-12",
+            "NAME": "test-example-13",
             "host": "localhost",
             "port": 27017
         }
@@ -236,3 +237,14 @@ STATIC_URL = '/static/'
 # look in the app and find a model named Account
 AUTH_USER_MODEL = 'vpmoauth.MyUser'
 
+# Pointing to the routing protocols for django-channels
+ASGI_APPLICATION = "vpmoprj.routing.application"
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
