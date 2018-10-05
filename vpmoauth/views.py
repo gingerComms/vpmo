@@ -35,7 +35,7 @@ class UserPermissionsView(APIView):
 
     def post(self, request):
         """ Adds input permission for input team to input user """
-        assert request.data.get("permission", None) in ["read_obj", "contribute_obj", "created_obj"]
+        assert request.data.get("permission", None) in ["read_obj", "create_obj", "delete_obj", "update_obj"]
 
         user = MyUser.objects.get(_id=request.data.get("user", None))
         team = Team.objects.get(_id=request.data.get("team", None))

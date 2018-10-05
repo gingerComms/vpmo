@@ -9,6 +9,30 @@ class IsAccountOwner(permissions.BasePermission):
         return False
 
 
+class AssignPermissions(permission.BasePermission):
+    """ Permission that decides whether a user a can assign a permission or not """
+    deliverable_types = ["Deliverable", "Topic"]
+
+    def has_object_permission(self, request, view, obj):
+        perms = shortcuts.get_user_perms(request.user, obj)
+        # Permission the user is trying to assign
+        assigning_perm = request.query_params.get("perm")
+        # Only allowing PUT method for assigning permissions
+        if request.method != "PUT":
+            return False
+
+        # Team admin permission assignment
+        if obj.node_type == "Team":
+            if "create_obj" in perms and "delete_obj" in perms:
+                return True
+        # This is enough to handle both Projects and Topics
+        else:
+            if "read_obj" in perms and "update_obj" in perms:
+                return True
+
+        return False
+
+
 class ReadPermissions(permissions.BasePermission):
     """ Returns True for an object if the user has at least read permissions using a Safe Method """
     def has_object_permission(self, request, view, obj):
