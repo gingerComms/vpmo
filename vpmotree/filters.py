@@ -12,15 +12,26 @@ class TeamListFilter(filters.BaseFilterBackend):
         # Return objects for ANY permissions if request method is in ["GET", "HEAD", "OPTIONS"]
         if request.method in permissions.SAFE_METHODS:
             return shortcuts.get_objects_for_user(user=request.user,
-                                                  perms=["created_obj", "contribute_obj", "read_obj"], klass=queryset,
-                                                  accept_global_perms=False, any_perm=True)
+                                                perms=["created_obj", "contribute_obj", "read_obj"], klass=queryset,
+                                                accept_global_perms=False, any_perm=True)
         # Return objects for contribute and owner permissions if request method is POST
         elif request.method in ["POST"]:
             return shortcuts.get_objects_for_user(user=request.user,
-                                                  perms=["created_obj", "contribute_obj"], klass=queryset,
-                                                  accept_global_perms=False, any_perm=True)
+                                                perms=["created_obj", "contribute_obj"], klass=queryset,
+                                                accept_global_perms=False, any_perm=True)
         # Return objects for only owner permissions if request method is not in above conditionals
         else:
             return shortcuts.get_objects_for_user(user=request.user,
-                                                  perms=["created_obj"], klass=queryset, accept_global_perms=False,
-                                                  any_perm=True)
+                                                perms=["created_obj"], klass=queryset, accept_global_perms=False,
+                                                any_perm=True)
+
+
+class ReadListFilter(filters.BaseFilterBackend):
+  """ Filters the input queryset to only contain items that the user has at least Read permissions for """
+
+  def filter_queryset(self, request, queryset, view):
+    if request.method in permissions.SAFE_METHODS:
+        return shortcuts.get_objects_for_user(user=request.user,
+                                            perms=["read_obj"], klass=queryset,
+                                            accept_global_perms=False, any_perm=True)
+    return []

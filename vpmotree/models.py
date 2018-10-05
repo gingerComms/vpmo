@@ -46,8 +46,18 @@ class TreeStructure(models.Model):
     # other than teams there is always a node which triggers the creation of child or sibling node
     # the triggering node provides its own path plus its id as the path for the new node
 
-    def save(self, *args, **kwargs):
+    @staticmethod
+    def get_parent(self, obj):
+        parent = TreeStructure.objects.get(_id=obj.path.split(',')[-2])
+        # Return the particular node object based on parent's node_type
+        if parent.node_type == "Team":
+            return Team.objects.get(_id=parent._id)
+        elif parent.node_type == "Project":
+            return Project.objects.get(_id=parent._id)
 
+        return parent
+
+    def save(self, *args, **kwargs):
         super(TreeStructure, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -72,9 +82,10 @@ class Team(TreeStructure):
 
     class Meta:
         permissions = (
-            ('created_obj', 'Admin Level Permissions',),
-            ('contribute_obj', "Contributor Level Permissions",),
-            ('read_obj', 'Read Level Permissions')
+            ("create_obj", "Create Level Permissions",),
+            ('delete_obj', 'Delete Level Permissions',),
+            ('update_obj', "Update Level Permissions",),
+            ('read_obj', 'Read Level Permissions'),
         )
 
     def __str__(self):
@@ -106,9 +117,10 @@ class Project(TreeStructure):
 
     class Meta:
         permissions = (
-            ('created_obj', 'Admin Level Permissions',),
-            ('contribute_obj', "Contributor Level Permissions",),
-            ('read_obj', 'Read Level Permissions')
+            ("create_obj", "Create Level Permissions",),
+            ('delete_obj', 'Delete Level Permissions',),
+            ('update_obj', "Update Level Permissions",),
+            ('read_obj', 'Read Level Permissions'),
         )
 
 class Topic(TreeStructure):
@@ -130,6 +142,14 @@ class Deliverable(Topic):
     def save(self, *args, **kwargs):
         self.node_type = "Deliverable"
         super(Deliverable, self).save(*args, **kwargs)
+
+    class Meta:
+        permissions = (
+            ("create_obj", "Create Level Permissions",),
+            ('delete_obj', 'Delete Level Permissions',),
+            ('update_obj', "Update Level Permissions",),
+            ('read_obj', 'Read Level Permissions'),
+        )
 
 
 class Message(models.Model):

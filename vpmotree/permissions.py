@@ -9,6 +9,52 @@ class IsAccountOwner(permissions.BasePermission):
         return False
 
 
+class ReadPermissions(permissions.BasePermission):
+    """ Returns True for an object if the user has at least read permissions using a Safe Method """
+    def has_object_permission(self, request, view, obj):
+        perms = shortcuts.get_user_perms(request.user, obj)
+
+        if "read_obj" in perms in request.method in permissions.SAFE_METHODS:
+            return True
+        return False
+
+
+class UpdatePermissions(permissions.BasePermission):
+    """ Returns True for an object if the user has at least Update permissions on an object
+        for a PUT/PATCH request
+    """
+    def has_object_permission(self, request, view, obj):
+        perms = shortcuts.get_user_perms(request.user, obj)
+
+        if "update_obj" in perms and request.method in ["PUT", "PATCH"]:
+            return True
+        return False
+
+
+class DeletePermissions(permissions.BasePermission):
+    """ Returns True for an object if the user has at least delete perms on an object
+        for DELETE requests
+    """
+    def has_object_permission(self, request, view, obj):
+        perms = shortcuts.get_user_perms(request.user, obj)
+
+        if "delete_obj" in perms and request.method == "DELETE":
+            return True
+        return False
+
+
+class CreatePermissions(permissions.BasePermission):
+    """ Returns True for an object if the user has at least create perms on an object
+        for POST requests
+    """
+    def has_object_permissions(self, request, view, obj):
+        perms = shortcuts.get_user_perms(request.user, obj)
+
+        if "create_obj" in perms and request.method == "POST":
+            return True
+        return False
+
+
 class TeamPermissions(permissions.BasePermission):
     """ Custom DRF Permissions that returns True or False based on
         the permissions a user has for a given object.
