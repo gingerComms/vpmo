@@ -4,7 +4,7 @@ from django.conf import settings
 from rest_framework.permissions import AllowAny
 
 from vpmotree.models import Team, Project
-from vpmotree.permissions import AssignPermissionsPermission
+from vpmoauth.permissions import AssignPermissionsPermission
 from vpmoauth.models import MyUser
 from vpmoauth.serializers import *
 
@@ -47,8 +47,12 @@ class UserPermissionsView(APIView):
 
 
 class AssignRoleView(generics.RetrieveUpdateAPIView):
-    permission_classes = (permission.IsAuthenticated, AssignPermissionsPermission,)
+    permission_classes = (permission.IsAuthenticated, AssignRolesPermission,)
     lookup_field = "_id"
+    valid_roles = {
+        "team": ["team_member", "team_lead", "team_admin"],
+        "project": ["project_admin", "project_contributor", "project_viewer"]
+    }
 
     def get_object(self):
         """ Returns the model set by node_id with the input _id """
@@ -65,7 +69,15 @@ class AssignRoleView(generics.RetrieveUpdateAPIView):
             to the input user if the request user has permissions to assign permissions
             for the input node
         """
-        pass
+        # Reading data from the request
+        role = request.query_params["role"]
+        try:
+            target_user = MyUser.objects.get(_id=request.query_params["user"])
+        except MyUser.DoesNotExist:
+            return Response({"message": "Target User does not exist"}, status=status.HTTP_404_NOT_FOUND)
+        node = self.get_object()
+        if not node:
+            return Response({"message": "Node does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
 
 
