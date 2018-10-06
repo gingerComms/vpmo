@@ -3,7 +3,8 @@ from django.contrib.auth import authenticate, get_user_model
 from django.conf import settings
 from rest_framework.permissions import AllowAny
 
-from vpmotree.models import Team
+from vpmotree.models import Team, Project
+from vpmotree.permissions import AssignPermissionsPermission
 from vpmoauth.models import MyUser
 from vpmoauth.serializers import *
 
@@ -24,7 +25,7 @@ import jwt
 # Create your views here.
 
 class UserPermissionsView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated,]
     # permission_classes = [AllowAny]
     def get(self, request):
         """ Returns a list of permissions held by the input User for the input Team """
@@ -43,6 +44,30 @@ class UserPermissionsView(APIView):
         shortcuts.assign_perm(request.data["permission"], user, team)
 
         return Response(shortcuts.get_perms(user, team))
+
+
+class AssignRoleView(generics.RetrieveUpdateAPIView):
+    permission_classes = (permission.IsAuthenticated, AssignPermissionsPermission,)
+    lookup_field = "_id"
+
+    def get_object(self):
+        """ Returns the model set by node_id with the input _id """
+        node = globals[self.request.query_params["node_type"]]
+        try:
+            obj = node.objects.get(_id=self.kwargs["node_id"])
+        except node.DoesNotExist:
+            return None
+
+        return opj
+
+    def put(self, request):
+        """ Assigns the permissions related to the role for the input node
+            to the input user if the request user has permissions to assign permissions
+            for the input node
+        """
+        pass
+
+
 
 
 class AllUserView(generics.ListAPIView):

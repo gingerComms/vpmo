@@ -27,7 +27,7 @@ class TeamListFilter(filters.BaseFilterBackend):
 
 
 class ReadListFilter(filters.BaseFilterBackend):
-  """ Filters the input queryset to only contain items that the user has at least Read permissions for """
+  """ Filters the input queryset to only contain items that the user has at least read_obj permissions for """
 
   def filter_queryset(self, request, queryset, view):
     if request.method in permissions.SAFE_METHODS:

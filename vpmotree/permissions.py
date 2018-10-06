@@ -9,7 +9,7 @@ class IsAccountOwner(permissions.BasePermission):
         return False
 
 
-class AssignPermissions(permission.BasePermission):
+class AssignPermissionsPermission(permission.BasePermission):
     """ Permission that decides whether a user a can assign a permission or not """
     deliverable_types = ["Deliverable", "Topic"]
 
@@ -33,7 +33,7 @@ class AssignPermissions(permission.BasePermission):
         return False
 
 
-class ReadPermissions(permissions.BasePermission):
+class ReadPermission(permissions.BasePermission):
     """ Returns True for an object if the user has at least read permissions using a Safe Method """
     def has_object_permission(self, request, view, obj):
         perms = shortcuts.get_user_perms(request.user, obj)
@@ -43,7 +43,7 @@ class ReadPermissions(permissions.BasePermission):
         return False
 
 
-class UpdatePermissions(permissions.BasePermission):
+class UpdatePermission(permissions.BasePermission):
     """ Returns True for an object if the user has at least Update permissions on an object
         for a PUT/PATCH request
     """
@@ -55,7 +55,7 @@ class UpdatePermissions(permissions.BasePermission):
         return False
 
 
-class DeletePermissions(permissions.BasePermission):
+class DeletePermission(permissions.BasePermission):
     """ Returns True for an object if the user has at least delete perms on an object
         for DELETE requests
     """
