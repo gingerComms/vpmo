@@ -20,6 +20,7 @@ from vpmoprj.settings import AUTH_USER_MODEL
 
 from django.core.mail import send_mail
 import guardian.mixins
+from guardian import shortcuts
 
 # to add a field to mongodb collection after adding it to model
 # 1- connect to mongodb via shell
@@ -80,6 +81,18 @@ class Team(TreeStructure):
         self.node_type = "Team"
         super(Team, self).save(*args, **kwargs)
 
+    def get_users_with_role(self, role):
+        """ Returns users with permissions based on the input role """
+        role_map = {
+            "team_member": ["read_obj"],
+            "team_admin": ["delete_obj", "update_obj", "read_obj"],
+            "team_lead": ["read_obj", "update_obj"]
+        }
+        # Returns users that have any perms for the object
+        user_perms = shortcuts.get_users_with_perms(self, with_superusers=False, attach_perms=True)
+        # Filtering those users to only the ones that have permissions from role_map
+        return filter(lambda x: user_perms[x] == role_map[role], user_perms)
+
     class Meta:
         permissions = (
             ("create_obj", "Create Level Permissions",),
@@ -115,6 +128,17 @@ class Project(TreeStructure):
         self.node_type = "Project"
         super(Project, self).save(*args, **kwargs)
 
+    def get_users_with_role(self, role):
+        role_map = {
+            "project_admin": ["read_obj", "update_obj"],
+            "project_contributor": ["read_obj"],
+            "project_viewer": ["read_obj"]
+        }
+        # Returns users that have any perms for the object
+        user_perms = shortcuts.get_users_with_perms(self, with_superusers=False, attach_perms=True)
+        # Filtering those users to only the ones that have permissions from role_map
+        return filter(lambda x: user_perms[x] == role_map[role], user_perms)
+
     class Meta:
         permissions = (
             ("create_obj", "Create Level Permissions",),
@@ -131,6 +155,8 @@ class Topic(TreeStructure):
     # content = models.CharField(max_length=150, null=False, unique=False)
     def __str__(self):
         return "{name} - {type}".format(name=self.name, type=type(self).__name__)
+
+    # TODO: Create similar get_users_with_role method for topics as the ones we have for proj/team
 
     class Meta:
         abstract = True
