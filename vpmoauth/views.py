@@ -4,7 +4,7 @@ from django.conf import settings
 from rest_framework.permissions import AllowAny
 
 from vpmotree.models import Team, Project
-from vpmoauth.permissions import AssignPermissionsPermission
+from vpmoauth.permissions import AssignRolesPermission
 from vpmoauth.models import MyUser
 from vpmoauth.serializers import *
 
@@ -47,7 +47,7 @@ class UserPermissionsView(APIView):
 
 
 class AssignRoleView(generics.RetrieveUpdateAPIView):
-    permission_classes = (permission.IsAuthenticated, AssignRolesPermission,)
+    permission_classes = (permissions.IsAuthenticated, AssignRolesPermission,)
     lookup_field = "_id"
     valid_roles = {
         "team": ["team_member", "team_lead", "team_admin"],

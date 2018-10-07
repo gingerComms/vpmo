@@ -198,3 +198,32 @@ class ProjectUpdateTestCase(TestCase):
 
         self.assertEqual(response["content"], "Hello there!")
 
+
+class NodePermissionsViewTestCase(TestCase):
+    """ Test for the nodepermissions retrieve api view """
+    client = Client()
+
+    def setUp(self):
+        self.view = views.NodePermissionsView
+
+        user_creds = {
+            "username": "TestUser",
+            "email": "TestUser@vpmotest.com",
+            "fullname": "Test User"
+        }
+        self.user = MyUser.objects.create(**user_creds)
+
+        self.project = Project(name="Test Proj", project_owner=self.user)
+        self.project.save()
+
+        assign_perm("read_obj", self.user, self.project)
+
+        logged_in = self.client.force_login(self.user, backend="vpmoauth.auth_backend.AuthBackend")
+
+
+    def test_get(self):
+        url = reverse("node_permissions", kwargs={"node_id": self.project._id})+"?nodeType=Project"
+
+        response = self.client.get(url).json()
+
+        print(response)

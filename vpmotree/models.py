@@ -69,6 +69,12 @@ class Team(TreeStructure):
     """ A Team is a ROOT level element in a TreeStructure; path is always None.
         * There is no save method because path is None by default
     """
+    ROLE_MAP = {
+        "team_member": ["read_obj"],
+        "team_admin": ["delete_obj", "update_obj", "read_obj"],
+        "team_lead": ["read_obj", "update_obj"]
+    }
+
     name = models.CharField(max_length=150, unique=False)
     # user_linked specifies whether the team is the default against user
     user_linked = models.BooleanField(default=False)
@@ -83,15 +89,10 @@ class Team(TreeStructure):
 
     def get_users_with_role(self, role):
         """ Returns users with permissions based on the input role """
-        role_map = {
-            "team_member": ["read_obj"],
-            "team_admin": ["delete_obj", "update_obj", "read_obj"],
-            "team_lead": ["read_obj", "update_obj"]
-        }
         # Returns users that have any perms for the object
         user_perms = shortcuts.get_users_with_perms(self, with_superusers=False, attach_perms=True)
         # Filtering those users to only the ones that have permissions from role_map
-        return filter(lambda x: user_perms[x] == role_map[role], user_perms)
+        return filter(lambda x: user_perms[x] == self.ROLE_MAP[role], user_perms)
 
     class Meta:
         permissions = (
@@ -110,6 +111,12 @@ class Project(TreeStructure):
         can have both Leaf and Branch children,
         can have both Root and Branch parents
     """
+    ROLE_MAP = {
+        "project_admin": ["read_obj", "update_obj", "assign_contributor", "assign_viewer", "assign_admin"],
+        "project_contributor": ["read_obj", "assign_contributor", "assign_viewer"],
+        "project_viewer": ["read_obj"]
+    }
+
     name = models.CharField(max_length=150, null=False)
     description = models.TextField(blank=True, null=True)
     # content contains the WYSIWYG content coming in from the frontend
@@ -129,22 +136,21 @@ class Project(TreeStructure):
         super(Project, self).save(*args, **kwargs)
 
     def get_users_with_role(self, role):
-        role_map = {
-            "project_admin": ["read_obj", "update_obj"],
-            "project_contributor": ["read_obj"],
-            "project_viewer": ["read_obj"]
-        }
         # Returns users that have any perms for the object
         user_perms = shortcuts.get_users_with_perms(self, with_superusers=False, attach_perms=True)
         # Filtering those users to only the ones that have permissions from role_map
-        return filter(lambda x: user_perms[x] == role_map[role], user_perms)
+        return filter(lambda x: user_perms[x] == self.ROLE_MAP[role], user_perms)
 
     class Meta:
         permissions = (
             ("create_obj", "Create Level Permissions",),
             ('delete_obj', 'Delete Level Permissions',),
             ('update_obj', "Update Level Permissions",),
-            ('read_obj', 'Read Level Permissions'),
+            ('read_obj', 'Read Level Permissions'),,
+            # Assign permissions
+            ("assign_contributor", "Assign Contributor Permission"),
+            ("assign_viewer", "Assign Viewer Permission"),
+            ("assign_admin", "Assign Admin Permission")
         )
 
 class Topic(TreeStructure):

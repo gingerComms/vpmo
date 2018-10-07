@@ -2,7 +2,8 @@ from django.db.models.functions import Length
 
 from rest_framework import viewsets
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView, get_object_or_404
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView, RetrieveAPIView, get_object_or_404
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
@@ -240,3 +241,38 @@ class MessageListView(ListAPIView):
         messages = sorted(messages, key=lambda x: x.sent_on)
 
         return messages
+
+
+class NodePermissionsView(APIView):
+    """ Returns a list of user-role map for a particular node of given nodeType """
+
+    def get(self, request, node_id):
+        assert request.query_params.get("nodeType") in ["Project", "Team", "Deliverable"]
+        # Fetching the node using the node_id and nodeType
+        node_type = globals()[request.query_params.get("nodeType")]
+        try:
+            node = node_type.objects.get(_id=node_id)
+        except node_type.DoesNotExist:
+            return Response({"message": "{} not found.".format(request.query_params["nodeType"])},
+                            status=status.HTTP_404_NOT_FOUND)
+
+        # Getting a dictionary of all users that have any permissions to the model
+        user_perms = shortcuts.get_users_with_perms(node, with_superusers=False, attach_perms=True)
+
+        # Mapping roles by collection of permissions
+        user_roles = []
+        for user in user_perms.keys():
+            user_obj = {
+                "_id": str(user._id),
+                "email": user.email,
+                "username": user.username,
+                "fullname": user.fullname
+            }
+            role = [i for i in node_type.ROLE_MAP.keys() if node_type.ROLE_MAP[i] == user_perms[user]]
+            if not role:
+                user_obj["role"] = None
+            else:
+                user_obj["role"] = role[0]
+            user_roles.append(user_obj)
+
+        return Response(user_roles)

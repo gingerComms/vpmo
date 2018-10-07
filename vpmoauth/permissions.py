@@ -2,7 +2,7 @@ from rest_framework import permissions
 from guardian import shortcuts
 
 
-class AssignRolesPermission(permission.BasePermission):
+class AssignRolesPermission(permissions.BasePermission):
     """ Permission that decides whether a user a can assign a permission or not """
     deliverable_types = ["Deliverable", "Topic"]
 
