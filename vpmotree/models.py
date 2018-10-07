@@ -157,7 +157,7 @@ class Project(TreeStructure):
             ("create_obj", "Create Level Permissions",),
             ('delete_obj', 'Delete Level Permissions',),
             ('update_obj', "Update Level Permissions",),
-            ('read_obj', 'Read Level Permissions'),,
+            ('read_obj', 'Read Level Permissions'),
             # Assign permissions
             ("assign_contributor", "Assign Contributor Permission"),
             ("assign_viewer", "Assign Viewer Permission"),
