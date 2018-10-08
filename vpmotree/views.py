@@ -265,13 +265,12 @@ class NodePermissionsView(APIView):
                 "_id": str(user._id),
                 "email": user.email,
                 "username": user.username,
-                "fullname": user.fullname
+                "fullname": user.fullname,
             }
-            role = [i for i in node_type.ROLE_MAP.keys() if node_type.ROLE_MAP[i] == user_perms[user]]
+            role = user.get_role(node)
             if not role:
-                user_obj["role"] = None
-            else:
-                user_obj["role"] = role[0]
+                role = user.get_role(node.get_parent())
+            user_obj["role"] = role
             user_roles.append(user_obj)
-        print(user_roles)
+
         return Response(user_roles)

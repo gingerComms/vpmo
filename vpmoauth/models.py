@@ -73,11 +73,15 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
         self.save()
         return role
 
-    def remove_role(self, role, node):
+    def remove_role(self, node, role=None):
         """ Removes the provided role from the current user for the node """
+        if role is None:
+            role = self.get_role(node)
+
         perms = node.ROLE_MAP[role]
         for perm in perms:
-            self.shortcuts.remove_perm(perm, self, node)
+            print(node, perm, self)
+            shortcuts.remove_perm(perm, self, node)
         self.save()
         return self.get_role(node)
 

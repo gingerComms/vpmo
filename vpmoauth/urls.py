@@ -21,6 +21,7 @@ urlpatterns = [
     # User Permission Views
     url(r"^api/user_perms/$", UserPermissionsView.as_view(), name="user-perms"),
     url(r"^api/user_node_permissions/(?P<node_id>.+)/$", UserNodePermissionsView.as_view(), name="user-node-perms"),
+    url(r"^api/remove_user_role/(?P<node_id>.+)/$", RemoveUserRoleView.as_view(), name="remove-user-role"),
     # Takes a user, role and node type as a GET query param (?user=<user._id>&node_type=<str>&role=<str>)
     url(r"^api/assign_role/(?P<node_id>.+)/", AssignRoleView.as_view(), name="assign-role")
 ]

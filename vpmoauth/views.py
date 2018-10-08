@@ -5,7 +5,7 @@ from django.apps import apps
 from rest_framework.permissions import AllowAny
 
 from vpmotree.models import Team, Project, TreeStructure
-from vpmoauth.permissions import AssignRolesPermission
+from vpmoauth.permissions import AssignRolesPermission, RemoveRolesPermission
 from vpmoauth.models import MyUser
 from vpmoauth.serializers import *
 
@@ -164,6 +164,41 @@ class UserNodePermissionsView(APIView):
             "permissions": permissions,
             "role": user_role
         })
+
+
+class RemoveUserRoleView(generics.DestroyAPIView):
+    """ Removes the role a user has for a particular node """
+    permission_classes = (permissions.IsAuthenticated, RemoveRolesPermission)
+
+    def get_object(self):
+        model = apps.get_model("vpmotree", self.request.query_params["nodeType"])
+        try:
+            node = model.objects.get(_id=self.kwargs["node_id"])
+        except model.DoesNotExist:
+            return None
+
+        perms = self.check_object_permissions(self.request, node)
+        return node
+
+    def get_user(self):
+        try:
+            user = MyUser.objects.get(_id=self.request.query_params["user"])
+        except MyUser.DoesNotExist:
+            return None
+        return user
+
+    def delete(self, request, node_id):
+        node = self.get_object()
+        if node is None:
+            return Response({"message": "Node not found"}, status=status.HTTP_404_NOT_FOUND)
+        user = self.get_user()
+        if user is None:
+            return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        role = request.query_params.get("role", None)
+        user.remove_role(node, role=role)
+
+        return Response(status=status.HTTP_200_OK)
 
 
 def profile(request):

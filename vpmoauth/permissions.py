@@ -31,3 +31,17 @@ class AssignRolesPermission(permissions.BasePermission):
                     return True
                     
         return False
+
+
+class RemoveRolesPermission(permissions.BasePermission):
+    """ Checks whether the requesting user has permissions to remove a user's role for a node """
+
+    def has_object_permission(self, request, view, obj):
+        perms = shortcuts.get_user_perms(request.user, obj)
+        if not perms:
+            perms = shortcuts.get_user_perms(request.user, obj.get_parent())
+
+        if request.method == "DELETE" and "remove_user" in perms:
+            return True
+
+        return False
