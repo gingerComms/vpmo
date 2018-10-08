@@ -47,6 +47,17 @@ class TreeStructure(models.Model):
     # other than teams there is always a node which triggers the creation of child or sibling node
     # the triggering node provides its own path plus its id as the path for the new node
 
+    def get_root(self):
+        """ Returns the root element of the current tree structure """
+        if self.path is None:
+            return self
+        # Getting the first element in the object's path (root)
+        root_id = self.path.split(",")[1]
+        # Getting the treestructure object followed by the actual node
+        root = TreeStructure.objects.get(_id=root_id)
+        node = apps.get_model("vpmotree", root.node_type)
+        return node.objects.get(_id=root._id)
+
     @staticmethod
     def get_parent(self, obj):
         parent = TreeStructure.objects.get(_id=obj.path.split(',')[-2])
@@ -55,6 +66,7 @@ class TreeStructure(models.Model):
             return Team.objects.get(_id=parent._id)
         elif parent.node_type == "Project":
             return Project.objects.get(_id=parent._id)
+
 
         return parent
 
@@ -70,9 +82,9 @@ class Team(TreeStructure):
         * There is no save method because path is None by default
     """
     ROLE_MAP = {
-        "team_member": ["read_obj", "add_user", "remove_user", "edit_role"],
-        "team_admin": ["delete_obj", "update_obj", "read_obj"],
-        "team_lead": ["read_obj", "update_obj"]
+        "team_admin": ["delete_obj", "update_obj", "read_obj", "add_user", "edit_role", "remove_user"],
+        "team_lead": ["read_obj", "update_obj"],
+        "team_member": ["read_obj"],
     }
 
     name = models.CharField(max_length=150, unique=False)
@@ -103,10 +115,10 @@ class Team(TreeStructure):
             ("create_obj", "Create Level Permissions",),
             ('delete_obj', 'Delete Level Permissions',),
             ('update_obj', "Update Level Permissions",),
-            ('read_obj', 'Read Level Permissions'),
-            ("add_user", "Add User to Root"),
-            ("remove_user", "Remove User from Tree"),
-            ("edit_role", "Edit other user's role")
+            ('read_obj', 'Read Level Permissions',),
+            ("add_user", "Add User to Root",),
+            ("remove_user", "Remove User from Tree",),
+            ("edit_role", "Edit other user's role",)
         )
 
     def __str__(self):
@@ -157,12 +169,12 @@ class Project(TreeStructure):
             ("create_obj", "Create Level Permissions",),
             ('delete_obj', 'Delete Level Permissions',),
             ('update_obj', "Update Level Permissions",),
-            ('read_obj', 'Read Level Permissions'),
+            ('read_obj', 'Read Level Permissions',),
             # Assign permissions
-            ("assign_contributor", "Assign Contributor Permission"),
-            ("assign_viewer", "Assign Viewer Permission"),
-            ("assign_admin", "Assign Admin Permission"),
-            ("edit_role", "Edit other user's role")
+            ("assign_contributor", "Assign Contributor Permission",),
+            ("assign_viewer", "Assign Viewer Permission",),
+            ("assign_admin", "Assign Admin Permission",),
+            ("edit_role", "Edit other user's role",)
         )
 
 class Topic(TreeStructure):

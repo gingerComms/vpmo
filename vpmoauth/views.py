@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate, get_user_model
 from django.conf import settings
+from django.apps import apps
 from rest_framework.permissions import AllowAny
 
 from vpmotree.models import Team, Project
@@ -49,14 +50,10 @@ class UserPermissionsView(APIView):
 class AssignRoleView(generics.RetrieveUpdateAPIView):
     permission_classes = (permissions.IsAuthenticated, AssignRolesPermission,)
     lookup_field = "_id"
-    valid_roles = {
-        "team": ["team_member", "team_lead", "team_admin"],
-        "project": ["project_admin", "project_contributor", "project_viewer"]
-    }
 
     def get_object(self):
         """ Returns the model set by node_id with the input _id """
-        node = globals[self.request.query_params["node_type"]]
+        node = apps.get_model("vpmotree", self.request.query_params["node_type"])
         try:
             obj = node.objects.get(_id=self.kwargs["node_id"])
         except node.DoesNotExist:

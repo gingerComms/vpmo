@@ -71,7 +71,6 @@ class CreateTeamView(CreateAPIView):
         serializer = TeamSerializer(data=data)
         if serializer.is_valid():
             team = serializer.save()
-            shortcuts.assign_perm("created_obj", request.user, team)
             request.user.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -274,5 +273,5 @@ class NodePermissionsView(APIView):
             else:
                 user_obj["role"] = role[0]
             user_roles.append(user_obj)
-
+        print(user_roles)
         return Response(user_roles)

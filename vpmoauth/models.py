@@ -63,6 +63,30 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
         """ Arbitrary method used in the UserDeserializer for email validation """
         return "Email field for validation of email"
 
+    def assign_role(self, role, node):
+        assert role in node.ROLE_MAP.keys()
+        # Getting the permissions belonging to each orle
+        to_assign = node.ROLE_MAP[role]
+        # Assigning the role's permissions
+        for perm in to_assign:
+            shortcuts.assign_perm(perm, self, node)
+        self.save()
+        return role
+
+    def remove_role(self, role, node):
+        """ Removes the provided role from the current user for the node """
+        perms = node.ROLE_MAP[role]
+        for perm in perms:
+            self.shortcuts.remove_perm(perm, self, node)
+        self.save()
+        return self.get_role(node)
+
+    def get_role(self, node):
+        perms = set(shortcuts.get_user_perms(self, node))
+        role = [i for i in node.ROLE_MAP.keys() if set(node.ROLE_MAP[i]) == perms]
+        if role:
+            return role[0]
+        return None
 
     def create_user_team(self):
         # create a TreeStructure with nodetype of Team Linked to the user
@@ -73,4 +97,4 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
             )
         team.save()
         # give the user created_obj permission against this team
-        shortcuts.assign_perm("created_obj", self, team)
+        self.assign_role("team_admin", team)
