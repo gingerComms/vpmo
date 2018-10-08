@@ -25,9 +25,9 @@ import jwt
 
 # Create your views here.
 
+# TODO: This view may be unnecessary - delete after permissions finished
 class UserPermissionsView(APIView):
     permission_classes = [permissions.IsAuthenticated,]
-    # permission_classes = [AllowAny]
     def get(self, request):
         """ Returns a list of permissions held by the input User for the input Team """
         user = MyUser.objects.get(_id=request.query_params.get("user", None))
@@ -47,19 +47,42 @@ class UserPermissionsView(APIView):
         return Response(shortcuts.get_perms(user, team))
 
 
+class AssignableUsersListView(generics.ListAPIView):
+    """ Returns a list of users that can be assigned a role for a given node """
+    serializer_class = UserDetailsSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        model = apps.get_model("vpmotree", self.request.query_params["nodeType"])
+        # Fetching the node
+        try:
+            node = model.objects.get(_id=self.kwargs["node_id"])
+        except model.DoesNotExist:
+            return []
+
+        existing_users = shortcuts.get_users_with_perms(node).values_list("_id", flat=True)
+
+        # If node is a Team, return ALL registered users
+        if node.node_type == "Team":
+            return MyUser.objects.all().exclude(_id__in=existing_users)
+        
+        root_users = shortcuts.get_users_with_perms(node.get_root())
+        return root_users
+
+
 class AssignRoleView(generics.RetrieveUpdateAPIView):
     permission_classes = (permissions.IsAuthenticated, AssignRolesPermission,)
     lookup_field = "_id"
 
     def get_object(self):
         """ Returns the model set by node_id with the input _id """
-        node = apps.get_model("vpmotree", self.request.query_params["node_type"])
+        node = apps.get_model("vpmotree", self.request.query_params["nodeType"])
         try:
             obj = node.objects.get(_id=self.kwargs["node_id"])
         except node.DoesNotExist:
             return None
 
-        return opj
+        return obj
 
     def put(self, request):
         """ Assigns the permissions related to the role for the input node
@@ -75,8 +98,67 @@ class AssignRoleView(generics.RetrieveUpdateAPIView):
         node = self.get_object()
         if not node:
             return Response({"message": "Node does not exist"}, status=status.HTTP_404_NOT_FOUND)
+        # TODO: Assign role to user for node here
 
 
+class UserNodePermissionsView(APIView):
+    """ Returns the permissions a user has for the current node """
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, node_id):
+        model = apps.get_model('vpmotree', request.query_params["nodeType"])
+        try:
+            node = model.objects.get(_id=node_id)
+        except model.DoesNotExist:
+            return Response({"message": "Tree structure not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        permissions = shortcuts.get_user_perms(request.user, node)
+        node_parent = node.get_parent()
+        if not permissions and node_parent != None:
+            permissions = shortcuts.get_user_perms(request.user, node_parent)
+            user_role = request.user.get_role(node_parent)
+        else:
+            user_role = request.user.get_role(node)
+        
+        return Response({
+            "permissions": permissions,
+            "role": user_role
+        })
+
+
+class RemoveUserRoleView(generics.DestroyAPIView):
+    """ Removes the role a user has for a particular node """
+    permission_classes = (permissions.IsAuthenticated, RemoveRolesPermission)
+
+    def get_object(self):
+        model = apps.get_model("vpmotree", self.request.query_params["nodeType"])
+        try:
+            node = model.objects.get(_id=self.kwargs["node_id"])
+        except model.DoesNotExist:
+            return None
+
+        perms = self.check_object_permissions(self.request, node)
+        return node
+
+    def get_user(self):
+        try:
+            user = MyUser.objects.get(_id=self.request.query_params["user"])
+        except MyUser.DoesNotExist:
+            return None
+        return user
+
+    def delete(self, request, node_id):
+        node = self.get_object()
+        if node is None:
+            return Response({"message": "Node not found"}, status=status.HTTP_404_NOT_FOUND)
+        user = self.get_user()
+        if user is None:
+            return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        role = request.query_params.get("role", None)
+        user.remove_role(node, role=role)
+
+        return Response("Success")
 
 
 class AllUserView(generics.ListAPIView):
@@ -139,66 +221,6 @@ class LoginUserView(APIView):
               {'error': 'Invalid credentials',
               'status': 'failed'},
             )
-
-
-class UserNodePermissionsView(APIView):
-    """ Returns the permissions a user has for the current node """
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def get(self, request, node_id):
-        model = apps.get_model('vpmotree', request.query_params["nodeType"])
-        try:
-            node = model.objects.get(_id=node_id)
-        except model.DoesNotExist:
-            return Response({"message": "Tree structure not found."}, status=status.HTTP_404_NOT_FOUND)
-
-        permissions = shortcuts.get_user_perms(request.user, node)
-        node_parent = node.get_parent()
-        if not permissions and node_parent != None:
-            permissions = shortcuts.get_user_perms(request.user, node_parent)
-            user_role = request.user.get_role(node_parent)
-        else:
-            user_role = request.user.get_role(node)
-        
-        return Response({
-            "permissions": permissions,
-            "role": user_role
-        })
-
-
-class RemoveUserRoleView(generics.DestroyAPIView):
-    """ Removes the role a user has for a particular node """
-    permission_classes = (permissions.IsAuthenticated, RemoveRolesPermission)
-
-    def get_object(self):
-        model = apps.get_model("vpmotree", self.request.query_params["nodeType"])
-        try:
-            node = model.objects.get(_id=self.kwargs["node_id"])
-        except model.DoesNotExist:
-            return None
-
-        perms = self.check_object_permissions(self.request, node)
-        return node
-
-    def get_user(self):
-        try:
-            user = MyUser.objects.get(_id=self.request.query_params["user"])
-        except MyUser.DoesNotExist:
-            return None
-        return user
-
-    def delete(self, request, node_id):
-        node = self.get_object()
-        if node is None:
-            return Response({"message": "Node not found"}, status=status.HTTP_404_NOT_FOUND)
-        user = self.get_user()
-        if user is None:
-            return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-
-        role = request.query_params.get("role", None)
-        user.remove_role(node, role=role)
-
-        return Response(status=status.HTTP_200_OK)
 
 
 def profile(request):

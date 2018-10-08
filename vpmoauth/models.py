@@ -7,8 +7,10 @@ from django import forms
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin, Group
 from vpmoauth.managers import MyUserManager
+
 from guardian.mixins import GuardianUserMixin
 from guardian import shortcuts
+from guardian.models import UserObjectPermission
 
 from vpmotree.models import Team
 
@@ -67,6 +69,10 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
         assert role in node.ROLE_MAP.keys()
         # Getting the permissions belonging to each orle
         to_assign = node.ROLE_MAP[role]
+
+        # TODO - Remove any roles the user might have for one of the node's children (if any)
+        #   Do the above after copnfirming with Ali
+
         # Assigning the role's permissions
         for perm in to_assign:
             shortcuts.assign_perm(perm, self, node)
@@ -79,9 +85,13 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
             role = self.get_role(node)
 
         perms = node.ROLE_MAP[role]
+        UserObjectPermission.objects.filter(user=self, object_pk=node._id).delete()
+        """
         for perm in perms:
-            print(node, perm, self)
-            shortcuts.remove_perm(perm, self, node)
+            # Deleting the permission object directly
+            UserObjectPermission.objects.filter(user=self, object_pk=node._id, permission__name=perm).delete()
+            #shortcuts.remove_perm(perm, self, node)
+        """
         self.save()
         return self.get_role(node)
 

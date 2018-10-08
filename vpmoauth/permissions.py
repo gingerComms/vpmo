@@ -17,18 +17,18 @@ class AssignRolesPermission(permissions.BasePermission):
 
         # Team admin permission assignment
         if obj.node_type == "Team":
-            if "create_obj" in perms and "delete_obj" in perms:
+            if "edit_role" in perms:
                 return True
         # Project permission assignment
         elif obj.node_type == "Project":
             if assigning_role == "project_admin":
-                existing_admins = obj.get_users_with_role("project_admin")
-                if request.user in existing_admins:
-                    return True
+                required_perm = "assign_admin"
+            elif assigning_role == "project_viewer":
+                required_perm = "assign_viewer"
             else:
-                existing_contributors = obj.get_users_with_role("project_contributor")
-                if request.user in existing_contributors:
-                    return True
+                required_perm = "assign_contributor"
+            if required_perm in perms:
+                return True
                     
         return False
 
