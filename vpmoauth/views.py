@@ -143,18 +143,27 @@ class LoginUserView(APIView):
 
 class UserNodePermissionsView(APIView):
     """ Returns the permissions a user has for the current node """
-    permission_classes = (permissions.IsAuthenticated)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, node_id):
-        model = get_model('vpmotree', request.query_params["nodeType"])
+        model = apps.get_model('vpmotree', request.query_params["nodeType"])
         try:
             node = model.objects.get(_id=node_id)
         except model.DoesNotExist:
             return Response({"message": "Tree structure not found."}, status=status.HTTP_404_NOT_FOUND)
 
         permissions = shortcuts.get_user_perms(request.user, node)
-
-        return Response(permissions)
+        node_parent = node.get_parent()
+        if not permissions and node_parent != None:
+            permissions = shortcuts.get_user_perms(request.user, node_parent)
+            user_role = request.user.get_role(node_parent)
+        else:
+            user_role = request.user.get_role(node)
+        
+        return Response({
+            "permissions": permissions,
+            "role": user_role
+        })
 
 
 def profile(request):

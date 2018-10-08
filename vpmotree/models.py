@@ -58,9 +58,10 @@ class TreeStructure(models.Model):
         node = apps.get_model("vpmotree", root.node_type)
         return node.objects.get(_id=root._id)
 
-    @staticmethod
-    def get_parent(self, obj):
-        parent = TreeStructure.objects.get(_id=obj.path.split(',')[-2])
+    def get_parent(self):
+        if self.path == None:
+            return
+        parent = TreeStructure.objects.get(_id=self.path.split(',')[-2])
         # Return the particular node object based on parent's node_type
         if parent.node_type == "Team":
             return Team.objects.get(_id=parent._id)
