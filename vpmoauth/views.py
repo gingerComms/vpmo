@@ -66,23 +66,24 @@ class AssignableUsersListView(generics.ListAPIView):
         if node.node_type == "Team":
             return MyUser.objects.all().exclude(_id__in=existing_users)
         
-        root_users = shortcuts.get_users_with_perms(node.get_root())
+        root_users = shortcuts.get_users_with_perms(node.get_root()).exclude(_id=request.user._id)
         return root_users
 
 
-class AssignRoleView(generics.RetrieveUpdateAPIView):
-    permission_classes = (permissions.IsAuthenticated, AssignRolesPermission,)
-    lookup_field = "_id"
+class AssignRoleView(APIView):
+    permission_classes = (permissions.IsAuthenticated, AssignRolesPermission)
+
 
     def get_object(self):
-        """ Returns the model set by node_id with the input _id """
-        node = apps.get_model("vpmotree", self.request.query_params["nodeType"])
+        node = apps.get_model("vpmotree", self.request.data["nodeType"])
         try:
-            obj = node.objects.get(_id=self.kwargs["node_id"])
+            obj = node.objects.get(_id=self.request.data["nodeID"])
         except node.DoesNotExist:
             return None
 
+        perms = self.check_object_permissions(self.request, obj)
         return obj
+
 
     def put(self, request):
         """ Assigns the permissions related to the role for the input node
@@ -90,15 +91,19 @@ class AssignRoleView(generics.RetrieveUpdateAPIView):
             for the input node
         """
         # Reading data from the request
-        role = request.query_params["role"]
+        role = request.data.get("role")
         try:
-            target_user = MyUser.objects.get(_id=request.query_params["user"])
+            target_user = MyUser.objects.get(_id=request.data["userID"])
         except MyUser.DoesNotExist:
             return Response({"message": "Target User does not exist"}, status=status.HTTP_404_NOT_FOUND)
         node = self.get_object()
         if not node:
             return Response({"message": "Node does not exist"}, status=status.HTTP_404_NOT_FOUND)
-        # TODO: Assign role to user for node here
+
+        target_user.assign_role(role, node)
+        target_user.save()
+
+        return Response(UserDetailsSerializer(target_user).data)
 
 
 class UserNodePermissionsView(APIView):
