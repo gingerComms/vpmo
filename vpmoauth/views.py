@@ -4,7 +4,7 @@ from django.conf import settings
 from django.apps import apps
 from rest_framework.permissions import AllowAny
 
-from vpmotree.models import Team, Project
+from vpmotree.models import Team, Project, TreeStructure
 from vpmoauth.permissions import AssignRolesPermission
 from vpmoauth.models import MyUser
 from vpmoauth.serializers import *
@@ -139,6 +139,22 @@ class LoginUserView(APIView):
               {'error': 'Invalid credentials',
               'status': 'failed'},
             )
+
+
+class UserNodePermissionsView(APIView):
+    """ Returns the permissions a user has for the current node """
+    permission_classes = (permissions.IsAuthenticated)
+
+    def get(self, request, node_id):
+        model = get_model('vpmotree', request.query_params["nodeType"])
+        try:
+            node = model.objects.get(_id=node_id)
+        except model.DoesNotExist:
+            return Response({"message": "Tree structure not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        permissions = shortcuts.get_user_perms(request.user, node)
+
+        return Response(permissions)
 
 
 def profile(request):
