@@ -75,6 +75,7 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
 
         # Assigning the role's permissions
         for perm in to_assign:
+            print("Assigning perm {} for {} to {}".format(perm, self.username, node.__str__()))
             shortcuts.assign_perm(perm, self, node)
         self.save()
         return role

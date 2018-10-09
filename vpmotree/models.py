@@ -88,6 +88,14 @@ class Team(TreeStructure):
         "team_member": ["read_obj"],
     }
 
+    ASSIGN_MAP = {
+        "team_admin": {
+            "Team": ["team_lead", "team_member"],
+            "Project": ["project_admin"]
+        }
+    }
+
+
     name = models.CharField(max_length=150, unique=False)
     # user_linked specifies whether the team is the default against user
     user_linked = models.BooleanField(default=False)
@@ -100,9 +108,6 @@ class Team(TreeStructure):
         self.node_type = "Team"
         super(Team, self).save(*args, **kwargs)
 
-    # TODO: Create a new method "assign_role" that takes a role as input & user as input
-    #   Role must be part of the ROLE_MAP.keys() array and assign all of the role's permissions
-    #   To the input user
 
     def get_users_with_role(self, role):
         """ Returns users with permissions based on the input role """
@@ -132,9 +137,20 @@ class Project(TreeStructure):
         can have both Root and Branch parents
     """
     ROLE_MAP = {
-        "project_admin": ["read_obj", "update_obj", "assign_contributor", "assign_viewer", "assign_admin", "edit_role"],
-        "project_contributor": ["read_obj", "assign_contributor", "assign_viewer"],
+        "project_admin": ["read_obj", "update_obj", "edit_role"],
+        "project_contributor": ["read_obj", "edit_role"],
         "project_viewer": ["read_obj"]
+    }
+
+    ASSIGN_MAP = {
+        "project_admin": {
+            "Project": ["project_contributor", "project_admin", "project_viewer"],
+            "Topic": ["topic_viewer", "topic_contributor"]
+        },
+        "project_contributor": {
+            "Project": ["project_contributor", "project_viewer"],
+            "Topic": ["topic_viewer", "topic_contributor"]
+        }
     }
 
     name = models.CharField(max_length=150, null=False)
@@ -155,10 +171,6 @@ class Project(TreeStructure):
         self.node_type = "Project"
         super(Project, self).save(*args, **kwargs)
 
-    # TODO: Create a new method "assign_role" that takes a role as input & user as input
-    #   Role must be part of the ROLE_MAP.keys() array and assign all of the role's permissions
-    #   To the input user
-
     def get_users_with_role(self, role):
         # Returns users that have any perms for the object
         user_perms = shortcuts.get_users_with_perms(self, with_superusers=False, attach_perms=True)
@@ -171,10 +183,6 @@ class Project(TreeStructure):
             ('delete_obj', 'Delete Level Permissions',),
             ('update_obj', "Update Level Permissions",),
             ('read_obj', 'Read Level Permissions',),
-            # Assign permissions
-            ("assign_contributor", "Assign Contributor Permission",),
-            ("assign_viewer", "Assign Viewer Permission",),
-            ("assign_admin", "Assign Admin Permission",),
             ("edit_role", "Edit other user's role",)
         )
 

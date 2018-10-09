@@ -30,6 +30,7 @@ urlpatterns = (
     url(r'^api/messages/(?P<node_id>.+)/$', MessageListView.as_view(), name="message_list"),
 
     url(r"^api/node_permissions/(?P<node_id>.+)/$", NodePermissionsView.as_view(), name="node_permissions"),
+    url(r"^api/assignable_roles/(?P<node_id>.+)/$", AssignableRolesView.as_view(), name="assignable-roles"),
 
     url(r'^(?P<path>.*\..*)/$', RedirectView.as_view(url='/static/%(path)s')),
     url(r'^', TemplateView.as_view(template_name='angular/index.html')),

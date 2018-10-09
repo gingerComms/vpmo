@@ -1,4 +1,5 @@
 from django.db.models.functions import Length
+from django.apps import apps
 
 from rest_framework import viewsets
 from rest_framework.decorators import api_view, permission_classes
@@ -187,27 +188,6 @@ class ProjectTreeView(TeamTreeView):
         except Project.DoesNotExist:
             return None
 
-"""
-class UpdateProjectView(RetrieveUpdateAPIView):
-    model = Project
-    serializers_class = ProjectSerializer
-    permission_classes = (IsAuthenticated,)
-
-    def get_object(self):
-        try:
-            project = Project.objects.get(_id=self.kwargs.get("Project_id", None))
-            return project
-        except Project.DoesNotExist:
-            return None
-
-
-    def update(self, request, *args, **kwargs):
-        project = Project.objects.get(_id=self.kwargs.get("Project_id", None))
-        project.name = self.request.data["name"]
-        project.save()
-        return Response(ProjectSerializer(project).data)
-"""
-
 
 class CreateDeliverableView(CreateAPIView):
     model = Deliverable
@@ -231,8 +211,6 @@ class MessageListView(ListAPIView):
             return None
 
         if earlier_than is not None:
-            # TODO: Implement an order_before instead - take a message id as input and return all messages
-            # Sent before that message
             earlier_msg = Message.objects.get(_id=earlier_than)
             filter_d["sent_on__lt"] = earlier_msg.sent_on
 
@@ -274,3 +252,25 @@ class NodePermissionsView(APIView):
             user_roles.append(user_obj)
 
         return Response(user_roles)
+
+
+class AssignableRolesView(APIView):
+    """ Returns a list of roles assignable by a user for a node """
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, node_id):
+        model = apps.get_model("vpmotree", request.query_params["nodeType"])
+        try:
+            node = model.objects.get(_id=node_id)
+        except model.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        role = request.user.get_role(node)
+        if role is None and model != Team:
+            role = request.user.get_role(node.get_parent())
+            model = Team
+
+        if role is None:
+            return Response([])
+
+        return Response(model.ASSIGN_MAP.get(role, {}).get(request.query_params["nodeType"], []))

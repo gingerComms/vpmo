@@ -8,22 +8,32 @@ class AssignRolesPermission(permissions.BasePermission):
     deliverable_types = ["Deliverable", "Topic"]
 
     def has_object_permission(self, request, view, obj):
-        perms = shortcuts.get_user_perms(request.user, obj)
+        # Getting the role and permissions a user has for the object
         current_user_role = request.user.get_role(obj)
-        if not perms and obj.node_type != "Team":
+        if current_user_role is None and obj.node_type != "Team":
             parent = obj.get_parent()
-            perms = shortcuts.get_user_perms(request.user, parent)
             current_user_role = request.user.get_role(parent)
+            obj = parent
+
+        if current_user_role is None:
+            return False
+
         # Permission the user is trying to assign
         assigning_role = request.data.get("role")
+        # The nodeType the role is to be assigned for
+        assigning_node = request.data.get("nodeType")
+        # The target user for the assignment
         target_user = MyUser.objects.get(_id=request.data.get("userID"))
         # Only allowing PUT method for assigning permissions
         if request.method != "PUT":
             return False
-        print(assigning_role, perms)
+
+        return assigning_role in obj.ASSIGN_MAP.get(current_user_role, {}).get(assigning_node, [])
+
+        """
         # Team admin permission assignment
         if obj.node_type == "Team":
-            if "edit_role" in perms:
+            if "edit_role" in obj.:
                 return True
         # Project permission assignment
         elif obj.node_type == "Project":
@@ -38,7 +48,7 @@ class AssignRolesPermission(permissions.BasePermission):
                 required_perm = "assign_contributor"
             if required_perm in perms:
                 return True
-                    
+        """
         return False
 
 

@@ -9,7 +9,7 @@ from vpmoauth.permissions import AssignRolesPermission, RemoveRolesPermission
 from vpmoauth.models import MyUser
 from vpmoauth.serializers import *
 
-from rest_framework import generics, permissions, mixins
+from rest_framework import generics, permissions, mixins, status
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
@@ -67,13 +67,12 @@ class AssignableUsersListView(generics.ListAPIView):
         if node.node_type == "Team":
             return MyUser.objects.all().exclude(_id__in=existing_users)
         
-        root_users = shortcuts.get_users_with_perms(node.get_root()).exclude(_id__in=existing_users)
+        root_users = shortcuts.get_users_with_perms(node.get_root()).exclude(_id__in=existing_users,)
         return root_users
 
 
 class AssignRoleView(APIView):
-    permission_classes = (permissions.IsAuthenticated, AssignRolesPermission)
-
+    permission_classes = (permissions.IsAuthenticated, AssignRolesPermission,)
 
     def get_object(self):
         node = apps.get_model("vpmotree", self.request.data["nodeType"])
@@ -101,10 +100,14 @@ class AssignRoleView(APIView):
         if not node:
             return Response({"message": "Node does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
+        print(role, node, target_user)
         target_user.assign_role(role, node)
         target_user.save()
 
-        return Response(UserDetailsSerializer(target_user).data)
+        data = UserDetailsSerializer(target_user).data
+        data["role"] = target_user.get_role(node)
+
+        return Response(data)
 
 
 class UserNodePermissionsView(APIView):
