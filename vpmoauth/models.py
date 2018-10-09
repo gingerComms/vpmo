@@ -70,8 +70,10 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
         # Getting the permissions belonging to each orle
         to_assign = node.ROLE_MAP[role]
 
-        # TODO - Remove any roles the user might have for one of the node's children (if any)
-        #   Do the above after copnfirming with Ali
+        # Removing existing roles for the node from the user
+        existing_role = self.get_role(node)
+        if existing_role is not None:
+            self.remove_role(node, role=existing_role)
 
         # Assigning the role's permissions
         for perm in to_assign:
@@ -87,17 +89,13 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
 
         perms = node.ROLE_MAP[role]
         UserObjectPermission.objects.filter(user=self, object_pk=node._id).delete()
-        """
-        for perm in perms:
-            # Deleting the permission object directly
-            UserObjectPermission.objects.filter(user=self, object_pk=node._id, permission__name=perm).delete()
-            #shortcuts.remove_perm(perm, self, node)
-        """
+
         self.save()
         return self.get_role(node)
 
     def get_role(self, node):
         perms = set(shortcuts.get_user_perms(self, node))
+
         role = [i for i in node.ROLE_MAP.keys() if set(node.ROLE_MAP[i]) == perms]
         if role:
             return role[0]

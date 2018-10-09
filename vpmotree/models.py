@@ -145,11 +145,11 @@ class Project(TreeStructure):
     ASSIGN_MAP = {
         "project_admin": {
             "Project": ["project_contributor", "project_admin", "project_viewer"],
-            "Topic": ["topic_viewer", "topic_contributor"]
+            "Deliverable": ["topic_viewer", "topic_contributor"]
         },
         "project_contributor": {
             "Project": ["project_contributor", "project_viewer"],
-            "Topic": ["topic_viewer", "topic_contributor"]
+            "Deliverable": ["topic_viewer", "topic_contributor"]
         }
     }
 
@@ -190,6 +190,18 @@ class Topic(TreeStructure):
     """ A Topic is a LEAF level element in a TreeStructure;
         can not have ANY children, and is always parented by a BRANCH Level element (Project)
     """
+    ROLE_MAP = {
+        "topic_contributor": ["read_obj", "edit_role"],
+        "topic_viewer": ["read_obj"]
+    }
+
+    ASSIGN_MAP = {
+        "topic_contributor": {
+            "Deliverable": ["topic_viewer", "topic_contributor"]
+        }
+    }
+
+
     name = models.CharField(max_length=150, null=False, unique=False)
     # content = models.CharField(max_length=150, null=False, unique=False)
     def __str__(self):
@@ -213,7 +225,7 @@ class Deliverable(Topic):
             ("create_obj", "Create Level Permissions",),
             ('delete_obj', 'Delete Level Permissions',),
             ('update_obj', "Update Level Permissions",),
-            ('read_obj', 'Read Level Permissions'),
+            ('read_obj', 'Read Level Permissions',),
         )
 
 

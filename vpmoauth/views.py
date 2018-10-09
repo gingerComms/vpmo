@@ -67,7 +67,7 @@ class AssignableUsersListView(generics.ListAPIView):
         if node.node_type == "Team":
             return MyUser.objects.all().exclude(_id__in=existing_users)
         
-        root_users = shortcuts.get_users_with_perms(node.get_root()).exclude(_id__in=existing_users,)
+        root_users = shortcuts.get_users_with_perms(node.get_parent()).exclude(_id__in=existing_users,)
         return root_users
 
 
@@ -100,7 +100,6 @@ class AssignRoleView(APIView):
         if not node:
             return Response({"message": "Node does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
-        print(role, node, target_user)
         target_user.assign_role(role, node)
         target_user.save()
 
