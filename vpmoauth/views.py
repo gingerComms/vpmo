@@ -60,13 +60,14 @@ class AssignableUsersListView(generics.ListAPIView):
         except model.DoesNotExist:
             return []
 
-        existing_users = shortcuts.get_users_with_perms(node).values_list("_id", flat=True)
+        existing_users = list(shortcuts.get_users_with_perms(node).values_list("_id", flat=True))
+        existing_users.append(self.request.user._id)
 
         # If node is a Team, return ALL registered users
         if node.node_type == "Team":
             return MyUser.objects.all().exclude(_id__in=existing_users)
         
-        root_users = shortcuts.get_users_with_perms(node.get_root()).exclude(_id=request.user._id)
+        root_users = shortcuts.get_users_with_perms(node.get_root()).exclude(_id__in=existing_users)
         return root_users
 
 
