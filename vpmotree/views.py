@@ -54,7 +54,6 @@ class CreateProjectView(CreateAPIView):
         serializer = ProjectSerializer(data=data)
         if serializer.is_valid():
             project = serializer.save()
-            shortcuts.assign_perm("created_obj", request.user, project)
             request.user.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
