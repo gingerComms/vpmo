@@ -104,13 +104,14 @@ class TreeStructure(models.Model):
                 parents += self.get_relatives(node_type, relation="parent")
         # If node is a Team, get only the team
         elif self.node_type == "Team":
-            parents += self
+            parents += [self]
 
         user_roles = {model:user.get_role(model) for model in parents}
 
         for model, role in user_roles.items():
-            if permission in model.ROLE_MAP[role][self.node_type]:
-                return True
+            if role is not None:
+                if permission in model.ROLE_MAP[role][self.node_type]:
+                    return True
         return False
 
 

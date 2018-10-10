@@ -59,10 +59,22 @@ class UserPermissionsTestCase(TestCase):
 		# Random password created on each iteration
 		self.password = binascii.hexlify(os.urandom(12))
 		self.user.set_password(self.password)
+		self.user.create_user_team()
 		self.user.save()
 
 		# TODO: Add user.create_team call, create a project under that team, check if user has permission to that project using
 		# 	Project.user.has_permission(user, "read_obj")
+		self.team = Team.objects.first()
+		self.project = Project(project_owner=self.user, name="Proj")
+		self.project.save()
+		self.project.path = ",{},".format(str(self.team._id))
+		self.project.save()
 
+	def test_permission(self):
+		self.assertTrue(self.project.user_has_permission(self.user, "read_obj"))
+		self.assertTrue(self.project.user_has_permission(self.user, "create_obj"))
+		self.assertTrue(self.project.user_has_permission(self.user, "delete_obj"))
+		self.assertTrue(self.project.user_has_permission(self.user, "update_obj"))
 
+		self.assertTrue(self.team.user_has_permission(self.user, "add_user"))
 

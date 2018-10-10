@@ -15,7 +15,7 @@ from vpmoauth.models import MyUser
 from vpmotree.models import *
 from vpmotree.serializers import *
 from vpmotree.permissions import TeamPermissions
-from vpmotree.filters import TeamListFilter
+from vpmotree.filters import TeamListFilter, ReadNodeListFilter
 from guardian import shortcuts
 
 from datetime import datetime as dt
@@ -31,6 +31,7 @@ class FilteredTeamsView(ListAPIView):
 class AllProjectsView(ListAPIView):
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [ReadNodeListFilter,]
     queryset = Project.objects.all()
 
 

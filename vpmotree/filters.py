@@ -26,12 +26,11 @@ class TeamListFilter(filters.BaseFilterBackend):
                                                 any_perm=True)
 
 
-class ReadListFilter(filters.BaseFilterBackend):
+class ReadNodeListFilter(filters.BaseFilterBackend):
   """ Filters the input queryset to only contain items that the user has at least read_obj permissions for """
 
   def filter_queryset(self, request, queryset, view):
     if request.method in permissions.SAFE_METHODS:
-        return shortcuts.get_objects_for_user(user=request.user,
-                                            perms=["read_obj"], klass=queryset,
-                                            accept_global_perms=False, any_perm=True)
+        queryset = filter(lambda x: x.user_has_permission(request.user, "read_obj"), queryset)
+        return queryset
     return []
