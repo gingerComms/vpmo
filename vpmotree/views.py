@@ -74,6 +74,7 @@ class CreateTeamView(CreateAPIView):
         if serializer.is_valid():
             team = serializer.save()
             request.user.save()
+            request.user.assign_role("team_admin", team)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
