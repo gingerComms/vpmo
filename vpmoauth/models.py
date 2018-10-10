@@ -68,7 +68,7 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
     def assign_role(self, role, node):
         assert role in node.ROLE_MAP.keys()
         # Getting the permissions belonging to each orle
-        to_assign = node.ROLE_MAP[role]
+        to_assign = node.ROLE_MAP[role][node.node_type]
 
         # Removing existing roles for the node from the user
         existing_role = self.get_role(node)
@@ -87,7 +87,7 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
         if role is None:
             role = self.get_role(node)
 
-        perms = node.ROLE_MAP[role]
+        perms = node.ROLE_MAP[role][node.node_type]
         UserObjectPermission.objects.filter(user=self, object_pk=node._id).delete()
 
         self.save()
@@ -96,7 +96,7 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
     def get_role(self, node):
         perms = set(shortcuts.get_user_perms(self, node))
 
-        role = [i for i in node.ROLE_MAP.keys() if set(node.ROLE_MAP[i]) == perms]
+        role = [i for i in node.ROLE_MAP.keys() if set(node.ROLE_MAP[i][node.node_type]) == perms]
         if role:
             return role[0]
         return None

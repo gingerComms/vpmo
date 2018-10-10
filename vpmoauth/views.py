@@ -68,6 +68,7 @@ class AssignableUsersListView(generics.ListAPIView):
             return MyUser.objects.all().exclude(_id__in=existing_users)
         
         root_users = shortcuts.get_users_with_perms(node.get_parent()).exclude(_id__in=existing_users,)
+        print(existing_users, root_users)
         return root_users
 
 
@@ -130,7 +131,8 @@ class UserNodePermissionsView(APIView):
         
         return Response({
             "permissions": permissions,
-            "role": user_role
+            "role": user_role,
+            "_id": str(request.user._id)
         })
 
 

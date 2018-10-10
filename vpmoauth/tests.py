@@ -1,17 +1,48 @@
 from django.test import TestCase
 from django.shortcuts import *
-from vpmoapp.models import Team
+from vpmotree.models import Team, Project, Deliverable
 from vpmoauth.models import MyUser
 from vpmoauth import views
 from rest_framework.test import APIRequestFactory, force_authenticate
 import os
 import json
 import binascii
+from guardian import shortcuts
 
 # Create your tests here.
 
 # UNKNOWN ISSUE WITH TESTS DUE TO GUARDIAN + MONGODB
 # 	TESTS RUN PROPERLY ONLY ON EVERY SECOND ATTEMPT. IF ONE RUN FAILS WITH EXC, ALWAYS TRY TO RUN THE TESTS AGAIN
+
+
+class UserRolesTestCase(TestCase):
+	""" Tests that all of the user's role-based methods are working correctly """
+	def setUp(self):
+		user_creds = {
+			"username": "TestUser",
+			"email": "TestUser@vpmotest.com"
+		}
+		self.user = MyUser.objects.create(**user_creds)
+		# Random password created on each iteration
+		self.password = binascii.hexlify(os.urandom(12))
+		self.user.set_password(self.password)
+		self.user.create_user_team()
+		self.user.save()
+
+		self.team = Team.objects.first()
+
+		self.project = Project(project_owner=self.user, name="Proj")
+		self.project.save()
+		self.project.path = ",{},".format(str(self.team._id))
+		self.project.save()
+
+		self.topic = Deliverable(name="Topic")
+		self.topic.save()
+		self.topic.path = "{},".format(self.project.path)
+		self.topic.save()
+
+	def test_roles(self):
+		self.assertEqual(self.user.get_role(self.team), "team_admin")
 
 
 class UserPermissionsTestCase(TestCase):
@@ -28,58 +59,10 @@ class UserPermissionsTestCase(TestCase):
 		# Random password created on each iteration
 		self.password = binascii.hexlify(os.urandom(12))
 		self.user.set_password(self.password)
+		self.user.save()
 
-		# Team used for testing
-		self.team = Team.objects.create(name="testCaseTeam")
-
-		# Creating the request factory
-		self.factory = APIRequestFactory()
-
-	def tearDown(self):
-		self.user.delete()
-		self.team.delete()
-
-
-	def create_get_request(self, url):
-		""" Creates the get request for the actual test """
-		get_url = url+"?user={}&team={}".format(self.user.id, self.team.id)
-		request = self.factory.get(get_url)
-		# Authenticating the GET request
-		force_authenticate(request, user=self.user)
-		response = self.view(request)
-		return response
-
-
-	def create_post_request(self, url, post_data):
-		""" Creates the post request for the actual test """
-		request = self.factory.post(url, json.dumps(post_data), content_type='application/json')
-		force_authenticate(request, user=self.user)
-		response = self.view(request)
-		return response
-
-
-	def test_user_permissions(self):
-		""" Testing the GET and POST methods of the UserPermissionsView """
-		url = reverse("user-perms")
-		
-		# Doing the first request with no permissions
-		get_resp = self.create_get_request(url)
-		self.assertEqual(get_resp.data, [])
-
-		# Doing the second request to add "read_obj" permissions
-		post_data = {
-			"user": self.user.id,
-			"team": self.team.id,
-			"permission": "read_obj"
-		}
-		post_resp = self.create_post_request(url, post_data)
-		self.assertEqual(post_resp.data, ["read_obj"])
-
-		# Doing the third get_request to confirm that permissions were added
-		get_resp = self.create_get_request(url)
-		self.assertEqual(get_resp.data, ["read_obj"])
-
-
+		# TODO: Add user.create_team call, create a project under that team, check if user has permission to that project using
+		# 	Project.user.has_permission(user, "read_obj")
 
 
 
