@@ -193,7 +193,7 @@ class Project(TreeStructure):
     ROLE_MAP = {
         "project_admin": {
             "Team": ["read_obj"],
-            "Project": ["read_obj", "update_obj", "edit_role"],
+            "Project": ["read_obj", "update_obj", "edit_role", "add_user"],
             "Deliverable": ["create_obj", "read_obj", "delete_obj", "update_obj", "edit_role"]
         },
         "project_contributor": {
@@ -247,6 +247,7 @@ class Project(TreeStructure):
             ('update_obj', "Update Level Permissions",),
             ('read_obj', 'Read Level Permissions',),
             ("edit_role", "Edit other user's role",)
+            ("add_user", "Add User to Root",),
         )
 
 class Topic(TreeStructure):
@@ -255,7 +256,7 @@ class Topic(TreeStructure):
     """
     ROLE_MAP = {
         "topic_contributor": {
-            "Deliverable": ["read_obj", "edit_role"]
+            "Deliverable": ["read_obj", "edit_role", "add_user", "update_obj"]
         },
         "topic_viewer": {
             "Deliverable": ["read_obj"]
@@ -303,6 +304,7 @@ class Deliverable(Topic):
             ('update_obj', "Update Level Permissions",),
             ('read_obj', 'Read Level Permissions',),
             ("edit_role", "Edit User Role Permissions",)
+            ("add_user", "Add User to Root",),
         )
 
 
