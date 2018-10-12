@@ -47,6 +47,8 @@ class TreeStructure(models.Model):
     # other than teams there is always a node which triggers the creation of child or sibling node
     # the triggering node provides its own path plus its id as the path for the new node
 
+    objects = models.DjongoManager()
+
     def get_root(self):
         """ Returns the root element of the current tree structure """
         if self.path is None:
@@ -246,7 +248,7 @@ class Project(TreeStructure):
             ('delete_obj', 'Delete Level Permissions',),
             ('update_obj', "Update Level Permissions",),
             ('read_obj', 'Read Level Permissions',),
-            ("edit_role", "Edit other user's role",)
+            ("edit_role", "Edit other user's role",),
             ("add_user", "Add User to Root",),
         )
 
@@ -303,7 +305,7 @@ class Deliverable(Topic):
             ('delete_obj', 'Delete Level Permissions',),
             ('update_obj', "Update Level Permissions",),
             ('read_obj', 'Read Level Permissions',),
-            ("edit_role", "Edit User Role Permissions",)
+            ("edit_role", "Edit User Role Permissions",),
             ("add_user", "Add User to Root",),
         )
 

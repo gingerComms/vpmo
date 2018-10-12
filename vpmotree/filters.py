@@ -31,6 +31,11 @@ class ReadNodeListFilter(filters.BaseFilterBackend):
 
   def filter_queryset(self, request, queryset, view):
     if request.method in permissions.SAFE_METHODS:
+        # Try something like:
+        #   allowed_users = MyUser.objects.annotate(has_perm=Count('userobjectpermission', filter=Q(
+        #       userobjectpermission__object_pk__in=queryset.values("_id", flat=True)))
+        #   if request.user in allowed_users: return True;
+
         queryset = filter(lambda x: x.user_has_permission(request.user, "read_obj"), queryset)
         return queryset
     return []
