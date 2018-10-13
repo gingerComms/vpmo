@@ -37,7 +37,13 @@ class ReadNodeListFilter(filters.BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
         query_params = request.query_params
 
-        if request.method in permissions.SAFE_METHODS and "parentNodeID" in query_params and "nodeType" in query_params:
+        if request.method in permissions.SAFE_METHODS and "nodeType" in query_params:
+            if query_params["nodeType"] == "Team":
+                assigned_teams = UserRole.objects.filter(node__node_type="Team", user=request.user,
+                    permissions__name="read_team").values_list("node___id", flat=True)
+                queryset = queryset.filter(_id__in=assigned_teams)
+                return queryset
+
             parent_node = TreeStructure.objects.get(_id=query_params["parentNodeID"])
             nodes_in_parent_path = list(filter(lambda x: x.strip(), parent_node.path.split(",") if parent_node.path else []))
             # Adding the parent node itself into the array
