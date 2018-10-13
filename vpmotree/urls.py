@@ -16,11 +16,13 @@ router = routers.DefaultRouter()
 urlpatterns = (
     url(r'^api/organisations/$', AllTeamsView.as_view()),
     url(r'^api/filtered_organisations/$', FilteredTeamsView.as_view(), name="filtered_teams"),
-    url(r'^api/projects/$', AllProjectsView.as_view()),
+    url(r'^api/projects/$', AllProjectsView.as_view(), name="all_projects"),
     url(r'^api/projects/add/$', CreateProjectView.as_view()),
     url(r'^api/projects/(?P<Project_id>.+)/$', UpdateProjectView.as_view()),
     url(r'^api/teams/add/$', CreateTeamView.as_view()),
     url(r'^api/deliverable/add/$', CreateDeliverableView.as_view()),
+    # Takes two querys parametrs - nodeType + parentNodeID and returns all nodes under those based on permissions
+    url(r'^api/nodes/$', AllNodesView.as_view(), name="all_nodes"),
 
     url(r"^api/update_project/(?P<_id>.+)/$", UpdateProjectView.as_view(), name="update_project"),
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Team, Project, Deliverable, TreeStructure, Message
+from .models import Team, Project, Deliverable, TreeStructure, Message, Topic
 from django.apps import apps
 
 

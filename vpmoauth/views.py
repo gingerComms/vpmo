@@ -6,7 +6,7 @@ from rest_framework.permissions import AllowAny
 
 from vpmotree.models import Team, Project, TreeStructure
 from vpmoauth.permissions import AssignRolesPermission, RemoveRolesPermission
-from vpmoauth.models import MyUser
+from vpmoauth.models import MyUser, UserRolePermission, UserRole
 from vpmoauth.serializers import *
 
 from rest_framework import generics, permissions, mixins, status
@@ -25,28 +25,6 @@ import jwt
 
 # Create your views here.
 
-# TODO: This view may be unnecessary - delete after permissions finished
-class UserPermissionsView(APIView):
-    permission_classes = [permissions.IsAuthenticated,]
-    def get(self, request):
-        """ Returns a list of permissions held by the input User for the input Team """
-        user = MyUser.objects.get(_id=request.query_params.get("user", None))
-        team = Team.objects.get(_id=request.query_params.get("team", None))
-
-        return Response(shortcuts.get_perms(user, team))
-
-    def post(self, request):
-        """ Adds input permission for input team to input user """
-        assert request.data.get("permission", None) in ["read_obj", "create_obj", "delete_obj", "update_obj"]
-
-        user = MyUser.objects.get(_id=request.data.get("user", None))
-        team = Team.objects.get(_id=request.data.get("team", None))
-
-        shortcuts.assign_perm(request.data["permission"], user, team)
-
-        return Response(shortcuts.get_perms(user, team))
-
-
 class AssignableUsersListView(generics.ListAPIView):
     """ Returns a list of users that can be assigned a role for a given node """
     serializer_class = UserDetailsSerializer
@@ -60,14 +38,14 @@ class AssignableUsersListView(generics.ListAPIView):
         except model.DoesNotExist:
             return []
 
-        existing_users = list(shortcuts.get_users_with_perms(node).values_list("_id", flat=True))
+        existing_users = list(UserRole.get_users_with_perms(node).values_list("_id", flat=True))
         existing_users.append(self.request.user._id)
 
         # If node is a Team, return ALL registered users
         if node.node_type == "Team":
             return MyUser.objects.all().exclude(_id__in=existing_users)
         
-        root_users = shortcuts.get_users_with_perms(node.get_parent()).exclude(_id__in=existing_users,)
+        root_users = UserRole.get_users_with_perms(node.get_parent()).exclude(_id__in=existing_users,)
         return root_users
 
 
@@ -101,7 +79,6 @@ class AssignRoleView(APIView):
             return Response({"message": "Node does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
         target_user.assign_role(role, node)
-        target_user.save()
 
         data = UserDetailsSerializer(target_user).data
         data["role"] = target_user.get_role(node)
@@ -120,13 +97,9 @@ class UserNodePermissionsView(APIView):
         except model.DoesNotExist:
             return Response({"message": "Tree structure not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        permissions = shortcuts.get_user_perms(request.user, node)
-        node_parent = node.get_parent()
-        if not permissions and node_parent != None:
-            permissions = shortcuts.get_user_perms(request.user, node_parent)
-            user_role = request.user.get_role(node_parent)
-        else:
-            user_role = request.user.get_role(node)
+        permissions = request.user.get_permissions(node)
+        
+        user_role = request.user.get_role(node)
         
         return Response({
             "permissions": permissions,

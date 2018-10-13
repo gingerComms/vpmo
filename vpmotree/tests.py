@@ -11,6 +11,7 @@ import os, json
 import binascii
 from copy import copy
 from vpmotree import serializers
+from create_base_permissions import create_base_permissions
 
 # Create your tests here.
 
@@ -227,3 +228,63 @@ class NodePermissionsViewTestCase(TestCase):
         response = self.client.get(url).json()
 
         print(response)
+
+
+class ReadNodeListFilterTestcase(TestCase):
+    client = Client()
+
+    def setUp(self):
+        """ Creates the models required to test the tree structure """
+        create_base_permissions()
+        self.view = views.AllProjectsView.as_view()
+        # MyUser Credentials used for the testing
+        user_creds = {
+            "username": "TestUser",
+            "email": "TestUser@vpmotest.com",
+            "fullname": "Test User"
+        }
+        self.user = MyUser.objects.create(**user_creds)
+        # Random password created on each iteration
+        self.password = binascii.hexlify(os.urandom(12))
+        self.user.set_password(self.password)
+        self.user.save()
+
+        self.team = Team(name="Test Team", user_team="Blah")
+        self.team.save()
+
+        self.team_2 = Team(name="Test Team 2", user_team="BlahBlah")
+        self.team_2.save()
+
+        self.user.assign_role("team_admin", self.team)
+        self.user.save()
+
+        self.project = Project(name="Test Proj", index=0, path=",{},".format(self.team._id))
+        self.project.save()
+
+        self.project_2 = Project(name="Test Proj 2", index=0, path=",{},".format(self.team_2._id))
+
+        self.topic = Deliverable(name="Test Topic", index=0, path="{}{},".format(self.project.path, self.project._id))
+        self.topic.save()
+
+        self.topic_2 = Deliverable(name="Test Topic 2", index=0, path="{}{},".format(self.project_2.path, self.project_2._id))
+        self.topic_2.save()
+
+        logged_in = self.client.force_login(self.user, backend="vpmoauth.auth_backend.AuthBackend")
+
+
+    def test_filter(self):
+        # Project Test
+        url = reverse("all_nodes")+"?nodeType=Project&parentNodeID="+str(self.team._id)
+
+        response = self.client.get(url).json()
+
+        self.assertEqual(len(response), 1)
+        self.assertEqual(response[0]["_id"], str(self.project._id))
+
+        # Topic Test (Deliverable)
+        url = reverse("all_nodes")+"?nodeType=Deliverable&parentNodeID="+str(self.project._id)
+
+        response = self.client.get(url).json()
+
+        self.assertEqual(len(response), 1)
+        self.assertEqual(response[0]["_id"], str(self.topic._id))

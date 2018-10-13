@@ -8,6 +8,7 @@ import os
 import json
 import binascii
 from guardian import shortcuts
+from create_base_permissions import create_base_permissions
 
 # Create your tests here.
 
@@ -22,6 +23,8 @@ class UserRolesTestCase(TestCase):
 			"username": "TestUser",
 			"email": "TestUser@vpmotest.com"
 		}
+		create_base_permissions()
+
 		self.user = MyUser.objects.create(**user_creds)
 		# Random password created on each iteration
 		self.password = binascii.hexlify(os.urandom(12))
@@ -41,8 +44,10 @@ class UserRolesTestCase(TestCase):
 		self.topic.path = "{},".format(self.project.path)
 		self.topic.save()
 
+		print(self.team.userrole_set.all())
+
 	def test_roles(self):
-		self.assertEqual(self.user.get_role(self.team), "team_admin")
+		self.assertEqual("team_admin", self.user.get_role(self.team).role_name)
 
 
 class UserPermissionsTestCase(TestCase):

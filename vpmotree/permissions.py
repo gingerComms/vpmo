@@ -12,9 +12,9 @@ class IsAccountOwner(permissions.BasePermission):
 class ReadPermission(permissions.BasePermission):
     """ Returns True for an object if the user has at least read permissions using a Safe Method """
     def has_object_permission(self, request, view, obj):
-        perms = shortcuts.get_user_perms(request.user, obj)
+        perms = request.user.get_permissions(obj)
 
-        if "read_obj" in perms in request.method in permissions.SAFE_METHODS:
+        if "read_{}".format(obj.node_type) in perms in request.method in permissions.SAFE_METHODS:
             return True
         return False
 
@@ -24,9 +24,9 @@ class UpdatePermission(permissions.BasePermission):
         for a PUT/PATCH request
     """
     def has_object_permission(self, request, view, obj):
-        perms = shortcuts.get_user_perms(request.user, obj)
+        perms = request.user.get_permissions(obj)
 
-        if "update_obj" in perms and request.method in ["PUT", "PATCH"]:
+        if "update_{}".format(obj.node_type) in perms and request.method in ["PUT", "PATCH"]:
             return True
         return False
 
@@ -36,9 +36,9 @@ class DeletePermission(permissions.BasePermission):
         for DELETE requests
     """
     def has_object_permission(self, request, view, obj):
-        perms = shortcuts.get_user_perms(request.user, obj)
+        perms = request.user.get_permissions(obj)
 
-        if "delete_obj" in perms and request.method == "DELETE":
+        if "delete_{}".format(obj.node_type) in perms and request.method == "DELETE":
             return True
         return False
 
@@ -48,9 +48,9 @@ class CreatePermissions(permissions.BasePermission):
         for POST requests
     """
     def has_object_permissions(self, request, view, obj):
-        perms = shortcuts.get_user_perms(request.user, obj)
+        perms = request.user.get_permissions(obj)
 
-        if "create_obj" in perms and request.method == "POST":
+        if "create_{}".format(obj.node_type) in perms and request.method == "POST":
             return True
         return False
 
@@ -66,16 +66,16 @@ class TeamPermissions(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         """ This method only comes into effect for a Detail Endpoint """
         # Retrieving all permissions a user has for the object
-        perms = shortcuts.get_user_perms(request.user, obj)
+        perms = request.user.get_permissions(obj)
 
         if request.method in permissions.SAFE_METHODS:
             # Checking if the user has ANY perms for the obj and returns True
-            if perms:
+            if "read_{}".format(obj.node_type) in perms:
                 return True
             return False
         else:
             # Checking if the user has creator or contributor perms for other methods
-            if "created_obj" in perms or "contribute_obj" in perms:
+            if "created_{}".format(obj.node_type) in perms or "update_{}".format(obj.node_type) in perms:
                 return True
             return False
         return False

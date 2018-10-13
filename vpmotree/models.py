@@ -71,51 +71,6 @@ class TreeStructure(models.Model):
             return Project.objects.get(_id=parent._id)
         return parent
 
-    def get_relatives(self, node_type, relation="parent"):
-        """ Returns the nodes containing the current object's path based on node_type 
-            NOTE - Includes self if node_type == self.node_type
-        """
-        model = apps.get_model("vpmotree", node_type)
-
-        relatives = []
-        children = []
-        parents = []
-        # Children are defined as nodes that contain the current obj's _id in their path
-        if relation == "children" or relation is None:
-            children = list(model.objects.filter(path__contains=self._id))
-        # Parents are defined as nodes that are contained in the current obj's _id
-        if self.path is not None and (relation == "parent" or relation is None):
-            parents = filter(lambda x: len(x.strip()), self.path.split(","))
-            parents = list(model.objects.filter(_id__in=parents))
-        relatives = children + parents
-
-        if node_type == self.node_type:
-            relatives.append(self)
-
-        return relatives
-
-
-    def user_has_permission(self, user, permission):
-        """ Returns true if the input user has the permission (even through a relative) to the current node  """
-        node_types = []
-        parents = []
-        # If node is a Project/Team get Project and Team type parents
-        if self.node_type == "Project" or self.node_type == "Deliverable":
-            node_types += ["Project", "Team"]
-            for node_type in node_types:
-                parents += self.get_relatives(node_type, relation="parent")
-        # If node is a Team, get only the team
-        elif self.node_type == "Team":
-            parents += [self]
-
-        user_roles = {model:user.get_role(model) for model in parents}
-
-        for model, role in user_roles.items():
-            if role is not None:
-                if permission in model.ROLE_MAP[role][self.node_type]:
-                    return True
-        return False
-
 
     def save(self, *args, **kwargs):
         super(TreeStructure, self).save(*args, **kwargs)
@@ -128,29 +83,6 @@ class Team(TreeStructure):
     """ A Team is a ROOT level element in a TreeStructure; path is always None.
         * There is no save method because path is None by default
     """
-    ROLE_MAP = {
-        "team_admin":   {
-            "Team": ["delete_obj", "update_obj", "read_obj", "add_user", "edit_role", "remove_user"],
-            "Project": ["create_obj", "read_obj", "delete_obj", "update_obj"],
-            "Deliverable": ["read_obj"]
-        },
-        "team_lead": {
-            "Team": ["read_obj", "update_obj"],
-            "Project": ["read_obj"],
-            "Deliverable": ["read_obj"]
-        },
-        "team_member": {
-            "Team": ["read_obj"],
-        }
-    }
-
-    ASSIGN_MAP = {
-        "team_admin": {
-            "Team": ["team_lead", "team_member"],
-            "Project": ["project_admin", "project_contributor", "project_viewer"]
-        }
-    }
-
 
     name = models.CharField(max_length=150, unique=False)
     # user_linked specifies whether the team is the default against user
@@ -164,25 +96,6 @@ class Team(TreeStructure):
         self.node_type = "Team"
         super(Team, self).save(*args, **kwargs)
 
-
-    def get_users_with_role(self, role):
-        """ Returns users with permissions based on the input role """
-        # Returns users that have any perms for the object
-        user_perms = shortcuts.get_users_with_perms(self, with_superusers=False, attach_perms=True)
-        # Filtering those users to only the ones that have permissions from role_map
-        return filter(lambda x: user_perms[x] == self.ROLE_MAP[role][self.node_type], user_perms)
-
-    class Meta:
-        permissions = (
-            ("create_obj", "Create Level Permissions",),
-            ('delete_obj', 'Delete Level Permissions',),
-            ('update_obj', "Update Level Permissions",),
-            ('read_obj', 'Read Level Permissions',),
-            ("add_user", "Add User to Root",),
-            ("remove_user", "Remove User from Tree",),
-            ("edit_role", "Edit other user's role",)
-        )
-
     def __str__(self):
         return '%s - %s' % (self.name, self.user_team)
 
@@ -192,31 +105,6 @@ class Project(TreeStructure):
         can have both Leaf and Branch children,
         can have both Root and Branch parents
     """
-    ROLE_MAP = {
-        "project_admin": {
-            "Team": ["read_obj"],
-            "Project": ["read_obj", "update_obj", "edit_role", "add_user"],
-            "Deliverable": ["create_obj", "read_obj", "delete_obj", "update_obj", "edit_role"]
-        },
-        "project_contributor": {
-            "Project": ["read_obj", "edit_role"],
-            "Deliverable": ["create_obj", "read_obj", "update_obj"]
-        },
-        "project_viewer": {
-            "Project": ["read_obj"]
-        }
-    }
-
-    ASSIGN_MAP = {
-        "project_admin": {
-            "Project": ["project_contributor", "project_admin", "project_viewer"],
-            "Deliverable": ["topic_viewer", "topic_contributor"]
-        },
-        "project_contributor": {
-            "Project": ["project_contributor", "project_viewer"],
-            "Deliverable": ["topic_viewer", "topic_contributor"]
-        }
-    }
 
     name = models.CharField(max_length=150, null=False)
     description = models.TextField(blank=True, null=True)
@@ -242,51 +130,19 @@ class Project(TreeStructure):
         # Filtering those users to only the ones that have permissions from role_map
         return filter(lambda x: user_perms[x] == self.ROLE_MAP[role][self.node_type], user_perms)
 
-    class Meta:
-        permissions = (
-            ("create_obj", "Create Level Permissions",),
-            ('delete_obj', 'Delete Level Permissions',),
-            ('update_obj', "Update Level Permissions",),
-            ('read_obj', 'Read Level Permissions',),
-            ("edit_role", "Edit other user's role",),
-            ("add_user", "Add User to Root",),
-        )
 
 class Topic(TreeStructure):
     """ A Topic is a LEAF level element in a TreeStructure;
         can not have ANY children, and is always parented by a BRANCH Level element (Project)
     """
-    ROLE_MAP = {
-        "topic_contributor": {
-            "Deliverable": ["read_obj", "edit_role", "add_user", "update_obj"]
-        },
-        "topic_viewer": {
-            "Deliverable": ["read_obj"]
-        }
-    }
-
-    ASSIGN_MAP = {
-        "topic_contributor": {
-            "Deliverable": ["topic_viewer", "topic_contributor"]
-        }
-    }
-
+    topic_classes = [
+        "Deliverable"
+    ]
 
     name = models.CharField(max_length=150, null=False, unique=False)
     # content = models.CharField(max_length=150, null=False, unique=False)
     def __str__(self):
         return "{name} - {type}".format(name=self.name, type=type(self).__name__)
-
-    def has_read_permissions(self, user):
-        current_role = user.get_role(self)
-        parent_role = user.get_role(self.get_parent())
-        root_role = user.get_role(self.get_root())
-
-        allowed_roles = ["team_admin", "team_lead", "project_admin", "project_contributor",
-            "project_viewer", "topic_viewer", "topic_contributor"]
-        if any(i in allowed_roles for i in [current_role, parent_role, root_role]):
-            return True
-        return False
 
     class Meta:
         abstract = True
@@ -296,18 +152,8 @@ class Deliverable(Topic):
     due_date = models.DateTimeField(auto_now=False, auto_now_add=False)
 
     def save(self, *args, **kwargs):
-        self.node_type = "Deliverable"
+        self.node_type = "Topic"
         super(Deliverable, self).save(*args, **kwargs)
-
-    class Meta:
-        permissions = (
-            ("create_obj", "Create Level Permissions",),
-            ('delete_obj', 'Delete Level Permissions',),
-            ('update_obj', "Update Level Permissions",),
-            ('read_obj', 'Read Level Permissions',),
-            ("edit_role", "Edit User Role Permissions",),
-            ("add_user", "Add User to Root",),
-        )
 
 
 class Message(models.Model):

@@ -10,7 +10,7 @@ from rest_framework.request import Request
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework import filters
 from rest_framework import status
-from vpmoauth.models import MyUser
+from vpmoauth.models import MyUser, UserRole
 
 from vpmotree.models import *
 from vpmotree.serializers import *
@@ -26,6 +26,24 @@ class FilteredTeamsView(ListAPIView):
     permission_classes = [IsAuthenticated, TeamPermissions]
     queryset = Team.objects.all()
     filter_backends = (TeamListFilter,)
+
+
+class AllNodesView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    filter_backends = [ReadNodeListFilter]
+
+    serializers = {
+        "Team": TeamSerializer,
+        "Project": ProjectSerializer,
+        "Deliverable": DeliverableSerializer
+    }
+
+    def get_queryset(self):
+        model = apps.get_model("vpmotree", self.request.query_params["nodeType"])
+        return model.objects.all()
+
+    def get_serializer_class(self):
+        return self.serializers[self.request.query_params["nodeType"]]
 
 
 class AllProjectsView(ListAPIView):
@@ -235,22 +253,21 @@ class NodePermissionsView(APIView):
                             status=status.HTTP_404_NOT_FOUND)
 
         # Getting a dictionary of all users that have any permissions to the model
-        user_perms = shortcuts.get_users_with_perms(node, with_superusers=False, attach_perms=True)
+        raw_user_roles = UserRole.objects.filter(node=node).values("role_name", 
+            "user___id", "user__email", "user__username", "user__fullname")
 
-        # Mapping roles by collection of permissions
+        # Rename the keys for easier access in the frontend
         user_roles = []
-        for user in user_perms.keys():
-            user_obj = {
-                "_id": str(user._id),
-                "email": user.email,
-                "username": user.username,
-                "fullname": user.fullname,
-            }
-            role = user.get_role(node)
-            if not role:
-                role = user.get_role(node.get_parent())
-            user_obj["role"] = role
-            user_roles.append(user_obj)
+        for obj in raw_user_roles:
+            user_roles.append({
+                "_id": obj["user___id"],
+                "role": obj["role_name"],
+                "email": obj["user__email"],
+                "username": obj["user__username"],
+                "fullname": obj["user__fullname"]
+            })
+
+        return Response(user_roles)
 
         return Response(user_roles)
 
@@ -266,12 +283,15 @@ class AssignableRolesView(APIView):
         except model.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        role = request.user.get_role(node)
-        if role is None and model != Team:
-            role = request.user.get_role(node.get_parent())
-            model = Team
+        permissions = request.user.get_permissions(node)
 
-        if role is None:
-            return Response([])
+        assignable_roles = []
 
-        return Response(model.ASSIGN_MAP.get(role, {}).get(request.query_params["nodeType"], []))
+        if "update_team_user_role" in permissions and model == Team:
+            assignable_roles += ["team_member", "team_lead", "team_admin"]
+        elif "update_project_user_role" in permissions and model == Project:
+            assignable_roles += ["project_viewer", "project_contributor", "project_admin"]
+        elif "update_top_user_role" in  permissions and request.query_params["nodeType"] in Topic.topic_classes:
+            assignable_roles += ["topic_viewer", "topic_contributor"]
+
+        return Response(assignable_roles)
