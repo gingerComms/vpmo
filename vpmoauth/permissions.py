@@ -13,7 +13,7 @@ class AssignRolesPermission(permissions.BasePermission):
 
         permissions = request.user.get_permissions(obj)
 
-        if "update_{}_user_role".format(obj.node_type) in permissions:
+        if "update_{}_user_role".format(obj.node_type.lower()) in permissions:
             return True
 
         return False
@@ -25,7 +25,7 @@ class RemoveRolesPermission(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         permissions = request.user.get_permissions(obj)
 
-        if request.method == "DELETE" and "remove_{}_user".format(obj.node_type) in permissions:
+        if request.method == "DELETE" and "remove_{}_user".format(obj.node_type.lower()) in permissions:
             return True
 
         return False

@@ -260,7 +260,7 @@ class NodePermissionsView(APIView):
         user_roles = []
         for obj in raw_user_roles:
             user_roles.append({
-                "_id": obj["user___id"],
+                "_id": str(obj["user___id"]),
                 "role": obj["role_name"],
                 "email": obj["user__email"],
                 "username": obj["user__username"],
@@ -268,9 +268,6 @@ class NodePermissionsView(APIView):
             })
 
         return Response(user_roles)
-
-        return Response(user_roles)
-
 
 class AssignableRolesView(APIView):
     """ Returns a list of roles assignable by a user for a node """

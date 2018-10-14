@@ -41,9 +41,9 @@ class UserRole(models.Model):
         return "{} - {} - {}".format(self.role_name, self.user.username, self.node.node_type)
 
     @staticmethod
-    def get_users_with_perms(self, node):
+    def get_user_ids_with_perms(node):
         user_ids = UserRole.objects.filter(node=node).values_list("user___id", flat=True)
-        return MyUser.objects.filter(_id__in=user_ids)
+        return user_ids
 
 
 # user.userrole_set.filter(node__id__in=[all_node_ids (parents + self)], permissions__permission_name__in=["read_topic"])
@@ -139,7 +139,7 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
     def get_permissions(self, node):
         """ Returns the list of permissions the user has for the given node """
         # All relevant node_ids for the permissions
-        node_branch = filter(lambda x: x.strip(), node.path.split(",")) if node.path else [] + [node._id]
+        node_branch = list(filter(lambda x: x.strip(), node.path.split(",") if node.path else '')) + [str(node._id)]
         # Getting a merged list of any and all permissions the user has for this branch
         # node__id__in=node_branch filters all roles the user has for nodes in this branch of the treestructure
         # permissions__name__icontains=node.node_type filters only the permissions relevant to this node type

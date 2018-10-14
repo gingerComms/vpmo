@@ -38,14 +38,15 @@ class AssignableUsersListView(generics.ListAPIView):
         except model.DoesNotExist:
             return []
 
-        existing_users = list(UserRole.get_users_with_perms(node).values_list("_id", flat=True))
-        existing_users.append(self.request.user._id)
+        existing_users = UserRole.get_user_ids_with_perms(node)
 
         # If node is a Team, return ALL registered users
         if node.node_type == "Team":
             return MyUser.objects.all().exclude(_id__in=existing_users)
         
-        root_users = UserRole.get_users_with_perms(node.get_parent()).exclude(_id__in=existing_users,)
+        root_users = UserRole.get_user_ids_with_perms(node.get_parent())
+        root_users = filter(lambda x: x not in existing_users, root_users)
+        root_users = MyUser.objects.filter(_id__in=root_users)
         return root_users
 
 
@@ -81,7 +82,7 @@ class AssignRoleView(APIView):
         target_user.assign_role(role, node)
 
         data = UserDetailsSerializer(target_user).data
-        data["role"] = target_user.get_role(node)
+        data["role"] = target_user.get_role(node).role_name
 
         return Response(data)
 
@@ -103,7 +104,7 @@ class UserNodePermissionsView(APIView):
         
         return Response({
             "permissions": permissions,
-            "role": user_role,
+            "role": user_role.role_name if user_role else None,
             "_id": str(request.user._id)
         })
 
@@ -138,7 +139,7 @@ class RemoveUserRoleView(generics.DestroyAPIView):
             return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
         role = request.query_params.get("role", None)
-        user.remove_role(node, role=role)
+        user.remove_role(node)
 
         return Response("Success")
 
