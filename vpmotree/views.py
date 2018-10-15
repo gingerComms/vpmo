@@ -67,6 +67,8 @@ class CreateProjectView(CreateAPIView):
     def post(self, request, *args, **kwargs):
         """ Handles creation of the project through the ProjectSerializer """
         data = request.data.copy()
+        parent = TreeStructure.objects.get(_id=data.pop("parent"))
+        data["path"] = parent.path or "," + str(parent._id) + ","
         # add team_project unique value based on project name @ team unique name
         # data["team_project"] = request.data["name"] + "@" + request.
         serializer = ProjectSerializer(data=data)
@@ -281,7 +283,7 @@ class AssignableRolesView(APIView):
         except model.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        permissions = request.user.get_permissions(node)
+        permissions = list(request.user.get_permissions(node, all_types=True))
 
         assignable_roles = []
 

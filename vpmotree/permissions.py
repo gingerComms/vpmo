@@ -50,9 +50,9 @@ class CreatePermissions(permissions.BasePermission):
         for POST requests
     """
     def has_permission(self, request, view):
-        """ Assuming that the request has a path attribute for the node to create """
+        """ Assuming that the request has a parent attribute for the node to create """
         if request.method == "POST":
-            node = list(filter(lambda x: x.strip(), request.data.get("path").split(",")))[-1]
+            node = request.data.get("parent")
             node = TreeStructure.objects.get(_id=node)
             perms = request.user.get_permissions(node, all_types=True)
 
