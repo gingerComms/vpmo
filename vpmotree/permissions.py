@@ -54,7 +54,7 @@ class CreatePermissions(permissions.BasePermission):
         if request.method == "POST":
             node = list(filter(lambda x: x.strip(), request.data.get("path").split(",")))[-1]
             node = TreeStructure.objects.get(_id=node)
-            perms = request.user.get_permissions(node)
+            perms = request.user.get_permissions(node, all_types=True)
 
             to_create_type = request.data["node_type"]
             if "create_{}".format(to_create_type.lower()) in perms:

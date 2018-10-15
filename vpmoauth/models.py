@@ -136,15 +136,20 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
 
         return deleted
 
-    def get_permissions(self, node):
+    def get_permissions(self, node, all_types=False):
         """ Returns the list of permissions the user has for the given node """
         # All relevant node_ids for the permissions
         node_branch = list(filter(lambda x: x.strip(), node.path.split(",") if node.path else '')) + [str(node._id)]
         # Getting a merged list of any and all permissions the user has for this branch
         # node__id__in=node_branch filters all roles the user has for nodes in this branch of the treestructure
         # permissions__name__icontains=node.node_type filters only the permissions relevant to this node type
-        permissions = UserRole.objects.filter(user=self, node___id__in=node_branch, 
-            permissions__name__icontains=node.node_type).values_list("permissions__name", flat=True).distinct()
+        filters = {
+            "user": self,
+            "node___id__in": node_branch,
+        }
+        if not all_types:
+            filters["permissions__name__icontains"] = node.node_type
+        permissions = UserRole.objects.filter(**filters).values_list("permissions__name", flat=True).distinct()
         return permissions
 
     def get_role(self, node):

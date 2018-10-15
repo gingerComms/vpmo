@@ -20,7 +20,7 @@ ROLES_MAP = {
 		"remove_team_user",
 		"read_team",
 		"update_team",
-		"delete_team (archive)",
+		"delete_team",
 		"read_topic",
 		"add_project_viewer",
 		"update_project_user_role"

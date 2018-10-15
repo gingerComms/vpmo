@@ -123,7 +123,7 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
 
         self.user =  self.context['request'].user
 
-        permissions = self.user.get_permissions(instance)
+        permissions = self.user.get_permissions(instance, all_types=True)
         allowed_node_types = [i.split("_")[-1].capitalize() for i in permissions if "read_" in i]
 
         child_condition = Q(path__startswith=","+str(instance._id)) | Q(path__icontains=str(instance._id))
