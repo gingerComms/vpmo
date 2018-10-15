@@ -1,6 +1,9 @@
 from rest_framework import serializers
 from .models import Team, Project, Deliverable, TreeStructure, Message, Topic
+from vpmoauth.models import UserRole
 from django.apps import apps
+from django.db.models import Q
+from rest_framework.fields import CurrentUserDefault
 
 
 class MessageSerializer(serializers.ModelSerializer):
@@ -118,16 +121,25 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
         """ Takes a team as input and returns the Tree it is the root of """
         children = []
 
+        self.user =  self.context['request'].user
+
+        permissions = self.user.get_permissions(instance)
+        allowed_node_types = [i.split("_")[-1].capitalize() for i in permissions if "read_" in i]
+
+        child_condition = Q(path__startswith=","+str(instance._id)) | Q(path__icontains=str(instance._id))
+        role_condition = Q(node_type__in=allowed_node_types) | Q(user_role_node__user=self.user)
+
+        self.all_children = TreeStructure.objects.filter(child_condition, role_condition)
+
         if instance.node_type == "Team":
             # All objects starting from the current ROOT (Team)
-            self.all_children = TreeStructureWithoutChildrenSerializer(TreeStructure.objects.filter(
-                path__startswith=","+str(instance._id)).filter(node_type="Project"), many=True).data
+            self.all_children = TreeStructureWithoutChildrenSerializer(self.all_children.filter(
+                node_type="Project"), many=True).data
             # Finding the first branches from the root (Projects)
             top_level = 2
         else:
             if instance.node_type == "Project":
-                self.all_children = TreeStructureWithoutChildrenSerializer(TreeStructure.objects.filter(
-                    path__contains= str(instance._id)), many=True).data
+                self.all_children = TreeStructureWithoutChildrenSerializer(self.all_children, many=True).data
                 top_level = instance.path.count(",") + 1
 
         first_branches = filter(lambda x: x["path"].count(",") == top_level, self.all_children)
