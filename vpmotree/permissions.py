@@ -1,5 +1,7 @@
 from rest_framework import permissions
+from django.apps import apps
 from guardian import shortcuts
+from vpmotree.models import TreeStructure
 
 
 class IsAccountOwner(permissions.BasePermission):
@@ -47,9 +49,20 @@ class CreatePermissions(permissions.BasePermission):
     """ Returns True for an object if the user has at least create perms on an object
         for POST requests
     """
+    def has_permission(self, request, view):
+        """ Assuming that the request has a path attribute for the node to create """
+        if request.method == "POST":
+            node = list(filter(lambda x: x.strip(), request.data.get("path").split(",")))[-1]
+            node = TreeStructure.objects.get(_id=node)
+            perms = request.user.get_permissions(node)
+
+            to_create_type = request.data["node_type"]
+            if "create_{}".format(to_create_type.lower()) in perms:
+                return True
+        return False
+
     def has_object_permissions(self, request, view, obj):
         perms = request.user.get_permissions(obj)
-
         if "create_{}".format(obj.node_type) in perms and request.method == "POST":
             return True
         return False

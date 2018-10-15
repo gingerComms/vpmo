@@ -14,7 +14,7 @@ from vpmoauth.models import MyUser, UserRole
 
 from vpmotree.models import *
 from vpmotree.serializers import *
-from vpmotree.permissions import TeamPermissions
+from vpmotree.permissions import TeamPermissions, CreatePermissions
 from vpmotree.filters import TeamListFilter, ReadNodeListFilter
 from guardian import shortcuts
 
@@ -62,7 +62,7 @@ class AllTeamsView(ListAPIView):
 class CreateProjectView(CreateAPIView):
     model = Project
     serializer_class = ProjectSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, CreatePermissions,)
 
     def post(self, request, *args, **kwargs):
         """ Handles creation of the project through the ProjectSerializer """
@@ -80,10 +80,11 @@ class CreateProjectView(CreateAPIView):
 class CreateTeamView(CreateAPIView):
     model = Team
     serializer_class = TeamSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, CreatePermissions)
 
     def post(self, request, *args, **kwargs):
         """ Handles creation of the team through the TeamSerializer """
+        self.check_object_permissions()
         data = request.data.copy()
         data["user_team"] = request.data["name"] + "@" +request.user.username
         data["user_linked"] = False
