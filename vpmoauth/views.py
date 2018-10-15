@@ -47,7 +47,7 @@ class AssignableUsersListView(generics.ListAPIView):
             user_ids = filter(lambda x: x not in existing_users, user_ids)
             return MyUser.objects.filter(_id__in=user_ids)
         
-        root_users = UserRole.get_user_ids_with_perms(node.get_parent())
+        root_users = UserRole.get_user_ids_with_perms(node.get_root())
         root_users = filter(lambda x: x not in existing_users, root_users)
         root_users = MyUser.objects.filter(_id__in=root_users)
         return root_users
