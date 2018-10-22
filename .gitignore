@@ -1,3 +1,4 @@
 give_perm_to_user.py
 *.pyc
-vpmoenv/
+vpmoEnv/
+vpmoAngular/
