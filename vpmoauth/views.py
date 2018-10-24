@@ -14,6 +14,8 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework_jwt.settings import api_settings
+from rest_framework import status
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView, get_object_or_404
 
 from guardian import shortcuts
 
@@ -154,14 +156,24 @@ class AllUserView(generics.ListAPIView):
     # permission_classes = [AllowAny]
 
 
-class UserUpdateView(mixins.UpdateModelMixin, generics.RetrieveAPIView):
+class UserUpdateView(RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    queryset = get_user_model().objects.all()
+    # permission_classes = [permissions.AllowAny]
+    queryset = get_user_model()
     serializer_class = UserDetailsSerializer
     lookup_field = '_id'
 
-    def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+    def partial_update(self, request, _id, *args, **kwargs):
+        try:
+            user = get_user_model().objects.get(_id = _id)
+        except MyUser.DoesNotExist:
+            return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = self.serializer_class(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserDetailsView(generics.RetrieveAPIView):

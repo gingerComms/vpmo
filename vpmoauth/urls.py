@@ -16,8 +16,8 @@ urlpatterns = [
     url(r'^api/users$', AllUserView.as_view()),
     url(r'^api/users/register/$', CreateUserView.as_view(), name='user'),
     url(r'^api/users/login/$', LoginUserView.as_view()),
-    url(r'^api/users/(?P<id>\d+)/$', UserDetailsView.as_view()),
-    url(r'^api/users/(?P<id>\d+)/update/$', UserUpdateView.as_view()),
+    url(r'^api/users/update/(?P<_id>.+)/$', UserUpdateView.as_view()),
+    url(r'^api/users/(?P<_id>.+)$', UserDetailsView.as_view()),
     # User Permission Views
     url(r"^api/user_node_permissions/(?P<node_id>.+)/$", UserNodePermissionsView.as_view(), name="user-node-perms"),
     url(r"^api/remove_user_role/(?P<node_id>.+)/$", RemoveUserRoleView.as_view(), name="remove-user-role"),
