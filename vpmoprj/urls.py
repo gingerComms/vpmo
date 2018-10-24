@@ -14,8 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
+from django.views.generic import TemplateView, RedirectView
+from django.conf import settings
+from django.contrib.staticfiles.views import serve
+
 from rest_framework_jwt.views import obtain_jwt_token
+
+import os
 
 
 urlpatterns = [
@@ -23,4 +29,8 @@ urlpatterns = [
     # /vpmoapp is now linked to vpmotree as opposed to vpmoapp - vpmoapp to be deleted on vpmotree deployment
     path(r'vpmoapp/', include('vpmotree.urls')),
     path(r'vpmoauth/', include("vpmoauth.urls")),
+    # Paths to allow serving the template + static files from ng's build folder
+    path(r"", serve, kwargs={'path': 'index.html'}),
+    re_path(r'^(?!/?static/)(?!/?media/)(?P<path>.*\..*)$',
+        RedirectView.as_view(url='/static/%(path)s', permanent=False))
 ]
