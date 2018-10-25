@@ -317,6 +317,22 @@ class TaskTestCase(TestCase):
 
         self.client.force_login(self.project_admin)
 
+    def test_task_assignee_update(self):
+        self.test_task_create()
+
+        url = reverse("vpmotree:create_task")+"?nodeType=Project"
+
+        data = {
+            "node": str(self.project._id),
+            "assignee": str(self.project_admin._id),
+            "task": str(self.task["_id"])
+        }
+
+        r = self.client.patch(url, json.dumps(data), content_type='application/json')
+        
+        self.assertEqual(str(r.json()["assignee"]), data["assignee"])
+        self.assertEqual(r.status_code, 200)
+
     def test_task_create(self):
         """ Tests the task creation POST endpoint """
         url = reverse("vpmotree:create_task")+"?nodeType=Project"
@@ -331,3 +347,4 @@ class TaskTestCase(TestCase):
         r = self.client.post(url, data)
 
         self.assertEqual(r.status_code, 201)
+        self.task = r.json()

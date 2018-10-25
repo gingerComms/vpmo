@@ -297,12 +297,45 @@ class AssignableRolesView(APIView):
         return Response(assignable_roles)
 
 
-class CreateTaskView(CreateAPIView):
+class PatchCreateTaskView(APIView):
     """ View that takes a post request for creating a Task object with the given data """
     serializer_class = TaskSerializer
     permission_classes = (IsAuthenticated, TaskCreatePermission,)
 
-    def create(self, request, *args, **kwargs):
+    def patch(self, request, *args, **kwargs):
+        """ Handles updating the assigning for a given task object """
+        data = request.data.copy()
+        # Getting the node
+        model = apps.get_model("vpmotree", request.query_params["nodeType"])
+        node = model.objects.get(_id=data["node"])
+
+        try:
+            assigning_to = MyUser.objects.get(_id=data["assignee"])
+        except MyUser.DoesNotExist:
+            return Response({"message": "Assignee not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            task = Task.objects.get(_id=data["task"])
+        except Task.DoesNotExist:
+            return Response({"message": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        # The new assignee must have at least update_node permissions to node, or return 400
+        assignee_perms = assigning_to.get_permissions(node)
+        if not "update_{}".format(request.query_params["nodeType"].lower()) in assignee_perms:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        task.assignee = assigning_to
+        task.save()
+
+        data = self.serializer_class(task).data
+        for key in data.keys():
+            data[key] = str(data[key])
+
+        return Response(data)
+
+
+    def post(self, request, *args, **kwargs):
+        """ Handles Creating a task object """
         data = request.data.copy()
         # Defaulting created_by and assignee to the creator (request.user)
         data["created_by"] = str(request.user.pk)
