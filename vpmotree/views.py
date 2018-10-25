@@ -14,7 +14,7 @@ from vpmoauth.models import MyUser, UserRole
 
 from vpmotree.models import *
 from vpmotree.serializers import *
-from vpmotree.permissions import TeamPermissions, CreatePermissions
+from vpmotree.permissions import TeamPermissions, CreatePermissions, TaskCreatePermission
 from vpmotree.filters import TeamListFilter, ReadNodeListFilter
 from guardian import shortcuts
 
@@ -295,3 +295,27 @@ class AssignableRolesView(APIView):
             assignable_roles += ["topic_viewer", "topic_contributor"]
 
         return Response(assignable_roles)
+
+
+class CreateTaskView(CreateAPIView):
+    """ View that takes a post request for creating a Task object with the given data """
+    serializer_class = TaskSerializer
+    permission_classes = (IsAuthenticated, TaskCreatePermission,)
+
+    def create(self, request, *args, **kwargs):
+        data = request.data.copy()
+        # Defaulting created_by and assignee to the creator (request.user)
+        data["created_by"] = str(request.user.pk)
+        data["assignee"] = str(request.user.pk)
+
+        data["status"] = "NEW"
+
+        serializer = self.serializer_class(data=data)
+        if serializer.is_valid():
+            task = serializer.save()
+            data = serializer.data
+            # Turning all response fields to strings (to prevent objectID errs)
+            for key in data.keys():
+                data[key] = str(data[key])
+            return Response(data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

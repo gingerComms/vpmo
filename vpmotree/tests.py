@@ -288,3 +288,46 @@ class ReadNodeListFilterTestcase(TestCase):
 
         self.assertEqual(len(response), 1)
         self.assertEqual(response[0]["_id"], str(self.topic._id))
+
+
+class TaskTestCase(TestCase):
+    client = Client()
+
+    def setUp(self):
+        create_base_permissions()
+        project_admin_creds = {
+            "username": "TestUser",
+            "email": "TestUser@vpmotest.com",
+            "fullname": "Test User"
+        }
+        self.project_admin = MyUser.objects.create(**project_admin_creds)
+
+        project_contributor_creds = {
+            "username": "TestUser2",
+            "email": "TestUser2@vpmotest.com",
+            "fullname": "Test2 User"
+        }
+        self.project_contributor = MyUser.objects.create(**project_contributor_creds)
+
+        self.project = Project(name="Test Proj", project_owner=self.project_admin)
+        self.project.save()
+
+        self.project_admin.assign_role("project_admin", self.project)
+        self.project_contributor.assign_role("project_contributor", self.project)
+
+        self.client.force_login(self.project_admin)
+
+    def test_task_create(self):
+        """ Tests the task creation POST endpoint """
+        url = reverse("vpmotree:create_task")+"?nodeType=Project"
+
+        data = {
+            "node": self.project._id,
+            "title": "Test Task",
+            "status": "NEW",
+            "due_date": "2015-12-16"
+        }
+
+        r = self.client.post(url, data)
+
+        self.assertEqual(r.status_code, 201)

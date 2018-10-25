@@ -1,9 +1,20 @@
 from rest_framework import serializers
-from .models import Team, Project, Deliverable, TreeStructure, Message, Topic
+from .models import Team, Project, Deliverable, TreeStructure, Message, Topic, Task
 from vpmoauth.models import UserRole
 from django.apps import apps
 from django.db.models import Q
 from rest_framework.fields import CurrentUserDefault
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    _id = serializers.SerializerMethodField(required=False)
+
+    def get__id(self, instance):
+        return str(instance._id)
+
+    class Meta:
+        model = Task
+        fields = "__all__"
 
 
 class MessageSerializer(serializers.ModelSerializer):
