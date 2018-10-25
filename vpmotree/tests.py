@@ -15,34 +15,6 @@ from create_base_permissions import create_base_permissions
 
 # Create your tests here.
 
-
-class ModelTestCase(test_addons.MongoTestCase):
-    # A MongoTestCase needs this argument to use the test database
-    allow_database_queries = True
-
-    # creating a song in setup to run multiple tests with one object
-    def setUp(self):
-        self.old_count = MyUser.objects.count()
-        self.object = MyUser.objects.create(email="ali@test.com", username="AliRad")
-
-    # deletion after tests are complete
-    def tearDown(self):
-        self.object.delete()
-
-    # basic count test
-    def test_model_can_create(self):
-        new_count = MyUser.objects.count()
-        self.assertNotEqual(self.old_count, new_count)
-
-
-    """ The following two tests are included to ensure django ids and pks are not interfered in the djongo compiling. See full doc for more on my experience with this """
-    def test_model_has_id(self):
-        self.assertIsNotNone(self.object.id)
-
-    def test_model_has_pk(self):
-        self.assertIsNotNone(self.object.pk)
-
-
 class TeamPermissionsTestCase(TestCase):
     """ Tests for the FilteredTeamsView """
 
@@ -75,7 +47,7 @@ class TeamPermissionsTestCase(TestCase):
 
 
     def test_filtered_team_view(self):
-        url  = reverse("filtered_teams")
+        url  = reverse("vpmotree:filtered_teams")
 
         # Giving perms to one Team to user
         assign_perm("read_obj", self.user, self.team_with_perms)
@@ -134,7 +106,7 @@ class TreeStructureTestCase(TestCase):
 
     def test_tree_structure_get(self):
         """ Makes the necessary requests and asserts to test the GET TeamTreeView """
-        url = reverse("team_tree_view", kwargs={"team_id": str(self.team._id)})
+        url = reverse("vpmotree:team_tree_view", kwargs={"team_id": str(self.team._id)})
         # GET on url to get the current tree structure
         response = self.client.get(url).json()
 
@@ -144,7 +116,7 @@ class TreeStructureTestCase(TestCase):
 
     def test_tree_structure_put(self):
         """ Makes the necessary requests and asserts to test the POST TeamTreeView """
-        url = reverse("team_tree_view", kwargs={"team_id": str(self.team._id)})
+        url = reverse("vpmotree:team_tree_view", kwargs={"team_id": str(self.team._id)})
         # GET on url to get the current tree structure
         first_response = self.client.get(url).json()
         print(json.dumps(first_response, indent=2))
@@ -187,7 +159,7 @@ class ProjectUpdateTestCase(TestCase):
 
 
     def test_update(self):
-        url = reverse("update_project", kwargs={"_id": str(self.project._id)})
+        url = reverse("vpmotree:update_project", kwargs={"_id": str(self.project._id)})
 
         data = {
             "content": "Hello there!"
@@ -223,7 +195,7 @@ class NodePermissionsViewTestCase(TestCase):
 
 
     def test_get(self):
-        url = reverse("node_permissions", kwargs={"node_id": self.project._id})+"?nodeType=Project"
+        url = reverse("vpmotree:node_permissions", kwargs={"node_id": self.project._id})+"?nodeType=Project"
 
         response = self.client.get(url).json()
 
@@ -274,7 +246,7 @@ class ReadNodeListFilterTestcase(TestCase):
 
     def test_filter(self):
         # Project Test
-        url = reverse("all_nodes")+"?nodeType=Project&parentNodeID="+str(self.team._id)
+        url = reverse("vpmotree:all_nodes")+"?nodeType=Project&parentNodeID="+str(self.team._id)
 
         response = self.client.get(url).json()
 
@@ -282,7 +254,7 @@ class ReadNodeListFilterTestcase(TestCase):
         self.assertEqual(response[0]["_id"], str(self.project._id))
 
         # Topic Test (Deliverable)
-        url = reverse("all_nodes")+"?nodeType=Deliverable&parentNodeID="+str(self.project._id)
+        url = reverse("vpmotree:all_nodes")+"?nodeType=Deliverable&parentNodeID="+str(self.project._id)
 
         response = self.client.get(url).json()
 
