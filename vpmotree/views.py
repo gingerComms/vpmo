@@ -299,18 +299,20 @@ class AssignableRolesView(APIView):
 
 
 class AssignableTaskUsersView(ListAPIView):
-    """ Returns a list of users that can be assigned a task """
+    """ Returns a list of users that can be assigned a task for a given node """
     serializer_class = UserDetailsSerializer
     permission_classes = (IsAuthenticated,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ("username",)
 
     def get_queryset(self):
-        task = self.kwargs["task"]
+        node = self.kwargs["nodeID"]
+        model = apps.get_model("vpmotree", self.request.query_params["nodeType"])
         try:
-            task = Task.objects.get(_id=task)
-        except Task.DoesNotExist:
+            node = model.objects.get(_id=node)
+        except model.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        node = task.node
         required_perm = "update_{}".format(node.node_type.lower())
         users_with_update_perms = UserRole.objects.filter(node=node, permissions__name=required_perm).values_list("user___id", flat=True)
 
@@ -323,7 +325,7 @@ class AssignedTasksListView(ListAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return Task.objects.filter(assignee=self.request.user)
+        return Task.objects.filter(assignee=self.request.user, node___id=self.kwargs["nodeID"]).order_by("-created_at")
 
 
 class PatchCreateTaskView(APIView):
@@ -354,10 +356,7 @@ class PatchCreateTaskView(APIView):
         task.save()
 
         data = self.serializer_class(task).data
-        """
-        for key in data.keys():
-            data[key] = str(data[key])
-        """
+
         return Response(data)
 
 
@@ -366,7 +365,12 @@ class PatchCreateTaskView(APIView):
         data = request.data.copy()
         # Defaulting created_by and assignee to the creator (request.user)
         data["created_by"] = str(request.user.pk)
-        data["assignee"] = str(request.user.pk)
+        if not data.get("assignee", None):
+            data["assignee"] = str(request.user.pk)
+        else:
+            data["assignee"] = MyUser.objects.get(username=data["assignee"])._id
+        # Expecting the date to be input in this format
+        data["due_date"] = dt.strptime(data["due_date"][:10], "%Y-%m-%d").strftime("%Y-%m-%d")
 
         data["status"] = "NEW"
 
@@ -374,10 +378,6 @@ class PatchCreateTaskView(APIView):
         if serializer.is_valid():
             task = serializer.save()
             data = serializer.data
-            # Turning all response fields to strings (to prevent objectID errs)
-            """
-            for key in data.keys():
-                data[key] = str(data[key])
-            """
+
             return Response(data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

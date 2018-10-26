@@ -313,7 +313,7 @@ class TaskTestCase(TestCase):
             "node": self.project._id,
             "title": "Test Task",
             "status": "NEW",
-            "due_date": "2015-12-16"
+            "due_date": "2018-10-07T18:30:00.000Z"
         }
 
         r = self.client.post(url, data)
@@ -324,7 +324,7 @@ class TaskTestCase(TestCase):
     def test_assignable_task_users(self):
         """ Tests the GET list view for assignable task users """
         self.test_task_create()
-        url = reverse("vpmotree:assignable_task_users", kwargs={"task": str(self.task["_id"])})+"?nodeType=Project"
+        url = reverse("vpmotree:assignable_task_users", kwargs={"nodeID": str(self.project._id)})+"?nodeType=Project"
 
         r = self.client.get(url)
 
@@ -337,9 +337,9 @@ class TaskTestCase(TestCase):
             To pass the test, the view should return the tasks assigned to the current user
         """
         self.test_task_create()
-        url = reverse("vpmotree:list_assigned_tasks")
+        url = reverse("vpmotree:list_assigned_tasks", kwargs={"nodeID": str(self.project._id)})
 
         r = self.client.get(url)
-
+        print(r.json())
         self.assertEqual(r.status_code, 200)
         self.assertEqual(len(r.json()), 1)
