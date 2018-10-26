@@ -1,16 +1,25 @@
 from rest_framework import serializers
+from rest_framework import fields
 from .models import Team, Project, Deliverable, TreeStructure, Message, Topic, Task
-from vpmoauth.models import UserRole
+from vpmoauth.models import UserRole, MyUser
 from django.apps import apps
 from django.db.models import Q
 from rest_framework.fields import CurrentUserDefault
 
 
-class TaskSerializer(serializers.ModelSerializer):
-    _id = serializers.SerializerMethodField(required=False)
+class RelatedObjectIdField(serializers.PrimaryKeyRelatedField):
+    def to_representation(self, value):
+        return str(value)
 
-    def get__id(self, instance):
-        return str(instance._id)
+class ObjectIdField(serializers.IntegerField):
+    def to_representation(self, value):
+        return str(value)
+
+class TaskSerializer(serializers.ModelSerializer):
+    _id = ObjectIdField(read_only=True)
+    node = RelatedObjectIdField(queryset=TreeStructure.objects.all())
+    created_by = RelatedObjectIdField(queryset=MyUser.objects.all())
+    assignee = RelatedObjectIdField(queryset=MyUser.objects.all())
 
     class Meta:
         model = Task
@@ -18,11 +27,8 @@ class TaskSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
-    _id = serializers.SerializerMethodField(required=False)
+    _id = ObjectIdField(read_only=True)
     author = serializers.CharField(source="author.username", required=False)
-
-    def get__id(self, instance):
-        return str(instance._id)
 
     class Meta:
         model = Message
@@ -30,16 +36,13 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
-    _id = serializers.SerializerMethodField(required=False)
+    _id = ObjectIdField(read_only=True)
     project_owner = serializers.SerializerMethodField(required=False)
 
     def get_project_owner(self, instance):
         if instance.project_owner:
             return str(instance.project_owner)
         return None
-
-    def get__id(self, instance):
-        return str(instance._id)
 
     class Meta:
         model = Project
@@ -48,11 +51,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 class TeamSerializer(serializers.ModelSerializer):
     # projects = ProjectSerializer(read_only=True, many=True)
-    _id = serializers.SerializerMethodField(required=False)
-
-    def get__id(self, instance):
-        print(str(instance._id))
-        return str(instance._id)
+    _id = ObjectIdField(read_only=True)
 
     class Meta:
         model = Team
@@ -60,11 +59,8 @@ class TeamSerializer(serializers.ModelSerializer):
 
 
 class DeliverableSerializer(serializers.ModelSerializer):
-    _id = serializers.SerializerMethodField(required=False)
-
-    def get__id(self, instance):
-        return str(instance._id)
-
+    _id = ObjectIdField(read_only=True)
+    
     class Meta:
         model = Deliverable
         fields = ["_id", "name", "node_type", "path", "index"]
@@ -93,14 +89,11 @@ class DeliverableSerializer(serializers.ModelSerializer):
 
 
 class TreeStructureWithoutChildrenSerializer(serializers.Serializer):
-    _id = serializers.SerializerMethodField()
+    _id = ObjectIdField(read_only=True)
     path = serializers.CharField(max_length=4048)
     index = serializers.IntegerField()
     node_type = serializers.CharField(max_length=48)      
     name = serializers.SerializerMethodField()
-
-    def get__id(self, instance):
-        return str(instance._id)
 
     def get_name(self, instance):
         model = apps.get_model('vpmotree', instance.node_type)
@@ -108,7 +101,7 @@ class TreeStructureWithoutChildrenSerializer(serializers.Serializer):
         return name
 
 class TreeStructureWithChildrenSerializer(serializers.Serializer):
-    _id = serializers.SerializerMethodField()
+    _id = ObjectIdField(read_only=True)
     path = serializers.CharField(max_length=4048)
     index = serializers.IntegerField()
     name = serializers.CharField(max_length=150)
@@ -161,7 +154,3 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
             children.append(branch)
 
         return children
-
-
-    def get__id(self, instance):
-        return str(instance._id)

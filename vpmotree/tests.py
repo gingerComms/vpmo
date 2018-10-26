@@ -292,7 +292,7 @@ class TaskTestCase(TestCase):
     def test_task_assignee_update(self):
         self.test_task_create()
 
-        url = reverse("vpmotree:create_task")+"?nodeType=Project"
+        url = reverse("vpmotree:patch_create_task")+"?nodeType=Project"
 
         data = {
             "node": str(self.project._id),
@@ -307,7 +307,7 @@ class TaskTestCase(TestCase):
 
     def test_task_create(self):
         """ Tests the task creation POST endpoint """
-        url = reverse("vpmotree:create_task")+"?nodeType=Project"
+        url = reverse("vpmotree:patch_create_task")+"?nodeType=Project"
 
         data = {
             "node": self.project._id,
@@ -330,3 +330,16 @@ class TaskTestCase(TestCase):
 
         self.assertEqual(r.status_code, 200)
         self.assertEqual(len(r.json()), 2)
+
+
+    def test_assigned_tasks_list(self):
+        """ Tests the list method for tasks view (GET)
+            To pass the test, the view should return the tasks assigned to the current user
+        """
+        self.test_task_create()
+        url = reverse("vpmotree:list_assigned_tasks")
+
+        r = self.client.get(url)
+
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(len(r.json()), 1)

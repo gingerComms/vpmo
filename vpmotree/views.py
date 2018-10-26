@@ -15,7 +15,7 @@ from vpmoauth.serializers import UserDetailsSerializer
 
 from vpmotree.models import *
 from vpmotree.serializers import *
-from vpmotree.permissions import TeamPermissions, CreatePermissions, TaskCreateAssignPermission
+from vpmotree.permissions import TeamPermissions, CreatePermissions, TaskListCreateAssignPermission
 from vpmotree.filters import TeamListFilter, ReadNodeListFilter
 from guardian import shortcuts
 
@@ -317,10 +317,19 @@ class AssignableTaskUsersView(ListAPIView):
         return MyUser.objects.filter(_id__in=users_with_update_perms)
 
 
+class AssignedTasksListView(ListAPIView):
+    """ Returns a list of tasks assigned to the current user """
+    serializer_class = TaskSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return Task.objects.filter(assignee=self.request.user)
+
+
 class PatchCreateTaskView(APIView):
     """ View that takes a post request for creating a Task object with the given data """
     serializer_class = TaskSerializer
-    permission_classes = (IsAuthenticated, TaskCreateAssignPermission,)
+    permission_classes = (IsAuthenticated, TaskListCreateAssignPermission,)
 
     def patch(self, request, *args, **kwargs):
         """ Handles updating the assigning for a given task object """
@@ -345,9 +354,10 @@ class PatchCreateTaskView(APIView):
         task.save()
 
         data = self.serializer_class(task).data
+        """
         for key in data.keys():
             data[key] = str(data[key])
-
+        """
         return Response(data)
 
 
@@ -365,7 +375,9 @@ class PatchCreateTaskView(APIView):
             task = serializer.save()
             data = serializer.data
             # Turning all response fields to strings (to prevent objectID errs)
+            """
             for key in data.keys():
                 data[key] = str(data[key])
+            """
             return Response(data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
