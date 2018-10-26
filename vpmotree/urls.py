@@ -14,20 +14,27 @@ router = routers.DefaultRouter()
 # router.register(r'users', UserViewSet)
 
 urlpatterns = (
+    # Team related URLs
     url(r'^api/organisations/$', AllTeamsView.as_view()),
     url(r'^api/filtered_organisations/$', FilteredTeamsView.as_view(), name="filtered_teams"),
+    url(r'^api/teams/add/$', CreateTeamView.as_view()),
+    url(r"^api/teams_tree/(?P<team_id>.+)/$", TeamTreeView.as_view(), name="team_tree_view"),
+
+    # Project related URLs
     url(r'^api/projects/$', AllProjectsView.as_view(), name="all_projects"),
     url(r'^api/projects/add/$', CreateProjectView.as_view()),
-    url(r'^api/projects/(?P<Project_id>.+)/$', UpdateProjectView.as_view()),
-    url(r'^api/teams/add/$', CreateTeamView.as_view()),
+    url(r"^api/update_project/(?P<_id>.+)/$", UpdateProjectView.as_view(), name="update_project"),
+    url(r"^api/project_tree/(?P<project_id>.+)/$", ProjectTreeView.as_view(), name="project_tree_view"),
+    # url(r'^api/projects/(?P<Project_id>.+)/$', UpdateProjectView.as_view()),
+
+    # Deliverable related URLs
     url(r'^api/deliverable/add/$', CreateDeliverableView.as_view()),
+    url(r"^api/update_deliverable/(?P<_id>.+)/$", UpdateDeliverableView.as_view(), name="update_deliverable"),
+
     # Takes two querys parametrs - nodeType + parentNodeID and returns all nodes under those based on permissions
     url(r'^api/nodes/$', AllNodesView.as_view(), name="all_nodes"),
 
-    url(r"^api/update_project/(?P<_id>.+)/$", UpdateProjectView.as_view(), name="update_project"),
 
-    url(r"^api/teams_tree/(?P<team_id>.+)/$", TeamTreeView.as_view(), name="team_tree_view"),
-    url(r"^api/project_tree/(?P<project_id>.+)/$", ProjectTreeView.as_view(), name="project_tree_view"),
 
     url(r'^api/messages/(?P<node_id>.+)/$', MessageListView.as_view(), name="message_list"),
 

@@ -140,7 +140,8 @@ class Topic(TreeStructure):
     ]
 
     name = models.CharField(max_length=150, null=False, unique=False)
-    # content = models.CharField(max_length=150, null=False, unique=False)
+    content = models.TextField(blank=True, null=True)
+
     def __str__(self):
         return "{name} - {type}".format(name=self.name, type=type(self).__name__)
 
@@ -154,6 +155,8 @@ class Deliverable(Topic):
     def save(self, *args, **kwargs):
         self.node_type = "Topic"
         super(Deliverable, self).save(*args, **kwargs)
+
+
 
 
 class Message(models.Model):

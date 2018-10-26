@@ -118,6 +118,25 @@ class UpdateProjectView(RetrieveUpdateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class UpdateDeliverableView(RetrieveUpdateAPIView):
+    queryset = Deliverable
+    serializer_class = DeliverableSerializer
+    lookup_field = "_id"
+
+    def partial_update(self, request, _id, *args, **kwargs):
+        """ This method gets called on a PATCH request - partially updates the model """
+        try:
+            deliverable = Deliverable.objects.get(_id=_id)
+        except Deliverable.DoesNotExist:
+            return Response({"message": "Deliverable not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = self.serializer_class(deliverable, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class TeamTreeView(RetrieveUpdateAPIView):
     model = Team
     serializer_class = TreeStructureWithChildrenSerializer

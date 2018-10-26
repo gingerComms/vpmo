@@ -56,7 +56,7 @@ class DeliverableSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Deliverable
-        fields = ["_id", "name", "node_type", "path", "index"]
+        fields = ["_id", "name", "content", "node_type", "path", "index"]
 
 
 # class ProjectTreeSerializer(serializers.ModelSerializer):
