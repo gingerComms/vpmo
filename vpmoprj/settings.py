@@ -132,7 +132,7 @@ WSGI_APPLICATION = 'vpmoprj.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-if DEBUG:
+if False and DEBUG:
     DATABASES = {
         "default": {
             "ENGINE": "djongo",

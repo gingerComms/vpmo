@@ -11,10 +11,11 @@ from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticate
 from rest_framework import filters
 from rest_framework import status
 from vpmoauth.models import MyUser, UserRole
+from vpmoauth.serializers import UserDetailsSerializer
 
 from vpmotree.models import *
 from vpmotree.serializers import *
-from vpmotree.permissions import TeamPermissions, CreatePermissions, TaskCreatePermission
+from vpmotree.permissions import TeamPermissions, CreatePermissions, TaskCreateAssignPermission
 from vpmotree.filters import TeamListFilter, ReadNodeListFilter
 from guardian import shortcuts
 
@@ -297,17 +298,33 @@ class AssignableRolesView(APIView):
         return Response(assignable_roles)
 
 
+class AssignableTaskUsersView(ListAPIView):
+    """ Returns a list of users that can be assigned a task """
+    serializer_class = UserDetailsSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        task = self.kwargs["task"]
+        try:
+            task = Task.objects.get(_id=task)
+        except Task.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        node = task.node
+        required_perm = "update_{}".format(node.node_type.lower())
+        users_with_update_perms = UserRole.objects.filter(node=node, permissions__name=required_perm).values_list("user___id", flat=True)
+
+        return MyUser.objects.filter(_id__in=users_with_update_perms)
+
+
 class PatchCreateTaskView(APIView):
     """ View that takes a post request for creating a Task object with the given data """
     serializer_class = TaskSerializer
-    permission_classes = (IsAuthenticated, TaskCreatePermission,)
+    permission_classes = (IsAuthenticated, TaskCreateAssignPermission,)
 
     def patch(self, request, *args, **kwargs):
         """ Handles updating the assigning for a given task object """
         data = request.data.copy()
-        # Getting the node
-        model = apps.get_model("vpmotree", request.query_params["nodeType"])
-        node = model.objects.get(_id=data["node"])
 
         try:
             assigning_to = MyUser.objects.get(_id=data["assignee"])
@@ -320,7 +337,7 @@ class PatchCreateTaskView(APIView):
             return Response({"message": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
 
         # The new assignee must have at least update_node permissions to node, or return 400
-        assignee_perms = assigning_to.get_permissions(node)
+        assignee_perms = assigning_to.get_permissions(task.node)
         if not "update_{}".format(request.query_params["nodeType"].lower()) in assignee_perms:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 

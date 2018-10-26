@@ -320,3 +320,13 @@ class TaskTestCase(TestCase):
 
         self.assertEqual(r.status_code, 201)
         self.task = r.json()
+
+    def test_assignable_task_users(self):
+        """ Tests the GET list view for assignable task users """
+        self.test_task_create()
+        url = reverse("vpmotree:assignable_task_users", kwargs={"task": str(self.task["_id"])})+"?nodeType=Project"
+
+        r = self.client.get(url)
+
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(len(r.json()), 2)

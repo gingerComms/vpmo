@@ -68,20 +68,6 @@ class CreatePermissions(permissions.BasePermission):
         return False
 
 
-class TaskCreatePermission(permissions.BasePermission):
-    def has_permission(self, request, view):
-        node = request.data["node"]
-        model = apps.get_model("vpmotree", request.query_params["nodeType"])
-        node = model.objects.get(_id=node)
-
-        perms = request.user.get_permissions(node)
-
-        if "update_{}".format(request.query_params["nodeType"].lower()) in perms:
-            return True
-
-        return False
-
-
 class TeamPermissions(permissions.BasePermission):
     """ Custom DRF Permissions that returns True or False based on
         the permissions a user has for a given object.
@@ -107,3 +93,16 @@ class TeamPermissions(permissions.BasePermission):
             return False
         return False
 
+
+class TaskCreateAssignPermission(permissions.BasePermission):
+    def has_permission(self, request, view):
+        node = request.data["node"]
+        model = apps.get_model("vpmotree", request.query_params["nodeType"])
+        node = model.objects.get(_id=node)
+
+        perms = request.user.get_permissions(node)
+
+        if "update_{}".format(request.query_params["nodeType"].lower()) in perms:
+            return True
+
+        return False
