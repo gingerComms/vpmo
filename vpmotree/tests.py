@@ -292,7 +292,7 @@ class TaskTestCase(TestCase):
     def test_task_assignee_update(self):
         self.test_task_create()
 
-        url = reverse("vpmotree:patch_create_task")+"?nodeType=Project"
+        url = reverse("vpmotree:update_create_task")+"?nodeType=Project"
 
         data = {
             "node": str(self.project._id),
@@ -300,14 +300,14 @@ class TaskTestCase(TestCase):
             "task": str(self.task["_id"])
         }
 
-        r = self.client.patch(url, json.dumps(data), content_type='application/json')
+        r = self.client.put(url, json.dumps(data), content_type='application/json')
         
         self.assertEqual(str(r.json()["assignee"]), data["assignee"])
         self.assertEqual(r.status_code, 200)
 
     def test_task_create(self):
         """ Tests the task creation POST endpoint """
-        url = reverse("vpmotree:patch_create_task")+"?nodeType=Project"
+        url = reverse("vpmotree:update_create_task")+"?nodeType=Project"
 
         data = {
             "node": self.project._id,
@@ -340,6 +340,22 @@ class TaskTestCase(TestCase):
         url = reverse("vpmotree:list_assigned_tasks", kwargs={"nodeID": str(self.project._id)})
 
         r = self.client.get(url)
-        print(r.json())
+
         self.assertEqual(r.status_code, 200)
         self.assertEqual(len(r.json()), 1)
+
+    def test_task_status_update(self):
+        """ Tests updating of the task status by the assignee """
+        url = reverse("vpmotree:update_create_task")+"?nodeType=Project"
+        self.test_task_create()
+
+        data = {
+            "task": str(self.task["_id"]),
+            "status": "COMPLETE",
+            "node": str(self.project._id)
+        }
+
+        r = self.client.patch(url, json.dumps(data), content_type='application/json')
+
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.json()["status"], "COMPLETE")

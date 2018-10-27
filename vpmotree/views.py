@@ -328,12 +328,33 @@ class AssignedTasksListView(ListAPIView):
         return Task.objects.filter(assignee=self.request.user, node___id=self.kwargs["nodeID"]).order_by("-created_at")
 
 
-class PatchCreateTaskView(APIView):
+class UpdateCreateTaskView(APIView):
     """ View that takes a post request for creating a Task object with the given data """
     serializer_class = TaskSerializer
     permission_classes = (IsAuthenticated, TaskListCreateAssignPermission,)
 
     def patch(self, request, *args, **kwargs):
+        """ Handles updating the status of a task 
+            NOTE - The reason this isn't merged into the put endpoint is because
+                we need to handle different permissions for both tasks and combining the 
+                endpoints would just make it messy
+        """
+        data = request.data.copy()
+        try:
+            task = Task.objects.get(_id=data["task"])
+        except Task.DoesNotExist:
+            return Response({'message': "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        if task.assignee != request.user:
+            return Response({"message": "Only assignee can update task status"}, status=status.HTTP_403_FORBIDDEN)
+
+        task.status = data["status"]
+        task.save()
+
+        return Response(self.serializer_class(task).data)
+
+
+    def put(self, request, *args, **kwargs):
         """ Handles updating the assigning for a given task object """
         data = request.data.copy()
 
