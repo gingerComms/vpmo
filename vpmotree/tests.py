@@ -292,7 +292,7 @@ class TaskTestCase(TestCase):
     def test_task_assignee_update(self):
         self.test_task_create()
 
-        url = reverse("vpmotree:update_create_task")+"?nodeType=Project"
+        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project"
 
         data = {
             "node": str(self.project._id),
@@ -307,7 +307,7 @@ class TaskTestCase(TestCase):
 
     def test_task_create(self):
         """ Tests the task creation POST endpoint """
-        url = reverse("vpmotree:update_create_task")+"?nodeType=Project"
+        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project"
 
         data = {
             "node": self.project._id,
@@ -346,7 +346,7 @@ class TaskTestCase(TestCase):
 
     def test_task_status_update(self):
         """ Tests updating of the task status by the assignee """
-        url = reverse("vpmotree:update_create_task")+"?nodeType=Project"
+        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project"
         self.test_task_create()
 
         data = {
@@ -359,3 +359,17 @@ class TaskTestCase(TestCase):
 
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r.json()["status"], "COMPLETE")
+
+    def test_task_delete(self):
+        """ Tests deletion of tasks """
+        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project"
+        self.test_task_create()
+
+        data = {
+            "task": str(self.task["_id"]),
+            "node": str(self.project._id)
+        }
+
+        r = self.client.delete(url, json.dumps(data), content_type='application/json')
+
+        self.assertEqual(r.status_code, 200)

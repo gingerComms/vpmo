@@ -328,10 +328,22 @@ class AssignedTasksListView(ListAPIView):
         return Task.objects.filter(assignee=self.request.user, node___id=self.kwargs["nodeID"]).order_by("-created_at")
 
 
-class UpdateCreateTaskView(APIView):
+class DeleteUpdateCreateTaskView(APIView):
     """ View that takes a post request for creating a Task object with the given data """
     serializer_class = TaskSerializer
     permission_classes = (IsAuthenticated, TaskListCreateAssignPermission,)
+
+    def delete(self, request, *args, **kwargs):
+        """ Deletes the input task """
+        data = request.data.copy()
+        try:
+            task = Task.objects.get(_id=data["task"])
+        except Task.DoesNotExist:
+            return Response({'message': "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        task.delete()
+
+        return Response(status=status.HTTP_200_OK)
 
     def patch(self, request, *args, **kwargs):
         """ Handles updating the status of a task 
