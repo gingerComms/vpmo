@@ -296,13 +296,13 @@ class TaskTestCase(TestCase):
 
         data = {
             "node": str(self.project._id),
-            "assignee": str(self.project_admin._id),
+            "assignee": str(self.project_admin.username),
             "task": str(self.task["_id"])
         }
 
         r = self.client.put(url, json.dumps(data), content_type='application/json')
         
-        self.assertEqual(str(r.json()["assignee"]), data["assignee"])
+        self.assertEqual(str(r.json()["assignee"]), str(self.project_admin._id))
         self.assertEqual(r.status_code, 200)
 
     def test_task_create(self):
