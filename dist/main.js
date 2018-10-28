@@ -6720,9 +6720,9 @@ var AppComponent = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "appConfig", function() { return appConfig; });
 var appConfig = {
-    apiUrl: 'http://127.0.0.1:8000/vpmoapp/api',
-    apiAuthUrl: 'http://127.0.0.1:8000/vpmoauth/api',
-    wsUrl: 'ws://127.0.0.1:8000/ws'
+    apiUrl: '/vpmoapp/api',
+    apiAuthUrl: '/vpmoauth/api',
+    wsUrl: 'ws://http://gingercomms.radconsultants.com.au/ws'
 };
 
 
