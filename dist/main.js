@@ -5823,10 +5823,27 @@ var AuthGuard = /** @class */ (function () {
         this.authService = authService;
     }
     AuthGuard.prototype.canActivate = function (route, state) {
-        return this.checklogedIn(state.url);
+        var _this = this;
+        return this.authService.isAuthenticated()
+            .map(function (data) {
+            if (data === false) {
+                _this.authService.redirectUrl = state.url;
+                _this.router.navigate(['/user/login']);
+                return data;
+            }
+            if (data === true) {
+                return data;
+            }
+        }, function (error) {
+            _this.authService.redirectUrl = state.url;
+            _this.router.navigate(['/user/login']);
+            return error;
+        });
     };
     AuthGuard.prototype.checklogedIn = function (url) {
-        if (this.authService.isAuthenticated()) {
+        var _this = this;
+        if (this.authService.isAuthenticated()
+            .subscribe(function (data) { _this.loggedIn = data; })) {
             return true;
         }
         this.authService.redirectUrl = url;
@@ -5992,6 +6009,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rxjs_add_observable_of__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/add/observable/of */ "./node_modules/rxjs-compat/_esm5/add/observable/of.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _http_cache_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./http-cache.service */ "./src/app/_services/http-cache.service.ts");
+/* harmony import */ var _global_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./global.service */ "./src/app/_services/global.service.ts");
+/* harmony import */ var _navigation_navigation__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../navigation/navigation */ "./src/app/navigation/navigation.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -6010,33 +6029,80 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
+
+
+// import { GlobalService } from './global2.service';
 var AuthenticationService = /** @class */ (function () {
-    // currentUser = this.user.asObservable();
-    // private loggedIn = new BehaviorSubject<boolean>(false);
     // userLoggedIn = this.loggedIn.asObservable();
-    function AuthenticationService(http, router, cacheService
-    // public jwtHelper: JwtHelperService
-    ) {
+    function AuthenticationService(http, router, cacheService, globalService) {
         this.http = http;
         this.router = router;
         this.cacheService = cacheService;
+        this.globalService = globalService;
         this.user = new rxjs_index__WEBPACK_IMPORTED_MODULE_5__["BehaviorSubject"]('');
+        // currentUser = this.user.asObservable();
+        this.loggedIn = new rxjs_index__WEBPACK_IMPORTED_MODULE_5__["BehaviorSubject"](false);
+        this.navigation = _navigation_navigation__WEBPACK_IMPORTED_MODULE_10__["navigation"];
+        // globalService.currentUserValue.subscribe(
+        //     nextValue => {
+        //         this.tempUser = nextValue;
+        //         this.tempUser = JSON.parse(this.tempUser);
+        //         this.token = this.tempUser.token;
+        //     },
+        //     error => {
+        //         console.log('token or currentUser are not recognised....');
+        //         this.logout();
+        //     }
+        // );
     }
-    AuthenticationService.prototype.isLoggedIn = function () {
-        var token = this.getToken();
-        return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_4__["appConfig"].apiAuthUrl + '/token-verify/', { token: token })
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (res) {
-            if (res.token) {
-                console.log('user token is verified');
-                return true;
-            }
-            else {
-                console.log('user token is not valid');
-                return false;
-            }
-        }));
+    // isLoggedIn(): Observable<boolean> {
+    //     const token = this.getToken();
+    //     return this.http.post<any>(appConfig.apiAuthUrl + '/token-verify/', { token: token })
+    //         .pipe(map(res => {
+    //             if (res.token) {
+    //                 console.log('user token is verified');
+    //                 return true;
+    //             } else {
+    //                 console.log('user token is not valid');
+    //                 return false;
+    //             }
+    //         }));
+    // }
+    AuthenticationService.prototype.isAuthenticated = function () {
+        var _this = this;
+        // get the token
+        // debugger;
+        if (this.getToken()) {
+            var token = this.getToken();
+            return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_4__["appConfig"].apiAuthUrl + '/token-verify/', { token: token })
+                .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (res) {
+                if (res.token) {
+                    console.log('isAuthenticated: user is authenticated');
+                    return true;
+                }
+                else {
+                    console.log('isAuthenticated: user is NOT authenticated');
+                    _this.logout();
+                    return false;
+                }
+            }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["catchError"])(function (err) { return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["of"])(false); }));
+        }
+        else {
+            this.logout();
+            return rxjs__WEBPACK_IMPORTED_MODULE_2__["Observable"].of(false);
+        }
     };
     AuthenticationService.prototype.getUserName = function () {
+        // this.user.subscribe(
+        //     (data) => {
+        //         return data.fullname;
+        //     },
+        //     (err: any) => {
+        //         console.log('Error getUser(): could not get user fullname!');
+        //         return '';
+        //     }
+        // );       
         if (!localStorage.getItem('currentUser')) {
             console.log('user has not logged in!');
         }
@@ -6046,14 +6112,18 @@ var AuthenticationService = /** @class */ (function () {
         }
     };
     AuthenticationService.prototype.getUser = function () {
-        if (!localStorage.getItem('currentUser')) {
-            console.log('user has not logged in!');
-            throw new Error('user has not logged in!');
-        }
-        else {
-            this.tempUser = JSON.parse(localStorage.getItem('currentUser'));
-            return rxjs__WEBPACK_IMPORTED_MODULE_2__["Observable"].of(this.tempUser);
-        }
+        this.user.subscribe(function (data) {
+            return data;
+        }, function (err) {
+            console.log('Error getUser(): could not get user information!');
+        });
+        // if (!localStorage.getItem('currentUser')) {
+        //     console.log('user has not logged in!');
+        //     throw new Error('user has not logged in!');
+        // } else {
+        //     this.tempUser = JSON.parse(localStorage.getItem('currentUser'));
+        //     return Observable.of(this.tempUser);
+        // }
     };
     AuthenticationService.prototype.getToken = function () {
         if (localStorage.getItem('currentUser')) {
@@ -6063,27 +6133,8 @@ var AuthenticationService = /** @class */ (function () {
             }
         }
         else {
-            return false;
-        }
-    };
-    AuthenticationService.prototype.isAuthenticated = function () {
-        // get the token
-        if (this.getToken()) {
-            this.token = this.getToken();
-            return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_4__["appConfig"].apiAuthUrl + '/token-verify/', { token: this.token })
-                .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (res) {
-                if (res && res.token) {
-                    console.log('user is authenticated');
-                    return true;
-                }
-                else {
-                    console.log('user is NOT authenticated');
-                    return false;
-                }
-            }));
-        }
-        else {
-            return rxjs__WEBPACK_IMPORTED_MODULE_2__["Observable"].of(false);
+            this.logout();
+            throw new Error('token or currentUser is not accessible!');
         }
     };
     AuthenticationService.prototype.login = function (email, password) {
@@ -6096,19 +6147,22 @@ var AuthenticationService = /** @class */ (function () {
             // login successful if there's a jwt token in the response
             if (user && user.token) {
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
+                _this.user.next(JSON.stringify(user));
                 localStorage.setItem('currentUser', JSON.stringify(user));
-                localStorage.setItem('nodeID', '');
+                localStorage.setItem('node', '');
                 localStorage.setItem('nodeType', '');
                 localStorage.setItem('nodePermission', '');
-                localStorage.setItem('teamID', '');
-                localStorage.setItem('projectID', '');
-                localStorage.setItem('topicID', '');
-                _this.user.next(JSON.parse(localStorage.getItem('currentUser')));
-                // this.loggedIn.next(true);
+                localStorage.setItem('team', '');
+                localStorage.setItem('project', '');
+                localStorage.setItem('topic', '');
+                _this.globalService.navigation = JSON.stringify(_this.navigation);
+                localStorage.setItem('navigation', '');
+                // this.isLoggedIn.next(true);
                 return user;
             }
             else {
                 console.log('could not log in, either email or password is wrong!');
+                // this.globalService.currentUser = '';
                 localStorage.removeItem('currentUser');
                 throw new Error('Email and/or Password is wrong!');
             }
@@ -6140,9 +6194,8 @@ var AuthenticationService = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
         __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"],
             _angular_router__WEBPACK_IMPORTED_MODULE_7__["Router"],
-            _http_cache_service__WEBPACK_IMPORTED_MODULE_8__["HttpCacheService"]
-            // public jwtHelper: JwtHelperService
-        ])
+            _http_cache_service__WEBPACK_IMPORTED_MODULE_8__["HttpCacheService"],
+            _global_service__WEBPACK_IMPORTED_MODULE_9__["GlobalService"]])
     ], AuthenticationService);
     return AuthenticationService;
 }());
@@ -6187,7 +6240,7 @@ var CacheInterceptor = /** @class */ (function () {
     CacheInterceptor.prototype.intercept = function (req, next) {
         var _this = this;
         // pass along non-cachable requests and invalidates the cache
-        if (req.method !== 'GET') {
+        if (req.method !== 'GET' || req.url.indexOf('assignable_task_users') >= 0) {
             console.log("Invalidating cache: " + req.method + " " + req.url);
             this.cacheService.invalidateCache();
             return next.handle(req);
@@ -6213,6 +6266,274 @@ var CacheInterceptor = /** @class */ (function () {
         __metadata("design:paramtypes", [_http_cache_service__WEBPACK_IMPORTED_MODULE_4__["HttpCacheService"]])
     ], CacheInterceptor);
     return CacheInterceptor;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/_services/global.service.ts":
+/*!*********************************************!*\
+  !*** ./src/app/_services/global.service.ts ***!
+  \*********************************************/
+/*! exports provided: GlobalService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GlobalService", function() { return GlobalService; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var rxjs_index__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs/index */ "./node_modules/rxjs/index.js");
+/* harmony import */ var rxjs_index__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(rxjs_index__WEBPACK_IMPORTED_MODULE_1__);
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var GlobalService = /** @class */ (function () {
+    function GlobalService() {
+        this.nodeValue = new rxjs_index__WEBPACK_IMPORTED_MODULE_1__["BehaviorSubject"](null);
+        this.teamValue = new rxjs_index__WEBPACK_IMPORTED_MODULE_1__["BehaviorSubject"](null);
+        this.projectValue = new rxjs_index__WEBPACK_IMPORTED_MODULE_1__["BehaviorSubject"](null);
+        this.topicValue = new rxjs_index__WEBPACK_IMPORTED_MODULE_1__["BehaviorSubject"](null);
+        this.navigationValue = new rxjs_index__WEBPACK_IMPORTED_MODULE_1__["BehaviorSubject"](null);
+    }
+    Object.defineProperty(GlobalService.prototype, "node", {
+        get: function () {
+            return localStorage.getItem('node');
+        },
+        set: function (value) {
+            this.nodeValue.next(value);
+            localStorage.setItem('node', value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(GlobalService.prototype, "team", {
+        get: function () {
+            return localStorage.getItem('team');
+        },
+        set: function (value) {
+            var _this = this;
+            this.teamValue.next(value);
+            localStorage.setItem('team', value);
+            this.navigationValue.subscribe(function (nextValue) { return _this.nav = JSON.parse(nextValue); });
+            this.nav
+                .find(function (item) { return item.id === 'teamGroup'; }).children
+                .find(function (item) { return item.id === 'focusTeam'; }).hidden = false;
+            this.nav
+                .find(function (item) { return item.id === 'teamGroup'; }).children
+                .find(function (item) { return item.id === 'focusTeam'; }).title = JSON.parse(value).name;
+            this.nav
+                .find(function (item) { return item.id === 'teamGroup'; }).children
+                .find(function (item) { return item.id === 'focusTeam'; }).url = '/node/Team/' + JSON.parse(value)._id;
+            this.nav.find(function (item) { return item.id === 'projectGroup'; }).hidden = false;
+            this.nav
+                .find(function (item) { return item.id === 'projectGroup'; }).children
+                .find(function (item) { return item.id === 'focusProject'; }).hidden = true;
+            this.nav
+                .find(function (item) { return item.id === 'projectGroup'; }).children
+                .find(function (item) { return item.id === 'projects'; }).hidden = false;
+            this.nav.find(function (item) { return item.id === 'topicGroup'; }).hidden = true;
+            localStorage.setItem('project', '');
+            localStorage.setItem('topic', '');
+            this.navStr = JSON.stringify(this.nav);
+            this.navigation = this.navStr;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(GlobalService.prototype, "project", {
+        get: function () {
+            return localStorage.getItem('project');
+        },
+        set: function (value) {
+            var _this = this;
+            this.projectValue.next(value);
+            localStorage.setItem('project', value);
+            this.navigationValue.subscribe(function (nextValue) { return _this.nav = JSON.parse(nextValue); });
+            this.nav
+                .find(function (item) { return item.id === 'projectGroup'; }).children
+                .find(function (item) { return item.id === 'focusProject'; }).hidden = false;
+            this.nav
+                .find(function (item) { return item.id === 'projectGroup'; }).children
+                .find(function (item) { return item.id === 'focusProject'; }).title = JSON.parse(value).name;
+            this.nav
+                .find(function (item) { return item.id === 'projectGroup'; }).children
+                .find(function (item) { return item.id === 'focusProject'; }).url = '/node/Project/' + JSON.parse(value)._id;
+            this.nav.find(function (item) { return item.id === 'topicGroup'; }).hidden = false;
+            this.nav
+                .find(function (item) { return item.id === 'topicGroup'; }).children
+                .find(function (item) { return item.id === 'focusTopic'; }).hidden = true;
+            this.nav
+                .find(function (item) { return item.id === 'topicGroup'; }).children
+                .find(function (item) { return item.id === 'topics'; }).hidden = false,
+                localStorage.setItem('topic', '');
+            this.navStr = JSON.stringify(this.nav);
+            this.navigation = this.navStr;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(GlobalService.prototype, "topic", {
+        get: function () {
+            return localStorage.getItem('topic');
+        },
+        set: function (value) {
+            var _this = this;
+            this.topicValue.next(value);
+            localStorage.setItem('topic', value);
+            this.navigationValue.subscribe(function (nextValue) { return _this.nav = JSON.parse(nextValue); });
+            this.nav
+                .find(function (item) { return item.id === 'topicGroup'; }).children
+                .find(function (item) { return item.id === 'focusTopic'; }).hidden = false;
+            this.nav
+                .find(function (item) { return item.id === 'topicGroup'; }).children
+                .find(function (item) { return item.id === 'focusTopic'; }).title = JSON.parse(value).name;
+            this.nav
+                .find(function (item) { return item.id === 'topicGroup'; }).children
+                .find(function (item) { return item.id === 'focusTopic'; }).url = '/node/Topic/' + JSON.parse(value)._id;
+            this.navStr = JSON.stringify(this.nav);
+            this.navigation = this.navStr;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(GlobalService.prototype, "navigation", {
+        get: function () {
+            return localStorage.getItem('navigation');
+        },
+        set: function (value) {
+            this.navigationValue.next(value);
+            localStorage.setItem('navigation', value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    GlobalService = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
+            providedIn: 'root'
+        }),
+        __metadata("design:paramtypes", [])
+    ], GlobalService);
+    return GlobalService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/_services/global2.service.ts":
+/*!**********************************************!*\
+  !*** ./src/app/_services/global2.service.ts ***!
+  \**********************************************/
+/*! exports provided: GlobalService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GlobalService", function() { return GlobalService; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var rxjs_Subject__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs/Subject */ "./node_modules/rxjs-compat/_esm5/Subject.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var GlobalService = /** @class */ (function () {
+    function GlobalService() {
+        this.currentUserValue = new rxjs_Subject__WEBPACK_IMPORTED_MODULE_1__["Subject"]();
+        this.nodeValue = new rxjs_Subject__WEBPACK_IMPORTED_MODULE_1__["Subject"]();
+        this.nodePermissionValue = new rxjs_Subject__WEBPACK_IMPORTED_MODULE_1__["Subject"]();
+        this.teamValue = new rxjs_Subject__WEBPACK_IMPORTED_MODULE_1__["Subject"]();
+        this.projectValue = new rxjs_Subject__WEBPACK_IMPORTED_MODULE_1__["Subject"]();
+        this.topicValue = new rxjs_Subject__WEBPACK_IMPORTED_MODULE_1__["Subject"]();
+    }
+    Object.defineProperty(GlobalService.prototype, "currentUser", {
+        get: function () {
+            return localStorage.getItem('currentUser');
+        },
+        set: function (value) {
+            this.currentUserValue.next(value); // this will make sure to tell every subscriber about the change.
+            localStorage.setItem('currentUser', value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(GlobalService.prototype, "nodeId", {
+        get: function () {
+            return localStorage.getItem('nodeId');
+        },
+        set: function (value) {
+            this.nodeValue.next(value); // this will make sure to tell every subscriber about the change.
+            localStorage.setItem('nodeId', value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(GlobalService.prototype, "nodePermissoin", {
+        get: function () {
+            return localStorage.getItem('nodePermission');
+        },
+        set: function (value) {
+            this.nodePermissionValue.next(value); // this will make sure to tell every subscriber about the change.
+            localStorage.setItem('nodePermission', value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(GlobalService.prototype, "teamId", {
+        get: function () {
+            return localStorage.getItem('teamId');
+        },
+        set: function (value) {
+            this.teamValue.next(value); // this will make sure to tell every subscriber about the change.
+            localStorage.setItem('teamId', value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(GlobalService.prototype, "projectId", {
+        get: function () {
+            return localStorage.getItem('projectId');
+        },
+        set: function (value) {
+            this.projectValue.next(value); // this will make sure to tell every subscriber about the change.
+            localStorage.setItem('projectId', value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(GlobalService.prototype, "topicId", {
+        get: function () {
+            return localStorage.getItem('topicId');
+        },
+        set: function (value) {
+            this.topicValue.next(value); // this will make sure to tell every subscriber about the change.
+            localStorage.setItem('topicId', value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    GlobalService = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
+            providedIn: 'root'
+        }),
+        __metadata("design:paramtypes", [])
+    ], GlobalService);
+    return GlobalService;
 }());
 
 
@@ -6273,7 +6594,7 @@ var HttpCacheService = /** @class */ (function () {
 /*!************************************!*\
   !*** ./src/app/_services/index.ts ***!
   \************************************/
-/*! exports provided: AlertService, AuthenticationService, UserService */
+/*! exports provided: AlertService, AuthenticationService */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6283,10 +6604,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony import */ var _authentication_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./authentication.service */ "./src/app/_services/authentication.service.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AuthenticationService", function() { return _authentication_service__WEBPACK_IMPORTED_MODULE_1__["AuthenticationService"]; });
-
-/* harmony import */ var _user_user_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../user/user.service */ "./src/app/user/user.service.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "UserService", function() { return _user_user_service__WEBPACK_IMPORTED_MODULE_2__["UserService"]; });
-
 
 
 
@@ -6403,9 +6720,9 @@ var AppComponent = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "appConfig", function() { return appConfig; });
 var appConfig = {
-    apiUrl: '/vpmoapp/api',
-    apiAuthUrl: '/vpmoauth/api',
-    wsUrl: '/ws'
+    apiUrl: 'http://127.0.0.1:8000/vpmoapp/api',
+    apiAuthUrl: 'http://127.0.0.1:8000/vpmoauth/api',
+    wsUrl: 'ws://127.0.0.1:8000/ws'
 };
 
 
@@ -6445,20 +6762,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _project_project_module__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./project/project.module */ "./src/app/project/project.module.ts");
 /* harmony import */ var _chat_chat_module__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./chat/chat.module */ "./src/app/chat/chat.module.ts");
 /* harmony import */ var _permissions_permissions_module__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./permissions/permissions.module */ "./src/app/permissions/permissions.module.ts");
-/* harmony import */ var _home_home_component__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./home/home.component */ "./src/app/home/home.component.ts");
-/* harmony import */ var _error_error_component__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./error/error.component */ "./src/app/error/error.component.ts");
-/* harmony import */ var _shared_message_service__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./shared/message.service */ "./src/app/shared/message.service.ts");
-/* harmony import */ var _directives_alert_component__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./_directives/alert.component */ "./src/app/_directives/alert.component.ts");
-/* harmony import */ var _services_alert_service__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./_services/alert.service */ "./src/app/_services/alert.service.ts");
-/* harmony import */ var _guards_auth_guard__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./_guards/auth.guard */ "./src/app/_guards/auth.guard.ts");
-/* harmony import */ var _services_authentication_service__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./_services/authentication.service */ "./src/app/_services/authentication.service.ts");
-/* harmony import */ var _services_http_cache_service__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./_services/http-cache.service */ "./src/app/_services/http-cache.service.ts");
-/* harmony import */ var _services_cache_interceptor__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./_services/cache.interceptor */ "./src/app/_services/cache.interceptor.ts");
-/* harmony import */ var _helpers_jwt_interceptor__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./_helpers/jwt.interceptor */ "./src/app/_helpers/jwt.interceptor.ts");
-/* harmony import */ var _team_team_module__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./team/team.module */ "./src/app/team/team.module.ts");
-/* harmony import */ var _node_node_module__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./node/node.module */ "./src/app/node/node.module.ts");
-/* harmony import */ var _tree_structure_tree_structure_module__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./tree-structure/tree-structure.module */ "./src/app/tree-structure/tree-structure.module.ts");
-/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _tasks_tasks_module__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./tasks/tasks.module */ "./src/app/tasks/tasks.module.ts");
+/* harmony import */ var _home_home_component__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./home/home.component */ "./src/app/home/home.component.ts");
+/* harmony import */ var _error_error_component__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./error/error.component */ "./src/app/error/error.component.ts");
+/* harmony import */ var _shared_message_service__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./shared/message.service */ "./src/app/shared/message.service.ts");
+/* harmony import */ var _directives_alert_component__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./_directives/alert.component */ "./src/app/_directives/alert.component.ts");
+/* harmony import */ var _services_alert_service__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./_services/alert.service */ "./src/app/_services/alert.service.ts");
+/* harmony import */ var _guards_auth_guard__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./_guards/auth.guard */ "./src/app/_guards/auth.guard.ts");
+/* harmony import */ var _services_authentication_service__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./_services/authentication.service */ "./src/app/_services/authentication.service.ts");
+/* harmony import */ var _services_http_cache_service__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./_services/http-cache.service */ "./src/app/_services/http-cache.service.ts");
+/* harmony import */ var _services_cache_interceptor__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./_services/cache.interceptor */ "./src/app/_services/cache.interceptor.ts");
+/* harmony import */ var _helpers_jwt_interceptor__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./_helpers/jwt.interceptor */ "./src/app/_helpers/jwt.interceptor.ts");
+/* harmony import */ var _team_team_module__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./team/team.module */ "./src/app/team/team.module.ts");
+/* harmony import */ var _node_node_module__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./node/node.module */ "./src/app/node/node.module.ts");
+/* harmony import */ var _tree_structure_tree_structure_module__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./tree-structure/tree-structure.module */ "./src/app/tree-structure/tree-structure.module.ts");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _services_global_service__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./_services/global.service */ "./src/app/_services/global.service.ts");
+/* harmony import */ var _navigation_navigation_component__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./navigation/navigation.component */ "./src/app/navigation/navigation.component.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -6466,6 +6786,9 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 // Import bugsnag-js and bugsnag-angular
+
+
+
 
 
 
@@ -6538,45 +6861,48 @@ var AppModule = /** @class */ (function () {
                 _fuse_shared_module__WEBPACK_IMPORTED_MODULE_11__["FuseSharedModule"],
                 _main_main_module__WEBPACK_IMPORTED_MODULE_14__["FuseMainModule"],
                 _main_content_sample_sample_module__WEBPACK_IMPORTED_MODULE_15__["FuseSampleModule"],
-                _team_team_module__WEBPACK_IMPORTED_MODULE_30__["TeamModule"],
+                _team_team_module__WEBPACK_IMPORTED_MODULE_31__["TeamModule"],
                 _user_user_module__WEBPACK_IMPORTED_MODULE_16__["UserModule"],
                 _project_project_module__WEBPACK_IMPORTED_MODULE_17__["ProjectModule"],
                 _chat_chat_module__WEBPACK_IMPORTED_MODULE_18__["ChatModule"],
                 _permissions_permissions_module__WEBPACK_IMPORTED_MODULE_19__["PermissionsModule"],
-                _tree_structure_tree_structure_module__WEBPACK_IMPORTED_MODULE_32__["TreeStructureModule"],
-                _node_node_module__WEBPACK_IMPORTED_MODULE_31__["NodeModule"],
+                _tasks_tasks_module__WEBPACK_IMPORTED_MODULE_20__["TasksModule"],
+                _tree_structure_tree_structure_module__WEBPACK_IMPORTED_MODULE_33__["TreeStructureModule"],
+                _node_node_module__WEBPACK_IMPORTED_MODULE_32__["NodeModule"],
             ],
             // The components, directives, and pipes that belong to this NgModule
             declarations: [
                 _app_component__WEBPACK_IMPORTED_MODULE_13__["AppComponent"],
-                _home_home_component__WEBPACK_IMPORTED_MODULE_20__["HomeComponent"],
-                _error_error_component__WEBPACK_IMPORTED_MODULE_21__["ErrorComponent"],
-                _directives_alert_component__WEBPACK_IMPORTED_MODULE_23__["AlertComponent"],
+                _home_home_component__WEBPACK_IMPORTED_MODULE_21__["HomeComponent"],
+                _error_error_component__WEBPACK_IMPORTED_MODULE_22__["ErrorComponent"],
+                _directives_alert_component__WEBPACK_IMPORTED_MODULE_24__["AlertComponent"],
+                _navigation_navigation_component__WEBPACK_IMPORTED_MODULE_36__["NavigationComponent"],
             ],
             // The main application view, called the root component, which hosts all other app views
             // Only the root NgModule should set the bootstrap property
             bootstrap: [
-                _app_component__WEBPACK_IMPORTED_MODULE_13__["AppComponent"]
+                _app_component__WEBPACK_IMPORTED_MODULE_13__["AppComponent"],
             ],
             // The subset of declarations that should be visible and 
             // usable in the component templatesof other NgModules
             exports: [
-                _angular_material__WEBPACK_IMPORTED_MODULE_33__["MatButtonModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_33__["MatCardModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_33__["MatListModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_33__["MatIconModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_34__["MatButtonModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_34__["MatCardModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_34__["MatListModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_34__["MatIconModule"],
             ],
             // Creators of services that this NgModule contributes to the global
             // collection of services; they become accessible in all parts of the app
             providers: [
-                _shared_message_service__WEBPACK_IMPORTED_MODULE_22__["MessageService"],
-                _services_authentication_service__WEBPACK_IMPORTED_MODULE_26__["AuthenticationService"],
-                _guards_auth_guard__WEBPACK_IMPORTED_MODULE_25__["AuthGuard"],
-                _services_alert_service__WEBPACK_IMPORTED_MODULE_24__["AlertService"],
-                _services_http_cache_service__WEBPACK_IMPORTED_MODULE_27__["HttpCacheService"],
+                _shared_message_service__WEBPACK_IMPORTED_MODULE_23__["MessageService"],
+                _services_authentication_service__WEBPACK_IMPORTED_MODULE_27__["AuthenticationService"],
+                _services_global_service__WEBPACK_IMPORTED_MODULE_35__["GlobalService"],
+                _guards_auth_guard__WEBPACK_IMPORTED_MODULE_26__["AuthGuard"],
+                _services_alert_service__WEBPACK_IMPORTED_MODULE_25__["AlertService"],
+                _services_http_cache_service__WEBPACK_IMPORTED_MODULE_28__["HttpCacheService"],
                 { provide: _angular_core__WEBPACK_IMPORTED_MODULE_3__["ErrorHandler"], useFactory: errorHandlerFactory },
-                { provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_5__["HTTP_INTERCEPTORS"], useClass: _services_cache_interceptor__WEBPACK_IMPORTED_MODULE_28__["CacheInterceptor"], multi: true },
-                { provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_5__["HTTP_INTERCEPTORS"], useClass: _helpers_jwt_interceptor__WEBPACK_IMPORTED_MODULE_29__["JwtInterceptor"], multi: true }
+                { provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_5__["HTTP_INTERCEPTORS"], useClass: _services_cache_interceptor__WEBPACK_IMPORTED_MODULE_29__["CacheInterceptor"], multi: true },
+                { provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_5__["HTTP_INTERCEPTORS"], useClass: _helpers_jwt_interceptor__WEBPACK_IMPORTED_MODULE_30__["JwtInterceptor"], multi: true }
             ],
         })
     ], AppModule);
@@ -6594,7 +6920,7 @@ var AppModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "#app-chat {\r\n\twidth: 100% !important;\r\n}"
+module.exports = "#app-chat {\r\n\twidth: 100% !important;\r\n}\r\n\r\nbody {\r\n    font-family: Arial;\r\n    margin: 0;\r\n}\r\n\r\n/* Column container */\r\n\r\n.row {  \r\n    display: flex;\r\n    flex-wrap: wrap;\r\n}\r\n\r\n/* Create two unequal columns that sits next to each other */\r\n\r\n/* Sidebar/left column */\r\n\r\n.avatar {\r\n    flex: 20%;\r\n    background-color: #f1f1f1;\r\n    padding: 10px;\r\n}\r\n\r\n/* Main column */\r\n\r\n.content {\r\n    flex: 70%;\r\n    background-color: white;\r\n    padding: 10px;\r\n}\r\n\r\n.timestamp {\r\n    flex: 10%;\r\n    background-color: white;\r\n    padding: 5px;\r\n}\r\n\r\n/* Fake image, just for this example */\r\n\r\n.fakeimg {\r\n    background-color: #aaa;\r\n    \r\n    padding: 10px;\r\n}\r\n\r\n/* Responsive layout - when the screen is less than 100px wide, make the two columns stack on top of each other instead of next to each other */\r\n\r\n@media screen and (max-width: 100px) {\r\n    .side, .main, .timestamp {   \r\n        flex-direction: column;\r\n    }\r\n}"
 
 /***/ }),
 
@@ -6605,7 +6931,7 @@ module.exports = "#app-chat {\r\n\twidth: 100% !important;\r\n}"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<style>\r\n\t.chat-container {\r\n\t\theight: 70%;\r\n\t\toverflow: scroll;\r\n\t\tposition: relative;\r\n\t}\r\n\r\n\t.chat-container mat-list {\r\n\t\tmax-height: 100%;\r\n\t}\r\n\r\n\t.chat-inp {\r\n\t\twidth: 100%;\r\n\t}\r\n\r\n</style>\r\n\r\n<p>\r\n  Chat\r\n</p>\r\n\r\n<div style=\"height: 100%;\">\r\n\t<div #chatContainer class=\"chat-container\" (scroll)=\"onScroll($event)\">\r\n\t\t<mat-list>\r\n\t\t\t<mat-list-item *ngFor=\"let message of messages\"> {{ message.author }}: {{ message.content }} {{ message.sent_on }}</mat-list-item>\r\n\t\t</mat-list>\r\n\t</div>\r\n\r\n\t<mat-form-field class=\"chat-inp\">\r\n\t    <input #msgInput matInput placeholder=\"Message\" value=\"\" (keyup.enter)=\"sendMessage(msgInput.value)\">\r\n\t</mat-form-field>\r\n</div>"
+module.exports = "<style>\r\n\t.chat-container {\r\n\t\theight: 70%;\r\n\t\toverflow: scroll;\r\n\t\tposition: relative;\r\n\t}\r\n\r\n\t.chat-container mat-list {\r\n\t\tmax-height: 100%;\r\n\t}\r\n\r\n\t.chat-inp {\r\n\t\twidth: 100%;\r\n\t}\r\n\r\n</style>\r\n\r\n<mat-card>\r\n\t<div #chatContainer class=\"chat-container\" (scroll)=\"onScroll($event)\">\r\n\t\t<mat-list>\r\n\t\t<!-- <ng-template let-item let-i=\"index\" let-last=\"last\" ngFor [ngForOf]=\"let message of messages\"> -->\r\n\t\t\r\n\t\t\t<mat-list-item *ngFor=\"let message of messages; let i = index; let last = last\">\r\n\t\t\t\t\r\n\t\t\t\t\t<img matListAvatar src=\"http://lorempixel.com/40/40/people/{{i}}\" />\r\n\t\t\t\t\t\r\n\t\t\t\t\t\r\n\t\t\t\t\t\t<h3 matLine class=\"cursor-pointer\"> {{ message.author }} </h3>\r\n\t\t\t\t\t\t<p matLine>\r\n\t\t\t\t\t\t\t<span>{{ message.content }}</span>\r\n\t\t\t\t\t\t</p>\r\n\t\t\t\t\t\r\n\t\t\t\t\t\t<h5>{{ message.sent_on | date:'dd-MMM-yyyy @ h:mma' }}</h5>\r\n\r\n\t\t\t\t\t<mat-divider *ngIf=\"!last\"></mat-divider>\r\n\t\t\t\t\r\n\t\t\t</mat-list-item>\r\n\t\t\r\n\t\t<!-- </ng-template> -->\r\n\t\t</mat-list>\r\n\t</div>\r\n\r\n\t<mat-form-field class=\"chat-inp\">\r\n\t    <input #msgInput matInput placeholder=\"Message\" value=\"\" (keyup.enter)=\"sendMessage(msgInput.value)\">\r\n\t</mat-form-field>\r\n</mat-card>"
 
 /***/ }),
 
@@ -6623,6 +6949,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _chat_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./chat.service */ "./src/app/chat/chat.service.ts");
 /* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../_services */ "./src/app/_services/index.ts");
+/* harmony import */ var _app_config__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../app.config */ "./src/app/app.config.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -6635,6 +6962,7 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 // import { Socket } from 'ngx-socket-io';
+
 
 
 var ChatComponent = /** @class */ (function () {
@@ -6652,8 +6980,8 @@ var ChatComponent = /** @class */ (function () {
     ChatComponent.prototype.ngOnInit = function () {
         var _this = this;
         var cookie = this.authUser.getToken();
-        this.chatSocket = new WebSocket('ws://127.0.0.1:8000/ws/chat/' + localStorage.getItem('nodeID') + '/?' + this.authUser.getToken());
-        this.node = localStorage.getItem('nodeID');
+        this.node = JSON.parse(localStorage.getItem('node'))._id;
+        this.chatSocket = new WebSocket(_app_config__WEBPACK_IMPORTED_MODULE_4__["appConfig"].wsUrl + '/chat/' + this.node + '/?' + this.authUser.getToken());
         this._chatService.getMessages(this.node)
             .subscribe(function (messages) { return _this.messages = messages; });
         var currentThis = this;
@@ -6738,7 +7066,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 
-//import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+// import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 var ChatRoutes = [
     {
@@ -6767,6 +7095,7 @@ var ChatModule = /** @class */ (function () {
                 _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatCardModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatListModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatIconModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatDividerModule"],
             ],
             declarations: [
                 _chat_component__WEBPACK_IMPORTED_MODULE_6__["ChatComponent"],
@@ -7459,7 +7788,7 @@ var FuseFooterModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-sidenav-container>\r\n\r\n    <div id=\"fuse-main-content\">\r\n\r\n        <!-- TOOLBAR: Above -->\r\n        <ng-container *ngIf=\"fuseSettings.layout.toolbar === 'above'\">\r\n            <fuse-toolbar class=\"above\" [ngClass]=\"fuseSettings.colorClasses.toolbar\"></fuse-toolbar>\r\n        </ng-container>\r\n        <!-- / TOOLBAR: Above -->\r\n\r\n        <!-- NAVBAR: Top -->\r\n        <fuse-navbar layout=\"horizontal\"\r\n                     class=\"top-navbar\" fxHide fxShow.gt-md\r\n                     [ngClass]=\"fuseSettings.colorClasses.navbar\"\r\n                     *ngIf=\"fuseSettings.layout.navigation === 'top'\">\r\n        </fuse-navbar>\r\n        <!-- / NAVBAR: Top -->\r\n\r\n        <div id=\"wrapper\">\r\n\r\n            <!-- NAVBAR: Left -->\r\n            <fuse-sidebar [name]=\"'navbar'\"\r\n                          [folded]=\"fuseSettings.layout.navigationFolded\"\r\n                          [lockedOpen]=\"'gt-md'\"\r\n                          class=\"left-navbar\" [ngClass]=\"fuseSettings.colorClasses.navbar\"\r\n                          *ngIf=\"fuseSettings.layout.navigation === 'left' || fuseSettings.layout.navigation === 'top'\">\r\n                <fuse-navbar layout=\"vertical\"></fuse-navbar>\r\n            </fuse-sidebar>\r\n            <!-- / NAVBAR: Left -->\r\n\r\n            <div class=\"content-wrapper\">\r\n\r\n                <!-- TOOLBAR: Below -->\r\n                <ng-container *ngIf=\"fuseSettings.layout.toolbar === 'below'\">\r\n                    <fuse-toolbar class=\"below\" [ngClass]=\"fuseSettings.colorClasses.toolbar\"></fuse-toolbar>\r\n                </ng-container>\r\n                <!-- / TOOLBAR: Below -->\r\n\r\n                <fuse-content></fuse-content>\r\n\r\n                <!-- FOOTER: Below -->\r\n                <ng-container *ngIf=\"fuseSettings.layout.footer === 'below'\">\r\n                    <fuse-footer class=\"below\" [ngClass]=\"fuseSettings.colorClasses.footer\"></fuse-footer>\r\n                </ng-container>\r\n                <!-- / FOOTER: Below -->\r\n\r\n            </div>\r\n\r\n            <!-- NAVBAR: Right -->\r\n            <fuse-sidebar [name]=\"'navbar'\" [align]=\"'right'\"\r\n                          [folded]=\"fuseSettings.layout.navigationFolded\"\r\n                          [lockedOpen]=\"'gt-md'\"\r\n                          class=\"right-navbar\" [ngClass]=\"fuseSettings.colorClasses.navbar\"\r\n                          *ngIf=\"fuseSettings.layout.navigation === 'right'\">\r\n                <fuse-navbar layout=\"vertical\"></fuse-navbar>\r\n            </fuse-sidebar>\r\n            <!-- / NAVBAR: Right -->\r\n\r\n        </div>\r\n\r\n        <!-- FOOTER: Above -->\r\n        <ng-container *ngIf=\"fuseSettings.layout.footer === 'above'\">\r\n            <fuse-footer class=\"above\" [ngClass]=\"fuseSettings.colorClasses.footer\"></fuse-footer>\r\n        </ng-container>\r\n        <!-- FOOTER: Above -->\r\n\r\n    </div>\r\n\r\n    <!-- QUICK PANEL -->\r\n    <mat-sidenav fuseMatSidenavHelper=\"quick-panel\" position=\"end\">\r\n        <fuse-quick-panel></fuse-quick-panel>\r\n    </mat-sidenav>\r\n    <!-- / QUICK PANEL -->\r\n\r\n</mat-sidenav-container>\r\n\r\n<fuse-theme-options [navigation]=\"navigation\"></fuse-theme-options>\r\n"
+module.exports = "<mat-sidenav-container>\r\n\r\n    <div id=\"fuse-main-content\">\r\n\r\n        <!-- TOOLBAR: Above -->\r\n        <ng-container *ngIf=\"fuseSettings.layout.toolbar === 'above'\">\r\n            <fuse-toolbar class=\"above\" [ngClass]=\"fuseSettings.colorClasses.toolbar\"></fuse-toolbar>\r\n        </ng-container>\r\n        <!-- / TOOLBAR: Above -->\r\n\r\n        <!-- NAVBAR: Top -->\r\n        <fuse-navbar layout=\"horizontal\"\r\n                     class=\"top-navbar\" fxHide fxShow.gt-md\r\n                     [ngClass]=\"fuseSettings.colorClasses.navbar\"\r\n                     *ngIf=\"fuseSettings.layout.navigation === 'top'\">\r\n        </fuse-navbar>\r\n        <!-- / NAVBAR: Top -->\r\n\r\n        <div id=\"wrapper\">\r\n\r\n            <!-- NAVBAR: Left -->\r\n            <fuse-sidebar [name]=\"'navbar'\"\r\n                          [folded]=\"fuseSettings.layout.navigationFolded\"\r\n                          [lockedOpen]=\"'gt-md'\"\r\n                          class=\"left-navbar\" [ngClass]=\"fuseSettings.colorClasses.navbar\"\r\n                          *ngIf=\"fuseSettings.layout.navigation === 'left' || fuseSettings.layout.navigation === 'top'\">\r\n                <fuse-navbar layout=\"vertical\"></fuse-navbar>\r\n            </fuse-sidebar>\r\n            <!-- / NAVBAR: Left -->\r\n\r\n            <div class=\"content-wrapper\">\r\n\r\n                <!-- TOOLBAR: Below -->\r\n                <ng-container *ngIf=\"fuseSettings.layout.toolbar === 'below'\">\r\n                    <fuse-toolbar class=\"below\" [ngClass]=\"fuseSettings.colorClasses.toolbar\"></fuse-toolbar>\r\n                </ng-container>\r\n                <!-- / TOOLBAR: Below -->\r\n\r\n                <fuse-content></fuse-content>\r\n\r\n                <!-- FOOTER: Below -->\r\n                <!-- <ng-container *ngIf=\"fuseSettings.layout.footer === 'below'\">\r\n                    <fuse-footer class=\"below\" [ngClass]=\"fuseSettings.colorClasses.footer\"></fuse-footer>\r\n                </ng-container> -->\r\n                <!-- / FOOTER: Below -->\r\n\r\n            </div>\r\n\r\n            <!-- NAVBAR: Right -->\r\n            <fuse-sidebar [name]=\"'navbar'\" [align]=\"'right'\"\r\n                          [folded]=\"fuseSettings.layout.navigationFolded\"\r\n                          [lockedOpen]=\"'gt-md'\"\r\n                          class=\"right-navbar\" [ngClass]=\"fuseSettings.colorClasses.navbar\"\r\n                          *ngIf=\"fuseSettings.layout.navigation === 'right'\">\r\n                <fuse-navbar layout=\"vertical\"></fuse-navbar>\r\n            </fuse-sidebar>\r\n            <!-- / NAVBAR: Right -->\r\n\r\n        </div>\r\n\r\n        <!-- FOOTER: Above -->\r\n        <ng-container *ngIf=\"fuseSettings.layout.footer === 'above'\">\r\n            <fuse-footer class=\"above\" [ngClass]=\"fuseSettings.colorClasses.footer\"></fuse-footer>\r\n        </ng-container>\r\n        <!-- FOOTER: Above -->\r\n\r\n    </div>\r\n\r\n    <!-- QUICK PANEL -->\r\n    <mat-sidenav fuseMatSidenavHelper=\"quick-panel\" position=\"end\">\r\n        <fuse-quick-panel></fuse-quick-panel>\r\n    </mat-sidenav>\r\n    <!-- / QUICK PANEL -->\r\n\r\n</mat-sidenav-container>\r\n\r\n<!-- <fuse-theme-options [navigation]=\"navigation\"></fuse-theme-options> -->\r\n"
 
 /***/ }),
 
@@ -7638,7 +7967,7 @@ var FuseMainModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ng-container *ngIf=\"layout == 'vertical'\">\r\n\r\n    <div class=\"navbar-vertical\">\r\n\r\n        <div class=\"navbar-header\">\r\n\r\n            <div class=\"logo\">\r\n                <img class=\"logo-icon\" src=\"assets/images/logos/vpmo-logo-small.png\">\r\n                <!-- <span class=\"logo-text\">VPMO</span> -->\r\n            </div>\r\n\r\n            <button mat-icon-button class=\"toggle-button-navbar\"\r\n                    (click)=\"toggleSidebarFolded()\" fxHide.lt-lg>\r\n                <mat-icon>menu</mat-icon>\r\n            </button>\r\n\r\n            <button mat-icon-button class=\"toggle-button-navbar\"\r\n                    (click)=\"toggleSidebarOpened()\" fxHide.gt-md>\r\n                <mat-icon>arrow_back</mat-icon>\r\n            </button>\r\n\r\n        </div>\r\n\r\n        <div class=\"navbar-content\" fusePerfectScrollbar>\r\n            <fuse-navigation [navigation]=\"navigation\" layout=\"vertical\"></fuse-navigation>\r\n        </div>\r\n\r\n    </div>\r\n\r\n</ng-container>\r\n\r\n<ng-container *ngIf=\"layout == 'horizontal'\">\r\n\r\n    <div class=\"navbar-horizontal\">\r\n        <fuse-navigation [navigation]=\"navigation\" layout=\"horizontal\"></fuse-navigation>\r\n    </div>\r\n\r\n</ng-container>"
+module.exports = "<ng-container *ngIf=\"layout == 'vertical'\">\r\n\r\n    <div class=\"navbar-vertical\">\r\n\r\n        <div class=\"navbar-header\">\r\n\r\n            <div class=\"logo\">\r\n                <img class=\"logo-icon\" src=\"assets/images/logos/vpmo-logo-small.png\">\r\n                <!-- <span class=\"logo-text\">VPMO</span> -->\r\n            </div>\r\n\r\n            <button mat-icon-button class=\"toggle-button-navbar\"\r\n                    (click)=\"toggleSidebarFolded()\" fxHide.lt-lg>\r\n                <mat-icon>menu</mat-icon>\r\n            </button>\r\n\r\n            <button mat-icon-button class=\"toggle-button-navbar\"\r\n                    (click)=\"toggleSidebarOpened()\" fxHide.gt-md>\r\n                <mat-icon>arrow_back</mat-icon>\r\n            </button>\r\n\r\n        </div>\r\n\r\n        <div class=\"navbar-content\" fusePerfectScrollbar>\r\n            <!-- {{team}} -->\r\n            <!-- <app-node-navigation></app-node-navigation> -->\r\n            <fuse-navigation [navigation]=\"navigation\" layout=\"vertical\"></fuse-navigation>\r\n            <!-- {{navigation}} -->\r\n        </div>\r\n\r\n    </div>\r\n\r\n</ng-container>\r\n\r\n<ng-container *ngIf=\"layout == 'horizontal'\">\r\n\r\n    <div class=\"navbar-horizontal\">\r\n        <fuse-navigation [navigation]=\"navigation\" layout=\"horizontal\"></fuse-navigation>\r\n    </div>\r\n\r\n</ng-container>"
 
 /***/ }),
 
@@ -7667,8 +7996,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _fuse_directives_fuse_perfect_scrollbar_fuse_perfect_scrollbar_directive__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive */ "./src/@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive.ts");
 /* harmony import */ var _fuse_components_sidebar_sidebar_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @fuse/components/sidebar/sidebar.service */ "./src/@fuse/components/sidebar/sidebar.service.ts");
-/* harmony import */ var app_navigation_navigation__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! app/navigation/navigation */ "./src/app/navigation/navigation.ts");
-/* harmony import */ var _fuse_components_navigation_navigation_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @fuse/components/navigation/navigation.service */ "./src/@fuse/components/navigation/navigation.service.ts");
+/* harmony import */ var _fuse_components_navigation_navigation_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @fuse/components/navigation/navigation.service */ "./src/@fuse/components/navigation/navigation.service.ts");
+/* harmony import */ var _services_global_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../_services/global.service */ "./src/app/_services/global.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7685,14 +8014,22 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 var FuseNavbarComponent = /** @class */ (function () {
-    function FuseNavbarComponent(sidebarService, navigationService, router) {
+    function FuseNavbarComponent(sidebarService, navigationService, router, globalService) {
+        // Navigation data
+        // this.navigation = navigation;
+        var _this = this;
         this.sidebarService = sidebarService;
         this.navigationService = navigationService;
         this.router = router;
-        // Navigation data
-        this.navigation = app_navigation_navigation__WEBPACK_IMPORTED_MODULE_4__["navigation"];
+        this.globalService = globalService;
         // Default layout
         this.layout = 'vertical';
+        globalService.teamValue.subscribe(function (nextValue) {
+            _this.team = nextValue;
+        });
+        globalService.navigationValue.subscribe(function (nextValue) {
+            _this.navigation = JSON.parse(nextValue);
+        });
     }
     Object.defineProperty(FuseNavbarComponent.prototype, "directive", {
         set: function (theDirective) {
@@ -7752,8 +8089,9 @@ var FuseNavbarComponent = /** @class */ (function () {
             encapsulation: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewEncapsulation"].None
         }),
         __metadata("design:paramtypes", [_fuse_components_sidebar_sidebar_service__WEBPACK_IMPORTED_MODULE_3__["FuseSidebarService"],
-            _fuse_components_navigation_navigation_service__WEBPACK_IMPORTED_MODULE_5__["FuseNavigationService"],
-            _angular_router__WEBPACK_IMPORTED_MODULE_1__["Router"]])
+            _fuse_components_navigation_navigation_service__WEBPACK_IMPORTED_MODULE_4__["FuseNavigationService"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_1__["Router"],
+            _services_global_service__WEBPACK_IMPORTED_MODULE_5__["GlobalService"]])
     ], FuseNavbarComponent);
     return FuseNavbarComponent;
 }());
@@ -7778,12 +8116,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _fuse_shared_module__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @fuse/shared.module */ "./src/@fuse/shared.module.ts");
 /* harmony import */ var app_main_navbar_navbar_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! app/main/navbar/navbar.component */ "./src/app/main/navbar/navbar.component.ts");
 /* harmony import */ var _fuse_components__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @fuse/components */ "./src/@fuse/components/index.ts");
+/* harmony import */ var _node_node_module__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../node/node.module */ "./src/app/node/node.module.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -7803,7 +8143,8 @@ var FuseNavbarModule = /** @class */ (function () {
                 _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatButtonModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatIconModule"],
                 _fuse_shared_module__WEBPACK_IMPORTED_MODULE_3__["FuseSharedModule"],
-                _fuse_components__WEBPACK_IMPORTED_MODULE_5__["FuseNavigationModule"]
+                _fuse_components__WEBPACK_IMPORTED_MODULE_5__["FuseNavigationModule"],
+                _node_node_module__WEBPACK_IMPORTED_MODULE_6__["NodeModule"],
             ],
             exports: [
                 app_main_navbar_navbar_component__WEBPACK_IMPORTED_MODULE_4__["FuseNavbarComponent"]
@@ -7981,6 +8322,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _fuse_components_sidebar_sidebar_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @fuse/components/sidebar/sidebar.service */ "./src/@fuse/components/sidebar/sidebar.service.ts");
 /* harmony import */ var app_navigation_navigation__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! app/navigation/navigation */ "./src/app/navigation/navigation.ts");
 /* harmony import */ var app_services_authentication_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! app/_services/authentication.service */ "./src/app/_services/authentication.service.ts");
+/* harmony import */ var _services_global2_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../_services/global2.service */ "./src/app/_services/global2.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7997,14 +8339,16 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var FuseToolbarComponent = /** @class */ (function () {
-    function FuseToolbarComponent(router, fuseConfig, sidebarService, translate, authService) {
+    function FuseToolbarComponent(router, fuseConfig, sidebarService, translate, authService, globalService) {
         var _this = this;
         this.router = router;
         this.fuseConfig = fuseConfig;
         this.sidebarService = sidebarService;
         this.translate = translate;
         this.authService = authService;
+        this.globalService = globalService;
         this.title = 'app';
         this.userStatusOptions = [
             {
@@ -8059,13 +8403,22 @@ var FuseToolbarComponent = /** @class */ (function () {
             _this.noNav = settings.layout.navigation === 'non e';
         });
         this.navigation = app_navigation_navigation__WEBPACK_IMPORTED_MODULE_5__["navigation"];
+        this.globalService.currentUserValue.subscribe(function (user) {
+            _this.user = user;
+            _this.user = JSON.parse(_this.user);
+            _this.fullname = _this.user.token;
+        }, function (err) { return console.log(err); });
     }
     FuseToolbarComponent.prototype.ngOnInit = function () {
+        // debugger;
         var _this = this;
         this.authService.getUserName()
-            .subscribe(function (user) { return _this.fullname = user; }, function (err) { return console.log(err); });
+            .subscribe(function (data) {
+            _this.fullname = data;
+            console.log("username:' " + _this.fullname);
+        }, function (err) { return console.log('toolbar oninit: could not retrieve user fullname'); });
         this.authService.isAuthenticated()
-            .subscribe(function (data) { _this.isLoggedIn = data, console.log("isLoggedIn: " + _this.isLoggedIn); }, function (err) { return console.log("error in reading isLoggedIn from Auth component\" " + err); }, function () { return console.log('isLoggedIn function read properly'); });
+            .subscribe(function (data) { _this.isLoggedIn = data, console.log("isLoggedIn: " + _this.isLoggedIn); }, function (err) { return console.log("error in reading isAuthenticated from Auth component " + err); }, function () { return console.log('isAuthenticated function read properly'); });
         console.log('ngOnInit complete');
     };
     FuseToolbarComponent.prototype.toggleSidebarOpened = function (key) {
@@ -8103,7 +8456,8 @@ var FuseToolbarComponent = /** @class */ (function () {
             _fuse_services_config_service__WEBPACK_IMPORTED_MODULE_3__["FuseConfigService"],
             _fuse_components_sidebar_sidebar_service__WEBPACK_IMPORTED_MODULE_4__["FuseSidebarService"],
             _ngx_translate_core__WEBPACK_IMPORTED_MODULE_2__["TranslateService"],
-            app_services_authentication_service__WEBPACK_IMPORTED_MODULE_6__["AuthenticationService"]])
+            app_services_authentication_service__WEBPACK_IMPORTED_MODULE_6__["AuthenticationService"],
+            _services_global2_service__WEBPACK_IMPORTED_MODULE_7__["GlobalService"]])
     ], FuseToolbarComponent);
     return FuseToolbarComponent;
 }());
@@ -8163,7 +8517,7 @@ var FuseToolbarModule = /** @class */ (function () {
                 _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatToolbarModule"],
                 _fuse_shared_module__WEBPACK_IMPORTED_MODULE_5__["FuseSharedModule"],
                 _fuse_components__WEBPACK_IMPORTED_MODULE_7__["FuseSearchBarModule"],
-                _fuse_components__WEBPACK_IMPORTED_MODULE_7__["FuseShortcutsModule"]
+                _fuse_components__WEBPACK_IMPORTED_MODULE_7__["FuseShortcutsModule"],
             ],
             exports: [
                 app_main_toolbar_toolbar_component__WEBPACK_IMPORTED_MODULE_6__["FuseToolbarComponent"]
@@ -8229,6 +8583,91 @@ var locale = {
 
 /***/ }),
 
+/***/ "./src/app/navigation/navigation.component.html":
+/*!******************************************************!*\
+  !*** ./src/app/navigation/navigation.component.html ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<p>\r\n  navigation works!\r\n</p>\r\n"
+
+/***/ }),
+
+/***/ "./src/app/navigation/navigation.component.less":
+/*!******************************************************!*\
+  !*** ./src/app/navigation/navigation.component.less ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/navigation/navigation.component.ts":
+/*!****************************************************!*\
+  !*** ./src/app/navigation/navigation.component.ts ***!
+  \****************************************************/
+/*! exports provided: NavigationComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NavigationComponent", function() { return NavigationComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _services_global_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../_services/global.service */ "./src/app/_services/global.service.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var NavigationComponent = /** @class */ (function () {
+    function NavigationComponent(globalService) {
+        var _this = this;
+        this.globalService = globalService;
+        globalService.teamValue.subscribe(function (nextValue) {
+            _this.team = nextValue;
+        });
+        globalService.projectValue.subscribe(function (nextValue) {
+            _this.project = nextValue;
+        });
+        globalService.topicValue.subscribe(function (nextValue) {
+            _this.topic = nextValue;
+        });
+        globalService.nodeValue.subscribe(function (nextValue) {
+            _this.node = nextValue;
+        });
+    }
+    NavigationComponent.prototype.teamUpdate = function () {
+    };
+    NavigationComponent.prototype.projectUpdate = function () {
+    };
+    NavigationComponent.prototype.topicUpdate = function () {
+    };
+    NavigationComponent.prototype.ngOnInit = function () {
+    };
+    NavigationComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'app-navigation',
+            template: __webpack_require__(/*! ./navigation.component.html */ "./src/app/navigation/navigation.component.html"),
+            styles: [__webpack_require__(/*! ./navigation.component.less */ "./src/app/navigation/navigation.component.less")]
+        }),
+        __metadata("design:paramtypes", [_services_global_service__WEBPACK_IMPORTED_MODULE_1__["GlobalService"]])
+    ], NavigationComponent);
+    return NavigationComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/navigation/navigation.ts":
 /*!******************************************!*\
   !*** ./src/app/navigation/navigation.ts ***!
@@ -8241,75 +8680,109 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "navigation", function() { return navigation; });
 var navigation = [
     {
-        'id': 'TEAM',
+        'id': 'teamGroup',
         'title': 'TEAM',
-        // 'translate': 'NAV.ORGANISATIONS',
         'type': 'group',
+        // 'icon' : 'business_center',
+        'url': '',
         'children': [
             {
-                'id': 'TeamTree',
-                'title': 'Team Tree (see projects)',
-                'translate': 'NAV.SAMPLE.TITLE',
+                'id': 'teams',
+                'title': 'My Teams',
+                // 'translate': 'NAV.SAMPLE.TITLE',
                 'type': 'item',
                 'icon': 'business_center',
-                'url': '/team/tree',
-                'badge': {
-                    'title': 25,
-                    'translate': 'NAV.SAMPLE.BADGE',
-                    'bg': '#F44336',
-                    'fg': '#FFFFFF'
-                }
+                'url': '/team/all',
+                'hidden': false,
             },
             {
-                'id': 'TeamMembers',
-                'title': 'People',
-                // 'translate': 'NAV.AddOrganisation.TITLE',
+                'id': 'focusTeam',
+                'title': 'ABC Co.',
                 'type': 'item',
-                'icon': 'add_box',
-                'url': '/team/members/',
+                'icon': 'business_center',
+                'url': '',
+                'hidden': true,
             },
-            {
-                'id': 'MyTeams',
-                'title': 'My Teams',
-                // 'translate': 'NAV.AddOrganisation.TITLE',
-                'type': 'item',
-                'icon': 'list',
-                'url': '/team/all/',
-            }
         ]
     },
     {
-        'id': 'PROJECT',
+        'id': 'projectGroup',
         'title': 'PROJECTS',
-        // 'translate': 'NAV.ORGANISATIONS',
         'type': 'group',
+        'hidden': true,
+        // 'icon' : 'business_center',
+        'url': '',
         'children': [
             {
-                'id': 'Current',
-                'title': 'Current: Project ABC',
+                'id': 'projects',
+                'title': 'My Projects',
                 // 'translate': 'NAV.SAMPLE.TITLE',
                 'type': 'item',
-                'icon': 'visibility',
-                'url': '/projects/abc',
+                // 'icon' : 'business_center',
+                'url': 'project/all',
+                'hidden': true,
             },
             {
-                'id': 'AddProject',
-                'title': 'Create Project',
-                // 'translate': 'NAV.AddOrganisation.TITLE',
+                'id': 'focusProject',
+                'title': 'Test Project',
                 'type': 'item',
-                'icon': 'add_box',
-                'url': '/projects/add',
+                'icon': 'business_center',
+                'url': 'focusproject_url',
+                'hidden': true,
             },
-            {
-                'id': 'MyProjects',
-                'title': 'My Projects',
-                // 'translate': 'NAV.AddOrganisation.TITLE',
-                'type': 'item',
-                'icon': 'view_module',
-                'url': '/projects/',
-            }
         ]
-    }
+    },
+    {
+        'id': 'topicGroup',
+        'title': 'TOPIC',
+        'type': 'group',
+        // 'icon' : 'business_center',
+        'url': '',
+        'hidden': true,
+        'children': [
+            {
+                'id': 'topics',
+                'title': 'My Topics',
+                // 'translate': 'NAV.SAMPLE.TITLE',
+                'type': 'item',
+                // 'icon' : 'business_center',
+                'url': 'topic/all',
+                'hidden': true,
+            },
+            {
+                'id': 'focusTopic',
+                'title': 'Issue 123',
+                'type': 'item',
+                // 'icon' : 'business_center',
+                'url': 'focusTopic_url',
+                'hidden': true,
+            },
+        ]
+    },
+    {
+        'id': 'favouritsGroup',
+        'title': 'FAVOURITES',
+        'type': 'group',
+        // 'icon' : 'business_center',
+        'url': '',
+        'children': [
+            {
+                'id': 'fav001',
+                'title': 'Issue 123',
+                // 'translate': 'NAV.SAMPLE.TITLE',
+                'type': 'item',
+                // 'icon' : 'business_center',
+                'url': '',
+            },
+            {
+                'id': 'fav002',
+                'title': 'Project XYZ',
+                'type': 'item',
+                // 'icon' : 'business_center',
+                'url': '',
+            },
+        ]
+    },
 ];
 
 
@@ -8368,16 +8841,19 @@ var NodeEditComponent = /** @class */ (function () {
         this.router = router;
     }
     NodeEditComponent.prototype.ngOnInit = function () {
-        if (localStorage.getItem('nodeType') === 'Team') {
+        var nodeId = JSON.parse(localStorage.getItem('node'))._Id;
+        var nodeType = localStorage.getItem('nodeType');
+        if (nodeType === 'Team') {
         }
-        else if (localStorage.getItem('nodeType') === 'Project') {
+        else if (nodeType === 'Project') {
+            console.log("Project.................");
             this.project = JSON.parse(localStorage.getItem('project'));
             if (this.project.content !== null) {
                 this.content = this.project.content;
                 console.log('NOT NULL!', this.content);
             }
-            else if (localStorage.getItem('nodeType') === 'Deliverable') {
-            }
+        }
+        else if (nodeType === 'Deliverable') {
         }
     };
     NodeEditComponent = __decorate([
@@ -8418,6 +8894,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tree_structure_tree_structure_module__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../tree-structure/tree-structure.module */ "./src/app/tree-structure/tree-structure.module.ts");
 /* harmony import */ var _node_edit_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./node-edit.component */ "./src/app/node/node-edit.component.ts");
 /* harmony import */ var _permissions_permissions_module__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../permissions/permissions.module */ "./src/app/permissions/permissions.module.ts");
+/* harmony import */ var _tasks_tasks_module__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../tasks/tasks.module */ "./src/app/tasks/tasks.module.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8436,12 +8913,13 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 
+
 var NodeRoutes = [
     {
         path: 'node',
         canActivate: [_guards_auth_guard__WEBPACK_IMPORTED_MODULE_2__["AuthGuard"]],
         children: [
-            { path: 'details', component: _nodepage_component__WEBPACK_IMPORTED_MODULE_4__["NodepageComponent"] },
+            { path: ':type/:id', component: _nodepage_component__WEBPACK_IMPORTED_MODULE_4__["NodepageComponent"] },
         ]
     },
 ];
@@ -8464,9 +8942,11 @@ var NodeModule = /** @class */ (function () {
                 _angular_material__WEBPACK_IMPORTED_MODULE_6__["MatListModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_6__["MatIconModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_6__["MatTabsModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_6__["MatExpansionModule"],
                 _project_project_module__WEBPACK_IMPORTED_MODULE_7__["ProjectModule"],
                 _chat_chat_module__WEBPACK_IMPORTED_MODULE_8__["ChatModule"],
                 _permissions_permissions_module__WEBPACK_IMPORTED_MODULE_11__["PermissionsModule"],
+                _tasks_tasks_module__WEBPACK_IMPORTED_MODULE_12__["TasksModule"],
                 _tree_structure_tree_structure_module__WEBPACK_IMPORTED_MODULE_9__["TreeStructureModule"],
             ],
             declarations: [
@@ -8492,7 +8972,7 @@ var NodeModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-tab-group [selectedIndex]=\"1\">\r\n  <mat-tab label=\"Tree\"> <app-tree-structure></app-tree-structure> </mat-tab>\r\n  <!--<mat-tab label=\"Content\"> <node-details></node-details> </mat-tab>-->\r\n  <!--<mat-tab label=\"Conversation\"> <app-chat></app-chat> </mat-tab>-->\r\n  <mat-tab label=\"Tasks\"> list of tasks (not built yet!) </mat-tab>\r\n  <mat-tab label=\"Documents\"> tiles of Documents (not built yet!) </mat-tab>\r\n  <mat-tab label=\"Permissions\">\r\n  \t<app-permissions></app-permissions>\r\n  </mat-tab>\r\n</mat-tab-group>\r\n"
+module.exports = "<div>\r\n  <h2>{{node.name}}</h2>\r\n</div>\r\n<mat-tab-group [selectedIndex]=\"1\">\r\n  <mat-tab label=\"Tree\"> \r\n    <app-tree-structure></app-tree-structure> \r\n  </mat-tab>\r\n  <mat-tab label=\"Content\"> \r\n    <node-details></node-details> \r\n  </mat-tab>\r\n  <mat-tab label=\"Conversation\"> \r\n    <app-chat></app-chat> \r\n  </mat-tab>\r\n  <mat-tab label=\"Tasks\"> \r\n    <app-tasks></app-tasks>\r\n  </mat-tab>\r\n  <mat-tab label=\"Documents\"> tiles of Documents (not built yet!) </mat-tab>\r\n  <mat-tab label=\"Permissions\">\r\n  \t<app-permissions></app-permissions>\r\n  </mat-tab>\r\n</mat-tab-group>\r\n"
 
 /***/ }),
 
@@ -8519,6 +8999,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NodepageComponent", function() { return NodepageComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _services_global_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../_services/global.service */ "./src/app/_services/global.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8530,11 +9011,31 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 
 
+
 var NodepageComponent = /** @class */ (function () {
-    function NodepageComponent(router) {
+    function NodepageComponent(router, route, globalService) {
+        var _this = this;
         this.router = router;
+        this.route = route;
+        this.globalService = globalService;
+        globalService.nodeValue.subscribe(function (nextValue) {
+            _this.node = JSON.parse(nextValue);
+        });
     }
+    NodepageComponent.prototype.updateGlobal = function (nodeType) {
+        if (nodeType === 'Team') {
+            this.globalService.team = localStorage.getItem('team');
+            this.globalService.node = localStorage.getItem('team');
+            localStorage.setItem('nodeType', 'Team');
+        }
+    };
     NodepageComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.route.params.subscribe(function (params) {
+            _this.nodeType = params['type'];
+            _this.updateGlobal(_this.nodeType);
+        });
+        // this.nodeType = localStorage.getItem('nodeType');
     };
     NodepageComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -8542,7 +9043,9 @@ var NodepageComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./nodepage.component.html */ "./src/app/node/nodepage.component.html"),
             styles: [__webpack_require__(/*! ./nodepage.component.less */ "./src/app/node/nodepage.component.less")]
         }),
-        __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_1__["Router"]])
+        __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_1__["Router"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_1__["ActivatedRoute"],
+            _services_global_service__WEBPACK_IMPORTED_MODULE_2__["GlobalService"]])
     ], NodepageComponent);
     return NodepageComponent;
 }());
@@ -8558,7 +9061,7 @@ var NodepageComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = ".full-width: {\r\n\twidth: 100%;\r\n}"
 
 /***/ }),
 
@@ -8697,7 +9200,7 @@ var PermissionsComponent = /** @class */ (function () {
         this.assignableRoles = [];
     }
     PermissionsComponent.prototype.ngOnInit = function () {
-        var nodeID = localStorage.getItem('nodeID');
+        var nodeID = JSON.parse(localStorage.getItem('node'))._id;
         var nodeType = localStorage.getItem('nodeType');
         this.getUserPermissions(nodeID, nodeType);
         this.getPermissionsList(nodeID, nodeType);
@@ -8759,7 +9262,7 @@ var PermissionsComponent = /** @class */ (function () {
         var editPerms = [];
         var self = this;
         this.currentUserPermissions.forEach(function (i) {
-            if (i == 'update_' + self.nodeType.toLowerCase() + '_user_role') {
+            if (i === 'update_' + self.nodeType.toLowerCase() + '_user_role') {
                 editPerms.push(i);
             }
         });
@@ -8783,7 +9286,7 @@ var PermissionsComponent = /** @class */ (function () {
         var _this = this;
         this._permissionsService.removeUserPermissions(this.nodeID, this.nodeType, user._id)
             .subscribe(function (response) {
-            _this.userList = _this.userList.filter(function (item) { return item._id != user._id; });
+            _this.userList = _this.userList.filter(function (item) { return item._id !== user._id; });
             // this.userList.splice(this.userList.indexOf(user), 1)
         });
     };
@@ -8855,6 +9358,7 @@ var PermissionsModule = /** @class */ (function () {
             imports: [
                 _angular_common__WEBPACK_IMPORTED_MODULE_1__["CommonModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormsModule"],
+                _angular_forms__WEBPACK_IMPORTED_MODULE_3__["ReactiveFormsModule"],
                 _angular_router__WEBPACK_IMPORTED_MODULE_2__["RouterModule"].forChild(PermissionsRoutes),
                 _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClientModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatIconModule"],
@@ -9092,7 +9596,7 @@ var ProjectAddComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div>\r\n  <H1>Editting Project: {{ project.name }}</H1>\r\n  <button mat-button class=\"white-icon\" (click)=\"saveContent()\">Save</button>\r\n</div>\r\n\r\n<quill-editor [(ngModel)]=\"projectContent\"></quill-editor>"
+module.exports = "<div>\r\n  <!-- <H1>Editting Project: {{ project.name }}</H1> -->\r\n  <button mat-button class=\"white-icon\" (click)=\"saveContent()\">Save</button>\r\n</div>\r\n\r\n<quill-editor [(ngModel)]=\"projectContent\"></quill-editor>"
 
 /***/ }),
 
@@ -9109,6 +9613,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _project_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./project.service */ "./src/app/project/project.service.ts");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _app_services_global_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../app/_services/global.service */ "./src/app/_services/global.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -9121,21 +9626,29 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var ProjectEditComponent = /** @class */ (function () {
-    function ProjectEditComponent(_projectService, router) {
+    function ProjectEditComponent(_projectService, router, global) {
         this._projectService = _projectService;
         this.router = router;
+        this.global = global;
     }
     ProjectEditComponent.prototype.ngOnInit = function () {
         this.project = JSON.parse(localStorage.getItem('project'));
         if (this.project.content !== null) {
             this.projectContent = this.project.content;
-            console.log('NOT NULL!', this.projectContent);
+            // console.log('NOT NULL!', this.projectContent);
         }
     };
     ProjectEditComponent.prototype.saveContent = function () {
         var _this = this;
-        this._projectService.partialUpdateProject(this.project._id, this.projectContent)
+        var id;
+        id = JSON.parse(localStorage.getItem('project'))._id;
+        // this.global.projectValue.subscribe(
+        //   (data) => { id = JSON.parse(data)._id; },
+        //   (err: any) => console.log('error: project id')
+        // );
+        this._projectService.partialUpdateProject(id, this.projectContent)
             .subscribe(function (project) { return _this.project = project; });
     };
     ProjectEditComponent = __decorate([
@@ -9144,7 +9657,8 @@ var ProjectEditComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./project-edit.component.html */ "./src/app/project/project-edit.component.html"),
         }),
         __metadata("design:paramtypes", [_project_service__WEBPACK_IMPORTED_MODULE_1__["ProjectService"],
-            _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]])
+            _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
+            _app_services_global_service__WEBPACK_IMPORTED_MODULE_3__["GlobalService"]])
     ], ProjectEditComponent);
     return ProjectEditComponent;
 }());
@@ -9360,13 +9874,13 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var ProjectRoutes = [
     {
         path: 'projects',
-        canActivate: [_guards_auth_guard__WEBPACK_IMPORTED_MODULE_10__["AuthGuard"]],
         // component: ProjectComponent,
         children: [
             { path: 'add', component: _project_add_component__WEBPACK_IMPORTED_MODULE_5__["ProjectAddComponent"] },
             { path: '', component: _project_list_component__WEBPACK_IMPORTED_MODULE_11__["ProjectListComponent"] },
             { path: 'edit', component: _project_edit_component__WEBPACK_IMPORTED_MODULE_6__["ProjectEditComponent"] }
-        ]
+        ],
+        canActivate: [_guards_auth_guard__WEBPACK_IMPORTED_MODULE_10__["AuthGuard"]],
     },
 ];
 var ProjectModule = /** @class */ (function () {
@@ -9526,6 +10040,516 @@ var MessageService = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/tasks/create-tasks.component.css":
+/*!**************************************************!*\
+  !*** ./src/app/tasks/create-tasks.component.css ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/tasks/create-tasks.component.html":
+/*!***************************************************!*\
+  !*** ./src/app/tasks/create-tasks.component.html ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div>\r\n\t<h3>Create Task</h3>\r\n\r\n\t<div>\r\n\t\t<mat-form-field class=\"full-width\">\r\n\t\t  <input [(ngModel)]=\"taskTitle\" matInput placeholder=\"Task Title\">\r\n\t\t</mat-form-field>\r\n\t</div>\r\n\r\n\t<mat-form-field class=\"full-width\">\r\n    \t<input (input)=\"filterUsers($event.target.value)\" type=\"text\" placeholder=\"Task Assignee\" matInput [matAutocomplete]=\"auto\" [(ngModel)]=\"selectedUser\">\r\n\t    <mat-autocomplete #auto=\"matAutocomplete\">\r\n\t      <mat-option *ngFor=\"let option of filteredAssignableUsers\" [value]=\"option.username\">\r\n\t        {{option.username}}\r\n\t      </mat-option>\r\n\t    </mat-autocomplete>\r\n  \t</mat-form-field>\r\n\r\n\t<div>\r\n\t\t<mat-form-field class=\"full-width\">\r\n\t\t  <input matInput [matDatepicker]=\"picker\" placeholder=\"Due Date\" [(ngModel)]=\"taskDueDate\">\r\n\t\t  <mat-datepicker-toggle matSuffix [for]=\"picker\"></mat-datepicker-toggle>\r\n\t\t  <mat-datepicker #picker></mat-datepicker>\r\n\t\t</mat-form-field>\r\n\t</div>\r\n\t<div>\r\n\t\t<button mat-flat-button color=\"primary\" (click)=\"createTask()\">Create Task</button>\r\n\t</div>\r\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/tasks/create-tasks.component.ts":
+/*!*************************************************!*\
+  !*** ./src/app/tasks/create-tasks.component.ts ***!
+  \*************************************************/
+/*! exports provided: CreateTasksComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CreateTasksComponent", function() { return CreateTasksComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _tasks_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tasks.service */ "./src/app/tasks/tasks.service.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var CreateTasksComponent = /** @class */ (function () {
+    function CreateTasksComponent(_tasksService) {
+        this._tasksService = _tasksService;
+        this.title = 'Create Tasks';
+        this.filteredAssignableUsers = [];
+    }
+    CreateTasksComponent.prototype.ngOnInit = function () {
+        this.nodeID = JSON.parse(localStorage.getItem('node'))._id;
+        this.nodeType = localStorage.getItem('nodeType');
+    };
+    CreateTasksComponent.prototype.createTask = function () {
+        if (!this.taskTitle || !this.taskDueDate || !this.selectedUser) {
+            alert('Missing Data');
+            return;
+        }
+        this._tasksService.createTask(this.nodeID, this.nodeType, this.taskDueDate, this.selectedUser, this.taskTitle)
+            .subscribe(function (resp) { return alert('Task Created'); });
+    };
+    CreateTasksComponent.prototype.filterUsers = function (e) {
+        var _this = this;
+        if (e.length < 5) {
+            return;
+        }
+        this._tasksService.getAssignableUsers(this.nodeID, this.nodeType, e)
+            .subscribe(function (assignableUsers) { return _this.filteredAssignableUsers = assignableUsers; });
+    };
+    CreateTasksComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'create-tasks',
+            template: __webpack_require__(/*! ./create-tasks.component.html */ "./src/app/tasks/create-tasks.component.html"),
+            styles: [__webpack_require__(/*! ./create-tasks.component.css */ "./src/app/tasks/create-tasks.component.css")]
+        }),
+        __metadata("design:paramtypes", [_tasks_service__WEBPACK_IMPORTED_MODULE_1__["TasksService"]])
+    ], CreateTasksComponent);
+    return CreateTasksComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/tasks/reassign-task.component.css":
+/*!***************************************************!*\
+  !*** ./src/app/tasks/reassign-task.component.css ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/tasks/reassign-task.component.html":
+/*!****************************************************!*\
+  !*** ./src/app/tasks/reassign-task.component.html ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div>\r\n\t<h3>Reassign Task</h3>\r\n\r\n\t<mat-form-field class=\"full-width\">\r\n    \t<input (input)=\"filterUsers($event.target.value)\" type=\"text\" placeholder=\"Task Assignee\" matInput [matAutocomplete]=\"auto\" [(ngModel)]=\"selectedUser\">\r\n\t    <mat-autocomplete #auto=\"matAutocomplete\">\r\n\t      <mat-option *ngFor=\"let option of filteredAssignableUsers\" [value]=\"option.username\">\r\n\t        {{option.username}}\r\n\t      </mat-option>\r\n\t    </mat-autocomplete>\r\n  \t</mat-form-field>\r\n\r\n  \t<div>\r\n\t\t<button mat-flat-button color=\"primary\" (click)=\"reassignTask()\">Reassign Task</button>\r\n\t</div>\r\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/tasks/reassign-task.component.ts":
+/*!**************************************************!*\
+  !*** ./src/app/tasks/reassign-task.component.ts ***!
+  \**************************************************/
+/*! exports provided: ReassignTaskComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ReassignTaskComponent", function() { return ReassignTaskComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _tasks_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tasks.service */ "./src/app/tasks/tasks.service.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var ReassignTaskComponent = /** @class */ (function () {
+    function ReassignTaskComponent(_tasksService) {
+        this._tasksService = _tasksService;
+        this.title = 'Reassign Task';
+        this.filteredAssignableUsers = [];
+    }
+    ReassignTaskComponent.prototype.ngOnInit = function () {
+        this.nodeID = JSON.parse(localStorage.getItem('node'))._id;
+        this.nodeType = localStorage.getItem('nodeType');
+        this.taskID = localStorage.getItem('taskID');
+    };
+    ReassignTaskComponent.prototype.filterUsers = function (e) {
+        var _this = this;
+        if (e.length < 5) {
+            return;
+        }
+        this._tasksService.getAssignableUsers(this.nodeID, this.nodeType, e)
+            .subscribe(function (assignableUsers) { return _this.filteredAssignableUsers = assignableUsers; });
+    };
+    ReassignTaskComponent.prototype.reassignTask = function () {
+        this._tasksService.reassignTask(this.nodeID, this.nodeType, this.taskID, this.selectedUser)
+            .subscribe(function (resp) { return alert('Task Reassigned'); });
+    };
+    ReassignTaskComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'reassign-task',
+            template: __webpack_require__(/*! ./reassign-task.component.html */ "./src/app/tasks/reassign-task.component.html"),
+            styles: [__webpack_require__(/*! ./reassign-task.component.css */ "./src/app/tasks/reassign-task.component.css")]
+        }),
+        __metadata("design:paramtypes", [_tasks_service__WEBPACK_IMPORTED_MODULE_1__["TasksService"]])
+    ], ReassignTaskComponent);
+    return ReassignTaskComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/tasks/tasks.component.css":
+/*!*******************************************!*\
+  !*** ./src/app/tasks/tasks.component.css ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ":host {\r\n\twidth: 100%;\r\n}\r\n\r\n.mat-table {\r\n\twidth: 100%\t;\r\n}"
+
+/***/ }),
+
+/***/ "./src/app/tasks/tasks.component.html":
+/*!********************************************!*\
+  !*** ./src/app/tasks/tasks.component.html ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\r\n<div>\r\n\t<button mat-icon-button class=\"white-icon\" (click)=\"openCreateTasksDialog()\" >\r\n        <mat-icon> add </mat-icon>\r\n    </button>\r\n\r\n\t<table mat-table [dataSource]=\"assignedTasks\">\r\n\t\t<ng-container matColumnDef=\"title\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Title </th>\r\n\t        <td mat-cell *matCellDef=\"let task\"> {{ task.title }} </td>\r\n\t    </ng-container>\r\n\t    <ng-container matColumnDef=\"status\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Status </th>\r\n\t        <td mat-cell *matCellDef=\"let task\">\r\n\r\n\t        \t<mat-form-field *ngIf=\"currentUser._id == task.assignee\">\r\n\t\t\t\t\t\t  <mat-select [(value)]=\"task.status\" (selectionChange)=\"changeTaskStatus($event.value, task)\">\r\n\t\t\t\t\t\t    <mat-option *ngFor=\"let status of taskStatusList\" [value]=\"status.value\">\r\n\t\t\t\t\t\t      {{ status.text }}\r\n\t\t\t\t\t\t    </mat-option>\r\n\t\t\t\t\t\t  </mat-select>\r\n\t\t\t\t\t\t</mat-form-field>\r\n\r\n\t\t\t\t\t\t<span *ngIf=\"currentUser._id != task.assignee\">\r\n\t        \t\t{{ task.status }}\r\n\t        \t</span>\r\n\t        </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"utils\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Utils </th>\r\n\t        <td mat-cell *matCellDef=\"let task\"> \r\n\t        \t<button mat-icon-button class=\"white-icon\" (click)=\"deleteTask(task)\" >\r\n\t\t\t        <mat-icon> delete </mat-icon>\r\n\t\t\t    </button>\r\n\t\t\t    <button mat-icon-button class=\"white-icon\" (click)=\"openReassignDialog(task)\" >\r\n\t\t\t        <mat-icon> edit </mat-icon>\r\n\t\t\t    </button>\r\n\t        </td>\r\n\t    </ng-container>\r\n\r\n\t    <tr mat-header-row *matHeaderRowDef=\"displayedColumns\"></tr>\r\n\t    <tr mat-row *matRowDef=\"let row; columns: displayedColumns\"></tr>\r\n\r\n\t</table>\r\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/tasks/tasks.component.ts":
+/*!******************************************!*\
+  !*** ./src/app/tasks/tasks.component.ts ***!
+  \******************************************/
+/*! exports provided: TasksComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TasksComponent", function() { return TasksComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../_services */ "./src/app/_services/index.ts");
+/* harmony import */ var _tasks_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./tasks.service */ "./src/app/tasks/tasks.service.ts");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _create_tasks_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./create-tasks.component */ "./src/app/tasks/create-tasks.component.ts");
+/* harmony import */ var _reassign_task_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./reassign-task.component */ "./src/app/tasks/reassign-task.component.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+var TasksComponent = /** @class */ (function () {
+    function TasksComponent(authUser, _tasksService, dialog) {
+        this.authUser = authUser;
+        this._tasksService = _tasksService;
+        this.dialog = dialog;
+        this.title = 'Tasks';
+        this.assignedTasks = [];
+        this.displayedColumns = ['title', 'status', 'utils'];
+        this.taskStatusList = [
+            { value: 'NEW', text: 'New' },
+            { value: 'IN_PROGRESS', text: 'In Progress' },
+            { value: 'COMPLETE', text: 'Complete' }
+        ];
+    }
+    TasksComponent.prototype.ngOnInit = function () {
+        this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.nodeID = JSON.parse(localStorage.getItem('node'))._id;
+        this.nodeType = localStorage.getItem('nodeType');
+        this.getAssignedTasks();
+    };
+    TasksComponent.prototype.getAssignedTasks = function () {
+        var _this = this;
+        this._tasksService.getAssignedTasks(this.nodeID).subscribe(function (tasks) { return _this.assignedTasks = tasks; });
+    };
+    TasksComponent.prototype.openCreateTasksDialog = function () {
+        var _this = this;
+        var dialogConfig = new _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatDialogConfig"]();
+        dialogConfig.autoFocus = true;
+        dialogConfig.width = '350';
+        dialogConfig.height = '500';
+        var dialogRef = this.dialog.open(_create_tasks_component__WEBPACK_IMPORTED_MODULE_4__["CreateTasksComponent"], dialogConfig);
+        dialogRef.afterClosed().subscribe(function (result) {
+            _this.getAssignedTasks();
+        });
+    };
+    TasksComponent.prototype.openReassignDialog = function (task) {
+        var _this = this;
+        var dialogConfig = new _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatDialogConfig"]();
+        dialogConfig.autoFocus = true;
+        dialogConfig.width = '350';
+        dialogConfig.height = '500';
+        localStorage.setItem('taskID', task._id);
+        var dialogRef = this.dialog.open(_reassign_task_component__WEBPACK_IMPORTED_MODULE_5__["ReassignTaskComponent"], dialogConfig);
+        dialogRef.afterClosed().subscribe(function (result) {
+            _this.getAssignedTasks();
+        });
+    };
+    TasksComponent.prototype.changeTaskStatus = function (newStatus, task) {
+        this._tasksService.updateTaskStatus(this.nodeID, this.nodeType, task._id, newStatus)
+            .subscribe(function (resp) { return console.log('Task Status for ' + task.title + ' updated to ' + resp.status); });
+    };
+    TasksComponent.prototype.deleteTask = function (task) {
+        var _this = this;
+        this._tasksService.deleteTask(this.nodeID, this.nodeType, task._id)
+            .subscribe(function (resp) {
+            _this.assignedTasks = _this.assignedTasks.filter(function (item) { return item._id !== task._id; });
+        });
+    };
+    TasksComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'app-tasks',
+            template: __webpack_require__(/*! ./tasks.component.html */ "./src/app/tasks/tasks.component.html"),
+            styles: [__webpack_require__(/*! ./tasks.component.css */ "./src/app/tasks/tasks.component.css")]
+        }),
+        __metadata("design:paramtypes", [_services__WEBPACK_IMPORTED_MODULE_1__["AuthenticationService"],
+            _tasks_service__WEBPACK_IMPORTED_MODULE_2__["TasksService"],
+            _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatDialog"]])
+    ], TasksComponent);
+    return TasksComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/tasks/tasks.module.ts":
+/*!***************************************!*\
+  !*** ./src/app/tasks/tasks.module.ts ***!
+  \***************************************/
+/*! exports provided: TasksModule */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TasksModule", function() { return TasksModule; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _guards_auth_guard__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../_guards/auth.guard */ "./src/app/_guards/auth.guard.ts");
+/* harmony import */ var _tasks_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./tasks.component */ "./src/app/tasks/tasks.component.ts");
+/* harmony import */ var _create_tasks_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./create-tasks.component */ "./src/app/tasks/create-tasks.component.ts");
+/* harmony import */ var _reassign_task_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./reassign-task.component */ "./src/app/tasks/reassign-task.component.ts");
+/* harmony import */ var _tasks_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./tasks.service */ "./src/app/tasks/tasks.service.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
+
+
+
+
+
+
+
+
+
+var TasksRoutes = [
+    {
+        path: 'tasks',
+        component: _tasks_component__WEBPACK_IMPORTED_MODULE_7__["TasksComponent"],
+        canActivate: [_guards_auth_guard__WEBPACK_IMPORTED_MODULE_6__["AuthGuard"]]
+    }
+];
+var TasksModule = /** @class */ (function () {
+    function TasksModule() {
+    }
+    TasksModule = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["NgModule"])({
+            imports: [
+                _angular_common__WEBPACK_IMPORTED_MODULE_1__["CommonModule"],
+                _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormsModule"],
+                _angular_forms__WEBPACK_IMPORTED_MODULE_3__["ReactiveFormsModule"],
+                _angular_router__WEBPACK_IMPORTED_MODULE_2__["RouterModule"].forChild(TasksRoutes),
+                _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClientModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatIconModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatFormFieldModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatInputModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatButtonModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatCardModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatListModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatIconModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatTableModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatDialogModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatSelectModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatTooltipModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatDatepickerModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatNativeDateModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatAutocompleteModule"]
+            ],
+            declarations: [
+                _tasks_component__WEBPACK_IMPORTED_MODULE_7__["TasksComponent"],
+                _create_tasks_component__WEBPACK_IMPORTED_MODULE_8__["CreateTasksComponent"],
+                _reassign_task_component__WEBPACK_IMPORTED_MODULE_9__["ReassignTaskComponent"]
+            ],
+            providers: [
+                _tasks_service__WEBPACK_IMPORTED_MODULE_10__["TasksService"]
+            ],
+            exports: [
+                _tasks_component__WEBPACK_IMPORTED_MODULE_7__["TasksComponent"],
+                _create_tasks_component__WEBPACK_IMPORTED_MODULE_8__["CreateTasksComponent"],
+                _reassign_task_component__WEBPACK_IMPORTED_MODULE_9__["ReassignTaskComponent"]
+            ],
+            bootstrap: [_tasks_component__WEBPACK_IMPORTED_MODULE_7__["TasksComponent"]],
+            entryComponents: [_create_tasks_component__WEBPACK_IMPORTED_MODULE_8__["CreateTasksComponent"], _reassign_task_component__WEBPACK_IMPORTED_MODULE_9__["ReassignTaskComponent"]]
+        })
+    ], TasksModule);
+    return TasksModule;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/tasks/tasks.service.ts":
+/*!****************************************!*\
+  !*** ./src/app/tasks/tasks.service.ts ***!
+  \****************************************/
+/*! exports provided: TasksService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TasksService", function() { return TasksService; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var rxjs_Observable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs/Observable */ "./node_modules/rxjs-compat/_esm5/Observable.js");
+/* harmony import */ var rxjs_add_observable_throw__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/add/observable/throw */ "./node_modules/rxjs-compat/_esm5/add/observable/throw.js");
+/* harmony import */ var rxjs_add_operator_catch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs/add/operator/catch */ "./node_modules/rxjs-compat/_esm5/add/operator/catch.js");
+/* harmony import */ var rxjs_add_operator_do__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs/add/operator/do */ "./node_modules/rxjs-compat/_esm5/add/operator/do.js");
+/* harmony import */ var _app_config__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../app.config */ "./src/app/app.config.ts");
+/* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../_services */ "./src/app/_services/index.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+
+
+var TasksService = /** @class */ (function () {
+    function TasksService(http, authUser) {
+        this.http = http;
+        this.authUser = authUser;
+        this.apiUrl = "" + _app_config__WEBPACK_IMPORTED_MODULE_6__["appConfig"].apiUrl;
+        this.getAssignedTasksUrl = this.apiUrl + '/list_assigned_tasks/';
+        this.getAssignableUsersUrl = this.apiUrl + '/assignable_task_users/';
+        this.createDeleteUpdateTaskUrl = this.apiUrl + '/delete_update_create_task/';
+        this.httpOptions = {
+            // for auntification
+            headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({
+                'Content-Type': 'application/json',
+                'Authorization': 'JWT ' + this.authUser.getToken()
+            })
+        };
+    }
+    TasksService.prototype.getAssignedTasks = function (nodeID) {
+        // Returns the list of tasks assigned to the user
+        return this.http.get(this.getAssignedTasksUrl + nodeID + '/', this.httpOptions).catch(this.handleError);
+    };
+    TasksService.prototype.getAssignableUsers = function (nodeID, nodeType, searchQuery) {
+        // Returns a filtered (searched) observable of a list of users that can be assigned a task for a node
+        return this.http.get(this.getAssignableUsersUrl + nodeID + '/?nodeType=' + nodeType + '&search=' + searchQuery, this.httpOptions)
+            .catch(this.handleError);
+    };
+    TasksService.prototype.createTask = function (nodeID, nodeType, dueDate, assignee, taskTitle) {
+        // Sends a post request with given data to create the task
+        var data = {
+            node: nodeID,
+            due_date: dueDate,
+            state: 'NEW',
+            title: taskTitle,
+            'assignee': assignee
+        };
+        return this.http.post(this.createDeleteUpdateTaskUrl + '?nodeType=' + nodeType, data, this.httpOptions)
+            .catch(this.handleError);
+    };
+    TasksService.prototype.updateTaskStatus = function (nodeID, nodeType, taskID, status) {
+        // Sends a Patch request for updating the task status for the given task
+        var data = {
+            node: nodeID,
+            task: taskID,
+            'status': status
+        };
+        return this.http.patch(this.createDeleteUpdateTaskUrl + '?nodeType=' + nodeType, data, this.httpOptions)
+            .catch(this.handleError);
+    };
+    TasksService.prototype.deleteTask = function (nodeID, nodeType, taskID) {
+        var data = {
+            node: nodeID,
+            task: taskID
+        };
+        var options = {
+            body: data,
+            headers: this.httpOptions.headers
+        };
+        return this.http.request('delete', this.createDeleteUpdateTaskUrl + '?nodeType=' + nodeType, options)
+            .catch(this.handleError);
+    };
+    TasksService.prototype.reassignTask = function (nodeID, nodeType, taskID, assigneeUsername) {
+        var data = {
+            node: nodeID,
+            assignee: assigneeUsername,
+            task: taskID
+        };
+        return this.http.put(this.createDeleteUpdateTaskUrl + '?nodeType=' + nodeType, data, this.httpOptions)
+            .catch(this.handleError);
+    };
+    TasksService.prototype.handleError = function (err) {
+        console.log(err.message);
+        return rxjs_Observable__WEBPACK_IMPORTED_MODULE_2__["Observable"].throw(err.message);
+    };
+    TasksService = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
+        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"], _services__WEBPACK_IMPORTED_MODULE_7__["AuthenticationService"]])
+    ], TasksService);
+    return TasksService;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/team/team.module.ts":
 /*!*************************************!*\
   !*** ./src/app/team/team.module.ts ***!
@@ -9557,12 +10581,12 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var TeamRoutes = [
     {
         path: 'team',
-        canActivate: [_guards_auth_guard__WEBPACK_IMPORTED_MODULE_4__["AuthGuard"]],
         // component: UserComponent,
         children: [
             // { path: 'tree', component: SignUpComponent },
             { path: 'all', component: _teams_component__WEBPACK_IMPORTED_MODULE_1__["TeamsComponent"] },
-        ]
+        ],
+        canActivate: [_guards_auth_guard__WEBPACK_IMPORTED_MODULE_4__["AuthGuard"]],
     },
 ];
 var TeamModule = /** @class */ (function () {
@@ -9671,7 +10695,7 @@ var TeamService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!-- <mat-nav-list>\r\n  <mat-list-item *ngFor='let team of teams'> \r\n    <a matLine (click)=\"teamTree(team._id)\">{{team.name}} </a>\r\n      \r\n      <button mat-icon-button (click)=\"teamTree(team._id)\">\r\n          <mat-icon>info</mat-icon>\r\n      </button>\r\n    \r\n  </mat-list-item>\r\n</mat-nav-list> -->\r\n<div>\r\n  <H1>Teams</H1>\r\n</div>\r\n\r\n<mat-card class=\"example-card\" *ngFor='let team of teams'>\r\n  <mat-card-header>\r\n    <mat-card-title>\r\n      <img src=\"../../assets/icons/Team-T-Icon.svg\" height=\"15\" width=\"15\">\r\n      <span class=\"pl-4\"><b>{{team.name}}</b></span>\r\n    </mat-card-title>\r\n    <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->\r\n  </mat-card-header>\r\n  <!-- <img mat-card-image src=\"https://material.angular.io/assets/img/examples/shiba2.jpg\" alt=\"Photo of a Shiba Inu\"> -->\r\n  <mat-card-content>\r\n    <p>\r\n      The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.\r\n      A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally\r\n      bred for hunting.\r\n    </p>\r\n  </mat-card-content>\r\n  <mat-card-actions>\r\n    <button mat-button (click)=\"teamTree(team._id)\">PROJECTS</button>\r\n    <!-- <button mat-button>SHARE</button> -->\r\n  </mat-card-actions>\r\n</mat-card>\r\n"
+module.exports = "<!-- <mat-nav-list>\r\n  <mat-list-item *ngFor='let team of teams'> \r\n    <a matLine (click)=\"teamTree(team._id)\">{{team.name}} </a>\r\n      \r\n      <button mat-icon-button (click)=\"teamTree(team._id)\">\r\n          <mat-icon>info</mat-icon>\r\n      </button>\r\n    \r\n  </mat-list-item>\r\n</mat-nav-list> -->\r\n<div>\r\n  <H1>my teams</H1>\r\n</div>\r\n\r\n<mat-card class=\"example-card\" *ngFor='let team of teams'>\r\n  <mat-card-header>\r\n    <mat-card-title>\r\n      <img src=\"../../assets/icons/Team-T-Icon.svg\" height=\"15\" width=\"15\">\r\n      <!-- <span class=\"pl-4\"><b>{{team.name}}</b></span> -->\r\n    </mat-card-title>\r\n    <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->\r\n  </mat-card-header>\r\n  <!-- <img mat-card-image src=\"https://material.angular.io/assets/img/examples/shiba2.jpg\" alt=\"Photo of a Shiba Inu\"> -->\r\n  <mat-card-content>\r\n    <!-- <p>\r\n      The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.\r\n      A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally\r\n      bred for hunting.\r\n    </p> -->\r\n  </mat-card-content>\r\n  <mat-card-actions>\r\n    <button mat-button (click)=\"teamTree(team)\">{{team.name}}</button>\r\n    <!-- <button mat-button>SHARE</button> -->\r\n  </mat-card-actions>\r\n</mat-card>\r\n"
 
 /***/ }),
 
@@ -9700,6 +10724,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var app_services_authentication_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! app/_services/authentication.service */ "./src/app/_services/authentication.service.ts");
 /* harmony import */ var _team_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./team.service */ "./src/app/team/team.service.ts");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _services_global_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../_services/global.service */ "./src/app/_services/global.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -9713,17 +10738,21 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var TeamsComponent = /** @class */ (function () {
-    function TeamsComponent(authenticationService, teamService, router) {
+    function TeamsComponent(authenticationService, teamService, router, globalService) {
         this.authenticationService = authenticationService;
         this.teamService = teamService;
         this.router = router;
+        this.globalService = globalService;
         this.teams = [];
     }
-    TeamsComponent.prototype.teamTree = function (id) {
-        localStorage.setItem('nodeID', id);
+    TeamsComponent.prototype.teamTree = function (team) {
+        // debugger;
         localStorage.setItem('nodeType', 'Team');
-        this.router.navigate(['/team/tree']);
+        this.globalService.team = JSON.stringify(team);
+        this.globalService.node = JSON.stringify(team);
+        this.router.navigate(['/node/Team/' + team._id]);
     };
     TeamsComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -9739,7 +10768,8 @@ var TeamsComponent = /** @class */ (function () {
         }),
         __metadata("design:paramtypes", [app_services_authentication_service__WEBPACK_IMPORTED_MODULE_1__["AuthenticationService"],
             _team_service__WEBPACK_IMPORTED_MODULE_2__["TeamService"],
-            _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"]])
+            _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"],
+            _services_global_service__WEBPACK_IMPORTED_MODULE_4__["GlobalService"]])
     ], TeamsComponent);
     return TeamsComponent;
 }());
@@ -9872,6 +10902,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _services_global_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../_services/global.service */ "./src/app/_services/global.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -9887,12 +10918,15 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var TreeStructureComponent = /** @class */ (function () {
-    function TreeStructureComponent(treeStructureService, treeStructureHttpService, router) {
+    function TreeStructureComponent(treeStructureService, treeStructureHttpService, router, route, globalService) {
         var _this = this;
         this.treeStructureService = treeStructureService;
         this.treeStructureHttpService = treeStructureHttpService;
         this.router = router;
+        this.route = route;
+        this.globalService = globalService;
         // user the object for cancel or save created node
         this.saveNewNodeData = null;
         this.editedNode = null;
@@ -9998,10 +11032,24 @@ var TreeStructureComponent = /** @class */ (function () {
         this.viewDetail = function (node) {
             var nodeType = node.data.node_type;
             var nodeId = node.data._id;
-            console.log("Opening Node", node);
-            localStorage.setItem('nodeID', nodeId);
+            var nodeName = node.data.name;
+            console.log('Opening Node', node);
+            // localStorage.setItem('nodeID', nodeId);
             localStorage.setItem('nodeType', nodeType);
-            _this.router.navigate(['node/details']);
+            _this.globalService.node = JSON.stringify({ _id: nodeId, name: nodeName });
+            if (nodeType === 'Team') {
+                _this.globalService.team = JSON.stringify({ _id: nodeId, name: nodeName });
+                // localStorage.setItem('teamID', nodeId);
+            }
+            else if (nodeType === 'Project') {
+                _this.globalService.project = JSON.stringify({ _id: nodeId, name: nodeName });
+            }
+            else {
+                _this.globalService.topic = JSON.stringify({ _id: nodeId, name: nodeName });
+            }
+            // this.router.navigate(['node/details']);
+            console.log('node/' + nodeType + '/' + nodeId);
+            _this.router.navigate(['node/' + nodeType + '/' + nodeId]);
             /*
             if (nodeType === 'Team'){
         
@@ -10016,6 +11064,19 @@ var TreeStructureComponent = /** @class */ (function () {
             }
             */
         };
+        globalService.teamValue.subscribe(function (nextValue) {
+            _this.team = JSON.parse(nextValue);
+        });
+        globalService.projectValue.subscribe(function (nextValue) {
+            _this.project = JSON.parse(nextValue);
+        });
+        globalService.topicValue.subscribe(function (nextValue) {
+            _this.topic = JSON.parse(nextValue);
+        });
+        globalService.nodeValue.subscribe(function (nextValue) {
+            _this.node = JSON.parse(nextValue);
+            _this.getTree(_this.getNodeType(), JSON.parse(nextValue)._id);
+        });
     }
     // IMPORTANT update is needed
     TreeStructureComponent.prototype.onMoveNode = function ($event) {
@@ -10027,7 +11088,7 @@ var TreeStructureComponent = /** @class */ (function () {
     };
     TreeStructureComponent.prototype.getTeam = function () {
         try {
-            this.treeRoot = (localStorage.getItem('nodeID'));
+            this.treeRoot = JSON.parse(this.node)._id;
         }
         catch (err) {
             console.log('Error: ' + err);
@@ -10037,8 +11098,8 @@ var TreeStructureComponent = /** @class */ (function () {
         return this.treeRoot;
     };
     TreeStructureComponent.prototype.getTopNode = function () {
-        this.treeRoot = localStorage.getItem('nodeID');
-        return this.treeRoot;
+        // this.treeRoot = JSON.parse(localStorage.getItem('node'));
+        return this.node._id;
         /*
         if (this.getNodeType() === 'Team'){
           try{
@@ -10066,16 +11127,16 @@ var TreeStructureComponent = /** @class */ (function () {
     TreeStructureComponent.prototype.getNodeType = function () {
         try {
             this.nodeType = (localStorage.getItem('nodeType'));
+            return this.nodeType;
         }
         catch (err) {
             console.log('Error: ' + err);
-            return ('Error: ' + err);
+            return ('');
         }
-        return this.nodeType;
     };
-    TreeStructureComponent.prototype.ngOnInit = function () {
+    TreeStructureComponent.prototype.getTree = function (nodeType, nodeId) {
         var _this = this;
-        this.treeStructureHttpService.getTree(this.getNodeType(), this.getTopNode())
+        this.treeStructureHttpService.getTree(nodeType, nodeId)
             .subscribe(function (data) {
             _this.nodes = _this.treeStructureService.preUploadData(data);
             // need time in order create dom for tree
@@ -10083,6 +11144,24 @@ var TreeStructureComponent = /** @class */ (function () {
                 _this.tree.treeModel.expandAll();
             }, 111);
         }, function (err) { return console.log('getTree ', err); }, function () { return console.log('All done getting nodes.'); });
+    };
+    TreeStructureComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.route.params.subscribe(function (params) {
+            _this.getTree(params['type'], params['id']);
+        });
+        // this.treeStructureHttpService.getTree(this.getNodeType(), this.getTopNode())
+        //   .subscribe(
+        //     (data) => {
+        //       this.nodes = this.treeStructureService.preUploadData(data);
+        //       // need time in order create dom for tree
+        //       setTimeout(() => {
+        //         this.tree.treeModel.expandAll();
+        //       }, 111);
+        //     },
+        //     (err: any) => console.log('getTree ', err),
+        //     () => console.log('All done getting nodes.')
+        //   );
     };
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])(_node_modules_angular_tree_component__WEBPACK_IMPORTED_MODULE_3__["TreeComponent"]),
@@ -10096,7 +11175,9 @@ var TreeStructureComponent = /** @class */ (function () {
         }),
         __metadata("design:paramtypes", [_tree_structure_service__WEBPACK_IMPORTED_MODULE_1__["TreeStructureService"],
             _tree_structure_http_service__WEBPACK_IMPORTED_MODULE_2__["TreeStructureHttpService"],
-            _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"]])
+            _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_5__["ActivatedRoute"],
+            _services_global_service__WEBPACK_IMPORTED_MODULE_6__["GlobalService"]])
     ], TreeStructureComponent);
     return TreeStructureComponent;
 }());
@@ -10124,6 +11205,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var angular_tree_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! angular-tree-component */ "./node_modules/angular-tree-component/dist/angular-tree-component.js");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _guards_auth_guard__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../_guards/auth.guard */ "./src/app/_guards/auth.guard.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -10139,10 +11221,13 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 
+
 var routes = [
     {
-        path: 'team/tree',
-        component: _tree_structure_component__WEBPACK_IMPORTED_MODULE_2__["TreeStructureComponent"]
+        // path: 'team/tree',
+        path: 'tree/:type/:id',
+        component: _tree_structure_component__WEBPACK_IMPORTED_MODULE_2__["TreeStructureComponent"],
+        canActivate: [_guards_auth_guard__WEBPACK_IMPORTED_MODULE_9__["AuthGuard"]],
     }
 ];
 var TreeStructureModule = /** @class */ (function () {
@@ -10161,8 +11246,13 @@ var TreeStructureModule = /** @class */ (function () {
             exports: [
                 _tree_structure_component__WEBPACK_IMPORTED_MODULE_2__["TreeStructureComponent"],
             ],
-            declarations: [_tree_structure_component__WEBPACK_IMPORTED_MODULE_2__["TreeStructureComponent"]],
-            providers: [_tree_structure_service__WEBPACK_IMPORTED_MODULE_4__["TreeStructureService"], _tree_structure_http_service__WEBPACK_IMPORTED_MODULE_5__["TreeStructureHttpService"]]
+            declarations: [
+                _tree_structure_component__WEBPACK_IMPORTED_MODULE_2__["TreeStructureComponent"],
+            ],
+            providers: [
+                _tree_structure_service__WEBPACK_IMPORTED_MODULE_4__["TreeStructureService"],
+                _tree_structure_http_service__WEBPACK_IMPORTED_MODULE_5__["TreeStructureHttpService"],
+            ]
         })
     ], TreeStructureModule);
     return TreeStructureModule;
@@ -10219,7 +11309,7 @@ var TreeStructureService = /** @class */ (function () {
             //  change PATH  MOVED element
             //  change PATH all children MOVED element
             var listUpdatedElement = [];
-            if (node.data.beforeUpdateData.parentId != node.parent.data._id) {
+            if (node.data.beforeUpdateData.parentId !== node.parent.data._id) {
                 var oldParentNode = treeModel.getNodeById(node.data.beforeUpdateData.parentId);
                 _this.updateCildrenIndex(oldParentNode.data.children, node.data.beforeUpdateData.index, listUpdatedElement, treeModel);
                 _this.updatePathWithChildren(node, listUpdatedElement);
@@ -10303,14 +11393,16 @@ var TreeStructureService = /** @class */ (function () {
         if ('isEditing' in data) {
             delete data.isEditing;
         }
-        node.data.index = node.parent.data.children.map(function (e) { return e._id; }).indexOf(data._id);
+        node.data.index = node.parent.data.children
+            .map(function (e) { return e._id; })
+            .indexOf(data._id);
     };
     TreeStructureService.prototype.updateCildrenIndex = function (children, fromIndex, listUpdatedElement, treeModel) {
         for (var index = fromIndex; index < children.length; index++) {
             var child = children[index];
             var childIndex = treeModel.getNodeById(child._id).index;
             child.beforeUpdateData.index = childIndex;
-            if (child.index != childIndex) {
+            if (child.index !== childIndex) {
                 child.index = childIndex;
                 listUpdatedElement.push(child._id);
             }
@@ -10326,7 +11418,7 @@ var TreeStructureService = /** @class */ (function () {
     };
     TreeStructureService.newGuid = function () {
         return 'xxxxxxxxxxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
         });
     };
@@ -10361,7 +11453,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"index-banner\" class=\"parallax-container\">\r\n  <div class=\"section no-pad-bot\">\r\n    <div class=\"container\">\r\n      <br><br>\r\n      <h1 class=\"header center teal-text text-lighten-2\">\r\n        Here is the VPMO dashboard for {{ fullname }}!\r\n      </h1>\r\n      \r\n    </div>\r\n  </div>\r\n</div>\r\n"
+module.exports = "<div id=\"index-banner\" class=\"parallax-container\">\r\n  <div class=\"section no-pad-bot\">\r\n    <div class=\"container\">\r\n      <br><br>\r\n      <h1 class=\"header center teal-text text-lighten-2\">\r\n        Here is the VPMO dashboard for {{ fullname }}!\r\n      </h1>\r\n      <app-team-card></app-team-card>\r\n    </div>\r\n  </div>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -10407,6 +11499,75 @@ var DashboardComponent = /** @class */ (function () {
         __metadata("design:paramtypes", [_services_authentication_service__WEBPACK_IMPORTED_MODULE_1__["AuthenticationService"]])
     ], DashboardComponent);
     return DashboardComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/user/dashboard/team-card.component.html":
+/*!*********************************************************!*\
+  !*** ./src/app/user/dashboard/team-card.component.html ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<mat-card class=\"example-card\">\r\n  <mat-card-header>\r\n    <mat-card-title>\r\n      <!-- <img src=\"../../assets/icons/Team-T-Icon.svg\" height=\"15\" width=\"15\"> -->\r\n      <span class=\"pl-4\"><b>My Teams</b></span>\r\n    </mat-card-title>\r\n    <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->\r\n  </mat-card-header>\r\n  <mat-card-content>\r\n    <p>\r\n      I have <span class=\"h1\">#</span> teams\r\n    </p>\r\n  </mat-card-content>\r\n  <mat-card-actions>\r\n    <button mat-button (click)=\"teams()\">Go to my teams</button>\r\n    <!-- <button mat-button>SHARE</button> -->\r\n  </mat-card-actions>\r\n</mat-card>"
+
+/***/ }),
+
+/***/ "./src/app/user/dashboard/team-card.component.less":
+/*!*********************************************************!*\
+  !*** ./src/app/user/dashboard/team-card.component.less ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ".example-card {\n  max-width: 400px;\n  display: inline-block;\n  width: 80%;\n  margin: 20px;\n  vertical-align: top;\n  cursor: pointer;\n}\n"
+
+/***/ }),
+
+/***/ "./src/app/user/dashboard/team-card.component.ts":
+/*!*******************************************************!*\
+  !*** ./src/app/user/dashboard/team-card.component.ts ***!
+  \*******************************************************/
+/*! exports provided: TeamCardComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TeamCardComponent", function() { return TeamCardComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var TeamCardComponent = /** @class */ (function () {
+    function TeamCardComponent(router) {
+        this.router = router;
+    }
+    TeamCardComponent.prototype.ngOnInit = function () {
+    };
+    TeamCardComponent.prototype.teams = function () {
+        this.router.navigate(['/team/all']);
+    };
+    TeamCardComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'app-team-card',
+            template: __webpack_require__(/*! ./team-card.component.html */ "./src/app/user/dashboard/team-card.component.html"),
+            styles: [__webpack_require__(/*! ./team-card.component.less */ "./src/app/user/dashboard/team-card.component.less")]
+        }),
+        __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_1__["Router"]])
+    ], TeamCardComponent);
+    return TeamCardComponent;
 }());
 
 
@@ -10628,7 +11789,7 @@ var LoginModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "  \r\n<h1>Edit Your Profile </h1>\r\n\r\n<form class=\"user-form\" [formGroup]=\"userProfileForm\" (ngSubmit)=\"saveProfile(userProfileForm.value)\" autocomplete=\"off\" novalidate>\r\n    Value: {{ userProfileForm.value | json }}\r\n    \r\n    <!-- <hr> -->\r\n\r\n    <mat-form-field class=\"full-width\">\r\n        <input matInput formControlName=\"fullname\" type=\"text\" placeholder=\"Full Name\" />\r\n \r\n    </mat-form-field>\r\n    <br>\r\n    <mat-form-field class=\"full-width\">\r\n        <input matInput formControlName=\"username\" id=\"username\" type=\"text\" placeholder=\"User Name\" />\r\n    </mat-form-field>\r\n    <br>\r\n    <mat-form-field class=\"full-width\">\r\n        <input matInput formControlName=\"email\" id=\"email\" type=\"text\" placeholder=\"Email Address\" />\r\n    </mat-form-field>\r\n    <br>\r\n\r\n    <!-- <mat-form-field>\r\n        <input matInput formControlName=\"id\" id=\"id\" type=\"number\" placeholder=\"id\" />\r\n    </mat-form-field> -->\r\n\r\n    <button mat-raised-button color=\"primary\" type=\"submit\" [disabled]=\"userProfileForm.invalid\">Save</button>\r\n    <button mat-raised-button routerLink=\"user/dashboard\">Cancel</button>\r\n    \r\n</form>\r\n\r\n"
+module.exports = "  \r\n<h1>Edit Your Profile </h1>\r\n\r\n<form class=\"user-form\" [formGroup]=\"userProfileForm\" (ngSubmit)=\"saveProfile(userProfileForm.value)\" autocomplete=\"off\" novalidate>\r\n    Value: {{ userProfileForm.value | json }}\r\n    \r\n    <!-- <hr> -->\r\n\r\n    <mat-form-field class=\"full-width\">\r\n        <input matInput formControlName=\"fullname\" type=\"text\" placeholder=\"Full Name\" />\r\n \r\n    </mat-form-field>\r\n    <br>\r\n    <mat-form-field class=\"full-width\">\r\n        <input matInput formControlName=\"username\" id=\"username\" type=\"text\" placeholder=\"User Name\" />\r\n    </mat-form-field>\r\n    <br>\r\n    <mat-form-field class=\"full-width\">\r\n        <input matInput formControlName=\"email\" id=\"email\" type=\"text\" placeholder=\"Email Address\" />\r\n    </mat-form-field>\r\n    <br>\r\n\r\n    <!-- <mat-form-field>\r\n        <input matInput formControlName=\"id\" id=\"id\" type=\"text\" placeholder=\"id\" />\r\n    </mat-form-field> -->\r\n    <br>\r\n    \r\n    <button mat-raised-button color=\"primary\" type=\"submit\" [disabled]=\"userProfileForm.invalid\">Save</button>\r\n    <button mat-raised-button routerLink=\"user/dashboard\">Cancel</button>\r\n    \r\n</form>\r\n\r\n"
 
 /***/ }),
 
@@ -10681,18 +11842,17 @@ var UserProfileComponent = /** @class */ (function () {
     }
     UserProfileComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.authService.getUser()
+        this.authService.user
             .subscribe(function (user) { return _this.currentUser = user; }, function (err) { return console.log(err); });
         console.log(this.currentUser.fullname + ' to be present');
         var fullname = new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormControl"](this.currentUser.fullname, [_angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].required]);
         var username = new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormControl"](this.currentUser.username, [_angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].required]);
         var email = new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormControl"](this.currentUser.email, [_angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].email]);
-        var id = new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormControl"](this.currentUser.id);
+        // const id = new FormControl(this.currentUser._id);
         this.userProfileForm = this.fb.group({
             fullname: fullname,
             username: username,
             email: email,
-            id: id,
         });
     };
     UserProfileComponent.prototype.cancel = function () {
@@ -10700,7 +11860,7 @@ var UserProfileComponent = /** @class */ (function () {
     };
     UserProfileComponent.prototype.saveProfile = function (formValues) {
         var _this = this;
-        this.userService.update(this.currentUser.id, formValues)
+        this.userService.update(this.currentUser._id, formValues)
             .subscribe(function (data) {
             _this.authService.updateLocalStorage(formValues.fullname, formValues.username, formValues.email);
             console.log('success: ', data);
@@ -10916,11 +12076,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _signUp_sign_up_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./signUp/sign-up.component */ "./src/app/user/signUp/sign-up.component.ts");
 /* harmony import */ var _user_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./user.service */ "./src/app/user/user.service.ts");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var _services_authentication_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../_services/authentication.service */ "./src/app/_services/authentication.service.ts");
-/* harmony import */ var _guards_auth_guard__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../_guards/auth.guard */ "./src/app/_guards/auth.guard.ts");
-/* harmony import */ var _dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./dashboard/dashboard.component */ "./src/app/user/dashboard/dashboard.component.ts");
-/* harmony import */ var _profile_userProfile_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./profile/userProfile.component */ "./src/app/user/profile/userProfile.component.ts");
-/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _guards_auth_guard__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../_guards/auth.guard */ "./src/app/_guards/auth.guard.ts");
+/* harmony import */ var _dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./dashboard/dashboard.component */ "./src/app/user/dashboard/dashboard.component.ts");
+/* harmony import */ var _profile_userProfile_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./profile/userProfile.component */ "./src/app/user/profile/userProfile.component.ts");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _dashboard_team_card_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./dashboard/team-card.component */ "./src/app/user/dashboard/team-card.component.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -10949,8 +12109,8 @@ var UserRoutes = [
         children: [
             // { path: 'login', component: LoginComponent },
             { path: 'signup', component: _signUp_sign_up_component__WEBPACK_IMPORTED_MODULE_6__["SignUpComponent"] },
-            { path: 'dashboard', component: _dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_11__["DashboardComponent"] },
-            { path: 'profile', component: _profile_userProfile_component__WEBPACK_IMPORTED_MODULE_12__["UserProfileComponent"] }
+            { path: 'dashboard', component: _dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_10__["DashboardComponent"] },
+            { path: 'profile', component: _profile_userProfile_component__WEBPACK_IMPORTED_MODULE_11__["UserProfileComponent"] }
             // { path: '', component: AdminMenuComponent, canActivate: [UserService] }
         ]
     },
@@ -10967,24 +12127,25 @@ var UserModule = /** @class */ (function () {
                 _angular_router__WEBPACK_IMPORTED_MODULE_3__["RouterModule"].forChild(UserRoutes),
                 _angular_common_http__WEBPACK_IMPORTED_MODULE_8__["HttpClientModule"],
                 _login_2_login_module__WEBPACK_IMPORTED_MODULE_5__["LoginModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatInputModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatButtonModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatInputModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatButtonModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_12__["MatCardModule"],
             ],
             exports: [
                 _signUp_sign_up_component__WEBPACK_IMPORTED_MODULE_6__["SignUpComponent"],
-                _dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_11__["DashboardComponent"],
-                _profile_userProfile_component__WEBPACK_IMPORTED_MODULE_12__["UserProfileComponent"],
+                _dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_10__["DashboardComponent"],
+                _profile_userProfile_component__WEBPACK_IMPORTED_MODULE_11__["UserProfileComponent"],
             ],
             declarations: [
                 _user_component__WEBPACK_IMPORTED_MODULE_4__["UserComponent"],
                 _signUp_sign_up_component__WEBPACK_IMPORTED_MODULE_6__["SignUpComponent"],
-                _dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_11__["DashboardComponent"],
-                _profile_userProfile_component__WEBPACK_IMPORTED_MODULE_12__["UserProfileComponent"],
+                _dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_10__["DashboardComponent"],
+                _profile_userProfile_component__WEBPACK_IMPORTED_MODULE_11__["UserProfileComponent"],
+                _dashboard_team_card_component__WEBPACK_IMPORTED_MODULE_13__["TeamCardComponent"],
             ],
             providers: [
                 _user_service__WEBPACK_IMPORTED_MODULE_7__["UserService"],
-                _services_authentication_service__WEBPACK_IMPORTED_MODULE_9__["AuthenticationService"],
-                _guards_auth_guard__WEBPACK_IMPORTED_MODULE_10__["AuthGuard"],
+                _guards_auth_guard__WEBPACK_IMPORTED_MODULE_9__["AuthGuard"],
             ],
             schemas: [
                 _angular_core__WEBPACK_IMPORTED_MODULE_0__["CUSTOM_ELEMENTS_SCHEMA"],
@@ -11014,6 +12175,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rxjs_add_operator_map__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/add/operator/map */ "./node_modules/rxjs-compat/_esm5/add/operator/map.js");
 /* harmony import */ var _shared_message_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../shared/message.service */ "./src/app/shared/message.service.ts");
 /* harmony import */ var _app_config__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../app.config */ "./src/app/app.config.ts");
+/* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../_services */ "./src/app/_services/index.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -11030,16 +12192,18 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
-var httpOptions = {
-    headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({
-        'Content-Type': 'application/json',
-        'Authorization': 'JWT'
-    })
-};
+
 var UserService = /** @class */ (function () {
-    function UserService(http, messageService) {
+    function UserService(http, messageService, authUser) {
         this.http = http;
         this.messageService = messageService;
+        this.authUser = authUser;
+        this.httpOptions = {
+            headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({
+                'Content-Type': 'application/json',
+                'Authorization': 'JWT'
+            })
+        };
     }
     // private extractData(res: Response) {
     //   let body = res.json();
@@ -11065,8 +12229,8 @@ var UserService = /** @class */ (function () {
         return this.http.delete(_app_config__WEBPACK_IMPORTED_MODULE_5__["appConfig"].apiAuthUrl + '/users/' + _id);
     };
     UserService.prototype.update = function (_id, user) {
-        var url = _app_config__WEBPACK_IMPORTED_MODULE_5__["appConfig"].apiAuthUrl + '/users/' + _id + '/update';
-        return this.http.put(url, user);
+        var url = _app_config__WEBPACK_IMPORTED_MODULE_5__["appConfig"].apiAuthUrl + '/users/update/' + _id + '/';
+        return this.http.patch(url, user, this.httpOptions);
     };
     /**
      * Handle Http operation that failed.
@@ -11093,7 +12257,8 @@ var UserService = /** @class */ (function () {
     UserService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
         __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"],
-            _shared_message_service__WEBPACK_IMPORTED_MODULE_4__["MessageService"]])
+            _shared_message_service__WEBPACK_IMPORTED_MODULE_4__["MessageService"],
+            _services__WEBPACK_IMPORTED_MODULE_6__["AuthenticationService"]])
     ], UserService);
     return UserService;
 }());
