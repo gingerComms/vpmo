@@ -6722,7 +6722,7 @@ __webpack_require__.r(__webpack_exports__);
 var appConfig = {
     apiUrl: '/vpmoapp/api',
     apiAuthUrl: '/vpmoauth/api',
-    wsUrl: 'ws://gingercomms.radconsultants.com.au/ws'
+    wsUrl: 'ws://13.239.32.74:80/ws'
 };
 
 
