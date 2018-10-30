@@ -28,6 +28,14 @@ SECRET_KEY = 'k3xrb+p%cw%7r@8$el#$7hd6_zqp93-(ue(acl^jx-okpzo643'
 DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
+# Setting for storing user uploads in S3
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_DEFAULT_ACL = None
+
+# AWS Keys
+AWS_ACCESS_KEY_ID = os.environ["VPMO_AWS_ACCESS"]
+AWS_SECRET_ACCESS_KEY = os.environ["VPMO_AWS_SECRET"]
+AWS_STORAGE_BUCKET_NAME = "vpmo"
 
 # Application definition
 
@@ -44,6 +52,7 @@ INSTALLED_APPS = [
     # 'vpmoapp',
     'vpmoauth',
     'vpmotree',
+    "vpmodoc",
     'guardian',
     'channels',
 ]
@@ -132,11 +141,11 @@ WSGI_APPLICATION = 'vpmoprj.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-if False and DEBUG:
+if DEBUG:
     DATABASES = {
         "default": {
             "ENGINE": "djongo",
-            "NAME": "test-example-22",
+            "NAME": "test-example-23",
             "host": "localhost",
             "port": 27017
         }

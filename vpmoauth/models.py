@@ -149,6 +149,7 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
         }
         if not all_types:
             filters["permissions__name__icontains"] = node.node_type
+
         permissions = UserRole.objects.filter(**filters).values_list("permissions__name", flat=True).distinct()
         return permissions
 
