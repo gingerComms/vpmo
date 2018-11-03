@@ -47,6 +47,7 @@ class AssignableUsersListView(generics.ListAPIView):
             # Because exclude isn't working...
             user_ids = MyUser.objects.all().values_list("_id", flat=True)
             user_ids = filter(lambda x: x not in existing_users, user_ids)
+            print(user_ids)
             return MyUser.objects.filter(_id__in=user_ids)
         
         root_users = UserRole.get_user_ids_with_perms(node.get_root())

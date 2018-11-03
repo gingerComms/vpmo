@@ -314,7 +314,7 @@ class AssignableTaskUsersView(ListAPIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         required_perm = "update_{}".format(node.node_type.lower())
-        users_with_update_perms = UserRole.objects.filter(node=node, permissions__name=required_perm).values_list("user___id", flat=True)
+        users_with_update_perms = UserRole.get_user_ids_with_heirarchy_perms(node, required_perm)
 
         return MyUser.objects.filter(_id__in=users_with_update_perms)
 

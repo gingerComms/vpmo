@@ -42,7 +42,15 @@ class UserRole(models.Model):
 
     @staticmethod
     def get_user_ids_with_perms(node):
+        """ Returns users that have direct perms to the node """
         user_ids = UserRole.objects.filter(node=node).values_list("user___id", flat=True)
+        return user_ids
+
+    @staticmethod
+    def get_user_ids_with_heirarchy_perms(node, perm_name):
+        """ Returns Users that have access to the perm either directly or through a parent """
+        node_branch = list(filter(lambda x: x.strip(), node.path.split(",") if node.path else '')) + [str(node._id)]
+        user_ids = UserRole.objects.filter(node___id__in=node_branch, permissions__name=perm_name).values_list("user___id", flat=True)
         return user_ids
 
 
