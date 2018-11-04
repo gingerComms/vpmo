@@ -83,14 +83,19 @@ class CreateProjectView(CreateAPIView):
 class CreateTeamView(CreateAPIView):
     model = Team
     serializer_class = TeamSerializer
-    permission_classes = (IsAuthenticated, CreatePermissions)
+    # Any authenticated user is allowed to create teams
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         """ Handles creation of the team through the TeamSerializer """
-        self.check_object_permissions()
         data = request.data.copy()
         data["user_team"] = request.data["name"] + "@" +request.user.username
         data["user_linked"] = False
+        data = {
+            "name": request.data["name"],
+            "user_linked": False,
+            "user_team": "{team_name}@{user_name}".format(team_name=request.data["name"], user_name=request.user.username)
+        }
         serializer = TeamSerializer(data=data)
         if serializer.is_valid():
             team = serializer.save()
