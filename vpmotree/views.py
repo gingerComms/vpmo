@@ -320,12 +320,12 @@ class AssignableTaskUsersView(ListAPIView):
 
 
 class AssignedTasksListView(ListAPIView):
-    """ Returns a list of tasks assigned to the current user """
+    """ Returns a list of tasks for the current node """
     serializer_class = TaskSerializer
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return Task.objects.filter(assignee=self.request.user, node___id=self.kwargs["nodeID"]).order_by("-created_at")
+        return Task.objects.filter(node___id=self.kwargs["nodeID"]).order_by("-created_at")
 
 
 class DeleteUpdateCreateTaskView(APIView):
