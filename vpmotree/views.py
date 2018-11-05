@@ -105,6 +105,28 @@ class CreateTeamView(CreateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class CreateNodeView(CreateAPIView):
+    """ Creates all node types that fall under a treestructure except Teams """
+    permission_classes = (IsAuthenticated,)
+
+    def get_serializer_class(self):
+        """ Returns the serializer responsible for creating the current node """
+        mapped_classes = {
+            "Project": ProjectSerializer,
+            "Deliverable": DeliverableSerializer
+        }
+        return mapped_classes[self.kwargs["nodeType"]]
+
+    def create(self, request, nodeType, *args, **kwargs):
+        data = request.data.copy()
+
+        serializer = self.get_serializer_class()(data=data)
+        if serializer.is_valid():
+            node = serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class UpdateProjectView(RetrieveUpdateAPIView):
     queryset = Project
     serializer_class = ProjectSerializer

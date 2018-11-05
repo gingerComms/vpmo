@@ -15,7 +15,7 @@ from create_base_permissions import create_base_permissions
 # Create your tests here.
 
 class TeamTestCase(TestCase):
-    """ Tests for the FilteredTeamsView """
+    """ Tests related to Teams """
     client = Client()
 
     def setUp(self):
@@ -261,6 +261,37 @@ class ReadNodeListFilterTestcase(TestCase):
 
         self.assertEqual(len(response), 1)
         self.assertEqual(response[0]["_id"], str(self.topic._id))
+
+
+class NodeCreationTestCase(TestCase):
+    """ Tests creation of Projects and Topics """
+    client = Client()
+
+    def setUp(self):
+        create_base_permissions()
+        user_creds = {
+            "username": "TestUser",
+            "email": "TestUser@vpmotest.com",
+            "fullname": "Test User"
+        }
+        self.user = MyUser.objects.create(**user_creds)
+
+        self.client.force_login(self.user)
+
+    def test_project_creation(self):
+        url = reverse("vpmotree:create_node", kwargs={"nodeType": "Project"})
+
+        data = {
+            "name": "TestProj",
+            "description": "Rand",
+            "start": "2018-10-07"
+        }
+
+        r = self.client.post(url, data)
+
+        self.assertEqual(r.status_code, 201)
+
+        return r.json()
 
 
 class TaskTestCase(TestCase):
