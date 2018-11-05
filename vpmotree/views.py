@@ -120,6 +120,9 @@ class CreateNodeView(CreateAPIView):
     def create(self, request, nodeType, *args, **kwargs):
         data = request.data.copy()
 
+        parent_node = TreeStructure.objects.get(_id=data.pop("parentID"))
+        data["path"] = "{parent_path}{parent_id},".format(parent_path=parent_node.path or ",", parent_id=str(parent_node._id))
+
         serializer = self.get_serializer_class()(data=data)
         if serializer.is_valid():
             node = serializer.save()

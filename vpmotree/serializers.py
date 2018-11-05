@@ -38,6 +38,7 @@ class MessageSerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
     project_owner = serializers.SerializerMethodField(required=False)
+    start = serializers.DateField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d"], allow_null=True, required=False)
 
     def get_project_owner(self, instance):
         if instance.project_owner:
@@ -60,10 +61,11 @@ class TeamSerializer(serializers.ModelSerializer):
 
 class DeliverableSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
+    due_date = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d %H:%M:%S"], allow_null=True, required=False)
     
     class Meta:
         model = Deliverable
-        fields = ["_id", "name", "node_type", "path", "index"]
+        fields = ["_id", "name", "node_type", "path", "index", "due_date"]
 
 
 # class ProjectTreeSerializer(serializers.ModelSerializer):
@@ -96,9 +98,11 @@ class TreeStructureWithoutChildrenSerializer(serializers.Serializer):
     name = serializers.SerializerMethodField()
 
     def get_name(self, instance):
-        model = apps.get_model('vpmotree', instance.node_type)
-        name = model.objects.get(treestructure_ptr_id=instance).name
-        return name
+        model = instance.get_model()
+        
+        node = model.objects.get(_id=instance._id)
+
+        return node.name
 
 class TreeStructureWithChildrenSerializer(serializers.Serializer):
     _id = ObjectIdField(read_only=True)

@@ -55,6 +55,7 @@ class Task(models.Model):
     def __str__(self):
         return "<{title}>: {due_date}".format(title=self.title, due_date=self.due_date.strftime("%d/%m/%Y"))
 
+
     def save(self, *args, **kwargs):
         """ Minor amendments to save for generic conditions """
         if self.status != "COMPLETE":
@@ -105,6 +106,21 @@ class TreeStructure(models.Model):
         elif parent.node_type == "Project":
             return Project.objects.get(_id=parent._id)
         return parent
+
+
+    def get_model(self):
+        # Return the Node Type if it isn't set to topic
+        if self.node_type != "Topic":
+            return apps.get_model("vpmotree", self.node_type)
+        # Otherwise, try to find each topic attr
+        else:
+            topic_types = ["deliverable"]
+            for topic_type in topic_types:
+                try:
+                    return getattr(self, topic_type)._meta.model
+                except:
+                    continue
+        return
 
 
     def save(self, *args, **kwargs):
@@ -170,9 +186,6 @@ class Topic(TreeStructure):
     """ A Topic is a LEAF level element in a TreeStructure;
         can not have ANY children, and is always parented by a BRANCH Level element (Project)
     """
-    topic_classes = [
-        "Deliverable"
-    ]
 
     name = models.CharField(max_length=150, null=False, unique=False)
     # content = models.CharField(max_length=150, null=False, unique=False)
