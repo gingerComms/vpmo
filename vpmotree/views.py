@@ -60,6 +60,8 @@ class AllTeamsView(ListAPIView):
     queryset = Team.objects.all()
 
 
+
+
 class CreateProjectView(CreateAPIView):
     model = Project
     serializer_class = ProjectSerializer
@@ -117,6 +119,14 @@ class UpdateProjectView(RetrieveUpdateAPIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get_object(self):
+        """ Returns the team object from the url id arg """
+        try:
+            project = Project.objects.get(_id=self.kwargs.get("_id", None))
+            return project
+        except Project.DoesNotExist:
+            return None
 
 
 class UpdateDeliverableView(RetrieveUpdateAPIView):
