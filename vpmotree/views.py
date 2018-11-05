@@ -11,10 +11,11 @@ from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticate
 from rest_framework import filters
 from rest_framework import status
 from vpmoauth.models import MyUser, UserRole
+from vpmoauth.serializers import UserDetailsSerializer
 
 from vpmotree.models import *
 from vpmotree.serializers import *
-from vpmotree.permissions import TeamPermissions, CreatePermissions
+from vpmotree.permissions import TeamPermissions, CreatePermissions, TaskListCreateAssignPermission
 from vpmotree.filters import TeamListFilter, ReadNodeListFilter
 from guardian import shortcuts
 
@@ -314,3 +315,121 @@ class AssignableRolesView(APIView):
             assignable_roles += ["topic_viewer", "topic_contributor"]
 
         return Response(assignable_roles)
+
+
+class AssignableTaskUsersView(ListAPIView):
+    """ Returns a list of users that can be assigned a task for a given node """
+    serializer_class = UserDetailsSerializer
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ("username",)
+
+    def get_queryset(self):
+        node = self.kwargs["nodeID"]
+        model = apps.get_model("vpmotree", self.request.query_params["nodeType"])
+        try:
+            node = model.objects.get(_id=node)
+        except model.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        required_perm = "update_{}".format(node.node_type.lower())
+        users_with_update_perms = UserRole.objects.filter(node=node, permissions__name=required_perm).values_list("user___id", flat=True)
+
+        return MyUser.objects.filter(_id__in=users_with_update_perms)
+
+
+class AssignedTasksListView(ListAPIView):
+    """ Returns a list of tasks assigned to the current user """
+    serializer_class = TaskSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return Task.objects.filter(assignee=self.request.user, node___id=self.kwargs["nodeID"]).order_by("-created_at")
+
+
+class DeleteUpdateCreateTaskView(APIView):
+    """ View that takes a post request for creating a Task object with the given data """
+    serializer_class = TaskSerializer
+    permission_classes = (IsAuthenticated, TaskListCreateAssignPermission,)
+
+    def delete(self, request, *args, **kwargs):
+        """ Deletes the input task """
+        data = request.data.copy()
+        try:
+            task = Task.objects.get(_id=data["task"])
+        except Task.DoesNotExist:
+            return Response({'message': "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        task.delete()
+
+        return Response(status=status.HTTP_200_OK)
+
+    def patch(self, request, *args, **kwargs):
+        """ Handles updating the status of a task 
+            NOTE - The reason this isn't merged into the put endpoint is because
+                we need to handle different permissions for both tasks and combining the 
+                endpoints would just make it messy
+        """
+        data = request.data.copy()
+        try:
+            task = Task.objects.get(_id=data["task"])
+        except Task.DoesNotExist:
+            return Response({'message': "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        if task.assignee != request.user:
+            return Response({"message": "Only assignee can update task status"}, status=status.HTTP_403_FORBIDDEN)
+
+        task.status = data["status"]
+        task.save()
+
+        return Response(self.serializer_class(task).data)
+
+
+    def put(self, request, *args, **kwargs):
+        """ Handles updating the assigning for a given task object """
+        data = request.data.copy()
+
+        try:
+            assigning_to = MyUser.objects.get(username=data["assignee"])
+        except MyUser.DoesNotExist:
+            return Response({"message": "Assignee not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            task = Task.objects.get(_id=data["task"])
+        except Task.DoesNotExist:
+            return Response({"message": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        # The new assignee must have at least update_node permissions to node, or return 400
+        assignee_perms = assigning_to.get_permissions(task.node)
+        if not "update_{}".format(request.query_params["nodeType"].lower()) in assignee_perms:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        task.assignee = assigning_to
+        task.save()
+
+        data = self.serializer_class(task).data
+
+        return Response(data)
+
+
+    def post(self, request, *args, **kwargs):
+        """ Handles Creating a task object """
+        data = request.data.copy()
+        # Defaulting created_by and assignee to the creator (request.user)
+        data["created_by"] = str(request.user.pk)
+        if not data.get("assignee", None):
+            data["assignee"] = str(request.user.pk)
+        else:
+            data["assignee"] = MyUser.objects.get(username=data["assignee"])._id
+        # Expecting the date to be input in this format
+        data["due_date"] = dt.strptime(data["due_date"][:10], "%Y-%m-%d").strftime("%Y-%m-%d")
+
+        data["status"] = "NEW"
+
+        serializer = self.serializer_class(data=data)
+        if serializer.is_valid():
+            task = serializer.save()
+            data = serializer.data
+
+            return Response(data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

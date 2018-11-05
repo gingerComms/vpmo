@@ -15,34 +15,6 @@ from create_base_permissions import create_base_permissions
 
 # Create your tests here.
 
-
-class ModelTestCase(test_addons.MongoTestCase):
-    # A MongoTestCase needs this argument to use the test database
-    allow_database_queries = True
-
-    # creating a song in setup to run multiple tests with one object
-    def setUp(self):
-        self.old_count = MyUser.objects.count()
-        self.object = MyUser.objects.create(email="ali@test.com", username="AliRad")
-
-    # deletion after tests are complete
-    def tearDown(self):
-        self.object.delete()
-
-    # basic count test
-    def test_model_can_create(self):
-        new_count = MyUser.objects.count()
-        self.assertNotEqual(self.old_count, new_count)
-
-
-    """ The following two tests are included to ensure django ids and pks are not interfered in the djongo compiling. See full doc for more on my experience with this """
-    def test_model_has_id(self):
-        self.assertIsNotNone(self.object.id)
-
-    def test_model_has_pk(self):
-        self.assertIsNotNone(self.object.pk)
-
-
 class TeamPermissionsTestCase(TestCase):
     """ Tests for the FilteredTeamsView """
 
@@ -75,7 +47,7 @@ class TeamPermissionsTestCase(TestCase):
 
 
     def test_filtered_team_view(self):
-        url  = reverse("filtered_teams")
+        url  = reverse("vpmotree:filtered_teams")
 
         # Giving perms to one Team to user
         assign_perm("read_obj", self.user, self.team_with_perms)
@@ -134,7 +106,7 @@ class TreeStructureTestCase(TestCase):
 
     def test_tree_structure_get(self):
         """ Makes the necessary requests and asserts to test the GET TeamTreeView """
-        url = reverse("team_tree_view", kwargs={"team_id": str(self.team._id)})
+        url = reverse("vpmotree:team_tree_view", kwargs={"team_id": str(self.team._id)})
         # GET on url to get the current tree structure
         response = self.client.get(url).json()
 
@@ -144,7 +116,7 @@ class TreeStructureTestCase(TestCase):
 
     def test_tree_structure_put(self):
         """ Makes the necessary requests and asserts to test the POST TeamTreeView """
-        url = reverse("team_tree_view", kwargs={"team_id": str(self.team._id)})
+        url = reverse("vpmotree:team_tree_view", kwargs={"team_id": str(self.team._id)})
         # GET on url to get the current tree structure
         first_response = self.client.get(url).json()
         print(json.dumps(first_response, indent=2))
@@ -187,7 +159,7 @@ class ProjectUpdateTestCase(TestCase):
 
 
     def test_update(self):
-        url = reverse("update_project", kwargs={"_id": str(self.project._id)})
+        url = reverse("vpmotree:update_project", kwargs={"_id": str(self.project._id)})
 
         data = {
             "content": "Hello there!"
@@ -223,7 +195,7 @@ class NodePermissionsViewTestCase(TestCase):
 
 
     def test_get(self):
-        url = reverse("node_permissions", kwargs={"node_id": self.project._id})+"?nodeType=Project"
+        url = reverse("vpmotree:node_permissions", kwargs={"node_id": self.project._id})+"?nodeType=Project"
 
         response = self.client.get(url).json()
 
@@ -274,7 +246,7 @@ class ReadNodeListFilterTestcase(TestCase):
 
     def test_filter(self):
         # Project Test
-        url = reverse("all_nodes")+"?nodeType=Project&parentNodeID="+str(self.team._id)
+        url = reverse("vpmotree:all_nodes")+"?nodeType=Project&parentNodeID="+str(self.team._id)
 
         response = self.client.get(url).json()
 
@@ -282,9 +254,122 @@ class ReadNodeListFilterTestcase(TestCase):
         self.assertEqual(response[0]["_id"], str(self.project._id))
 
         # Topic Test (Deliverable)
-        url = reverse("all_nodes")+"?nodeType=Deliverable&parentNodeID="+str(self.project._id)
+        url = reverse("vpmotree:all_nodes")+"?nodeType=Deliverable&parentNodeID="+str(self.project._id)
 
         response = self.client.get(url).json()
 
         self.assertEqual(len(response), 1)
         self.assertEqual(response[0]["_id"], str(self.topic._id))
+
+
+class TaskTestCase(TestCase):
+    client = Client()
+
+    def setUp(self):
+        create_base_permissions()
+        project_admin_creds = {
+            "username": "TestUser",
+            "email": "TestUser@vpmotest.com",
+            "fullname": "Test User"
+        }
+        self.project_admin = MyUser.objects.create(**project_admin_creds)
+
+        project_contributor_creds = {
+            "username": "TestUser2",
+            "email": "TestUser2@vpmotest.com",
+            "fullname": "Test2 User"
+        }
+        self.project_contributor = MyUser.objects.create(**project_contributor_creds)
+
+        self.project = Project(name="Test Proj", project_owner=self.project_admin)
+        self.project.save()
+
+        self.project_admin.assign_role("project_admin", self.project)
+        self.project_contributor.assign_role("project_contributor", self.project)
+
+        self.client.force_login(self.project_admin)
+
+    def test_task_assignee_update(self):
+        self.test_task_create()
+
+        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project"
+
+        data = {
+            "node": str(self.project._id),
+            "assignee": str(self.project_admin.username),
+            "task": str(self.task["_id"])
+        }
+
+        r = self.client.put(url, json.dumps(data), content_type='application/json')
+        
+        self.assertEqual(str(r.json()["assignee"]), str(self.project_admin._id))
+        self.assertEqual(r.status_code, 200)
+
+    def test_task_create(self):
+        """ Tests the task creation POST endpoint """
+        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project"
+
+        data = {
+            "node": self.project._id,
+            "title": "Test Task",
+            "status": "NEW",
+            "due_date": "2018-10-07T18:30:00.000Z"
+        }
+
+        r = self.client.post(url, data)
+
+        self.assertEqual(r.status_code, 201)
+        self.task = r.json()
+
+    def test_assignable_task_users(self):
+        """ Tests the GET list view for assignable task users """
+        self.test_task_create()
+        url = reverse("vpmotree:assignable_task_users", kwargs={"nodeID": str(self.project._id)})+"?nodeType=Project"
+
+        r = self.client.get(url)
+
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(len(r.json()), 2)
+
+
+    def test_assigned_tasks_list(self):
+        """ Tests the list method for tasks view (GET)
+            To pass the test, the view should return the tasks assigned to the current user
+        """
+        self.test_task_create()
+        url = reverse("vpmotree:list_assigned_tasks", kwargs={"nodeID": str(self.project._id)})
+
+        r = self.client.get(url)
+
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(len(r.json()), 1)
+
+    def test_task_status_update(self):
+        """ Tests updating of the task status by the assignee """
+        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project"
+        self.test_task_create()
+
+        data = {
+            "task": str(self.task["_id"]),
+            "status": "COMPLETE",
+            "node": str(self.project._id)
+        }
+
+        r = self.client.patch(url, json.dumps(data), content_type='application/json')
+
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.json()["status"], "COMPLETE")
+
+    def test_task_delete(self):
+        """ Tests deletion of tasks """
+        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project"
+        self.test_task_create()
+
+        data = {
+            "task": str(self.task["_id"]),
+            "node": str(self.project._id)
+        }
+
+        r = self.client.delete(url, json.dumps(data), content_type='application/json')
+
+        self.assertEqual(r.status_code, 200)

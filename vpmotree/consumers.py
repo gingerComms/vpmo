@@ -29,6 +29,7 @@ class ChatConsumer(WebsocketConsumer):
             # Only accept the connection if node exists
             self.accept()
         except:
+            raise
             self.close()
 
 
