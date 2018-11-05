@@ -21,17 +21,17 @@ urlpatterns = (
     url(r'^api/filtered_organisations/$', FilteredTeamsView.as_view(), name="filtered_teams"),
     url(r'^api/projects/$', AllProjectsView.as_view(), name="all_projects"),
     url(r'^api/projects/add/$', CreateProjectView.as_view()),
-    url(r'^api/projects/(?P<Project_id>.+)/$', UpdateProjectView.as_view()),
     url(r'^api/teams/add/$', CreateTeamView.as_view(), name="create_team"),
     url(r'^api/deliverable/add/$', CreateDeliverableView.as_view()),
 
     # Generic View to create any node that falls under the treestructure
     path("api/create_node/<str:nodeType>/", CreateNodeView.as_view(), name="create_node"),
+    path("api/update_node/<str:nodeType>/<str:nodeID>/", UpdateNodeView.as_view(), name="update_node"),
 
     # Takes two querys parametrs - nodeType + parentNodeID and returns all nodes under those based on permissions
     url(r'^api/nodes/$', AllNodesView.as_view(), name="all_nodes"),
 
-    url(r"^api/update_project/(?P<_id>.+)/$", UpdateProjectView.as_view(), name="update_project"),
+    
 
     url(r"^api/teams_tree/(?P<team_id>.+)/$", TeamTreeView.as_view(), name="team_tree_view"),
     url(r"^api/project_tree/(?P<project_id>.+)/$", ProjectTreeView.as_view(), name="project_tree_view"),

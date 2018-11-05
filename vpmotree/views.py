@@ -130,19 +130,35 @@ class CreateNodeView(CreateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UpdateProjectView(RetrieveUpdateAPIView):
+class UpdateNodeView(RetrieveUpdateAPIView):
     queryset = Project
-    serializer_class = ProjectSerializer
-    lookup_field = "_id"
 
-    def partial_update(self, request, _id, *args, **kwargs):
+    def get_model(self):
+        node = TreeStructure.objects.get(_id=self.kwargs["nodeID"])
+        return node.get_model()
+
+    def get_serializer_class(self):
+        """ Returns the serializer responsible for creating the current node """
+        mapped_classes = {
+            "Project": ProjectSerializer,
+            "Deliverable": DeliverableSerializer,
+            "Team": TeamSerializer
+        }
+        if self.kwargs["nodeType"] != "Topic":
+            return mapped_classes[self.kwargs["nodeType"]]
+        
+        model = self.get_model()
+        return mapped_classes[self.get_model().__name__]
+
+    def partial_update(self, request, *args, **kwargs):
         """ This method gets called on a PATCH request - partially updates the model """
+        model = self.get_model()
         try:
-            project = Project.objects.get(_id=_id)
-        except Project.DoesNotExist:
-            return Response({"message": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
+            node = model.objects.get(_id=self.kwargs["nodeID"])
+        except model.DoesNotExist:
+            return Response({"message": "Node not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = self.serializer_class(project, data=request.data, partial=True)
+        serializer = self.get_serializer_class()(node, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

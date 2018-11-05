@@ -139,13 +139,11 @@ class TreeStructureTestCase(TestCase):
         	self.assertTrue(second_response["children"][0]["children"], msg="LEAF Level children not present in PUT response")
 
 
-class ProjectUpdateTestCase(TestCase):
-    """ TestCase for testing the Project RetreiveUpdateView """
+class NodeUpdateTestCase(TestCase):
+    """ TestCase for testing the Node RetreiveUpdateView """
     client = Client()
 
     def setUp(self):
-        self.view = views.UpdateProjectView
-
         user_creds = {
             "username": "TestUser",
             "email": "TestUser@vpmotest.com",
@@ -160,7 +158,7 @@ class ProjectUpdateTestCase(TestCase):
 
 
     def test_update(self):
-        url = reverse("vpmotree:update_project", kwargs={"_id": str(self.project._id)})
+        url = reverse("vpmotree:update_node", kwargs={"nodeID": str(self.project._id), "nodeType": "Project"})
 
         data = {
             "content": "Hello there!"
