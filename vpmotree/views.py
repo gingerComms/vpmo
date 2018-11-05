@@ -333,18 +333,18 @@ class AssignableTaskUsersView(ListAPIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         required_perm = "update_{}".format(node.node_type.lower())
-        users_with_update_perms = UserRole.objects.filter(node=node, permissions__name=required_perm).values_list("user___id", flat=True)
+        users_with_update_perms = UserRole.get_user_ids_with_heirarchy_perms(node, required_perm)
 
         return MyUser.objects.filter(_id__in=users_with_update_perms)
 
 
 class AssignedTasksListView(ListAPIView):
-    """ Returns a list of tasks assigned to the current user """
+    """ Returns a list of tasks for the current node """
     serializer_class = TaskSerializer
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return Task.objects.filter(assignee=self.request.user, node___id=self.kwargs["nodeID"]).order_by("-created_at")
+        return Task.objects.filter(node___id=self.kwargs["nodeID"]).order_by("-created_at")
 
 
 class DeleteUpdateCreateTaskView(APIView):

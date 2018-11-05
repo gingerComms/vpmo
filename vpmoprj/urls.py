@@ -29,6 +29,7 @@ urlpatterns = [
     # /vpmoapp is now linked to vpmotree as opposed to vpmoapp - vpmoapp to be deleted on vpmotree deployment
     path(r'vpmoapp/', include('vpmotree.urls')),
     path(r'vpmoauth/', include("vpmoauth.urls")),
+    path(r"vpmodoc/", include("vpmodoc.urls")),
     # Paths to allow serving the template + static files from ng's build folder
     path(r"", serve, kwargs={'path': 'index.html'}),
     re_path(r'^(?!/?static/)(?!/?media/)(?P<path>.*\..*)$',
