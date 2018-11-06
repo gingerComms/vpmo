@@ -165,17 +165,17 @@ class UpdateNodeView(RetrieveUpdateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class TeamTreeView(RetrieveUpdateAPIView):
-    model = Team
+class NodeTreeView(RetrieveUpdateAPIView):
+    model = TreeStructure
     serializer_class = TreeStructureWithChildrenSerializer
     permission_classes = (IsAuthenticated,)
 
     def get_object(self):
-        """ Returns the team object from the url id arg """
+        """ Returns the node object from the url id arg """
         try:
-            team = Team.objects.get(_id=self.kwargs.get("team_id", None))
-            return team
-        except Team.DoesNotExist:
+            node = TreeStructure.objects.get(_id=self.kwargs.get("nodeID", None))
+            return node
+        except TreeStructure.DoesNotExist:
             return None
 
 
@@ -213,7 +213,7 @@ class TeamTreeView(RetrieveUpdateAPIView):
         return list(filter(lambda x: str(x.path.split(",")[-2]) == str(node_id), all_children))
 
 
-    def update(self, request, team_id):
+    def update(self, request, nodeID):
         """ Updates the models based on the input hierarchy; takes a dictionary starting from a single team as input """
         # request.data should be an array of nodes
         nodes = request.data
@@ -238,15 +238,17 @@ class TeamTreeView(RetrieveUpdateAPIView):
 
 
         # The top most element is always a team, so second level is always projects
+        """
         if nodes[0]["path"] is not None:
             team_id = nodes[0]["path"].split(",")[1]
         else:
             team_id = nodes[0]["_id"]
-        team = Team.objects.get(_id=team_id)
-        return Response(TreeStructureWithChildrenSerializer(team).data)
+        """
+        node = self.get_object()
+        return Response(TreeStructureWithChildrenSerializer(node, context={"request": request}).data)
 
 
-class ProjectTreeView(TeamTreeView):
+class ProjectTreeView(NodeTreeView):
     model = Project
 
     def get_object(self):

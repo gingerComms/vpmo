@@ -108,10 +108,18 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
     _id = ObjectIdField(read_only=True)
     path = serializers.CharField(max_length=4048)
     index = serializers.IntegerField()
-    name = serializers.CharField(max_length=150)
+    name = serializers.SerializerMethodField()
     children = serializers.SerializerMethodField()
     node_type = serializers.CharField(max_length=48)
 
+    def get_name(self, instance):
+        model = instance.get_model()
+
+        print(instance, model)
+        
+        node = model.objects.get(_id=instance._id)
+
+        return node.name
 
     def get_branch_extensions(self, branch, branch_level):
         """ Takes a branch as input and starts the loop for either the next branches (if they exist) or the leaves """

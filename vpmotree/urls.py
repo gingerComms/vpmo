@@ -33,7 +33,7 @@ urlpatterns = (
 
     
 
-    url(r"^api/teams_tree/(?P<team_id>.+)/$", TeamTreeView.as_view(), name="team_tree_view"),
+    url(r"^api/nodes_tree/(?P<nodeID>.+)/$", NodeTreeView.as_view(), name="node_tree_view"),
     url(r"^api/project_tree/(?P<project_id>.+)/$", ProjectTreeView.as_view(), name="project_tree_view"),
 
     url(r'^api/messages/(?P<node_id>.+)/$', MessageListView.as_view(), name="message_list"),
