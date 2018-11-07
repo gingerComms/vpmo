@@ -47,6 +47,24 @@ class AllNodesView(ListAPIView):
         return self.serializers[self.request.query_params["nodeType"]]
 
 
+class NodeParents(RetrieveAPIView):
+    # this is to reconstruct the navigation data in front-end based on the route (node/id)
+    # if the node is team then only returns team
+    # if the node is project then returns team and project
+    # if the node is topic then returns team, project (most immediate) and topic
+
+    serializer_class = NodeParentsSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self):
+        """ Returns the node object from the url id arg """
+        try:
+            node = TreeStructure.objects.get(_id=self.kwargs.get("nodeID", None))
+            return node
+        except TreeStructure.DoesNotExist:
+            return None
+
+
 class AllProjectsView(ListAPIView):
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated]

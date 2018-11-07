@@ -166,3 +166,72 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
             children.append(branch)
 
         return children
+
+class NodeParentsSerializer(serializers.Serializer):
+    _Id = ObjectIdField(read_only=True)
+    node_type = serializers.CharField(max_length=48)
+    node_name = serializers.SerializerMethodField()
+    path = serializers.CharField(max_length=4048)
+    team_name = serializers.SerializerMethodField()
+    team_id = serializers.SerializerMethodField()
+    project_name = serializers.SerializerMethodField()
+    project_id = serializers.SerializerMethodField()
+    topic_name = serializers.SerializerMethodField()
+    topic_id = serializers.SerializerMethodField()
+
+    def get_node_name(self, instance):
+        model = instance.get_model()
+        node = model.objects.get(_id=instance._id)
+        return node.name
+
+    def get_team_name(self, instance):
+        team = instance.get_root().name
+        return team
+
+    def get_team_id(self, instance):
+        team = instance.get_root()._id
+        return str(team)
+
+    def get_project_name(self, instance):
+        model = instance.get_model()
+        if model != "Team" and model != "Project":
+            try:
+                project = instance.get_parent().name
+                return project
+            except Project.DoesNotExist:
+                return None
+
+        if model != "Team":
+            try:
+                project = Project.objects.get(_id=instance._id)
+                return project.name
+            except Project.DoesNotExist:
+                return None
+
+    def get_project_id(self, instance):
+        model = instance.get_model()
+        if model != "Team" and model != "Project":
+            try:
+                project = instance.get_parent()._id
+                return str(project)
+            except Project.DoesNotExist:
+                return None
+
+        if model != "Team":
+            try:
+                project = Project.objects.get(_id=instance._id)
+                return str(project._id)
+            except Project.DoesNotExist:
+                return None
+
+    def get_topic_name(self, instance):
+        model = instance.get_model()
+        if model != "Team" and model != "Project":
+            topic = model.objects.get(_id=instance._id)
+            return topic.name
+
+    def get_topic_id(self, instance):
+        model = instance.get_model()
+        if model != "Team" and model != "Project":
+            topic = model.objects.get(_id=instance._id)
+            return str(topic._id)

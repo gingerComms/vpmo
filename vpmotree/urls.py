@@ -31,6 +31,8 @@ urlpatterns = (
     # Takes two querys parametrs - nodeType + parentNodeID and returns all nodes under those based on permissions
     url(r'^api/nodes/$', AllNodesView.as_view(), name="all_nodes"),
 
+    # Takes node id and returns team and project (if applicable) as parents
+    url(r'^api/node_parents/(?P<nodeID>.+)/$', NodeParents.as_view(), name="node_parents"),
     
 
     url(r"^api/nodes_tree/(?P<nodeID>.+)/$", NodeTreeView.as_view(), name="node_tree_view"),
