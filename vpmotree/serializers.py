@@ -192,7 +192,7 @@ class NodeParentsSerializer(serializers.Serializer):
         if instance.path is None:
             return None
 
-        split_path = filter(lambda x: x.strip(), instance.path.split(','))
+        split_path = list(filter(lambda x: x.strip(), instance.path.split(',')))
         if len(split_path) <= 2:
             return None
 
@@ -201,8 +201,8 @@ class NodeParentsSerializer(serializers.Serializer):
 
     def get_root(self, instance):
         if instance.path is None:
-            return MinimalNodeSerialiizer(instance.data)
+            return MinimalNodeSerialiizer(instance).data
 
-        split_path = filter(lambda x: x.strip(), instance.path.split(','))
+        split_path = list(filter(lambda x: x.strip(), instance.path.split(',')))
         parent = TreeStructure.objects.get(_id=split_path[0])
         return MinimalNodeSerialiizer(parent).data
