@@ -67,7 +67,6 @@ class TreeStructureTestCase(TestCase):
 
     def setUp(self):
         """ Creates the models required to test the tree structure """
-        self.view = views.TeamTreeView.as_view()
         # MyUser Credentials used for the testing
         user_creds = {
             "username": "TestUser",
@@ -75,9 +74,6 @@ class TreeStructureTestCase(TestCase):
             "fullname": "Test User"
         }
         self.user = MyUser.objects.create(**user_creds)
-        # Random password created on each iteration
-        self.password = binascii.hexlify(os.urandom(12))
-        self.user.set_password(self.password)
         self.user.save()
 
         self.team = Team(name="Test Team")
@@ -104,6 +100,19 @@ class TreeStructureTestCase(TestCase):
         self.team.delete()
         self.project.delete()
         self.topic.delete()
+
+    def test_node_parent_get(self):
+        team_url = reverse("vpmotree:node_parents", kwargs={"nodeID": str(self.team._id)})
+        proj_url = reverse("vpmotree:node_parents", kwargs={"nodeID": str(self.project._id)})
+        topic_url = reverse("vpmotree:node_parents", kwargs={"nodeID": str(self.topic._id)})
+
+        team_r = self.client.get(team_url)
+        proj_r = self.client.get(proj_url)
+        topic_r = self.client.get(topic_url)
+
+        self.assertEqual(team_r.status_code, 200)
+        self.assertEqual(proj_r.status_code, 200)
+        self.assertEqual(topic_r.status_code, 200)
 
     def test_tree_structure_get(self):
         """ Makes the necessary requests and asserts to test the GET TeamTreeView """
