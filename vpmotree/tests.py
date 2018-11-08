@@ -110,9 +110,16 @@ class TreeStructureTestCase(TestCase):
         proj_r = self.client.get(proj_url)
         topic_r = self.client.get(topic_url)
 
+        # Asserting that the requests went through without exception
         self.assertEqual(team_r.status_code, 200)
         self.assertEqual(proj_r.status_code, 200)
         self.assertEqual(topic_r.status_code, 200)
+
+        # Asserting that the returned response had all required nodes
+        self.assertEqual(len(team_r.json()), 1)
+        self.assertEqual(len(proj_r.json()), 2)
+        self.assertEqual(len(topic_r.json()), 3)
+
 
     def test_tree_structure_get(self):
         """ Makes the necessary requests and asserts to test the GET TeamTreeView """

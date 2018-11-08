@@ -141,7 +141,7 @@ WSGI_APPLICATION = 'vpmoprj.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-if False or DEBUG:
+if DEBUG:
     DATABASES = {
         "default": {
             "ENGINE": "djongo",
@@ -262,3 +262,24 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+# For disabling migrations during testing
+"""
+import sys
+
+TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
+if TESTING:
+    print('=========================')
+    print('In TEST Mode - Disableling Migrations')
+    print('=========================')
+
+    class DisableMigrations(object):
+
+        def __contains__(self, item):
+            return True
+
+        def __getitem__(self, item):
+            return "notmigrations"
+
+    MIGRATION_MODULES = DisableMigrations()
+"""

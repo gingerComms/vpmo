@@ -178,31 +178,3 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
             children.append(branch)
 
         return children
-
-class NodeParentsSerializer(serializers.Serializer):
-    _id = ObjectIdField(read_only=True)
-    node = serializers.SerializerMethodField()
-    immediate_parent = serializers.SerializerMethodField()
-    root = serializers.SerializerMethodField()
-
-    def get_node(self, instance):
-        return MinimalNodeSerialiizer(instance).data
-
-    def get_immediate_parent(self, instance):
-        if instance.path is None:
-            return None
-
-        split_path = list(filter(lambda x: x.strip(), instance.path.split(',')))
-        if len(split_path) <= 2:
-            return None
-
-        parent = TreeStructure.objects.get(_id=split_path[-1])
-        return MinimalNodeSerialiizer(parent).data
-
-    def get_root(self, instance):
-        if instance.path is None:
-            return MinimalNodeSerialiizer(instance).data
-
-        split_path = list(filter(lambda x: x.strip(), instance.path.split(',')))
-        parent = TreeStructure.objects.get(_id=split_path[0])
-        return MinimalNodeSerialiizer(parent).data
