@@ -52,7 +52,7 @@ class ReadNodeListFilter(filters.BaseFilterBackend):
 
             node_type = query_params["nodeType"]
 
-            if node_type in Topic.topic_classes:
+            if node_type in ["Deliverable"]:
                 node_type = "Topic"
 
             # Explanation:

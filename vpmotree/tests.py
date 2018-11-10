@@ -30,7 +30,6 @@ class TeamTestCase(TestCase):
         self.user = MyUser.objects.create(**user_creds)
         
         logged_in = self.client.force_login(self.user, backend="vpmoauth.auth_backend.AuthBackend")
-        print("Logged In ", logged_in)
 
     def tearDown(self):
         self.user.delete()
@@ -62,7 +61,9 @@ class TeamTestCase(TestCase):
 
 
 class TreeStructureTestCase(TestCase):
-    """ Tests the TeamTreeView for correct inherit structures """
+    """ Tests the TeamTreeView for correct inherit structures
+        NOTE - NEEDS TO BE REWRITTEN
+    """
     client = Client()
 
     def setUp(self):
@@ -192,7 +193,9 @@ class NodeRetrieveUpdateTestCase(TestCase):
 
 
 class NodePermissionsViewTestCase(TestCase):
-    """ Test for the nodepermissions retrieve api view """
+    """ Test for the nodepermissions retrieve api view
+        NOTE - Currently using guardian - needs to be modified to use UserRolePermissions instead
+    """
     client = Client()
 
     def setUp(self):
@@ -294,6 +297,12 @@ class NodeCreationTestCase(TestCase):
         }
         self.user = MyUser.objects.create(**user_creds)
 
+        self.team = Team(name="Test Team", user_team="Blah")
+        self.team.save()
+
+        self.user.assign_role("team_admin", self.team)
+        self.user.save()
+
         self.client.force_login(self.user)
 
     def test_project_creation(self):
@@ -302,8 +311,11 @@ class NodeCreationTestCase(TestCase):
         data = {
             "name": "TestProj",
             "description": "Rand",
-            "start": "2018-10-07"
+            "start": "2018-10-07",
+            "parentID": str(self.team._id)
         }
+
+        print(data)
 
         r = self.client.post(url, data)
 
