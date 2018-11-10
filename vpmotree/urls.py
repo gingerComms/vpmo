@@ -26,7 +26,7 @@ urlpatterns = (
 
     # Generic Views to create/update/retrieve any node that falls under the treestructure
     path("api/create_node/<str:nodeType>/", CreateNodeView.as_view(), name="create_node"),
-    path("api/node/<str:nodeType>/<str:nodeID>/", RetrieveUpdateNodeView.as_view(), name="node_retrieve_update"),
+    path("api/node/<str:nodeID>/", RetrieveUpdateNodeView.as_view(), name="node_retrieve_update"),
 
     # Takes two querys parametrs - nodeType + parentNodeID and returns all nodes under those based on permissions
     url(r'^api/nodes/$', AllNodesListView.as_view(), name="all_nodes"),

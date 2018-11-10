@@ -102,7 +102,7 @@ class TaskListCreateAssignPermission(permissions.BasePermission):
 
         perms = request.user.get_permissions(node)
 
-        if "update_{}".format(request.query_params["nodeType"].lower()) in perms:
+        if "update_{}".format(node.node_type.lower()) in perms:
             return True
 
         return False

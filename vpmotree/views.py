@@ -175,10 +175,7 @@ class RetrieveUpdateNodeView(RetrieveUpdateAPIView):
             "Deliverable": DeliverableSerializer,
             "Team": TeamSerializer
         }
-        # Return the mapped class as is if nodeType is not Topic
-        if self.kwargs["nodeType"] != "Topic":
-            return mapped_classes[self.kwargs["nodeType"]]
-        # If nodeType is Topic, return the actual Topic class-serializer this node is linked to
+
         model = self.get_model()
         return mapped_classes[self.get_model().__name__]
 
@@ -313,13 +310,12 @@ class NodePermissionsView(APIView):
     """ Returns a list of user-role map for a particular node of given nodeType """
 
     def get(self, request, node_id):
-        assert request.query_params.get("nodeType") in ["Project", "Team", "Deliverable"]
-        # Fetching the node using the node_id and nodeType
-        node_type = globals()[request.query_params.get("nodeType")]
+        assert request.query_params.get("nodeType") in ["Project", "Team", "Topic"]
+
         try:
-            node = node_type.objects.get(_id=node_id)
-        except node_type.DoesNotExist:
-            return Response({"message": "{} not found.".format(request.query_params["nodeType"])},
+            node = TreeStructure.objects.get(_id=node_id)
+        except TreeStructure.DoesNotExist:
+            return Response({"message": "TreeStructure not found."},
                             status=status.HTTP_404_NOT_FOUND)
 
         # Getting a dictionary of all users that have any permissions to the model

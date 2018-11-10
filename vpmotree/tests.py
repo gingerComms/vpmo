@@ -172,7 +172,7 @@ class NodeRetrieveUpdateTestCase(TestCase):
 
         logged_in = self.client.force_login(self.user, backend="vpmoauth.auth_backend.AuthBackend")
 
-        self.url = reverse("vpmotree:node_retrieve_update", kwargs={"nodeID": str(self.project._id), "nodeType": "Project"})
+        self.url = reverse("vpmotree:node_retrieve_update", kwargs={"nodeID": str(self.project._id)})
 
 
     def test_update(self):
