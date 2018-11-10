@@ -108,7 +108,7 @@ class TreeStructure(models.Model):
         return parent
 
 
-    def get_model(self):
+    def get_model_class(self):
         # Return the Node Type if it isn't set to topic
         if self.node_type != "Topic":
             return apps.get_model("vpmotree", self.node_type)
@@ -121,6 +121,11 @@ class TreeStructure(models.Model):
                 except:
                     continue
         return
+
+    def get_object(self):
+        """ Returns the particular model instance for this treeStructure node """
+        model = self.get_model_class()
+        return model.objects.get(_id=self._id)
 
 
     def save(self, *args, **kwargs):

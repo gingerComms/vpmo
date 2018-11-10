@@ -93,11 +93,10 @@ class DeliverableSerializer(serializers.ModelSerializer):
 class MinimalNodeSerialiizer(serializers.Serializer):
     _id = ObjectIdField(read_only=True)
     name = serializers.SerializerMethodField()
+    node_type = serializers.CharField(max_length=120)
 
     def get_name(self, instance):
-        model = instance.get_model()
-        
-        node = model.objects.get(_id=instance._id)
+        node = TreeStructure.objects.get(_id=instance._id).get_object()
 
         return node.name
 
@@ -110,9 +109,7 @@ class TreeStructureWithoutChildrenSerializer(serializers.Serializer):
     name = serializers.SerializerMethodField()
 
     def get_name(self, instance):
-        model = instance.get_model()
-        
-        node = model.objects.get(_id=instance._id)
+        node = TreeStructure.objects.get(_id=instance._id).get_object()
 
         return node.name
 
@@ -125,9 +122,7 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
     node_type = serializers.CharField(max_length=48)
 
     def get_name(self, instance):
-        model = instance.get_model()
-        
-        node = model.objects.get(_id=instance._id)
+        node = TreeStructure.objects.get(_id=instance._id).get_object()
 
         return node.name
 

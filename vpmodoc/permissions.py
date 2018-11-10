@@ -11,7 +11,8 @@ class IsAdminOrContributor(permissions.BasePermission):
 
         # TODO - Add conditional that asserts that node_type is either Project or Topic
 
-        node = apps.get_model("vpmotree", node_type).objects.get(_id=node)
+        node = TreeStructure.objects.get(_id=node)
+        node = node.get_object()
 
         perms = request.user.get_permissions(node)
 

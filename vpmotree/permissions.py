@@ -97,8 +97,8 @@ class TeamPermissions(permissions.BasePermission):
 class TaskListCreateAssignPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         node = request.data["node"]
-        model = apps.get_model("vpmotree", request.query_params["nodeType"])
-        node = model.objects.get(_id=node)
+        node = TreeStructure.objects.get(_id=node)
+        node = node.get_object()
 
         perms = request.user.get_permissions(node)
 

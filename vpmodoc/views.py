@@ -28,10 +28,9 @@ class DocumentManagementView(APIView):
 
 	def get_node(self):
 		""" Returns the node based on the nodeID kwarg and the nodeType parameter """
-		model = apps.get_model("vpmotree", self.request.query_params["nodeType"])
 		try:
-			return model.objects.get(_id=self.kwargs["nodeID"])
-		except model.DoesNotExist:
+			return TreeStructure.objects.get(_id=self.kwargs["nodeID"]).get_object()
+		except TreeStructure.DoesNotExist:
 			return None
 
 	def get_document(self):
@@ -92,10 +91,9 @@ class CreateDocumentView(generics.CreateAPIView):
 
 	def get_node(self):
 		""" Returns the node based on the nodeID kwarg and the nodeType parameter """
-		model = apps.get_model("vpmotree", self.request.query_params["nodeType"])
 		try:
-			return model.objects.get(_id=self.kwargs["nodeID"])
-		except model.DoesNotExist:
+			return TreeStructure.objects.get(_id=self.kwargs["nodeID"]).get_object()
+		except TreeStructure.DoesNotExist:
 			return None
 
 	def create(self, request, nodeID):

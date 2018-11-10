@@ -48,7 +48,7 @@ class AllNodesListView(ListAPIView):
 
 
 class NodeParentsListView(ListAPIView):
-    """ Returns a list of all nodes in the path of the input node """
+    """ Returns a list of all nodes in the path of the input node (including the input node itself) """
 
     serializer_class = MinimalNodeSerialiizer
     permission_classes = (IsAuthenticated,)
@@ -159,15 +159,14 @@ class CreateNodeView(CreateAPIView):
 class RetrieveUpdateNodeView(RetrieveUpdateAPIView):
 
     def get_object(self):
-        model = self.get_model()
         try:
-            return model.objects.get(_id=self.kwargs["nodeID"])
-        except model.DoesNotExist:
+            return TreeStructure.objects.get(_id=self.kwargs["nodeID"]).get_object()
+        except TreeStructure.DoesNotExist:
             return None
 
     def get_model(self):
         node = TreeStructure.objects.get(_id=self.kwargs["nodeID"])
-        return node.get_model()
+        return node.get_model_class()
 
     def get_serializer_class(self):
         """ Returns the serializer responsible for creating the current node """
@@ -279,18 +278,6 @@ class NodeTreeView(RetrieveUpdateAPIView):
         return Response(TreeStructureWithChildrenSerializer(node, context={"request": request}).data)
 
 
-class ProjectTreeView(NodeTreeView):
-    model = Project
-
-    def get_object(self):
-        """ Returns the project object from the url id arg """
-        try:
-            project = Project.objects.get(_id=self.kwargs.get("project_id", None))
-            return project
-        except Project.DoesNotExist:
-            return None
-
-
 class CreateDeliverableView(CreateAPIView):
     model = Deliverable
     serializer_class = DeliverableSerializer
@@ -357,16 +344,17 @@ class AssignableRolesView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, node_id):
-        model = apps.get_model("vpmotree", request.query_params["nodeType"])
         try:
-            node = model.objects.get(_id=node_id)
-        except model.DoesNotExist:
+            node = TreeStructure.objects.get(_id=node_id)
+            node = node.get_object()
+        except TreeStructure.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         permissions = list(request.user.get_permissions(node, all_types=True))
 
         assignable_roles = []
 
+        model = node.get_model_class()
         if "update_team_user_role" in permissions and model == Team:
             assignable_roles += ["team_member", "team_lead", "team_admin"]
         elif "update_project_user_role" in permissions and model == Project:
@@ -386,10 +374,10 @@ class AssignableTaskUsersView(ListAPIView):
 
     def get_queryset(self):
         node = self.kwargs["nodeID"]
-        model = apps.get_model("vpmotree", self.request.query_params["nodeType"])
         try:
-            node = model.objects.get(_id=node)
-        except model.DoesNotExist:
+            node = TreeStructure.objects.get(_id=node)
+            node = node.get_object()
+        except TreeStructure.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         required_perm = "update_{}".format(node.node_type.lower())
