@@ -29,7 +29,7 @@ class FilteredTeamsView(ListAPIView):
     filter_backends = (TeamListFilter,)
 
 
-class AllNodesView(ListAPIView):
+class AllNodesListView(ListAPIView):
     permission_classes = [IsAuthenticated]
     filter_backends = [ReadNodeListFilter]
 
@@ -156,8 +156,14 @@ class CreateNodeView(CreateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UpdateNodeView(RetrieveUpdateAPIView):
-    queryset = Project
+class RetrieveUpdateNodeView(RetrieveUpdateAPIView):
+
+    def get_object(self):
+        model = self.get_model()
+        try:
+            return model.objects.get(_id=self.kwargs["nodeID"])
+        except model.DoesNotExist:
+            return None
 
     def get_model(self):
         node = TreeStructure.objects.get(_id=self.kwargs["nodeID"])
@@ -170,18 +176,17 @@ class UpdateNodeView(RetrieveUpdateAPIView):
             "Deliverable": DeliverableSerializer,
             "Team": TeamSerializer
         }
+        # Return the mapped class as is if nodeType is not Topic
         if self.kwargs["nodeType"] != "Topic":
             return mapped_classes[self.kwargs["nodeType"]]
-        
+        # If nodeType is Topic, return the actual Topic class-serializer this node is linked to
         model = self.get_model()
         return mapped_classes[self.get_model().__name__]
 
     def partial_update(self, request, *args, **kwargs):
         """ This method gets called on a PATCH request - partially updates the model """
-        model = self.get_model()
-        try:
-            node = model.objects.get(_id=self.kwargs["nodeID"])
-        except model.DoesNotExist:
+        node = self.get_object()
+        if node is None:
             return Response({"message": "Node not found"}, status=status.HTTP_404_NOT_FOUND)
 
         serializer = self.get_serializer_class()(node, data=request.data, partial=True)

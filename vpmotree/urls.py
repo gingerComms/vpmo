@@ -24,12 +24,12 @@ urlpatterns = (
     url(r'^api/teams/add/$', CreateTeamView.as_view(), name="create_team"),
     url(r'^api/deliverable/add/$', CreateDeliverableView.as_view()),
 
-    # Generic View to create any node that falls under the treestructure
+    # Generic Views to create/update/retrieve any node that falls under the treestructure
     path("api/create_node/<str:nodeType>/", CreateNodeView.as_view(), name="create_node"),
-    path("api/update_node/<str:nodeType>/<str:nodeID>/", UpdateNodeView.as_view(), name="update_node"),
+    path("api/node/<str:nodeType>/<str:nodeID>/", RetrieveUpdateNodeView.as_view(), name="node_retrieve_update"),
 
     # Takes two querys parametrs - nodeType + parentNodeID and returns all nodes under those based on permissions
-    url(r'^api/nodes/$', AllNodesView.as_view(), name="all_nodes"),
+    url(r'^api/nodes/$', AllNodesListView.as_view(), name="all_nodes"),
 
     # Takes node id and returns team and project (if applicable) as parents
     path(r'api/node_parents/<str:nodeID>/', NodeParentsListView.as_view(), name="node_parents"),

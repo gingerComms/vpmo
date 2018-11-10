@@ -155,7 +155,7 @@ class TreeStructureTestCase(TestCase):
         	self.assertTrue(second_response["children"][0]["children"], msg="LEAF Level children not present in PUT response")
 
 
-class NodeUpdateTestCase(TestCase):
+class NodeRetrieveUpdateTestCase(TestCase):
     """ TestCase for testing the Node RetreiveUpdateView """
     client = Client()
 
@@ -172,19 +172,23 @@ class NodeUpdateTestCase(TestCase):
 
         logged_in = self.client.force_login(self.user, backend="vpmoauth.auth_backend.AuthBackend")
 
+        self.url = reverse("vpmotree:node_retrieve_update", kwargs={"nodeID": str(self.project._id), "nodeType": "Project"})
+
 
     def test_update(self):
-        url = reverse("vpmotree:update_node", kwargs={"nodeID": str(self.project._id), "nodeType": "Project"})
-
         data = {
             "content": "Hello there!"
         }
 
-        response = self.client.patch(url, json.dumps(data), content_type='application/json').json()
-
-        print(response)
+        response = self.client.patch(self.url, json.dumps(data), content_type='application/json').json()
 
         self.assertEqual(response["content"], "Hello there!")
+
+
+    def test_retrieve(self):
+        r = self.client.get(self.url)
+
+        self.assertEqual(r.status_code, 200)
 
 
 class NodePermissionsViewTestCase(TestCase):
