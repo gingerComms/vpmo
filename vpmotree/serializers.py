@@ -196,7 +196,7 @@ class NodeParentsSerializer(serializers.Serializer):
         if len(split_path) <= 2:
             return None
 
-        parent = TreeStructure.objects.get(_id=split_path[-2])
+        parent = TreeStructure.objects.get(_id=split_path[-1])
         return MinimalNodeSerialiizer(parent).data
 
     def get_root(self, instance):

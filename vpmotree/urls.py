@@ -34,7 +34,7 @@ urlpatterns = (
     # Takes node id and returns team and project (if applicable) as parents
     path(r'api/node_parents/<str:nodeID>/', NodeParents.as_view(), name="node_parents"),
     
-
+    # url(r"^api/nodes_details/(?P<nodeID>.+)/$", NodeDetailsView.as_view(), name="node_details_view"),
     url(r"^api/nodes_tree/(?P<nodeID>.+)/$", NodeTreeView.as_view(), name="node_tree_view"),
     url(r"^api/project_tree/(?P<project_id>.+)/$", ProjectTreeView.as_view(), name="project_tree_view"),
 
