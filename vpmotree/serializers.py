@@ -126,8 +126,6 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
 
     def get_name(self, instance):
         model = instance.get_model()
-
-        print(instance, model)
         
         node = model.objects.get(_id=instance._id)
 

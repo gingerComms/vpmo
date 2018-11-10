@@ -25,7 +25,7 @@ NG_BUILD_DIR = os.path.join(BASE_DIR, "dist")
 SECRET_KEY = 'k3xrb+p%cw%7r@8$el#$7hd6_zqp93-(ue(acl^jx-okpzo643'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
 # Setting for storing user uploads in S3
