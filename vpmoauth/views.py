@@ -9,7 +9,7 @@ from vpmoauth.permissions import AssignRolesPermission, RemoveRolesPermission
 from vpmoauth.models import MyUser, UserRolePermission, UserRole
 from vpmoauth.serializers import *
 
-from rest_framework import generics, permissions, mixins, status
+from rest_framework import generics, permissions, mixins, status, filters
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
@@ -31,6 +31,8 @@ class AssignableUsersListView(generics.ListAPIView):
     """ Returns a list of users that can be assigned a role for a given node """
     serializer_class = UserDetailsSerializer
     permission_classes = (permissions.IsAuthenticated,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ("username",)
 
     def get_queryset(self):
         # Fetching the node
@@ -78,7 +80,7 @@ class AssignRoleView(APIView):
         # Reading data from the request
         role = request.data.get("role")
         try:
-            target_user = MyUser.objects.get(_id=request.data["userID"])
+            target_user = MyUser.objects.get(username=request.data["user"])
         except MyUser.DoesNotExist:
             return Response({"message": "Target User does not exist"}, status=status.HTTP_404_NOT_FOUND)
         node = self.get_object()
