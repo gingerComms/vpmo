@@ -118,7 +118,7 @@ class TreeStructure(models.Model):
             for topic_type in topic_types:
                 try:
                     return getattr(self, topic_type)._meta.model
-                except:
+                except Exception as e:
                     continue
         return
 

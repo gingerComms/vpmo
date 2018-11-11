@@ -16,7 +16,10 @@ class IsAdminOrContributor(permissions.BasePermission):
 
         perms = request.user.get_permissions(node)
 
-        if "update_{}".format(node_type.lower()) in perms:
-            return True
+        try:
+            if "update_{}".format(node_type.lower()) in perms:
+                return True
+        except:
+            print(perms, node_type)
 
         return False

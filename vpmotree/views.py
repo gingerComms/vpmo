@@ -66,9 +66,14 @@ class NodeParentsListView(ListAPIView):
         # Otherwise, return all nodes in the node's path
         node_path = list(filter(lambda x: x.strip(), node.path.split(',')))
         node_path.append(str(node._id))
-        nodes_in_path = TreeStructure.objects.filter(_id__in=node_path)
-        # Sorting the nodes by index in the path
-        nodes_in_path = sorted(nodes_in_path, key=lambda x: node_path.index(str(x._id)))
+        # print(node_path)
+        try:
+            nodes_in_path = TreeStructure.objects.filter(_id__in=node_path)
+            # Sorting the nodes by index in the path
+            nodes_in_path = sorted(nodes_in_path, key=lambda x: node_path.index(str(x._id)))
+        except:
+            print("EXCEPTION", node_path)
+            raise
 
         return nodes_in_path
 
