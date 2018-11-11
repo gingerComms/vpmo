@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework import fields
 from .models import Team, Project, Deliverable, TreeStructure, Message, Topic, Task
 from vpmoauth.models import UserRole, MyUser
+from vpmoauth.serializers import UserDetailsSerializer
 from django.apps import apps
 from django.db.models import Q
 from rest_framework.fields import CurrentUserDefault
@@ -19,7 +20,25 @@ class TaskSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
     node = RelatedObjectIdField(queryset=TreeStructure.objects.all())
     created_by = RelatedObjectIdField(queryset=MyUser.objects.all())
-    assignee = RelatedObjectIdField(queryset=MyUser.objects.all())
+    assignee = UserDetailsSerializer(required=False)
+    due_date = serializers.DateField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d"], allow_null=True, required=False)
+
+    def get_assignee_name(self, instance):
+        try:
+            return instance.assignee.fullname
+        except:
+            return None
+
+    def validate(self, data):
+        # Getting the assignee from the initial data passed into serializer
+        assignee_id = self.initial_data.get("assignee_id", None)
+        # Validating the rest of the fields
+        data = super(TaskSerializer, self).validate(data)
+        # Setting the foreign key
+        if assignee_id:
+            data["assignee"] = MyUser.objects.get(_id=assignee_id)
+
+        return data
 
     class Meta:
         model = Task

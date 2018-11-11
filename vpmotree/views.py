@@ -405,7 +405,7 @@ class DeleteUpdateCreateTaskView(APIView):
         """ Deletes the input task """
         data = request.data.copy()
         try:
-            task = Task.objects.get(_id=data["task"])
+            task = Task.objects.get(_id=data["_id"])
         except Task.DoesNotExist:
             return Response({'message': "Task not found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -421,17 +421,20 @@ class DeleteUpdateCreateTaskView(APIView):
         """
         data = request.data.copy()
         try:
-            task = Task.objects.get(_id=data["task"])
+            task = Task.objects.get(_id=data["_id"])
         except Task.DoesNotExist:
             return Response({'message': "Task not found"}, status=status.HTTP_404_NOT_FOUND)
 
         if task.assignee != request.user:
-            return Response({"message": "Only assignee can update task status"}, status=status.HTTP_403_FORBIDDEN)
+            return Response({"message": "Only assignee can partially update the task"}, status=status.HTTP_403_FORBIDDEN)
 
-        task.status = data["status"]
-        task.save()
+        # Partially updating the task
+        serializer = self.serializer_class(task, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
 
-        return Response(self.serializer_class(task).data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
     def put(self, request, *args, **kwargs):
@@ -439,12 +442,12 @@ class DeleteUpdateCreateTaskView(APIView):
         data = request.data.copy()
 
         try:
-            assigning_to = MyUser.objects.get(username=data["assignee"])
+            assigning_to = MyUser.objects.get(username=data.pop("assignee"))
         except MyUser.DoesNotExist:
             return Response({"message": "Assignee not found"}, status=status.HTTP_404_NOT_FOUND)
 
         try:
-            task = Task.objects.get(_id=data["task"])
+            task = Task.objects.get(_id=data["_id"])
         except Task.DoesNotExist:
             return Response({"message": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -453,12 +456,13 @@ class DeleteUpdateCreateTaskView(APIView):
         if not "update_{}".format(request.query_params["nodeType"].lower()) in assignee_perms:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        task.assignee = assigning_to
-        task.save()
-
-        data = self.serializer_class(task).data
-
-        return Response(data)
+        # Partially updating the task
+        data["assignee_id"] = assigning_to._id
+        serializer = self.serializer_class(task, data=data, partial=True)
+        if serializer.is_valid():
+            task = serializer.save()
+            return Response(self.serializer_class(task).data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
     def post(self, request, *args, **kwargs):
@@ -466,17 +470,18 @@ class DeleteUpdateCreateTaskView(APIView):
         data = request.data.copy()
         # Defaulting created_by and assignee to the creator (request.user)
         data["created_by"] = str(request.user.pk)
-        if not data.get("assignee", None):
-            data["assignee"] = str(request.user.pk)
+        assignee = data.pop("assignee", None)
+        if not assignee:
+            data["assignee_id"] = str(request.user._id)
         else:
-            data["assignee"] = MyUser.objects.get(username=data["assignee"])._id
+            data["assignee_id"] = MyUser.objects.get(username=assignee)._id
         # Expecting the date to be input in this format
         data["due_date"] = dt.strptime(data["due_date"][:10], "%Y-%m-%d").strftime("%Y-%m-%d")
 
         data["status"] = "NEW"
 
         serializer = self.serializer_class(data=data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             task = serializer.save()
             data = serializer.data
 

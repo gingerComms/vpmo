@@ -354,28 +354,27 @@ class TaskTestCase(TestCase):
     def test_task_assignee_update(self):
         self.test_task_create()
 
-        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project"
+        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project&nodeID="+str(self.project._id)
 
         data = {
-            "node": str(self.project._id),
             "assignee": str(self.project_admin.username),
-            "task": str(self.task["_id"])
+            "_id": str(self.task["_id"])
         }
 
         r = self.client.put(url, json.dumps(data), content_type='application/json')
         
-        self.assertEqual(str(r.json()["assignee"]), str(self.project_admin._id))
+        self.assertEqual(str(r.json()["assignee"]["_id"]), str(self.project_admin._id))
         self.assertEqual(r.status_code, 200)
 
     def test_task_create(self):
         """ Tests the task creation POST endpoint """
-        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project"
+        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project&nodeID="+str(self.project._id)
 
         data = {
-            "node": self.project._id,
             "title": "Test Task",
             "status": "NEW",
-            "due_date": "2018-10-07T18:30:00.000Z"
+            "due_date": "2018-10-07T18:30:00.000Z",
+            "node": str(self.project._id)
         }
 
         r = self.client.post(url, data)
@@ -408,13 +407,12 @@ class TaskTestCase(TestCase):
 
     def test_task_status_update(self):
         """ Tests updating of the task status by the assignee """
-        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project"
+        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project&nodeID="+str(self.project._id)
         self.test_task_create()
 
         data = {
-            "task": str(self.task["_id"]),
-            "status": "COMPLETE",
-            "node": str(self.project._id)
+            "_id": str(self.task["_id"]),
+            "status": "COMPLETE"
         }
 
         r = self.client.patch(url, json.dumps(data), content_type='application/json')
@@ -424,12 +422,11 @@ class TaskTestCase(TestCase):
 
     def test_task_delete(self):
         """ Tests deletion of tasks """
-        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project"
+        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project&nodeID="+str(self.project._id)
         self.test_task_create()
 
         data = {
-            "task": str(self.task["_id"]),
-            "node": str(self.project._id)
+            "_id": str(self.task["_id"]),
         }
 
         r = self.client.delete(url, json.dumps(data), content_type='application/json')
