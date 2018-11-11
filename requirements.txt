@@ -20,7 +20,6 @@ django-bootstrap3==9.1.0
 django-cors-headers==2.4.0
 django-extensions==1.9.9
 django-filter==2.0.0
-django-guardian==1.4.9
 django-storages==1.7.1
 django-test-addons==1.0
 djangorestframework==3.8.2

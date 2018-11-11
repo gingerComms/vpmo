@@ -81,10 +81,10 @@ class TeamSerializer(serializers.ModelSerializer):
 class DeliverableSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
     due_date = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d %H:%M:%S"], allow_null=True, required=False)
-    
+
     class Meta:
         model = Deliverable
-        fields = ["_id", "name", "node_type", "path", "index", "due_date"]
+        fields = ["_id", "name", "node_type", "path", "index", "due_date", "content"]
 
 
 # class ProjectTreeSerializer(serializers.ModelSerializer):
@@ -115,9 +115,9 @@ class MinimalNodeSerialiizer(serializers.Serializer):
     node_type = serializers.CharField(max_length=120)
 
     def get_name(self, instance):
-        node = TreeStructure.objects.get(_id=instance._id).get_object()
-
-        return node.name
+        if instance._meta.model == TreeStructure:
+            return instance.get_object().name
+        return instance.name
 
 
 class TreeStructureWithoutChildrenSerializer(serializers.Serializer):
@@ -128,9 +128,9 @@ class TreeStructureWithoutChildrenSerializer(serializers.Serializer):
     name = serializers.SerializerMethodField()
 
     def get_name(self, instance):
-        node = TreeStructure.objects.get(_id=instance._id).get_object()
-
-        return node.name
+        if instance._meta.model == TreeStructure:
+            return instance.get_object().name
+        return instance.name
 
 class TreeStructureWithChildrenSerializer(serializers.Serializer):
     _id = ObjectIdField(read_only=True)
@@ -141,9 +141,9 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
     node_type = serializers.CharField(max_length=48)
 
     def get_name(self, instance):
-        node = TreeStructure.objects.get(_id=instance._id).get_object()
-
-        return node.name
+        if instance._meta.model == TreeStructure:
+            return instance.get_object().name
+        return instance.name
 
     def get_branch_extensions(self, branch, branch_level):
         """ Takes a branch as input and starts the loop for either the next branches (if they exist) or the leaves """

@@ -12,10 +12,6 @@ from vpmoauth.managers import MyUserManager
 from vpmoauth.role_permissions_map import ROLES_MAP
 from vpmotree.models import Team
 
-from guardian.mixins import GuardianUserMixin
-from guardian import shortcuts
-from guardian.models import UserObjectPermission
-
 
 class UserRolePermission(models.Model):
     """ Model used to map permissions for nodes and roles """
@@ -57,7 +53,7 @@ class UserRole(models.Model):
 # user.userrole_set.filter(node__id__in=[all_node_ids (parents + self)], permissions__permission_name__in=["read_topic"])
 
 
-class MyUser(AbstractBaseUser, GuardianUserMixin):
+class MyUser(AbstractBaseUser):
     _id = models.ObjectIdField()
     email = models.EmailField(
         verbose_name='email address',

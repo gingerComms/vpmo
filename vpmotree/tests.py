@@ -4,7 +4,6 @@ from vpmoauth.models import MyUser
 import test_addons
 from vpmotree import views
 from django.shortcuts import reverse
-from guardian.shortcuts import assign_perm
 from rest_framework.test import APIRequestFactory, force_authenticate
 import os, json
 import binascii
@@ -33,16 +32,6 @@ class TeamTestCase(TestCase):
 
     def tearDown(self):
         self.user.delete()
-
-    def test_team_create(self):
-        """ Tests the create team view """
-        url = reverse("vpmotree:create_team")
-        data = {
-            "name": "Test Team"
-        }
-        r = self.client.post(url, data)
-
-        self.assertEqual(r.status_code, 201)
 
     """ - NEEDS TO BE REWRITTEN
     def test_filtered_team_view(self):
@@ -122,8 +111,8 @@ class TreeStructureTestCase(TestCase):
         self.assertEqual(len(topic_r.json()), 3)
 
 
+    """ Needs to be rewritten with nodes-tree-view
     def test_tree_structure_get(self):
-        """ Makes the necessary requests and asserts to test the GET TeamTreeView """
         url = reverse("vpmotree:team_tree_view", kwargs={"team_id": str(self.team._id)})
         # GET on url to get the current tree structure
         response = self.client.get(url).json()
@@ -133,7 +122,6 @@ class TreeStructureTestCase(TestCase):
 
 
     def test_tree_structure_put(self):
-        """ Makes the necessary requests and asserts to test the POST TeamTreeView """
         url = reverse("vpmotree:team_tree_view", kwargs={"team_id": str(self.team._id)})
         # GET on url to get the current tree structure
         first_response = self.client.get(url).json()
@@ -154,6 +142,7 @@ class TreeStructureTestCase(TestCase):
         self.assertTrue(second_response["children"], msg="PUT response does not have any children")
         if second_response["children"]:
         	self.assertTrue(second_response["children"][0]["children"], msg="LEAF Level children not present in PUT response")
+    """
 
 
 class NodeRetrieveUpdateTestCase(TestCase):
@@ -211,6 +200,7 @@ class NodePermissionsViewTestCase(TestCase):
         self.project = Project(name="Test Proj", project_owner=self.user)
         self.project.save()
 
+        # TODO: Needs to be rewritten
         assign_perm("read_obj", self.user, self.project)
 
         logged_in = self.client.force_login(self.user, backend="vpmoauth.auth_backend.AuthBackend")

@@ -7,7 +7,6 @@ from rest_framework.test import APIRequestFactory, force_authenticate
 import os
 import json
 import binascii
-from guardian import shortcuts
 from create_base_permissions import create_base_permissions
 
 # Create your tests here.

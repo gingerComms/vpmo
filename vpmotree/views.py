@@ -16,17 +16,9 @@ from vpmoauth.serializers import UserDetailsSerializer
 from vpmotree.models import *
 from vpmotree.serializers import *
 from vpmotree.permissions import TeamPermissions, CreatePermissions, TaskListCreateAssignPermission
-from vpmotree.filters import TeamListFilter, ReadNodeListFilter
-from guardian import shortcuts
+from vpmotree.filters import ReadNodeListFilter
 
 from datetime import datetime as dt
-
-
-class FilteredTeamsView(ListAPIView):
-    serializer_class = TeamSerializer
-    permission_classes = [IsAuthenticated, TeamPermissions]
-    queryset = Team.objects.all()
-    filter_backends = (TeamListFilter,)
 
 
 class AllNodesListView(ListAPIView):

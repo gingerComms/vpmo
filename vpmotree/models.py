@@ -9,7 +9,6 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.template.defaultfilters import slugify
-from guardian import shortcuts
 from django.apps import AppConfig
 from django.apps import apps
 
@@ -19,8 +18,6 @@ from django import forms
 from vpmoprj.settings import AUTH_USER_MODEL
 
 from django.core.mail import send_mail
-import guardian.mixins
-from guardian import shortcuts
 
 # to add a field to mongodb collection after adding it to model
 # 1- connect to mongodb via shell
@@ -179,12 +176,6 @@ class Project(TreeStructure):
     def save(self, *args, **kwargs):
         self.node_type = "Project"
         super(Project, self).save(*args, **kwargs)
-
-    def get_users_with_role(self, role):
-        # Returns users that have any perms for the object
-        user_perms = shortcuts.get_users_with_perms(self, with_superusers=False, attach_perms=True)
-        # Filtering those users to only the ones that have permissions from role_map
-        return filter(lambda x: user_perms[x] == self.ROLE_MAP[role][self.node_type], user_perms)
 
 
 class Topic(TreeStructure):

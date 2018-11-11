@@ -1,6 +1,5 @@
 from rest_framework import permissions
 from django.apps import apps
-from guardian import shortcuts
 from vpmotree.models import TreeStructure
 
 

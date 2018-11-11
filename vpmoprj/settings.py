@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     'vpmoauth',
     'vpmotree',
     "vpmodoc",
-    'guardian',
     'channels',
 ]
 
@@ -68,7 +67,6 @@ MIGRATION_MODULES = {
 AUTHENTICATION_BACKENDS = (
     'vpmoauth.auth_backend.AuthBackend', # this is default from vpmo
     'django.contrib.auth.backends.ModelBackend', # The default
-    'guardian.backends.ObjectPermissionBackend',
 )
 
 
@@ -141,7 +139,7 @@ WSGI_APPLICATION = 'vpmoprj.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-if False and DEBUG:
+if DEBUG:
     DATABASES = {
         "default": {
             "ENGINE": "djongo",

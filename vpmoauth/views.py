@@ -17,8 +17,6 @@ from rest_framework_jwt.settings import api_settings
 from rest_framework import status
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView, get_object_or_404
 
-from guardian import shortcuts
-
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 import jwt
