@@ -30,7 +30,7 @@ class AssignableUsersListView(generics.ListAPIView):
     serializer_class = UserDetailsSerializer
     permission_classes = (permissions.IsAuthenticated,)
     filter_backends = (filters.SearchFilter,)
-    search_fields = ("username",)
+    search_fields = ("username","email","fullname")
 
     def get_queryset(self):
         # Fetching the node
