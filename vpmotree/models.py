@@ -111,7 +111,7 @@ class TreeStructure(models.Model):
             return apps.get_model("vpmotree", self.node_type)
         # Otherwise, try to find each topic attr
         else:
-            topic_types = ["deliverable"]
+            topic_types = ["deliverable", "issue"]
             for topic_type in topic_types:
                 try:
                     return getattr(self, topic_type)._meta.model
@@ -198,6 +198,22 @@ class Deliverable(Topic):
     def save(self, *args, **kwargs):
         self.node_type = "Topic"
         super(Deliverable, self).save(*args, **kwargs)
+
+
+class Issue(Topic):
+    SEVERITY_CHOICES = [
+        ('1', 'Low',),
+        ('2', 'Medium',),
+        ('3', "High",)
+    ]
+    due_date = models.DateTimeField(auto_now=False, auto_now_add=False)
+    assignee = models.ForeignKey("vpmoauth.MyUser", on_delete=models.CASCADE)
+    severity = models.CharField(max_length=1, choices=SEVERITY_CHOICES, blank=False, default='1')
+
+    def save(self, *args, **kwargs):
+        self.node_type = "Topic"
+        super(Issue, self).save(*args, **kwargs)
+
 
 
 class Message(models.Model):
