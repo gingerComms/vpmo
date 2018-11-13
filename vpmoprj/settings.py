@@ -28,6 +28,13 @@ SECRET_KEY = 'k3xrb+p%cw%7r@8$el#$7hd6_zqp93-(ue(acl^jx-okpzo643'
 DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
+# Twilio IDs and Keys
+# May need to set up roles here
+TWILIO_SERVICE_INSTANCE_SID = os.environ["TWILIO_SERVICE_INSTANCE_SID"]
+TWILIO_ACCOUNT_SID = os.environ["TWILIO_ACCOUNT_SID"]
+TWILIO_API_KEY = os.environ["TWILIO_API_KEY"]
+TWILIO_SECRET_KEY = os.environ["TWILIO_SECRET_KEY"]
+
 # Setting for storing user uploads in S3
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 AWS_DEFAULT_ACL = None
