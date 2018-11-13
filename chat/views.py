@@ -24,7 +24,7 @@ class TwilioTokenView(APIView):
 
 	    account_sid = settings.TWILIO_ACCOUNT_SID
 	    api_key = settings.TWILIO_API_KEY
-	    api_secret = os.settings.TWILIO_SECRET_KEY
+	    api_secret = settings.TWILIO_SECRET_KEY
 	    chat_service_sid = settings.TWILIO_CHAT_SERVICE_SID
 
 	    # Create access token with credentials

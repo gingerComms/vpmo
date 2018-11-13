@@ -137,7 +137,7 @@ class TreeStructure(models.Model):
             Must be called after the object has been created
         """
         obj = self.get_object()
-        client = Client(settings.TWILIO_ACCOUNT_SID, settiings.TWILIO_AUTH_TOKEN)
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
         channel = client.chat.services(settings.TWILIO_CHAT_SERVICE_SID) \
                     .channels \
                     .create(unique_name=str(obj._id), friendly_name=obj.name)
