@@ -30,6 +30,7 @@ urlpatterns = [
     path(r'vpmoapp/', include('vpmotree.urls')),
     path(r'vpmoauth/', include("vpmoauth.urls")),
     path(r"vpmodoc/", include("vpmodoc.urls")),
+    path(r"chat/", include("chat.urls")),
     # Paths to allow serving the template + static files from ng's build folder
     path(r"", serve, kwargs={'path': 'index.html'}),
     re_path(r'^(?!/?static/)(?!/?media/)(?P<path>.*\..*)$',

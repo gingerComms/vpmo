@@ -30,7 +30,7 @@ ALLOWED_HOSTS = ["*"]
 
 # Twilio IDs and Keys
 # May need to set up roles here
-TWILIO_SERVICE_INSTANCE_SID = os.environ["TWILIO_SERVICE_INSTANCE_SID"]
+TWILIO_SERVICE_INSTANCE_SID = os.environ["TWILIO_CHAT_SERVICE_SID"]
 TWILIO_ACCOUNT_SID = os.environ["TWILIO_ACCOUNT_SID"]
 TWILIO_API_KEY = os.environ["TWILIO_API_KEY"]
 TWILIO_SECRET_KEY = os.environ["TWILIO_SECRET_KEY"]
@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'vpmoauth',
     'vpmotree',
     "vpmodoc",
+    "chat"
 ]
 
 """
