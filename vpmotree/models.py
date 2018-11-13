@@ -11,13 +11,14 @@ from django.db.models.signals import post_save
 from django.template.defaultfilters import slugify
 from django.apps import AppConfig
 from django.apps import apps
+from django.core.mail import send_mail
 
 from djongo import models
 from django import forms
 
 from vpmoprj.settings import AUTH_USER_MODEL
 
-from django.core.mail import send_mail
+from twilio.rest import Client
 
 # to add a field to mongodb collection after adding it to model
 # 1- connect to mongodb via shell
@@ -69,6 +70,9 @@ class TreeStructure(models.Model):
     index = models.IntegerField(default=0, null=False)
 
     node_type = models.CharField(max_length=48, default="Team")
+
+    # The twilio channel unique_name for this node
+    # channel = models.CharField(max_length=120, blank=False)
 
     # other than the Teams the rest of the nodes get created under (as a child)
     # OR at the same level of another node (sibling)
@@ -127,6 +131,18 @@ class TreeStructure(models.Model):
 
     def save(self, *args, **kwargs):
         super(TreeStructure, self).save(*args, **kwargs)
+
+    def create_channel(self):
+        """ Creates the twilio chat channel for this node
+            Must be called after the object has been created
+        """
+        obj = self.get_object()
+        client = Client(settings.TWILIO_ACCOUNT_SID, settiings.TWILIO_AUTH_TOKEN)
+        channel = client.chat.services(settings.TWILIO_CHAT_SERVICE_SID) \
+                    .channels \
+                    .create(unique_name=str(obj._id), friendly_name=obj.name)
+        # self.channel = channel.unique_name
+
 
     def __str__(self):
         return '%s - %s' % (self._id, self.node_type)
