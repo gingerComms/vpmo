@@ -60,7 +60,6 @@ INSTALLED_APPS = [
     'vpmoauth',
     'vpmotree',
     "vpmodoc",
-    'channels',
 ]
 
 """
@@ -146,7 +145,7 @@ WSGI_APPLICATION = 'vpmoprj.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-if False and DEBUG:
+if DEBUG:
     DATABASES = {
         "default": {
             "ENGINE": "djongo",
@@ -255,18 +254,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # look in the app and find a model named Account
 AUTH_USER_MODEL = 'vpmoauth.MyUser'
-
-# Pointing to the routing protocols for django-channels
-ASGI_APPLICATION = "vpmoprj.routing.application"
-
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
-        },
-    },
-}
 
 # For disabling migrations during testing
 """

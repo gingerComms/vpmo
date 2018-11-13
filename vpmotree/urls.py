@@ -36,8 +36,6 @@ urlpatterns = (
 
     url(r"^api/nodes_tree/(?P<nodeID>.+)/$", NodeTreeView.as_view(), name="node_tree_view"),
 
-    url(r'^api/messages/(?P<node_id>.+)/$', MessageListView.as_view(), name="message_list"),
-
     url(r"^api/node_permissions/(?P<node_id>.+)/$", NodePermissionsView.as_view(), name="node_permissions"),
     url(r"^api/assignable_roles/(?P<node_id>.+)/$", AssignableRolesView.as_view(), name="assignable-roles"),
 

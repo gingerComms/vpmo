@@ -278,31 +278,6 @@ class CreateDeliverableView(CreateAPIView):
     permission_classes = (IsAuthenticated,)
 
 
-class MessageListView(ListAPIView):
-    model = Message
-    serializer_class = MessageSerializer
-    permission_classes = (IsAuthenticated,)
-
-    def get_queryset(self):
-        earlier_than = self.request.query_params.get('earlier_than', None)
-        node_id = self.kwargs["node_id"]
-
-        filter_d = {}
-        try:
-            filter_d["node"] = TreeStructure.objects.get(_id=node_id)
-        except TreeStructure.DoesNotExist:
-            return None
-
-        if earlier_than is not None:
-            earlier_msg = Message.objects.get(_id=earlier_than)
-            filter_d["sent_on__lt"] = earlier_msg.sent_on
-
-        messages = Message.objects.filter(**filter_d).order_by("-sent_on")[:20]
-        messages = sorted(messages, key=lambda x: x.sent_on)
-
-        return messages
-
-
 class NodePermissionsView(APIView):
     """ Returns a list of user-role map for a particular node of given nodeType """
 

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework import fields
-from .models import Team, Project, Deliverable, TreeStructure, Message, Topic, Task
+from .models import Team, Project, Deliverable, TreeStructure, Topic, Task
 from vpmoauth.models import UserRole, MyUser
 from vpmoauth.serializers import UserDetailsSerializer
 from django.apps import apps
@@ -43,15 +43,6 @@ class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = "__all__"
-
-
-class MessageSerializer(serializers.ModelSerializer):
-    _id = ObjectIdField(read_only=True)
-    author = serializers.CharField(source="author.username", required=False)
-
-    class Meta:
-        model = Message
-        fields = ["_id", "author", "content", "sent_on"]
 
 
 class ProjectSerializer(serializers.ModelSerializer):
