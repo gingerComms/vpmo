@@ -11,6 +11,7 @@ from django.contrib.auth.models import PermissionsMixin, Group
 from vpmoauth.managers import MyUserManager
 from vpmoauth.role_permissions_map import ROLES_MAP
 from vpmotree.models import Team
+from twilio.rest import Client
 
 
 class UserRolePermission(models.Model):
@@ -103,6 +104,38 @@ class MyUser(AbstractBaseUser):
         """ Arbitrary method used in the UserDeserializer for email validation """
         return "Email field for validation of email"
 
+    def remove_from_channel(self, channel):
+        """ Removes this user from the given channel """
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+        members = client.chat.services(settings.TWILIO_CHAT_SERVICE_SID) \
+                     .channels(channel) \
+                     .members \
+                     .list()
+        # The username is the identity for the user in a channel
+        if self.username in [member.identity for member in members]:
+            client.chat.services(settings.TWILIO_CHAT_SERVICE_SID) \
+                .channels(channel) \
+                .members(self.username) \
+                .delete()
+        return True
+
+    def add_to_channel(self, channel):
+        """ Adds the user to the given channel """
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+        # Checking if member isn't already in members
+        members = client.chat.services(settings.TWILIO_CHAT_SERVICE_SID) \
+                     .channels(channel) \
+                     .members \
+                     .list()
+        is self.username in [member.identity for member in members]:
+            return True
+        member = client.chat.services(settings.TWILIO_CHAT_SERVICE_SID) \
+                    .channels(channel) \
+                    .members \
+                    .create(identity=self.username)
+        return member
+
+
     def assign_role(self, role, node):
         assert role in ROLES_MAP.keys()
 
@@ -116,6 +149,13 @@ class MyUser(AbstractBaseUser):
 
         # Getting the permissions belonging to each orle
         permissions = ROLES_MAP[role]
+
+        # Removing/adding the user to the channel for this node based on the new role
+        if "update_{}".format(node.node_type.lower()) not in permissions:
+            self.remove_from_channel(node._id)
+        else:
+            member = self.add_to_channel(node._id)
+
         # Getting the permissions from the database
         permissions = UserRolePermission.objects.filter(name__in=permissions)
 
