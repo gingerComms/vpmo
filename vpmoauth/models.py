@@ -174,6 +174,8 @@ class MyUser(AbstractBaseUser):
 
     def remove_role(self, node):
         """ Removes the provided role from the current user for the node """
+        # Removing from node channel
+        self.remove_from_channel(str(node._id))
         # All the roles the user has for the node and the children of this node
         to_remove = UserRole.objects.filter(Q(node__path__contains=node._id) | Q(node___id=node._id), user=self)
         deleted = to_remove.delete()
