@@ -127,7 +127,7 @@ class MyUser(AbstractBaseUser):
                      .channels(channel) \
                      .members \
                      .list()
-        is self.username in [member.identity for member in members]:
+        if self.username in [member.identity for member in members]:
             return True
         member = client.chat.services(settings.TWILIO_CHAT_SERVICE_SID) \
                     .channels(channel) \
