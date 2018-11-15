@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework import fields
-from .models import Team, Project, Deliverable, TreeStructure, Topic, Task
+from .models import Team, Project, Deliverable, TreeStructure, Topic, Task, Issue
 from vpmoauth.models import UserRole, MyUser
 from vpmoauth.serializers import UserDetailsSerializer
 from django.apps import apps
@@ -77,6 +77,31 @@ class DeliverableSerializer(serializers.ModelSerializer):
         model = Deliverable
         fields = ["_id", "name", "node_type", "path", "index", "due_date", "content"]
 
+
+class IssueSerializer(serializers.ModelSerializer):
+    _id = ObjectIdField(read_only=True)
+    due_date = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d %H:%M:%S"], allow_null=True, required=False)
+    assignee = UserDetailsSerializer(required=False)
+
+    def get_assignee_name(self, instance):
+        try:
+            return instance.assignee.fullname
+        except:
+            return None
+
+    def validate(self, data):
+        # Getting the assignee from the initial data passed into serializer
+        assignee_id = self.initial_data.get("assignee_id", None)
+        # Validating the rest of the fields
+        data = super(IssueSerializer, self).validate(data)
+        # Setting the foreign key
+        if assignee_id:
+            data["assignee"] = MyUser.objects.get(_id=assignee_id)
+        return data
+
+    class Meta:
+        model = Issue
+        fields = ["_id", "name", "node_type", "path", "index", "due_date", "content", "severity", "assignee"]
 
 # class ProjectTreeSerializer(serializers.ModelSerializer):
 #     _id = serializers.SerializerMethodField(required=False)
@@ -181,3 +206,29 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
             children.append(branch)
 
         return children
+
+
+class NodeParentsSerializer(serializers.Serializer):
+    _id = ObjectIdField(read_only=True)
+    node = serializers.SerializerMethodField()
+    immediate_parent = serializers.SerializerMethodField()
+    root = serializers.SerializerMethodField()
+
+    def get_node(self, instance):
+        return MinimalNodeSerialiizer(instance).data
+
+    def get_immediate_parent(self, instance):
+        if instance.path is None:
+            return None
+        split_path = list(filter(lambda x: x.strip(), instance.path.split(',')))
+        if len(split_path) <= 2:
+            return None
+        parent = TreeStructure.objects.get(_id=split_path[-1])
+        return MinimalNodeSerialiizer(parent).data
+
+    def get_root(self, instance):
+        if instance.path is None:
+            return MinimalNodeSerialiizer(instance).data
+        split_path = list(filter(lambda x: x.strip(), instance.path.split(',')))
+        parent = TreeStructure.objects.get(_id=split_path[0])
+        return MinimalNodeSerialiizer(parent).data

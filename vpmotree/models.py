@@ -206,6 +206,11 @@ class Topic(TreeStructure):
         can not have ANY children, and is always parented by a BRANCH Level element (Project)
     """
 
+    topic_classes = [
+        "Deliverable",
+        "Issue",
+    ]
+
     name = models.CharField(max_length=150, null=False, unique=False)
     content = models.TextField(blank=True, null=True)
     def __str__(self):

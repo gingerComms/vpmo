@@ -21,7 +21,7 @@ urlpatterns = (
     url(r'^api/projects/$', AllProjectsView.as_view(), name="all_projects"),
     url(r'^api/projects/add/$', CreateProjectView.as_view()),
     url(r'^api/teams/add/$', CreateTeamView.as_view(), name="create_team"),
-    url(r'^api/deliverable/add/$', CreateDeliverableView.as_view()),
+
 
     # Generic Views to create/update/retrieve any node that falls under the treestructure
     path("api/create_node/<str:nodeType>/", CreateNodeView.as_view(), name="create_node"),

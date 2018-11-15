@@ -138,7 +138,8 @@ class CreateNodeView(CreateAPIView):
         """ Returns the serializer responsible for creating the current node """
         mapped_classes = {
             "Project": ProjectSerializer,
-            "Deliverable": DeliverableSerializer
+            "Deliverable": DeliverableSerializer,
+            "Issue": IssueSerializer
         }
         return mapped_classes[self.kwargs["nodeType"]]
 
@@ -173,7 +174,8 @@ class RetrieveUpdateNodeView(RetrieveUpdateAPIView):
         mapped_classes = {
             "Project": ProjectSerializer,
             "Deliverable": DeliverableSerializer,
-            "Team": TeamSerializer
+            "Team": TeamSerializer,
+            "Issue": IssueSerializer,
         }
 
         model = self.get_model()
@@ -191,6 +193,13 @@ class RetrieveUpdateNodeView(RetrieveUpdateAPIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def get_object(self):
+        """ Returns the team object from the url id arg """
+        try:
+            project = Project.objects.get(_id=self.kwargs.get("_id", None))
+            return project
+        except Project.DoesNotExist:
+            return None
 
 class NodeTreeView(RetrieveUpdateAPIView):
     model = TreeStructure
@@ -278,6 +287,12 @@ class NodeTreeView(RetrieveUpdateAPIView):
 class CreateDeliverableView(CreateAPIView):
     model = Deliverable
     serializer_class = DeliverableSerializer
+    permission_classes = (IsAuthenticated,)
+
+
+class CreateIssueView(CreateAPIView):
+    model = Issue
+    serializer_class = IssueSerializer
     permission_classes = (IsAuthenticated,)
 
 
