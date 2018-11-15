@@ -84,6 +84,7 @@ class AllTeamsView(ListAPIView):
 
 
 class CreateProjectView(CreateAPIView):
+    """ LEGACY VIEW - MAY BE REMOVED """
     model = Project
     serializer_class = ProjectSerializer
     permission_classes = (IsAuthenticated, CreatePermissions,)
@@ -122,6 +123,7 @@ class CreateTeamView(CreateAPIView):
         serializer = TeamSerializer(data=data)
         if serializer.is_valid():
             team = serializer.save()
+            team.create_channel()
             request.user.save()
             request.user.assign_role("team_admin", team)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -149,6 +151,7 @@ class CreateNodeView(CreateAPIView):
         serializer = self.get_serializer_class()(data=data)
         if serializer.is_valid():
             node = serializer.save()
+            node.create_channel()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

@@ -104,6 +104,17 @@ class MyUser(AbstractBaseUser):
         """ Arbitrary method used in the UserDeserializer for email validation """
         return "Email field for validation of email"
 
+    def get_user_channels(self):
+        """ Returns a list of channel objects assigned to this user """
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+        # This internally does a filter of channels that contain this user's username in it's members list
+        channels = client.chat \
+          .services(settings.TWILIO_CHAT_SERVICE_SID) \
+          .users(self.username) \
+          .user_channels \
+          .list()
+        return channels
+
     def remove_from_channel(self, channel):
         """ Removes this user from the given channel """
         client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)

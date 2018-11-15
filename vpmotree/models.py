@@ -141,7 +141,14 @@ class TreeStructure(models.Model):
         channel = client.chat.services(settings.TWILIO_CHAT_SERVICE_SID) \
                     .channels \
                     .create(unique_name=str(obj._id), friendly_name=obj.name)
-        # self.channel = channel.unique_name
+
+
+    def delete_channel(self):
+        """ Deletes the channel related to this node """
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+        channel = client.chat.services(settings.TWILIO_CHAT_SERVICE_SID) \
+                    .channels(str(self._id)) \
+                    .delete()
 
 
     def __str__(self):

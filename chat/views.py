@@ -5,6 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from chat.serializers import *
+
 from twilio.rest import Client
 from twilio.jwt.access_token import AccessToken
 from twilio.jwt.access_token.grants import (
@@ -40,3 +42,11 @@ class TwilioTokenView(APIView):
 	    	"identity": identity,
 	    	"token": token.to_jwt().decode('utf-8')
 	    })
+
+
+class UserChannelsListView(generics.ListAPIView):
+	serializer_class = ChannelSerializer
+	permission_classes = (IsAuthenticated,)
+
+	def get_queryset(self):
+		return self.request.user.get_user_channels()
