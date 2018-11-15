@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from rest_framework import fields
-from .models import Team, Project, Deliverable, TreeStructure, Message, Topic, Task
+from .models import Team, Project, Deliverable, TreeStructure, Message, Topic, Task, Issue
 from vpmoauth.models import UserRole, MyUser
+from vpmoauth.serializers import UserDetailsSerializer
 from django.apps import apps
 from django.db.models import Q
 from rest_framework.fields import CurrentUserDefault
@@ -19,7 +20,25 @@ class TaskSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
     node = RelatedObjectIdField(queryset=TreeStructure.objects.all())
     created_by = RelatedObjectIdField(queryset=MyUser.objects.all())
-    assignee = RelatedObjectIdField(queryset=MyUser.objects.all())
+    assignee = UserDetailsSerializer(required=False)
+    due_date = serializers.DateField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d"], allow_null=True, required=False)
+
+    def get_assignee_name(self, instance):
+        try:
+            return instance.assignee.fullname
+        except:
+            return None
+
+    def validate(self, data):
+        # Getting the assignee from the initial data passed into serializer
+        assignee_id = self.initial_data.get("assignee_id", None)
+        # Validating the rest of the fields
+        data = super(TaskSerializer, self).validate(data)
+        # Setting the foreign key
+        if assignee_id:
+            data["assignee"] = MyUser.objects.get(_id=assignee_id)
+
+        return data
 
     class Meta:
         model = Task
@@ -65,7 +84,34 @@ class DeliverableSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Deliverable
-        fields = ["_id", "name", "node_type", "path", "index", "due_date"]
+        fields = ["_id", "name", "node_type", "path", "index", "due_date", "content"]
+
+
+class IssueSerializer(serializers.ModelSerializer):
+    _id = ObjectIdField(read_only=True)
+    due_date = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d %H:%M:%S"], allow_null=True, required=False)
+    assignee = UserDetailsSerializer(required=False)
+
+    def get_assignee_name(self, instance):
+        try:
+            return instance.assignee.fullname
+        except:
+            return None
+
+    def validate(self, data):
+        # Getting the assignee from the initial data passed into serializer
+        assignee_id = self.initial_data.get("assignee_id", None)
+        # Validating the rest of the fields
+        data = super(IssueSerializer, self).validate(data)
+        # Setting the foreign key
+        if assignee_id:
+            data["assignee"] = MyUser.objects.get(_id=assignee_id)
+
+        return data
+
+    class Meta:
+        model = Issue
+        fields = ["_id", "name", "node_type", "path", "index", "due_date", "content", "severity", "assignee"]
 
 
 # class ProjectTreeSerializer(serializers.ModelSerializer):
@@ -93,13 +139,12 @@ class DeliverableSerializer(serializers.ModelSerializer):
 class MinimalNodeSerialiizer(serializers.Serializer):
     _id = ObjectIdField(read_only=True)
     name = serializers.SerializerMethodField()
+    node_type = serializers.CharField(max_length=120)
 
     def get_name(self, instance):
-        model = instance.get_model()
-
-        node = model.objects.get(_id=instance._id)
-
-        return node.name
+        if instance._meta.model == TreeStructure:
+            return instance.get_object().name
+        return instance.name
 
 
 class TreeStructureWithoutChildrenSerializer(serializers.Serializer):
@@ -110,11 +155,9 @@ class TreeStructureWithoutChildrenSerializer(serializers.Serializer):
     name = serializers.SerializerMethodField()
 
     def get_name(self, instance):
-        model = instance.get_model()
-
-        node = model.objects.get(_id=instance._id)
-
-        return node.name
+        if instance._meta.model == TreeStructure:
+            return instance.get_object().name
+        return instance.name
 
 class TreeStructureWithChildrenSerializer(serializers.Serializer):
     _id = ObjectIdField(read_only=True)
@@ -125,13 +168,9 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
     node_type = serializers.CharField(max_length=48)
 
     def get_name(self, instance):
-        model = instance.get_model()
-
-        print(instance, model)
-
-        node = model.objects.get(_id=instance._id)
-
-        return node.name
+        if instance._meta.model == TreeStructure:
+            return instance.get_object().name
+        return instance.name
 
     def get_branch_extensions(self, branch, branch_level):
         """ Takes a branch as input and starts the loop for either the next branches (if they exist) or the leaves """

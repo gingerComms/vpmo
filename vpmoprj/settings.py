@@ -25,7 +25,7 @@ NG_BUILD_DIR = os.path.join(BASE_DIR, "dist")
 SECRET_KEY = 'k3xrb+p%cw%7r@8$el#$7hd6_zqp93-(ue(acl^jx-okpzo643'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
 # Setting for storing user uploads in S3
@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     'vpmoauth',
     'vpmotree',
     "vpmodoc",
-    'guardian',
     'channels',
 ]
 
@@ -68,7 +67,6 @@ MIGRATION_MODULES = {
 AUTHENTICATION_BACKENDS = (
     'vpmoauth.auth_backend.AuthBackend', # this is default from vpmo
     'django.contrib.auth.backends.ModelBackend', # The default
-    'guardian.backends.ObjectPermissionBackend',
 )
 
 
@@ -141,11 +139,11 @@ WSGI_APPLICATION = 'vpmoprj.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-if False or DEBUG:
+if False and DEBUG:
     DATABASES = {
         "default": {
             "ENGINE": "djongo",
-            "NAME": "test-example-24",
+            "NAME": "test-example-25",
             "host": "localhost",
             "port": 27017
         }
@@ -262,3 +260,24 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+# For disabling migrations during testing
+"""
+import sys
+
+TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
+if TESTING:
+    print('=========================')
+    print('In TEST Mode - Disableling Migrations')
+    print('=========================')
+
+    class DisableMigrations(object):
+
+        def __contains__(self, item):
+            return True
+
+        def __getitem__(self, item):
+            return "notmigrations"
+
+    MIGRATION_MODULES = DisableMigrations()
+"""

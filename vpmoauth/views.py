@@ -9,15 +9,13 @@ from vpmoauth.permissions import AssignRolesPermission, RemoveRolesPermission
 from vpmoauth.models import MyUser, UserRolePermission, UserRole
 from vpmoauth.serializers import *
 
-from rest_framework import generics, permissions, mixins, status
+from rest_framework import generics, permissions, mixins, status, filters
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework_jwt.settings import api_settings
 from rest_framework import status
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView, get_object_or_404
-
-from guardian import shortcuts
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
@@ -31,13 +29,15 @@ class AssignableUsersListView(generics.ListAPIView):
     """ Returns a list of users that can be assigned a role for a given node """
     serializer_class = UserDetailsSerializer
     permission_classes = (permissions.IsAuthenticated,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ("username","email","fullname")
 
     def get_queryset(self):
-        model = apps.get_model("vpmotree", self.request.query_params["nodeType"])
         # Fetching the node
         try:
-            node = model.objects.get(_id=self.kwargs["node_id"])
-        except model.DoesNotExist:
+            node = TreeStructure.objects.get(_id=self.kwargs["node_id"])
+            node = node.get_object()
+        except TreeStructure.DoesNotExist:
             return []
 
         existing_users = UserRole.get_user_ids_with_perms(node)
@@ -60,9 +60,9 @@ class AssignRoleView(APIView):
     permission_classes = (permissions.IsAuthenticated, AssignRolesPermission,)
 
     def get_object(self):
-        node = apps.get_model("vpmotree", self.request.data["nodeType"])
         try:
-            obj = node.objects.get(_id=self.request.data["nodeID"])
+            obj = TreeStructure.objects.get(_id=self.request.data["nodeID"])
+            obj = obj.get_object()
         except node.DoesNotExist:
             return None
 
@@ -78,7 +78,7 @@ class AssignRoleView(APIView):
         # Reading data from the request
         role = request.data.get("role")
         try:
-            target_user = MyUser.objects.get(_id=request.data["userID"])
+            target_user = MyUser.objects.get(username=request.data["user"])
         except MyUser.DoesNotExist:
             return Response({"message": "Target User does not exist"}, status=status.HTTP_404_NOT_FOUND)
         node = self.get_object()
@@ -98,10 +98,10 @@ class UserNodePermissionsView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, node_id):
-        model = apps.get_model('vpmotree', request.query_params["nodeType"])
         try:
-            node = model.objects.get(_id=node_id)
-        except model.DoesNotExist:
+            node = TreeStructure.objects.get(_id=node_id)
+            node = node.get_object()
+        except TreeStructure.DoesNotExist:
             return Response({"message": "Tree structure not found."}, status=status.HTTP_404_NOT_FOUND)
 
         permissions = request.user.get_permissions(node)
@@ -120,10 +120,10 @@ class RemoveUserRoleView(generics.DestroyAPIView):
     permission_classes = (permissions.IsAuthenticated, RemoveRolesPermission)
 
     def get_object(self):
-        model = apps.get_model("vpmotree", self.request.query_params["nodeType"])
         try:
-            node = model.objects.get(_id=self.kwargs["node_id"])
-        except model.DoesNotExist:
+            node = TreeStructure.objects.get(_id=self.kwargs["node_id"])
+            node = node.get_object()
+        except TreeStructure.DoesNotExist:
             return None
 
         perms = self.check_object_permissions(self.request, node)

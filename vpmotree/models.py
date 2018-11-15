@@ -9,7 +9,6 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.template.defaultfilters import slugify
-from guardian import shortcuts
 from django.apps import AppConfig
 from django.apps import apps
 
@@ -19,8 +18,6 @@ from django import forms
 from vpmoprj.settings import AUTH_USER_MODEL
 
 from django.core.mail import send_mail
-import guardian.mixins
-from guardian import shortcuts
 
 # to add a field to mongodb collection after adding it to model
 # 1- connect to mongodb via shell
@@ -108,19 +105,24 @@ class TreeStructure(models.Model):
         return parent
 
 
-    def get_model(self):
+    def get_model_class(self):
         # Return the Node Type if it isn't set to topic
         if self.node_type != "Topic":
             return apps.get_model("vpmotree", self.node_type)
         # Otherwise, try to find each topic attr
         else:
-            topic_types = ["deliverable"]
+            topic_types = ["deliverable", "issue"]
             for topic_type in topic_types:
                 try:
                     return getattr(self, topic_type)._meta.model
-                except:
+                except Exception as e:
                     continue
         return
+
+    def get_object(self):
+        """ Returns the particular model instance for this treeStructure node """
+        model = self.get_model_class()
+        return model.objects.get(_id=self._id)
 
 
     def save(self, *args, **kwargs):
@@ -175,24 +177,18 @@ class Project(TreeStructure):
         self.node_type = "Project"
         super(Project, self).save(*args, **kwargs)
 
-    def get_users_with_role(self, role):
-        # Returns users that have any perms for the object
-        user_perms = shortcuts.get_users_with_perms(self, with_superusers=False, attach_perms=True)
-        # Filtering those users to only the ones that have permissions from role_map
-        return filter(lambda x: user_perms[x] == self.ROLE_MAP[role][self.node_type], user_perms)
-
 
 class Topic(TreeStructure):
     """ A Topic is a LEAF level element in a TreeStructure;
         can not have ANY children, and is always parented by a BRANCH Level element (Project)
     """
     topic_classes = [
-        "Deliverable"
+        "Deliverable",
+        "Issue",
     ]
 
     name = models.CharField(max_length=150, null=False, unique=False)
     content = models.TextField(blank=True, null=True)
-
     def __str__(self):
         return "{name} - {type}".format(name=self.name, type=type(self).__name__)
 
@@ -206,6 +202,22 @@ class Deliverable(Topic):
     def save(self, *args, **kwargs):
         self.node_type = "Topic"
         super(Deliverable, self).save(*args, **kwargs)
+
+
+class Issue(Topic):
+    SEVERITY_CHOICES = [
+        ('1', 'Low',),
+        ('2', 'Medium',),
+        ('3', "High",)
+    ]
+    due_date = models.DateTimeField(auto_now=False, auto_now_add=False)
+    assignee = models.ForeignKey("vpmoauth.MyUser", on_delete=models.CASCADE)
+    severity = models.CharField(max_length=1, choices=SEVERITY_CHOICES, blank=False, default='1')
+
+    def save(self, *args, **kwargs):
+        self.node_type = "Topic"
+        super(Issue, self).save(*args, **kwargs)
+
 
 
 class Message(models.Model):

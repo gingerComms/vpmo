@@ -2,7 +2,6 @@
 
 from django.db import migrations, models
 import djongo.models.fields
-import guardian.mixins
 
 
 class Migration(migrations.Migration):
@@ -32,7 +31,6 @@ class Migration(migrations.Migration):
             ],
             options={
                 'abstract': False,
-            },
-            bases=(models.Model, guardian.mixins.GuardianUserMixin),
+            }
         ),
     ]

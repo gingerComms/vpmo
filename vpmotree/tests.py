@@ -4,7 +4,6 @@ from vpmoauth.models import MyUser
 import test_addons
 from vpmotree import views
 from django.shortcuts import reverse
-from guardian.shortcuts import assign_perm
 from rest_framework.test import APIRequestFactory, force_authenticate
 import os, json
 import binascii
@@ -30,20 +29,9 @@ class TeamTestCase(TestCase):
         self.user = MyUser.objects.create(**user_creds)
         
         logged_in = self.client.force_login(self.user, backend="vpmoauth.auth_backend.AuthBackend")
-        print("Logged In ", logged_in)
 
     def tearDown(self):
         self.user.delete()
-
-    def test_team_create(self):
-        """ Tests the create team view """
-        url = reverse("vpmotree:create_team")
-        data = {
-            "name": "Test Team"
-        }
-        r = self.client.post(url, data)
-
-        self.assertEqual(r.status_code, 201)
 
     """ - NEEDS TO BE REWRITTEN
     def test_filtered_team_view(self):
@@ -62,7 +50,9 @@ class TeamTestCase(TestCase):
 
 
 class TreeStructureTestCase(TestCase):
-    """ Tests the TeamTreeView for correct inherit structures """
+    """ Tests the TeamTreeView for correct inherit structures
+        NOTE - NEEDS TO BE REWRITTEN
+    """
     client = Client()
 
     def setUp(self):
@@ -110,12 +100,19 @@ class TreeStructureTestCase(TestCase):
         proj_r = self.client.get(proj_url)
         topic_r = self.client.get(topic_url)
 
+        # Asserting that the requests went through without exception
         self.assertEqual(team_r.status_code, 200)
         self.assertEqual(proj_r.status_code, 200)
         self.assertEqual(topic_r.status_code, 200)
 
+        # Asserting that the returned response had all required nodes
+        self.assertEqual(len(team_r.json()), 1)
+        self.assertEqual(len(proj_r.json()), 2)
+        self.assertEqual(len(topic_r.json()), 3)
+
+
+    """ Needs to be rewritten with nodes-tree-view
     def test_tree_structure_get(self):
-        """ Makes the necessary requests and asserts to test the GET TeamTreeView """
         url = reverse("vpmotree:team_tree_view", kwargs={"team_id": str(self.team._id)})
         # GET on url to get the current tree structure
         response = self.client.get(url).json()
@@ -125,7 +122,6 @@ class TreeStructureTestCase(TestCase):
 
 
     def test_tree_structure_put(self):
-        """ Makes the necessary requests and asserts to test the POST TeamTreeView """
         url = reverse("vpmotree:team_tree_view", kwargs={"team_id": str(self.team._id)})
         # GET on url to get the current tree structure
         first_response = self.client.get(url).json()
@@ -146,9 +142,10 @@ class TreeStructureTestCase(TestCase):
         self.assertTrue(second_response["children"], msg="PUT response does not have any children")
         if second_response["children"]:
         	self.assertTrue(second_response["children"][0]["children"], msg="LEAF Level children not present in PUT response")
+    """
 
 
-class NodeUpdateTestCase(TestCase):
+class NodeRetrieveUpdateTestCase(TestCase):
     """ TestCase for testing the Node RetreiveUpdateView """
     client = Client()
 
@@ -165,23 +162,29 @@ class NodeUpdateTestCase(TestCase):
 
         logged_in = self.client.force_login(self.user, backend="vpmoauth.auth_backend.AuthBackend")
 
+        self.url = reverse("vpmotree:node_retrieve_update", kwargs={"nodeID": str(self.project._id)})
+
 
     def test_update(self):
-        url = reverse("vpmotree:update_node", kwargs={"nodeID": str(self.project._id), "nodeType": "Project"})
-
         data = {
             "content": "Hello there!"
         }
 
-        response = self.client.patch(url, json.dumps(data), content_type='application/json').json()
-
-        print(response)
+        response = self.client.patch(self.url, json.dumps(data), content_type='application/json').json()
 
         self.assertEqual(response["content"], "Hello there!")
 
 
+    def test_retrieve(self):
+        r = self.client.get(self.url)
+
+        self.assertEqual(r.status_code, 200)
+
+
 class NodePermissionsViewTestCase(TestCase):
-    """ Test for the nodepermissions retrieve api view """
+    """ Test for the nodepermissions retrieve api view
+        NOTE - Currently using guardian - needs to be modified to use UserRolePermissions instead
+    """
     client = Client()
 
     def setUp(self):
@@ -197,6 +200,7 @@ class NodePermissionsViewTestCase(TestCase):
         self.project = Project(name="Test Proj", project_owner=self.user)
         self.project.save()
 
+        # TODO: Needs to be rewritten
         assign_perm("read_obj", self.user, self.project)
 
         logged_in = self.client.force_login(self.user, backend="vpmoauth.auth_backend.AuthBackend")
@@ -283,6 +287,12 @@ class NodeCreationTestCase(TestCase):
         }
         self.user = MyUser.objects.create(**user_creds)
 
+        self.team = Team(name="Test Team", user_team="Blah")
+        self.team.save()
+
+        self.user.assign_role("team_admin", self.team)
+        self.user.save()
+
         self.client.force_login(self.user)
 
     def test_project_creation(self):
@@ -291,8 +301,11 @@ class NodeCreationTestCase(TestCase):
         data = {
             "name": "TestProj",
             "description": "Rand",
-            "start": "2018-10-07"
+            "start": "2018-10-07",
+            "parentID": str(self.team._id)
         }
+
+        print(data)
 
         r = self.client.post(url, data)
 
@@ -331,28 +344,27 @@ class TaskTestCase(TestCase):
     def test_task_assignee_update(self):
         self.test_task_create()
 
-        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project"
+        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project&nodeID="+str(self.project._id)
 
         data = {
-            "node": str(self.project._id),
             "assignee": str(self.project_admin.username),
-            "task": str(self.task["_id"])
+            "_id": str(self.task["_id"])
         }
 
         r = self.client.put(url, json.dumps(data), content_type='application/json')
         
-        self.assertEqual(str(r.json()["assignee"]), str(self.project_admin._id))
+        self.assertEqual(str(r.json()["assignee"]["_id"]), str(self.project_admin._id))
         self.assertEqual(r.status_code, 200)
 
     def test_task_create(self):
         """ Tests the task creation POST endpoint """
-        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project"
+        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project&nodeID="+str(self.project._id)
 
         data = {
-            "node": self.project._id,
             "title": "Test Task",
             "status": "NEW",
-            "due_date": "2018-10-07T18:30:00.000Z"
+            "due_date": "2018-10-07T18:30:00.000Z",
+            "node": str(self.project._id)
         }
 
         r = self.client.post(url, data)
@@ -385,13 +397,12 @@ class TaskTestCase(TestCase):
 
     def test_task_status_update(self):
         """ Tests updating of the task status by the assignee """
-        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project"
+        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project&nodeID="+str(self.project._id)
         self.test_task_create()
 
         data = {
-            "task": str(self.task["_id"]),
-            "status": "COMPLETE",
-            "node": str(self.project._id)
+            "_id": str(self.task["_id"]),
+            "status": "COMPLETE"
         }
 
         r = self.client.patch(url, json.dumps(data), content_type='application/json')
@@ -401,12 +412,11 @@ class TaskTestCase(TestCase):
 
     def test_task_delete(self):
         """ Tests deletion of tasks """
-        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project"
+        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project&nodeID="+str(self.project._id)
         self.test_task_create()
 
         data = {
-            "task": str(self.task["_id"]),
-            "node": str(self.project._id)
+            "_id": str(self.task["_id"]),
         }
 
         r = self.client.delete(url, json.dumps(data), content_type='application/json')

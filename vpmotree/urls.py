@@ -19,37 +19,23 @@ router = routers.DefaultRouter()
 urlpatterns = (
     # Team related URLs
     url(r'^api/organisations/$', AllTeamsView.as_view()),
-    url(r'^api/filtered_organisations/$', FilteredTeamsView.as_view(), name="filtered_teams"),
-    url(r'^api/teams/add/$', CreateTeamView.as_view()),
-    url(r"^api/teams_tree/(?P<team_id>.+)/$", TeamTreeView.as_view(), name="team_tree_view"),
-
-    # Project related URLs
     url(r'^api/projects/$', AllProjectsView.as_view(), name="all_projects"),
     url(r'^api/projects/add/$', CreateProjectView.as_view()),
     url(r'^api/teams/add/$', CreateTeamView.as_view(), name="create_team"),
-    url(r"^api/update_project/(?P<_id>.+)/$", UpdateProjectView.as_view(), name="update_project"),
-    url(r"^api/project_tree/(?P<project_id>.+)/$", ProjectTreeView.as_view(), name="project_tree_view"),
-    # url(r'^api/projects/(?P<Project_id>.+)/$', UpdateProjectView.as_view()),
-
-    # Deliverable related URLs
     url(r'^api/deliverable/add/$', CreateDeliverableView.as_view()),
 
-    # Generic View to create any node that falls under the treestructure
+    # Generic Views to create/update/retrieve any node that falls under the treestructure
     path("api/create_node/<str:nodeType>/", CreateNodeView.as_view(), name="create_node"),
-    path("api/update_node/<str:nodeType>/<str:nodeID>/", UpdateNodeView.as_view(), name="update_node"),
-
-    url(r"^api/update_deliverable/(?P<_id>.+)/$", UpdateDeliverableView.as_view(), name="update_deliverable"),
+    path("api/node/<str:nodeID>/", RetrieveUpdateNodeView.as_view(), name="node_retrieve_update"),
 
     # Takes two querys parametrs - nodeType + parentNodeID and returns all nodes under those based on permissions
-    url(r'^api/nodes/$', AllNodesView.as_view(), name="all_nodes"),
+    url(r'^api/nodes/$', AllNodesListView.as_view(), name="all_nodes"),
 
     # Takes node id and returns team and project (if applicable) as parents
-    path(r'api/node_parents/<str:nodeID>/', NodeParents.as_view(), name="node_parents"),
+    path(r'api/node_parents/<str:nodeID>/', NodeParentsListView.as_view(), name="node_parents"),
+    
 
-    # url(r"^api/nodes_details/(?P<nodeID>.+)/$", NodeDetailsView.as_view(), name="node_details_view"),
     url(r"^api/nodes_tree/(?P<nodeID>.+)/$", NodeTreeView.as_view(), name="node_tree_view"),
-    url(r"^api/project_tree/(?P<project_id>.+)/$", ProjectTreeView.as_view(), name="project_tree_view"),
-
 
     url(r'^api/messages/(?P<node_id>.+)/$', MessageListView.as_view(), name="message_list"),
 

@@ -1,6 +1,5 @@
 from rest_framework import permissions
 from django.apps import apps
-from guardian import shortcuts
 from vpmotree.models import TreeStructure
 
 
@@ -96,13 +95,13 @@ class TeamPermissions(permissions.BasePermission):
 
 class TaskListCreateAssignPermission(permissions.BasePermission):
     def has_permission(self, request, view):
-        node = request.data["node"]
-        model = apps.get_model("vpmotree", request.query_params["nodeType"])
-        node = model.objects.get(_id=node)
+        node = request.query_params["nodeID"]
+        node = TreeStructure.objects.get(_id=node)
+        node = node.get_object()
 
         perms = request.user.get_permissions(node)
 
-        if "update_{}".format(request.query_params["nodeType"].lower()) in perms:
+        if "update_{}".format(node.node_type.lower()) in perms:
             return True
 
         return False
