@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework import fields
-from .models import Team, Project, Deliverable, TreeStructure, Message, Topic, Task
+from .models import Team, Project, Deliverable, TreeStructure, Message, Topic, Task, Issue
 from vpmoauth.models import UserRole, MyUser
 from vpmoauth.serializers import UserDetailsSerializer
 from django.apps import apps
@@ -85,6 +85,33 @@ class DeliverableSerializer(serializers.ModelSerializer):
     class Meta:
         model = Deliverable
         fields = ["_id", "name", "node_type", "path", "index", "due_date", "content"]
+
+
+class IssueSerializer(serializers.ModelSerializer):
+    _id = ObjectIdField(read_only=True)
+    due_date = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d %H:%M:%S"], allow_null=True, required=False)
+    assignee = UserDetailsSerializer(required=False)
+
+    def get_assignee_name(self, instance):
+        try:
+            return instance.assignee.fullname
+        except:
+            return None
+
+    def validate(self, data):
+        # Getting the assignee from the initial data passed into serializer
+        assignee_id = self.initial_data.get("assignee_id", None)
+        # Validating the rest of the fields
+        data = super(IssueSerializer, self).validate(data)
+        # Setting the foreign key
+        if assignee_id:
+            data["assignee"] = MyUser.objects.get(_id=assignee_id)
+
+        return data
+
+    class Meta:
+        model = Issue
+        fields = ["_id", "name", "node_type", "path", "index", "due_date", "content", "severity", "assignee"]
 
 
 # class ProjectTreeSerializer(serializers.ModelSerializer):

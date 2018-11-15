@@ -136,7 +136,8 @@ class CreateNodeView(CreateAPIView):
         """ Returns the serializer responsible for creating the current node """
         mapped_classes = {
             "Project": ProjectSerializer,
-            "Deliverable": DeliverableSerializer
+            "Deliverable": DeliverableSerializer,
+            "Issue": IssueSerializer
         }
         return mapped_classes[self.kwargs["nodeType"]]
 
@@ -170,7 +171,8 @@ class RetrieveUpdateNodeView(RetrieveUpdateAPIView):
         mapped_classes = {
             "Project": ProjectSerializer,
             "Deliverable": DeliverableSerializer,
-            "Team": TeamSerializer
+            "Team": TeamSerializer,
+            "Issue": IssueSerializer,
         }
 
         model = self.get_model()
@@ -275,6 +277,12 @@ class NodeTreeView(RetrieveUpdateAPIView):
 class CreateDeliverableView(CreateAPIView):
     model = Deliverable
     serializer_class = DeliverableSerializer
+    permission_classes = (IsAuthenticated,)
+
+
+class CreateIssueView(CreateAPIView):
+    model = Issue
+    serializer_class = IssueSerializer
     permission_classes = (IsAuthenticated,)
 
 
