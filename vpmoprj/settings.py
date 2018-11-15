@@ -25,7 +25,7 @@ NG_BUILD_DIR = os.path.join(BASE_DIR, "dist")
 SECRET_KEY = 'k3xrb+p%cw%7r@8$el#$7hd6_zqp93-(ue(acl^jx-okpzo643'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ["*"]
 
 # Setting for storing user uploads in S3
@@ -141,11 +141,11 @@ WSGI_APPLICATION = 'vpmoprj.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-if False and DEBUG:
+if False or DEBUG:
     DATABASES = {
         "default": {
             "ENGINE": "djongo",
-            "NAME": "test-example-23",
+            "NAME": "test-example-24",
             "host": "localhost",
             "port": 27017
         }

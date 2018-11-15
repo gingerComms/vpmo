@@ -38,6 +38,7 @@ class MessageSerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
     project_owner = serializers.SerializerMethodField(required=False)
+    start = serializers.DateField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d"], allow_null=True, required=False)
 
     def get_project_owner(self, instance):
         if instance.project_owner:
@@ -60,10 +61,11 @@ class TeamSerializer(serializers.ModelSerializer):
 
 class DeliverableSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
-    
+    due_date = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d %H:%M:%S"], allow_null=True, required=False)
+
     class Meta:
         model = Deliverable
-        fields = ["_id", "name", "content", "node_type", "path", "index"]
+        fields = ["_id", "name", "node_type", "path", "index", "due_date"]
 
 
 # class ProjectTreeSerializer(serializers.ModelSerializer):
@@ -88,6 +90,18 @@ class DeliverableSerializer(serializers.ModelSerializer):
 #         fields = ["_id", "name", "node_type", "path", "index"]
 
 
+class MinimalNodeSerialiizer(serializers.Serializer):
+    _id = ObjectIdField(read_only=True)
+    name = serializers.SerializerMethodField()
+
+    def get_name(self, instance):
+        model = instance.get_model()
+
+        node = model.objects.get(_id=instance._id)
+
+        return node.name
+
+
 class TreeStructureWithoutChildrenSerializer(serializers.Serializer):
     _id = ObjectIdField(read_only=True)
     path = serializers.CharField(max_length=4048)
@@ -96,18 +110,28 @@ class TreeStructureWithoutChildrenSerializer(serializers.Serializer):
     name = serializers.SerializerMethodField()
 
     def get_name(self, instance):
-        model = apps.get_model('vpmotree', instance.node_type)
-        name = model.objects.get(treestructure_ptr_id=instance).name
-        return name
+        model = instance.get_model()
+
+        node = model.objects.get(_id=instance._id)
+
+        return node.name
 
 class TreeStructureWithChildrenSerializer(serializers.Serializer):
     _id = ObjectIdField(read_only=True)
     path = serializers.CharField(max_length=4048)
     index = serializers.IntegerField()
-    name = serializers.CharField(max_length=150)
+    name = serializers.SerializerMethodField()
     children = serializers.SerializerMethodField()
     node_type = serializers.CharField(max_length=48)
 
+    def get_name(self, instance):
+        model = instance.get_model()
+
+        print(instance, model)
+
+        node = model.objects.get(_id=instance._id)
+
+        return node.name
 
     def get_branch_extensions(self, branch, branch_level):
         """ Takes a branch as input and starts the loop for either the next branches (if they exist) or the leaves """
@@ -154,3 +178,31 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
             children.append(branch)
 
         return children
+
+class NodeParentsSerializer(serializers.Serializer):
+    _id = ObjectIdField(read_only=True)
+    node = serializers.SerializerMethodField()
+    immediate_parent = serializers.SerializerMethodField()
+    root = serializers.SerializerMethodField()
+
+    def get_node(self, instance):
+        return MinimalNodeSerialiizer(instance).data
+
+    def get_immediate_parent(self, instance):
+        if instance.path is None:
+            return None
+
+        split_path = list(filter(lambda x: x.strip(), instance.path.split(',')))
+        if len(split_path) <= 2:
+            return None
+
+        parent = TreeStructure.objects.get(_id=split_path[-1])
+        return MinimalNodeSerialiizer(parent).data
+
+    def get_root(self, instance):
+        if instance.path is None:
+            return MinimalNodeSerialiizer(instance).data
+
+        split_path = list(filter(lambda x: x.strip(), instance.path.split(',')))
+        parent = TreeStructure.objects.get(_id=split_path[0])
+        return MinimalNodeSerialiizer(parent).data

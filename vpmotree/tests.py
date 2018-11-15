@@ -1,5 +1,4 @@
-from django.test import TestCase
-from django.test import Client
+from django.test import TestCase, Client
 from vpmotree.models import Team, Project, Deliverable
 from vpmoauth.models import MyUser
 import test_addons
@@ -15,8 +14,9 @@ from create_base_permissions import create_base_permissions
 
 # Create your tests here.
 
-class TeamPermissionsTestCase(TestCase):
-    """ Tests for the FilteredTeamsView """
+class TeamTestCase(TestCase):
+    """ Tests related to Teams """
+    client = Client()
 
     def setUp(self):
         """ Creating the test user and the test team """
@@ -24,28 +24,28 @@ class TeamPermissionsTestCase(TestCase):
         # MyUser Credentials used for the testing
         user_creds = {
             "username": "TestUser",
-            "email": "TestUser@vpmotest.com"
+            "email": "TestUser@vpmotest.com",
+            "fullname": "Test User"
         }
         self.user = MyUser.objects.create(**user_creds)
-        # Random password created on each iteration
-        self.password = binascii.hexlify(os.urandom(12))
-        self.user.set_password(self.password)
-
-        # Team used for testing
-        self.team_with_perms = Team.objects.create(name="testCaseTeam")
-        # A random team to confirm we only get the team with permissions in the GET request
-        self.team_without_perms = Team.objects.create(name="RandTeam")
-
-        # Creating the request factory
-        self.factory = APIRequestFactory()
-
+        
+        logged_in = self.client.force_login(self.user, backend="vpmoauth.auth_backend.AuthBackend")
+        print("Logged In ", logged_in)
 
     def tearDown(self):
         self.user.delete()
-        self.team_with_perms.delete()
-        self.team_without_perms.delete()
 
+    def test_team_create(self):
+        """ Tests the create team view """
+        url = reverse("vpmotree:create_team")
+        data = {
+            "name": "Test Team"
+        }
+        r = self.client.post(url, data)
 
+        self.assertEqual(r.status_code, 201)
+
+    """ - NEEDS TO BE REWRITTEN
     def test_filtered_team_view(self):
         url  = reverse("vpmotree:filtered_teams")
 
@@ -58,6 +58,7 @@ class TeamPermissionsTestCase(TestCase):
         response = self.view(request)
         
         self.assertEqual(response.data, [{"id": 1, "name": "testCaseTeam"}])
+    """
 
 
 class TreeStructureTestCase(TestCase):
@@ -66,7 +67,6 @@ class TreeStructureTestCase(TestCase):
 
     def setUp(self):
         """ Creates the models required to test the tree structure """
-        self.view = views.TeamTreeView.as_view()
         # MyUser Credentials used for the testing
         user_creds = {
             "username": "TestUser",
@@ -74,9 +74,6 @@ class TreeStructureTestCase(TestCase):
             "fullname": "Test User"
         }
         self.user = MyUser.objects.create(**user_creds)
-        # Random password created on each iteration
-        self.password = binascii.hexlify(os.urandom(12))
-        self.user.set_password(self.password)
         self.user.save()
 
         self.team = Team(name="Test Team")
@@ -103,6 +100,19 @@ class TreeStructureTestCase(TestCase):
         self.team.delete()
         self.project.delete()
         self.topic.delete()
+
+    def test_node_parent_get(self):
+        team_url = reverse("vpmotree:node_parents", kwargs={"nodeID": str(self.team._id)})
+        proj_url = reverse("vpmotree:node_parents", kwargs={"nodeID": str(self.project._id)})
+        topic_url = reverse("vpmotree:node_parents", kwargs={"nodeID": str(self.topic._id)})
+
+        team_r = self.client.get(team_url)
+        proj_r = self.client.get(proj_url)
+        topic_r = self.client.get(topic_url)
+
+        self.assertEqual(team_r.status_code, 200)
+        self.assertEqual(proj_r.status_code, 200)
+        self.assertEqual(topic_r.status_code, 200)
 
     def test_tree_structure_get(self):
         """ Makes the necessary requests and asserts to test the GET TeamTreeView """
@@ -138,13 +148,11 @@ class TreeStructureTestCase(TestCase):
         	self.assertTrue(second_response["children"][0]["children"], msg="LEAF Level children not present in PUT response")
 
 
-class ProjectUpdateTestCase(TestCase):
-    """ TestCase for testing the Project RetreiveUpdateView """
+class NodeUpdateTestCase(TestCase):
+    """ TestCase for testing the Node RetreiveUpdateView """
     client = Client()
 
     def setUp(self):
-        self.view = views.UpdateProjectView
-
         user_creds = {
             "username": "TestUser",
             "email": "TestUser@vpmotest.com",
@@ -159,7 +167,7 @@ class ProjectUpdateTestCase(TestCase):
 
 
     def test_update(self):
-        url = reverse("vpmotree:update_project", kwargs={"_id": str(self.project._id)})
+        url = reverse("vpmotree:update_node", kwargs={"nodeID": str(self.project._id), "nodeType": "Project"})
 
         data = {
             "content": "Hello there!"
@@ -260,6 +268,37 @@ class ReadNodeListFilterTestcase(TestCase):
 
         self.assertEqual(len(response), 1)
         self.assertEqual(response[0]["_id"], str(self.topic._id))
+
+
+class NodeCreationTestCase(TestCase):
+    """ Tests creation of Projects and Topics """
+    client = Client()
+
+    def setUp(self):
+        create_base_permissions()
+        user_creds = {
+            "username": "TestUser",
+            "email": "TestUser@vpmotest.com",
+            "fullname": "Test User"
+        }
+        self.user = MyUser.objects.create(**user_creds)
+
+        self.client.force_login(self.user)
+
+    def test_project_creation(self):
+        url = reverse("vpmotree:create_node", kwargs={"nodeType": "Project"})
+
+        data = {
+            "name": "TestProj",
+            "description": "Rand",
+            "start": "2018-10-07"
+        }
+
+        r = self.client.post(url, data)
+
+        self.assertEqual(r.status_code, 201)
+
+        return r.json()
 
 
 class TaskTestCase(TestCase):

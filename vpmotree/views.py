@@ -47,6 +47,24 @@ class AllNodesView(ListAPIView):
         return self.serializers[self.request.query_params["nodeType"]]
 
 
+class NodeParents(RetrieveAPIView):
+    # this is to reconstruct the navigation data in front-end based on the route (node/id)
+    # if the node is team then only returns team
+    # if the node is project then returns team and project
+    # if the node is topic then returns team, project (most immediate) and topic
+
+    serializer_class = NodeParentsSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self):
+        """ Returns the node object from the url id arg """
+        try:
+            node = TreeStructure.objects.get(_id=self.kwargs.get("nodeID", None))
+            return node
+        except TreeStructure.DoesNotExist:
+            return None
+
+
 class AllProjectsView(ListAPIView):
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated]
@@ -85,14 +103,19 @@ class CreateProjectView(CreateAPIView):
 class CreateTeamView(CreateAPIView):
     model = Team
     serializer_class = TeamSerializer
-    permission_classes = (IsAuthenticated, CreatePermissions)
+    # Any authenticated user is allowed to create teams
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         """ Handles creation of the team through the TeamSerializer """
-        self.check_object_permissions()
         data = request.data.copy()
         data["user_team"] = request.data["name"] + "@" +request.user.username
         data["user_linked"] = False
+        data = {
+            "name": request.data["name"],
+            "user_linked": False,
+            "user_team": "{team_name}@{user_name}".format(team_name=request.data["name"], user_name=request.user.username)
+        }
         serializer = TeamSerializer(data=data)
         if serializer.is_valid():
             team = serializer.save()
@@ -102,19 +125,60 @@ class CreateTeamView(CreateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UpdateProjectView(RetrieveUpdateAPIView):
+class CreateNodeView(CreateAPIView):
+    """ Creates all node types that fall under a treestructure except Teams """
+    permission_classes = (IsAuthenticated,)
+
+    def get_serializer_class(self):
+        """ Returns the serializer responsible for creating the current node """
+        mapped_classes = {
+            "Project": ProjectSerializer,
+            "Deliverable": DeliverableSerializer
+        }
+        return mapped_classes[self.kwargs["nodeType"]]
+
+    def create(self, request, nodeType, *args, **kwargs):
+        data = request.data.copy()
+
+        parent_node = TreeStructure.objects.get(_id=data.pop("parentID"))
+        data["path"] = "{parent_path}{parent_id},".format(parent_path=parent_node.path or ",", parent_id=str(parent_node._id))
+
+        serializer = self.get_serializer_class()(data=data)
+        if serializer.is_valid():
+            node = serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UpdateNodeView(RetrieveUpdateAPIView):
     queryset = Project
-    serializer_class = ProjectSerializer
-    lookup_field = "_id"
 
-    def partial_update(self, request, _id, *args, **kwargs):
+    def get_model(self):
+        node = TreeStructure.objects.get(_id=self.kwargs["nodeID"])
+        return node.get_model()
+
+    def get_serializer_class(self):
+        """ Returns the serializer responsible for creating the current node """
+        mapped_classes = {
+            "Project": ProjectSerializer,
+            "Deliverable": DeliverableSerializer,
+            "Team": TeamSerializer
+        }
+        if self.kwargs["nodeType"] != "Topic":
+            return mapped_classes[self.kwargs["nodeType"]]
+        
+        model = self.get_model()
+        return mapped_classes[self.get_model().__name__]
+
+    def partial_update(self, request, *args, **kwargs):
         """ This method gets called on a PATCH request - partially updates the model """
+        model = self.get_model()
         try:
-            project = Project.objects.get(_id=_id)
-        except Project.DoesNotExist:
-            return Response({"message": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
+            node = model.objects.get(_id=self.kwargs["nodeID"])
+        except model.DoesNotExist:
+            return Response({"message": "Node not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = self.serializer_class(project, data=request.data, partial=True)
+        serializer = self.get_serializer_class()(node, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -148,17 +212,17 @@ class UpdateDeliverableView(RetrieveUpdateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class TeamTreeView(RetrieveUpdateAPIView):
-    model = Team
+class NodeTreeView(RetrieveUpdateAPIView):
+    model = TreeStructure
     serializer_class = TreeStructureWithChildrenSerializer
     permission_classes = (IsAuthenticated,)
 
     def get_object(self):
-        """ Returns the team object from the url id arg """
+        """ Returns the node object from the url id arg """
         try:
-            team = Team.objects.get(_id=self.kwargs.get("team_id", None))
-            return team
-        except Team.DoesNotExist:
+            node = TreeStructure.objects.get(_id=self.kwargs.get("nodeID", None))
+            return node
+        except TreeStructure.DoesNotExist:
             return None
 
 
@@ -196,7 +260,7 @@ class TeamTreeView(RetrieveUpdateAPIView):
         return list(filter(lambda x: str(x.path.split(",")[-2]) == str(node_id), all_children))
 
 
-    def update(self, request, team_id):
+    def update(self, request, nodeID):
         """ Updates the models based on the input hierarchy; takes a dictionary starting from a single team as input """
         # request.data should be an array of nodes
         nodes = request.data
@@ -221,15 +285,17 @@ class TeamTreeView(RetrieveUpdateAPIView):
 
 
         # The top most element is always a team, so second level is always projects
+        """
         if nodes[0]["path"] is not None:
             team_id = nodes[0]["path"].split(",")[1]
         else:
             team_id = nodes[0]["_id"]
-        team = Team.objects.get(_id=team_id)
-        return Response(TreeStructureWithChildrenSerializer(team).data)
+        """
+        node = self.get_object()
+        return Response(TreeStructureWithChildrenSerializer(node, context={"request": request}).data)
 
 
-class ProjectTreeView(TeamTreeView):
+class ProjectTreeView(NodeTreeView):
     model = Project
 
     def get_object(self):
@@ -443,3 +509,4 @@ class DeleteUpdateCreateTaskView(APIView):
 
             return Response(data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
