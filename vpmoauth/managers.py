@@ -43,3 +43,6 @@ class MyUserManager(BaseUserManager):
         user.create_user_team()
         return user
 
+    def get_by_natural_key(self, email):
+        return self.get(email=email)
+

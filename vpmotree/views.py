@@ -58,14 +58,10 @@ class NodeParentsListView(ListAPIView):
         # Otherwise, return all nodes in the node's path
         node_path = list(filter(lambda x: x.strip(), node.path.split(',')))
         node_path.append(str(node._id))
-        # print(node_path)
-        try:
-            nodes_in_path = TreeStructure.objects.filter(_id__in=node_path)
-            # Sorting the nodes by index in the path
-            nodes_in_path = sorted(nodes_in_path, key=lambda x: node_path.index(str(x._id)))
-        except:
-            print("EXCEPTION", node_path)
-            raise
+        
+        nodes_in_path = TreeStructure.objects.filter(_id__in=node_path)
+        # Sorting the nodes by index in the path
+        nodes_in_path = sorted(nodes_in_path, key=lambda x: node_path.index(str(x._id)))
 
         return nodes_in_path
 
@@ -194,6 +190,7 @@ class RetrieveUpdateNodeView(RetrieveUpdateAPIView):
         data = request.data.copy()
         if "_id" in data.keys():
             _id = data.pop("_id")
+            
         serializer = self.get_serializer_class()(node, data=data, partial=True)
         if serializer.is_valid():
             serializer.save()

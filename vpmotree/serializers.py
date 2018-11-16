@@ -71,7 +71,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
 class DeliverableSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
-    due_date = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d %H:%M:%S"], allow_null=True, required=False)
+    due_date = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%d %H:%M:%S"], allow_null=True, required=False)
     topic_type = serializers.SerializerMethodField(required=False)
 
     def get_topic_type(self, obj):
@@ -84,8 +84,8 @@ class DeliverableSerializer(serializers.ModelSerializer):
 
 class IssueSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
-    due_date = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d %H:%M:%S"], allow_null=True, required=False)
-    assignee = UserDetailsSerializer(required=False)
+    due_date = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%d %H:%M:%S"], allow_null=True, required=False)
+    assignee = UserDetailsSerializer(required=False, allow_null=True)
     topic_type = serializers.SerializerMethodField(required=False)
 
     def get_topic_type(self, obj):
