@@ -71,6 +71,7 @@ class NodeParentsListView(ListAPIView):
 
 
 class AllProjectsView(ListAPIView):
+    # LEGACY VIEW - MAY BE REMOVED
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [ReadNodeListFilter,]
@@ -78,6 +79,7 @@ class AllProjectsView(ListAPIView):
 
 
 class AllTeamsView(ListAPIView):
+    # LEGACY VIEW - MAY BE REMOVED
     serializer_class = TeamSerializer
     permission_classes = [IsAuthenticated]
     queryset = Team.objects.all()
@@ -158,9 +160,11 @@ class CreateNodeView(CreateAPIView):
 
 
 class RetrieveUpdateNodeView(RetrieveUpdateAPIView):
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self):
         try:
+            node = TreeStructure.objects.get(_id=self.kwargs["nodeID"]).get_object()
             return TreeStructure.objects.get(_id=self.kwargs["nodeID"]).get_object()
         except TreeStructure.DoesNotExist:
             return None
@@ -187,19 +191,15 @@ class RetrieveUpdateNodeView(RetrieveUpdateAPIView):
         if node is None:
             return Response({"message": "Node not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = self.get_serializer_class()(node, data=request.data, partial=True)
+        data = request.data.copy()
+        if "_id" in data.keys():
+            _id = data.pop("_id")
+        serializer = self.get_serializer_class()(node, data=data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def get_object(self):
-        """ Returns the team object from the url id arg """
-        try:
-            project = Project.objects.get(_id=self.kwargs.get("_id", None))
-            return project
-        except Project.DoesNotExist:
-            return None
 
 class NodeTreeView(RetrieveUpdateAPIView):
     model = TreeStructure

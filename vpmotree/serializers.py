@@ -57,7 +57,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ["_id", "name", "description", "content", "start", "project_owner", "path", "index"]
+        fields = ["_id", "name", "description", "content", "start", "project_owner", "path", "index", "node_type", "created_at"]
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -66,22 +66,30 @@ class TeamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Team
-        fields = ["_id", "name", "user_linked", "created_at", "updated_at", "user_team"]
+        fields = ["_id", "name", "user_linked", "created_at", "updated_at", "user_team", "node_type"]
 
 
 class DeliverableSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
     due_date = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d %H:%M:%S"], allow_null=True, required=False)
+    topic_type = serializers.SerializerMethodField(required=False)
+
+    def get_topic_type(self, obj):
+        return "Deliverable"
 
     class Meta:
         model = Deliverable
-        fields = ["_id", "name", "node_type", "path", "index", "due_date", "content"]
+        fields = ["_id", "name", "node_type", "path", "index", "due_date", "content", "topic_type"]
 
 
 class IssueSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
     due_date = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d %H:%M:%S"], allow_null=True, required=False)
     assignee = UserDetailsSerializer(required=False)
+    topic_type = serializers.SerializerMethodField(required=False)
+
+    def get_topic_type(self, obj):
+        return "Issue"
 
     def get_assignee_name(self, instance):
         try:
@@ -101,7 +109,7 @@ class IssueSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Issue
-        fields = ["_id", "name", "node_type", "path", "index", "due_date", "content", "severity", "assignee"]
+        fields = ["_id", "name", "node_type", "path", "index", "due_date", "content", "severity", "assignee", "topic_type"]
 
 # class ProjectTreeSerializer(serializers.ModelSerializer):
 #     _id = serializers.SerializerMethodField(required=False)
