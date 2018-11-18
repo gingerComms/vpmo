@@ -49,6 +49,15 @@ class ProjectSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
     project_owner = serializers.SerializerMethodField(required=False)
     start = serializers.DateField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d"], allow_null=True, required=False)
+    user_permissions = serializers.SerializerMethodField(required=False)
+    user_role = serializers.SerializerMethodField(required=False)
+
+    def get_user_permissions(self, instance):
+        return self.context["request"].user.get_permissions(instance)
+
+    def get_user_role(self, instance):
+        role = self.context["request"].user.get_role(instance)
+        return role.role_name if role else None
 
     def get_project_owner(self, instance):
         if instance.project_owner:
@@ -57,29 +66,50 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ["_id", "name", "description", "content", "start", "project_owner", "path", "index", "node_type", "created_at"]
+        fields = ["_id", "name", "description", "content", "start", "project_owner", "path", "index", "node_type",
+                "created_at", "user_permissions", "user_role"]
 
 
 class TeamSerializer(serializers.ModelSerializer):
     # projects = ProjectSerializer(read_only=True, many=True)
     _id = ObjectIdField(read_only=True)
+    user_permissions = serializers.SerializerMethodField(required=False)
+    user_role = serializers.SerializerMethodField(required=False)
+
+    def get_user_permissions(self, instance):
+        return self.context["request"].user.get_permissions(instance)
+
+    def get_user_role(self, instance):
+        role = self.context["request"].user.get_role(instance)
+        return role.role_name if role else None
 
     class Meta:
         model = Team
-        fields = ["_id", "name", "user_linked", "created_at", "updated_at", "user_team", "node_type"]
+        fields = ["_id", "name", "user_linked", "created_at", "updated_at", "user_team",
+                "node_type", "user_permissions", "user_role"]
 
 
 class DeliverableSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
     due_date = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%d %H:%M:%S"], allow_null=True, required=False)
     topic_type = serializers.SerializerMethodField(required=False)
+    user_permissions = serializers.SerializerMethodField(required=False)
+    user_role = serializers.SerializerMethodField(required=False)
+
+    def get_user_permissions(self, instance):
+        return self.context["request"].user.get_permissions(instance)
+
+    def get_user_role(self, instance):
+        role = self.context["request"].user.get_role(instance)
+        return role.role_name if role else None
 
     def get_topic_type(self, obj):
         return "Deliverable"
 
     class Meta:
         model = Deliverable
-        fields = ["_id", "name", "node_type", "path", "index", "due_date", "content", "topic_type"]
+        fields = ["_id", "name", "node_type", "path", "index", "due_date", "content", "topic_type",
+                "user_permissions", "user_role"]
 
 
 class IssueSerializer(serializers.ModelSerializer):
@@ -87,6 +117,15 @@ class IssueSerializer(serializers.ModelSerializer):
     due_date = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%d %H:%M:%S"], allow_null=True, required=False)
     assignee = UserDetailsSerializer(required=False, allow_null=True)
     topic_type = serializers.SerializerMethodField(required=False)
+    user_permissions = serializers.SerializerMethodField(required=False)
+    user_role = serializers.SerializerMethodField(required=False)
+
+    def get_user_permissions(self, instance):
+        return self.context["request"].user.get_permissions(instance)
+
+    def get_user_role(self, instance):
+        role = self.context["request"].user.get_role(instance)
+        return role.role_name if role else None
 
     def get_topic_type(self, obj):
         return "Issue"
@@ -109,7 +148,8 @@ class IssueSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Issue
-        fields = ["_id", "name", "node_type", "path", "index", "due_date", "content", "severity", "assignee", "topic_type"]
+        fields = ["_id", "name", "node_type", "path", "index", "due_date", "content", "severity", "assignee",
+                "topic_type", "user_permissions", "user_role"]
 
 # class ProjectTreeSerializer(serializers.ModelSerializer):
 #     _id = serializers.SerializerMethodField(required=False)
