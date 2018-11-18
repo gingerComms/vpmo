@@ -118,7 +118,7 @@ class CreateTeamView(CreateAPIView):
             "user_linked": False,
             "user_team": "{team_name}@{user_name}".format(team_name=request.data["name"], user_name=request.user.username)
         }
-        serializer = TeamSerializer(data=data)
+        serializer = TeamSerializer(data=data, context={"request": request})
         if serializer.is_valid():
             team = serializer.save()
             team.create_channel()
