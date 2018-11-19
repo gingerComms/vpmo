@@ -233,7 +233,7 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
         child_condition = Q(path__startswith=","+str(instance._id)) | Q(path__icontains=str(instance._id))
         role_condition = Q(node_type__in=allowed_node_types) | Q(user_role_node__user=self.user)
         
-        self.all_children = TreeStructure.objects.filter(child_condition, role_condition)
+        self.all_children = TreeStructure.objects.filter(child_condition, role_condition).distinct()
 
         if instance.node_type == "Team":
             # All objects starting from the current ROOT (Team)

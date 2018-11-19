@@ -192,6 +192,7 @@ class RetrieveUpdateNodeView(RetrieveUpdateAPIView):
             return Response({"message": "Node not found"}, status=status.HTTP_404_NOT_FOUND)
 
         data = request.data.copy()
+        # Taking out _id from the input data if it's there (not needed since this is a partial update)
         if "_id" in data.keys():
             _id = data.pop("_id")
             
