@@ -150,6 +150,7 @@ class NodeRetrieveUpdateTestCase(TestCase):
     client = Client()
 
     def setUp(self):
+        create_base_permissions()
         user_creds = {
             "username": "TestUser",
             "email": "TestUser@vpmotest.com",
@@ -159,6 +160,8 @@ class NodeRetrieveUpdateTestCase(TestCase):
 
         self.project = Project(name="Test Proj", project_owner=self.user)
         self.project.save()
+
+        self.user.assign_role("project_admin", self.project, test=True)
 
         logged_in = self.client.force_login(self.user, backend="vpmoauth.auth_backend.AuthBackend")
 
@@ -183,7 +186,6 @@ class NodeRetrieveUpdateTestCase(TestCase):
 
 class NodePermissionsViewTestCase(TestCase):
     """ Test for the nodepermissions retrieve api view
-        NOTE - Currently using guardian - needs to be modified to use UserRolePermissions instead
     """
     client = Client()
 
@@ -200,8 +202,7 @@ class NodePermissionsViewTestCase(TestCase):
         self.project = Project(name="Test Proj", project_owner=self.user)
         self.project.save()
 
-        # TODO: Needs to be rewritten
-        assign_perm("read_obj", self.user, self.project)
+        self.user.assign_role("project_admin", self.project, test=True)
 
         logged_in = self.client.force_login(self.user, backend="vpmoauth.auth_backend.AuthBackend")
 
@@ -239,7 +240,7 @@ class ReadNodeListFilterTestcase(TestCase):
         self.team_2 = Team(name="Test Team 2", user_team="BlahBlah")
         self.team_2.save()
 
-        self.user.assign_role("team_admin", self.team)
+        self.user.assign_role("team_admin", self.team, test=True)
         self.user.save()
 
         self.project = Project(name="Test Proj", index=0, path=",{},".format(self.team._id))
@@ -290,7 +291,7 @@ class NodeCreationTestCase(TestCase):
         self.team = Team(name="Test Team", user_team="Blah")
         self.team.save()
 
-        self.user.assign_role("team_admin", self.team)
+        self.user.assign_role("team_admin", self.team, test=True)
         self.user.save()
 
         self.client.force_login(self.user)
@@ -336,8 +337,8 @@ class TaskTestCase(TestCase):
         self.project = Project(name="Test Proj", project_owner=self.project_admin)
         self.project.save()
 
-        self.project_admin.assign_role("project_admin", self.project)
-        self.project_contributor.assign_role("project_contributor", self.project)
+        self.project_admin.assign_role("project_admin", self.project, test=True)
+        self.project_contributor.assign_role("project_contributor", self.project, test=True)
 
         self.client.force_login(self.project_admin)
 

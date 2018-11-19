@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 import datetime
 import os
+import sys
+
+TESTING = sys.argv[1:2] == ['test']
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -147,7 +150,7 @@ WSGI_APPLICATION = 'vpmoprj.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-if DEBUG:
+if False and DEBUG:
     DATABASES = {
         "default": {
             "ENGINE": "djongo",

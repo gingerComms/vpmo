@@ -147,7 +147,7 @@ class MyUser(AbstractBaseUser):
         return member
 
 
-    def assign_role(self, role, node):
+    def assign_role(self, role, node, test=False):
         assert role in ROLES_MAP.keys()
 
         # Check if the user already has a role for this user, and remove it if it exists
@@ -162,10 +162,12 @@ class MyUser(AbstractBaseUser):
         permissions = ROLES_MAP[role]
 
         # Removing/adding the user to the channel for this node based on the new role
-        if "update_{}".format(node.node_type.lower()) not in permissions:
-            self.remove_from_channel(node._id)
-        else:
-            member = self.add_to_channel(node._id)
+        # If this isn't a test
+        if not test:
+            if "update_{}".format(node.node_type.lower()) not in permissions:
+                self.remove_from_channel(node._id)
+            else:
+                member = self.add_to_channel(node._id)
 
         # Getting the permissions from the database
         permissions = UserRolePermission.objects.filter(name__in=permissions)
