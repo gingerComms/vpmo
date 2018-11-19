@@ -47,6 +47,7 @@ AWS_DEFAULT_ACL = None
 AWS_ACCESS_KEY_ID = os.environ["VPMO_AWS_ACCESS"]
 AWS_SECRET_ACCESS_KEY = os.environ["VPMO_AWS_SECRET"]
 AWS_STORAGE_BUCKET_NAME = "vpmo"
+AWS_S3_FILE_OVERWRITE = False
 
 # Application definition
 
@@ -150,7 +151,7 @@ WSGI_APPLICATION = 'vpmoprj.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-if DEBUG:
+if False and DEBUG:
     DATABASES = {
         "default": {
             "ENGINE": "djongo",
