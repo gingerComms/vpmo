@@ -17,7 +17,6 @@ class ReadNodeListFilter(filters.BaseFilterBackend):
             if query_params["nodeType"] == "Team":
                 assigned_teams = UserRole.objects.filter(node__node_type="Team", user=request.user,
                     permissions__name="read_team").values_list("node___id", flat=True)
-                print(assigned_teams)
                 queryset = queryset.filter(_id__in=assigned_teams)
                 return queryset
 

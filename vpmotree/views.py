@@ -15,7 +15,10 @@ from vpmoauth.serializers import UserDetailsSerializer
 
 from vpmotree.models import *
 from vpmotree.serializers import *
-from vpmotree.permissions import TeamPermissions, CreatePermissions, TaskListCreateAssignPermission
+from vpmotree.permissions import TeamPermissions, \
+                                CreatePermissions, \
+                                TaskListCreateAssignPermission, \
+                                GeneralNodePermission
 from vpmotree.filters import ReadNodeListFilter
 
 from datetime import datetime as dt
@@ -147,7 +150,7 @@ class CreateNodeView(CreateAPIView):
         parent_node = TreeStructure.objects.get(_id=data.pop("parentID"))
         data["path"] = "{parent_path}{parent_id},".format(parent_path=parent_node.path or ",", parent_id=str(parent_node._id))
 
-        serializer = self.get_serializer_class()(data=data)
+        serializer = self.get_serializer_class()(data=data, context={"request": request})
         if serializer.is_valid():
             node = serializer.save()
             node.create_channel()
@@ -156,11 +159,12 @@ class CreateNodeView(CreateAPIView):
 
 
 class RetrieveUpdateNodeView(RetrieveUpdateAPIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, GeneralNodePermission)
 
     def get_object(self):
         try:
             node = TreeStructure.objects.get(_id=self.kwargs["nodeID"]).get_object()
+            self.check_object_permissions(self.request, node)
             return TreeStructure.objects.get(_id=self.kwargs["nodeID"]).get_object()
         except TreeStructure.DoesNotExist:
             return None
@@ -191,7 +195,7 @@ class RetrieveUpdateNodeView(RetrieveUpdateAPIView):
         if "_id" in data.keys():
             _id = data.pop("_id")
             
-        serializer = self.get_serializer_class()(node, data=data, partial=True)
+        serializer = self.get_serializer_class()(node, data=data, partial=True, context={"request": request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

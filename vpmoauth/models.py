@@ -223,5 +223,6 @@ class MyUser(AbstractBaseUser):
                 user_linked=True,
             )
         team.save()
+        team.create_channel()
         # give the user created_obj permission against this team
         self.assign_role("team_admin", team)

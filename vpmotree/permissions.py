@@ -10,12 +10,32 @@ class IsAccountOwner(permissions.BasePermission):
         return False
 
 
+class GeneralNodePermission(permissions.BasePermission):
+    """ Returns whether a user is allowed access to a node based on request method """
+    def has_object_permission(self, request, view, obj):
+        perms = request.user.get_permissions(obj)
+        if request.method in ["PUT", "PATCH"]:
+            if "update_{}".format(obj.node_type.lower()) in perms and request.method in ["PUT", "PATCH"]:
+                return True
+
+        elif request.method in permissions.SAFE_METHODS:
+            if "read_{}".format(obj.node_type.lower()) in perms:
+                return True
+
+        elif request.method == "DELETE":
+            if "delete_{}".format(obj.node_type.lower()) in perms:
+                return True
+
+        return False
+
+
+
 class ReadPermission(permissions.BasePermission):
     """ Returns True for an object if the user has at least read permissions using a Safe Method """
     def has_object_permission(self, request, view, obj):
         perms = request.user.get_permissions(obj)
 
-        if "read_{}".format(obj.node_type) in perms in request.method in permissions.SAFE_METHODS:
+        if "read_{}".format(obj.node_type) in perms and request.method in permissions.SAFE_METHODS:
             return True
         return False
 
