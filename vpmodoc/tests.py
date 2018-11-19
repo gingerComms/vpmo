@@ -27,7 +27,7 @@ class NodeDocumentsTestCase(TestCase):
 
         self.project = Project(name="Test Proj", project_owner=self.project_admin)
         self.project.save()
-        self.project_admin.assign_role("project_admin", self.project)
+        self.project_admin.assign_role("project_admin", self.project, test=True)
 
         self.client.force_login(self.project_admin)
         self.doc = self.create_document()

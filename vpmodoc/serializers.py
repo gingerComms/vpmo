@@ -12,6 +12,7 @@ class NodeDocumentSerializer(serializers.ModelSerializer):
     # Document related fields
     document_name = serializers.SerializerMethodField()
     document_size = serializers.SerializerMethodField()
+    document_url = serializers.SerializerMethodField()
 
     def get_document_name(self, instance):
         try:
@@ -25,9 +26,15 @@ class NodeDocumentSerializer(serializers.ModelSerializer):
         except ValueError:
             return None
 
+    def get_document_url(self, instance):
+        try:
+            return instance.document.url
+        except ValueError:
+            return None
+
     def get_uploaded_by(self, instance):
         return instance.uploaded_by.username
 
     class Meta:
         model = NodeDocument
-        fields = ["_id", "node", "uploaded_at", "uploaded_by", "document", "document_name", "document_size"]
+        fields = ["_id", "node", "uploaded_at", "uploaded_by", "document", "document_name", "document_size", "document_url"]
