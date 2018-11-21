@@ -101,6 +101,8 @@ class CreateProjectView(CreateAPIView):
         if serializer.is_valid():
             project = serializer.save()
             project.create_channel()
+            project.update_channel_access()
+
             request.user.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -156,6 +158,7 @@ class CreateNodeView(CreateAPIView):
             node = serializer.save()
             node.save()
             node.create_channel()
+            node.update_channel_access()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
