@@ -71,8 +71,8 @@ class TreeStructure(models.Model):
 
     node_type = models.CharField(max_length=48, default="Team")
 
-    # The twilio channel unique_name for this node
-    # channel = models.CharField(max_length=120, blank=False)
+    # The twilio channel SID for this node
+    channel_sid = models.CharField(max_length=34, blank=False)
 
     # other than the Teams the rest of the nodes get created under (as a child)
     # OR at the same level of another node (sibling)
@@ -128,7 +128,6 @@ class TreeStructure(models.Model):
         model = self.get_model_class()
         return model.objects.get(_id=self._id)
 
-
     def save(self, *args, **kwargs):
         super(TreeStructure, self).save(*args, **kwargs)
 
@@ -140,8 +139,9 @@ class TreeStructure(models.Model):
         client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
         channel = client.chat.services(settings.TWILIO_CHAT_SERVICE_SID) \
                     .channels \
-                    .create(unique_name=str(obj._id), friendly_name=obj.name)
-
+                    .create(unique_name=self._id, friendly_name=obj.name)
+        self.channel_sid = channel.sid
+        self.save()
 
     def delete_channel(self):
         """ Deletes the channel related to this node """
@@ -149,6 +149,38 @@ class TreeStructure(models.Model):
         channel = client.chat.services(settings.TWILIO_CHAT_SERVICE_SID) \
                     .channels(str(self._id)) \
                     .delete()
+
+    def get_users_in_channel(self):
+        """ Returns all users part of this node's channel """
+        if not self.channel_sid:
+            raise ValueError("Node doesn't have a channel")
+
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+        # List of member objects for this channel
+        members = client.chat.services(settings.TWILIO_CHAT_SERVICE_SID) \
+                     .channels(self._id) \
+                     .members \
+                     .list()
+
+        return members
+
+    def update_channel_access(self):
+        """ Updates the channel access for all users that should have update access
+            to this node - Only checks for additions because all removals are handled by
+            `assign_role` currently - removal only happens when role is changed while
+            addition can happen when node is created
+            NOTE - MAY NOT BE NECESSARY SINCE HANDLOOED IN ASSIGN_ROLE
+        """
+        users_to_add = apps.get_model("vpmoauth", "UserRole") \
+                        .get_user_ids_with_heirarchy_perms(self, "update_"+self.node_type.lower())
+        users_to_add = apps.get_model("vpmoauth", "MyUser") \
+                        .objects.filter(_id__in=users_to_add)
+
+        # Adding the users to the channel
+        for i in users_to_add:
+            i.add_to_channel(str(self._id))
+
+        return users_to_add
 
 
     def __str__(self):
