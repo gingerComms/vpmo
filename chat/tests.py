@@ -30,8 +30,6 @@ class ChannelsTestCase(TestCase):
         # This adds the user to the project
         self.user.assign_role("project_admin", self.project)
 
-        print(dir(self.project.get_users_in_channel()[0]))
-
     def tearDown(self):
         self.project.delete_channel()
 

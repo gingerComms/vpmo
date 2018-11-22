@@ -1,20 +1,16 @@
 from rest_framework import serializers
 from rest_framework import fields
+
 from .models import Team, Project, Deliverable, TreeStructure, Topic, Task, Issue
 from vpmoauth.models import UserRole, MyUser
 from vpmoauth.serializers import UserDetailsSerializer
+from vpmoprj.serializers import *
+
 from django.apps import apps
 from django.db.models import Q
 from rest_framework.fields import CurrentUserDefault
 
 
-class RelatedObjectIdField(serializers.PrimaryKeyRelatedField):
-    def to_representation(self, value):
-        return str(value)
-
-class ObjectIdField(serializers.IntegerField):
-    def to_representation(self, value):
-        return str(value)
 
 class TaskSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
@@ -150,38 +146,6 @@ class IssueSerializer(serializers.ModelSerializer):
         model = Issue
         fields = ["_id", "name", "node_type", "path", "index", "due_date", "content", "severity", "assignee",
                 "topic_type", "user_permissions", "user_role"]
-
-# class ProjectTreeSerializer(serializers.ModelSerializer):
-#     _id = serializers.SerializerMethodField(required=False)
-#
-#     def get__id(self, instance):
-#         return str(instance._id)
-#
-#     class Meta:
-#         model = Project
-#         fields = ["_id", "name", "description", "node_type", "path", "index"]
-
-
-# class TeamTreeSerializer(serializers.ModelSerializer):
-#     _id = serializers.SerializerMethodField(required=False)
-#
-#     def get__id(self, instance):
-#         return str(instance._id)
-#
-#     class Meta:
-#         model = Team
-#         fields = ["_id", "name", "node_type", "path", "index"]
-
-
-class MinimalNodeSerialiizer(serializers.Serializer):
-    _id = ObjectIdField(read_only=True)
-    name = serializers.SerializerMethodField()
-    node_type = serializers.CharField(max_length=120)
-
-    def get_name(self, instance):
-        if instance._meta.model == TreeStructure:
-            return instance.get_object().name
-        return instance.name
 
 
 class TreeStructureWithoutChildrenSerializer(serializers.Serializer):

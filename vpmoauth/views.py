@@ -22,8 +22,47 @@ jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 import jwt
 
 
-
 # Create your views here.
+
+class FavoriteNodesView(APIView):
+    """ Endpoint for adding/removing favorite nodes from the user's m2m field """
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = UserDetailsSerializer
+
+    def get_node(self, node_id):
+        """ Retrieves the node from the given ID """
+        try:
+            return TreeStructure.objects.get(_id=node_id)
+        except TreeStructure.DoesNotExist:
+            return None
+
+    def put(self, request):
+        """ Adds the given node to the user's m2m field """
+        data = request.data.copy()
+        node = self.get_node(data["node"])
+
+        # Adding the node to the user's favorites
+        request.user.favorite_nodes.add(node)
+        request.user.save()
+
+        return Response(self.serializer_class(request.user).data)
+
+    def delete(self, request):
+        """ Removes the given user from the user's m2m fieild """
+        data = request.data.copy()
+        node = self.get_node(data["node"])
+
+        # List of nodes the user has in favorites currently
+        current_favorites = request.user.favorite_nodes.all().values_list("_id", flat=True)
+        # Checking if the input id even exists in the current favorites
+        if node._id in current_favorites:
+            request.user.favorite_nodes.remove(node)
+            request.user.save()
+        else:
+            return Response({"message": "Node does not exist in user's favorite nodes"}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(self.serializer_class(request.user).data)
+
 
 class AssignableUsersListView(generics.ListAPIView):
     """ Returns a list of users that can be assigned a role for a given node """
