@@ -14,7 +14,7 @@ class ObjectIdField(serializers.IntegerField):
     def to_representation(self, value):
         return str(value)
 
-class MinimalNodeSerialiizer(serializers.Serializer):
+class MinimalNodeSerializer(serializers.Serializer):
     _id = ObjectIdField(read_only=True)
     name = serializers.SerializerMethodField()
     node_type = serializers.CharField(max_length=120)

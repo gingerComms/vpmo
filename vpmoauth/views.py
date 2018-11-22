@@ -8,6 +8,7 @@ from vpmotree.models import Team, Project, TreeStructure
 from vpmoauth.permissions import AssignRolesPermission, RemoveRolesPermission
 from vpmoauth.models import MyUser, UserRolePermission, UserRole
 from vpmoauth.serializers import *
+from vpmoprj.serializers import MinimalNodeSerializer
 
 from rest_framework import generics, permissions, mixins, status, filters
 from rest_framework.response import Response
@@ -27,7 +28,7 @@ import jwt
 class FavoriteNodesView(APIView):
     """ Endpoint for adding/removing favorite nodes from the user's m2m field """
     permission_classes = (permissions.IsAuthenticated,)
-    serializer_class = UserDetailsSerializer
+    serializer_class = MinimalNodeSerializer
 
     def get_node(self, node_id):
         """ Retrieves the node from the given ID """
@@ -35,6 +36,9 @@ class FavoriteNodesView(APIView):
             return TreeStructure.objects.get(_id=node_id)
         except TreeStructure.DoesNotExist:
             return None
+
+    def get(self, request):
+        return Response(self.serializer_class(request.user.favorite_nodes.all(), many=True).data)
 
     def put(self, request):
         """ Adds the given node to the user's m2m field """
@@ -45,7 +49,7 @@ class FavoriteNodesView(APIView):
         request.user.favorite_nodes.add(node)
         request.user.save()
 
-        return Response(self.serializer_class(request.user).data)
+        return Response(self.serializer_class(request.user.favorite_nodes.all(), many=True).data)
 
     def delete(self, request):
         """ Removes the given user from the user's m2m fieild """
@@ -61,7 +65,7 @@ class FavoriteNodesView(APIView):
         else:
             return Response({"message": "Node does not exist in user's favorite nodes"}, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response(self.serializer_class(request.user).data)
+        return Response(self.serializer_class(request.user.favorite_nodes.all(), many=True).data)
 
 
 class AssignableUsersListView(generics.ListAPIView):

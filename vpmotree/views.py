@@ -45,7 +45,7 @@ class AllNodesListView(ListAPIView):
 class NodeParentsListView(ListAPIView):
     """ Returns a list of all nodes in the path of the input node (including the input node itself) """
 
-    serializer_class = MinimalNodeSerialiizer
+    serializer_class = MinimalNodeSerializer
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):

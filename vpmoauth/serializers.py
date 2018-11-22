@@ -20,7 +20,7 @@ class AllUsersSerializer(serializers.ModelSerializer):
 
 class UserDetailsSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
-    favorite_nodes = MinimalNodeSerialiizer(required=False, many=True)
+    favorite_nodes = MinimalNodeSerializer(required=False, many=True)
 
     class Meta:
         model = get_user_model()

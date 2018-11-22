@@ -41,7 +41,7 @@ class FavoriteNodesTestCase(TestCase):
         r = self.client.put(url, json.dumps(data), content_type='application/json')
         
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(len(r.json()["favorite_nodes"]), 1)
+        self.assertEqual(len(r.json()), 1)
 
     def test_favorite_delete(self):
         """ Tests the DELETE endpoint for removing favorite nodes """
@@ -55,5 +55,15 @@ class FavoriteNodesTestCase(TestCase):
         r = self.client.delete(url, json.dumps(data), content_type='application/json')
         
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(len(r.json()["favorite_nodes"]), 0)
+        self.assertEqual(len(r.json()), 0)
+
+    def test_favorite_get(self):
+        """ Tests the GET endpoint for retreiving favorite nodes """
+        self.test_favorite_add()
+        url = reverse("vpmoauth:favorite-nodes")
+
+        r = self.client.get(url)
+        
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(len(r.json()), 1)
     
