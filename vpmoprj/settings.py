@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 import datetime
 import os
+import sys
+
+TESTING = sys.argv[1:2] == ['test']
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -28,6 +31,23 @@ SECRET_KEY = 'k3xrb+p%cw%7r@8$el#$7hd6_zqp93-(ue(acl^jx-okpzo643'
 DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
+# Twilio IDs and Keys
+# May need to set up roles here
+TWILIO_CHAT_SERVICE_SID = os.environ["TWILIO_CHAT_SERVICE_SID"]
+TWILIO_ACCOUNT_SID = os.environ["TWILIO_ACCOUNT_SID"]
+TWILIO_API_KEY = os.environ["TWILIO_API_KEY"]
+TWILIO_SECRET_KEY = os.environ["TWILIO_SECRET_KEY"]
+TWILIO_AUTH_TOKEN = os.environ["VPMO_TWILIO_AUTH_TOKEN"]
+
+# Setting for storing user uploads in S3
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_DEFAULT_ACL = None
+
+# AWS Keys
+AWS_ACCESS_KEY_ID = os.environ["VPMO_AWS_ACCESS"]
+AWS_SECRET_ACCESS_KEY = os.environ["VPMO_AWS_SECRET"]
+AWS_STORAGE_BUCKET_NAME = "vpmo"
+AWS_S3_FILE_OVERWRITE = False
 
 # Application definition
 
@@ -44,8 +64,8 @@ INSTALLED_APPS = [
     # 'vpmoapp',
     'vpmoauth',
     'vpmotree',
-    'guardian',
-    'channels',
+    "vpmodoc",
+    "chat"
 ]
 
 """
@@ -59,7 +79,6 @@ MIGRATION_MODULES = {
 AUTHENTICATION_BACKENDS = (
     'vpmoauth.auth_backend.AuthBackend', # this is default from vpmo
     'django.contrib.auth.backends.ModelBackend', # The default
-    'guardian.backends.ObjectPermissionBackend',
 )
 
 
@@ -136,7 +155,7 @@ if False and DEBUG:
     DATABASES = {
         "default": {
             "ENGINE": "djongo",
-            "NAME": "test-example-20",
+            "NAME": "test-example-30",
             "host": "localhost",
             "port": 27017
         }
@@ -198,6 +217,8 @@ JWT_AUTH = {
     'JWT_VERIFY': True,
     'JWT_VERIFY_EXPIRATION': True,
     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=3000),
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=30),
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -240,14 +261,23 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 # look in the app and find a model named Account
 AUTH_USER_MODEL = 'vpmoauth.MyUser'
 
-# Pointing to the routing protocols for django-channels
-ASGI_APPLICATION = "vpmoprj.routing.application"
+# For disabling migrations during testing
+"""
+import sys
 
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
-        },
-    },
-}
+TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
+if TESTING:
+    print('=========================')
+    print('In TEST Mode - Disableling Migrations')
+    print('=========================')
+
+    class DisableMigrations(object):
+
+        def __contains__(self, item):
+            return True
+
+        def __getitem__(self, item):
+            return "notmigrations"
+
+    MIGRATION_MODULES = DisableMigrations()
+"""

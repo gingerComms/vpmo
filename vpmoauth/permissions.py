@@ -1,5 +1,4 @@
 from rest_framework import permissions
-from guardian import shortcuts
 from vpmoauth.models import MyUser
 
 

@@ -9,23 +9,57 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.template.defaultfilters import slugify
-from guardian import shortcuts
 from django.apps import AppConfig
 from django.apps import apps
+from django.core.mail import send_mail
 
 from djongo import models
 from django import forms
 
 from vpmoprj.settings import AUTH_USER_MODEL
 
-from django.core.mail import send_mail
-import guardian.mixins
-from guardian import shortcuts
+from twilio.rest import Client
 
 # to add a field to mongodb collection after adding it to model
 # 1- connect to mongodb via shell
 # 2- use cluster0
 # 3- db.[collection name].update({},{$set : {"field_name":null}},false,true)
+
+
+class Task(models.Model):
+    """ Represents a Tasks assignable to users for project/topic nodes """
+    STATUS_CHOICES = [
+        ("NEW", "New"),
+        ("IN_PROGRESS", "In Progress"),
+        ("COMPLETE", "Complete"),
+    ]
+
+    _id = models.ObjectIdField()
+    # The node can be a Project or a Subclass of Topic
+    node = models.ForeignKey("TreeStructure", on_delete=models.CASCADE)
+
+    title = models.CharField(max_length=255, unique=False, blank=False)
+    created_by = models.ForeignKey("vpmoauth.MyUser", on_delete=models.CASCADE, related_name="created_task_set")
+    created_at = models.DateTimeField(auto_now_add=True, auto_now=False)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    # The user the task is assigned to currently (defaults to created_by)
+    assignee = models.ForeignKey("vpmoauth.MyUser", on_delete=models.CASCADE, related_name="assigned_task_set")
+
+    status = models.CharField(max_length=11, choices=STATUS_CHOICES, blank=False, unique=False)
+    due_date = models.DateField(auto_now=False, auto_now_add=False, null=False)
+    closed_at = models.DateTimeField(auto_now=False, auto_now_add=False, null=True)
+
+    def __str__(self):
+        return "<{title}>: {due_date}".format(title=self.title, due_date=self.due_date.strftime("%d/%m/%Y"))
+
+
+    def save(self, *args, **kwargs):
+        """ Minor amendments to save for generic conditions """
+        if self.status != "COMPLETE":
+            self.closed_at = None
+
+        super(Task, self).save(*args, **kwargs)
 
 
 class TreeStructure(models.Model):
@@ -36,6 +70,9 @@ class TreeStructure(models.Model):
     index = models.IntegerField(default=0, null=False)
 
     node_type = models.CharField(max_length=48, default="Team")
+
+    # The twilio channel SID for this node
+    channel_sid = models.CharField(max_length=34, blank=False)
 
     # other than the Teams the rest of the nodes get created under (as a child)
     # OR at the same level of another node (sibling)
@@ -72,8 +109,81 @@ class TreeStructure(models.Model):
         return parent
 
 
+    def get_model_class(self):
+        # Return the Node Type if it isn't set to topic
+        if self.node_type != "Topic":
+            return apps.get_model("vpmotree", self.node_type)
+        # Otherwise, try to find each topic attr
+        else:
+            topic_types = ["deliverable", "issue"]
+            for topic_type in topic_types:
+                try:
+                    return getattr(self, topic_type)._meta.model
+                except Exception as e:
+                    continue
+        return
+
+    def get_object(self):
+        """ Returns the particular model instance for this treeStructure node """
+        model = self.get_model_class()
+        return model.objects.get(_id=self._id)
+
     def save(self, *args, **kwargs):
         super(TreeStructure, self).save(*args, **kwargs)
+
+    def create_channel(self):
+        """ Creates the twilio chat channel for this node
+            Must be called after the object has been created
+        """
+        obj = self.get_object()
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+        channel = client.chat.services(settings.TWILIO_CHAT_SERVICE_SID) \
+                    .channels \
+                    .create(unique_name=self._id, friendly_name=obj.name)
+        self.channel_sid = channel.sid
+        self.save()
+
+    def delete_channel(self):
+        """ Deletes the channel related to this node """
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+        channel = client.chat.services(settings.TWILIO_CHAT_SERVICE_SID) \
+                    .channels(str(self._id)) \
+                    .delete()
+        self.channel_sid = ""
+        self.save()
+
+    def get_users_in_channel(self):
+        """ Returns all users part of this node's channel """
+        if not self.channel_sid:
+            raise ValueError("Node doesn't have a channel")
+
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+        # List of member objects for this channel
+        members = client.chat.services(settings.TWILIO_CHAT_SERVICE_SID) \
+                     .channels(self._id) \
+                     .members \
+                     .list()
+
+        return members
+
+    def update_channel_access(self):
+        """ Updates the channel access for all users that should have update access
+            to this node - Only checks for additions because all removals are handled by
+            `assign_role` currently - removal only happens when role is changed while
+            addition can happen when node is created
+            NOTE - MAY NOT BE NECESSARY SINCE HANDLOOED IN ASSIGN_ROLE
+        """
+        users_to_add = apps.get_model("vpmoauth", "UserRole") \
+                        .get_user_ids_with_heirarchy_perms(self, "update_"+self.node_type.lower())
+        users_to_add = apps.get_model("vpmoauth", "MyUser") \
+                        .objects.filter(_id__in=users_to_add)
+
+        # Adding the users to the channel
+        for i in users_to_add:
+            i.add_to_channel(str(self._id))
+
+        return users_to_add
+
 
     def __str__(self):
         return '%s - %s' % (self._id, self.node_type)
@@ -124,23 +234,19 @@ class Project(TreeStructure):
         self.node_type = "Project"
         super(Project, self).save(*args, **kwargs)
 
-    def get_users_with_role(self, role):
-        # Returns users that have any perms for the object
-        user_perms = shortcuts.get_users_with_perms(self, with_superusers=False, attach_perms=True)
-        # Filtering those users to only the ones that have permissions from role_map
-        return filter(lambda x: user_perms[x] == self.ROLE_MAP[role][self.node_type], user_perms)
-
 
 class Topic(TreeStructure):
     """ A Topic is a LEAF level element in a TreeStructure;
         can not have ANY children, and is always parented by a BRANCH Level element (Project)
     """
+
     topic_classes = [
-        "Deliverable"
+        "Deliverable",
+        "Issue",
     ]
 
     name = models.CharField(max_length=150, null=False, unique=False)
-    # content = models.CharField(max_length=150, null=False, unique=False)
+    content = models.TextField(blank=True, null=True)
     def __str__(self):
         return "{name} - {type}".format(name=self.name, type=type(self).__name__)
 
@@ -156,17 +262,16 @@ class Deliverable(Topic):
         super(Deliverable, self).save(*args, **kwargs)
 
 
-class Message(models.Model):
-    """ Represents every individual message in a Team's chatroom
-        The Path for this model is set by the socket consumer whenever a new message is recieved
-        - The index is basically set by the order the messages are received in (sent_on)
-    """
-    _id = models.ObjectIdField()
-    node = models.ForeignKey(TreeStructure, on_delete=models.CASCADE)
-    author = models.ForeignKey("vpmoauth.MyUser", on_delete=models.CASCADE)
-    content = models.CharField(max_length=250, null=False, unique=False)
+class Issue(Topic):
+    SEVERITY_CHOICES = [
+        ('1', 'Low',),
+        ('2', 'Medium',),
+        ('3', "High",)
+    ]
+    due_date = models.DateTimeField(auto_now=False, auto_now_add=False)
+    assignee = models.ForeignKey("vpmoauth.MyUser", on_delete=models.CASCADE)
+    severity = models.CharField(max_length=1, choices=SEVERITY_CHOICES, blank=False, default='1')
 
-    sent_on = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return "{} - {}".format(self.author.email, self.sent_on.strftime("%m-%d-%Y %H:%M"))
+    def save(self, *args, **kwargs):
+        self.node_type = "Topic"
+        super(Issue, self).save(*args, **kwargs)

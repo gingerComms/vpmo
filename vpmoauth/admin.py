@@ -6,7 +6,6 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from guardian.admin import GuardedModelAdmin
 
 # Register your models here.
 
@@ -14,10 +13,6 @@ from vpmotree.models import Team, Project, Deliverable
 from .models import MyUser
 
 # admin.site.register(Project)
-
-class TeamAdmin(GuardedModelAdmin):
-    list_display = ('name',)
-    search_fields = ('name',)
 
 # admin.site.register(Team, TeamAdmin)
 

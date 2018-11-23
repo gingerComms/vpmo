@@ -1,4 +1,3 @@
-from django.db import models
 from django.conf import settings
 
 from djongo import models
@@ -10,11 +9,8 @@ from django.contrib.auth.models import PermissionsMixin, Group
 
 from vpmoauth.managers import MyUserManager
 from vpmoauth.role_permissions_map import ROLES_MAP
-from vpmotree.models import Team
-
-from guardian.mixins import GuardianUserMixin
-from guardian import shortcuts
-from guardian.models import UserObjectPermission
+from vpmotree.models import Team, TreeStructure
+from twilio.rest import Client
 
 
 class UserRolePermission(models.Model):
@@ -42,14 +38,37 @@ class UserRole(models.Model):
 
     @staticmethod
     def get_user_ids_with_perms(node):
+        """ Returns users that have direct perms to the node """
         user_ids = UserRole.objects.filter(node=node).values_list("user___id", flat=True)
         return user_ids
+
+    @staticmethod
+    def get_user_ids_with_heirarchy_perms(node, perm_name):
+        """ Returns Users that have access to the perm either directly or through a parent """
+        node_branch = list(filter(lambda x: x.strip(), node.path.split(",") if node.path else '')) + [str(node._id)]
+        user_ids = UserRole.objects.filter(node___id__in=node_branch, permissions__name=perm_name).values_list("user___id", flat=True)
+        return user_ids
+
+    @staticmethod
+    def get_assigned_nodes(user, parent_node, perm_type="update"):
+        """ Returns all nodes the user has the `perm_type` permission for """
+        parent_node_condition = Q(node___id=parent_node) | Q(node__path__contains=parent_node)
+        permission_condition = Q(permissions__name=perm_type+"_team") \
+                                | Q(permissions__name=perm_type+"_project") \
+                                | Q(permissions__name=perm_type+"_topic")
+
+        node_ids = UserRole.objects.filter(
+                        parent_node_condition,
+                        permission_condition,
+                        user=user
+                    ).values_list("node___id", flat=True)
+        return node_ids
 
 
 # user.userrole_set.filter(node__id__in=[all_node_ids (parents + self)], permissions__permission_name__in=["read_topic"])
 
 
-class MyUser(AbstractBaseUser, GuardianUserMixin):
+class MyUser(AbstractBaseUser):
     _id = models.ObjectIdField()
     email = models.EmailField(
         verbose_name='email address',
@@ -69,6 +88,9 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
     fullname = models.CharField(max_length=100, null=True)
     username = models.CharField(max_length=100, unique=True, null=False)
     groups = models.ManyToManyField(Group, related_name="groups")
+
+    # The nodes favorited by the user - shows up in the side bar
+    favorite_nodes = models.ManyToManyField(TreeStructure, blank=True)
 
     objects = MyUserManager()
 
@@ -99,7 +121,73 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
         """ Arbitrary method used in the UserDeserializer for email validation """
         return "Email field for validation of email"
 
-    def assign_role(self, role, node):
+    def get_user_channels(self):
+        """ Returns a list of channel objects assigned to this user """
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+        # This internally does a filter of channels that contain this user's username in it's members list
+        channels = client.chat \
+          .services(settings.TWILIO_CHAT_SERVICE_SID) \
+          .users(self.username) \
+          .user_channels \
+          .list()
+        return channels
+
+    def remove_from_channel(self, channel):
+        """ Removes this user from the given channel """
+        # The username is the identity for the user in a channel
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+        try:
+            client.chat.services(settings.TWILIO_CHAT_SERVICE_SID) \
+                .channels(channel) \
+                .members(self.username) \
+                .delete()
+        except:
+            return
+
+        return True
+
+    def add_to_channel(self, channel):
+        """ Adds the user to the given channel """
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+        try:
+            member = client.chat.services(settings.TWILIO_CHAT_SERVICE_SID) \
+                        .channels(channel) \
+                        .members \
+                        .create(identity=self.username)
+        except:
+            return
+
+        return member
+
+    def update_channel_access(self, node, new_perms):
+        """ Updates the user channel access for the given node branch
+            Note: The assigned node is passed as the parent for get_assigned_nodes 
+            because only the children of the assigned node or the assigned node itself
+            have any chance of needing channels added
+        """
+        # The nodes  channels the user is added to
+        user_channels = [i.channel_sid for i in self.get_user_channels()]
+        nodes_already_added = TreeStructure.objects.filter(channel_sid__in=user_channels) \
+                                .values_list("_id", flat=True)
+        # The nodes the user has at least update access to
+        accessible_nodes = UserRole.get_assigned_nodes(self, str(node._id), "update")
+
+        # Nodes to remove is defined as channels the user is currently added to but can not access
+        nodes_to_remove = [i for i in nodes_already_added if i not in accessible_nodes]
+        # Nodes to add is defined as nodes the user can access but is not added to
+        nodes_to_add = [i for i in accessible_nodes if i not in nodes_already_added]
+
+        # Actually adding to and removing from the channels
+        for i in nodes_to_remove:
+            self.remove_from_channel(i)
+
+        for i in nodes_to_add:
+            self.add_to_channel(i)
+
+        return accessible_nodes
+
+
+    def assign_role(self, role, node, test=False):
         assert role in ROLES_MAP.keys()
 
         # Check if the user already has a role for this user, and remove it if it exists
@@ -112,6 +200,7 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
 
         # Getting the permissions belonging to each orle
         permissions = ROLES_MAP[role]
+
         # Getting the permissions from the database
         permissions = UserRolePermission.objects.filter(name__in=permissions)
 
@@ -126,10 +215,17 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
         role.permissions.add(*permissions)
         role.save()
 
+        # Removing/adding the user to the channel for this node based on the new role
+        # If this isn't a test
+        if not test:
+            self.update_channel_access(node, permissions.values_list("name", flat=True))
+
         return role
 
     def remove_role(self, node):
         """ Removes the provided role from the current user for the node """
+        # Removing from node channel
+        self.remove_from_channel(str(node._id))
         # All the roles the user has for the node and the children of this node
         to_remove = UserRole.objects.filter(Q(node__path__contains=node._id) | Q(node___id=node._id), user=self)
         deleted = to_remove.delete()
@@ -149,6 +245,7 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
         }
         if not all_types:
             filters["permissions__name__icontains"] = node.node_type
+
         permissions = UserRole.objects.filter(**filters).values_list("permissions__name", flat=True).distinct()
         return permissions
 
@@ -165,5 +262,6 @@ class MyUser(AbstractBaseUser, GuardianUserMixin):
                 user_linked=True,
             )
         team.save()
+        team.create_channel()
         # give the user created_obj permission against this team
         self.assign_role("team_admin", team)

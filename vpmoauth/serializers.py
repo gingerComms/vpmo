@@ -2,13 +2,10 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth import update_session_auth_hash
 from rest_framework.response import Response
-
+from vpmoprj.serializers import *
 
 class AllUsersSerializer(serializers.ModelSerializer):
-    _id = serializers.SerializerMethodField(required=False)
-
-    def get__id(self, instance):
-        return str(instance._id)
+    _id = ObjectIdField(read_only=True)
 
     class Meta:
         model = get_user_model()
@@ -22,11 +19,9 @@ class AllUsersSerializer(serializers.ModelSerializer):
 
 
 class UserDetailsSerializer(serializers.ModelSerializer):
-    _id = serializers.SerializerMethodField(required=False)
+    _id = ObjectIdField(read_only=True)
+    favorite_nodes = MinimalNodeSerializer(required=False, many=True)
 
-    def get__id(self, instance):
-        return str(instance._id)
-        
     class Meta:
         model = get_user_model()
         fields = (
@@ -34,7 +29,8 @@ class UserDetailsSerializer(serializers.ModelSerializer):
                 'email',
                 # 'password',
                 'fullname',
-                'username'
+                'username',
+                "favorite_nodes",
         )
 
 

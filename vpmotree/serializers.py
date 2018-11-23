@@ -1,109 +1,177 @@
 from rest_framework import serializers
-from .models import Team, Project, Deliverable, TreeStructure, Message, Topic
-from vpmoauth.models import UserRole
+from rest_framework import fields
+
+from .models import Team, Project, Deliverable, TreeStructure, Topic, Task, Issue
+from vpmoauth.models import UserRole, MyUser
+from vpmoauth.serializers import UserDetailsSerializer
+from vpmoprj.serializers import *
+
 from django.apps import apps
 from django.db.models import Q
 from rest_framework.fields import CurrentUserDefault
 
 
-class MessageSerializer(serializers.ModelSerializer):
-    _id = serializers.SerializerMethodField(required=False)
-    author = serializers.CharField(source="author.username", required=False)
 
-    def get__id(self, instance):
-        return str(instance._id)
+class TaskSerializer(serializers.ModelSerializer):
+    _id = ObjectIdField(read_only=True)
+    node = RelatedObjectIdField(queryset=TreeStructure.objects.all())
+    created_by = RelatedObjectIdField(queryset=MyUser.objects.all())
+    assignee = UserDetailsSerializer(required=False)
+    due_date = serializers.DateField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d"], allow_null=True, required=False)
+
+    def get_assignee_name(self, instance):
+        try:
+            return instance.assignee.fullname
+        except:
+            return None
+
+    def validate(self, data):
+        # Getting the assignee from the initial data passed into serializer
+        assignee_id = self.initial_data.get("assignee_id", None)
+        # Validating the rest of the fields
+        data = super(TaskSerializer, self).validate(data)
+        # Setting the foreign key
+        if assignee_id:
+            data["assignee"] = MyUser.objects.get(_id=assignee_id)
+
+        return data
 
     class Meta:
-        model = Message
-        fields = ["_id", "author", "content", "sent_on"]
+        model = Task
+        fields = "__all__"
 
 
 class ProjectSerializer(serializers.ModelSerializer):
-    _id = serializers.SerializerMethodField(required=False)
+    _id = ObjectIdField(read_only=True)
     project_owner = serializers.SerializerMethodField(required=False)
+    start = serializers.DateField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d"], allow_null=True, required=False)
+    user_permissions = serializers.SerializerMethodField(required=False)
+    user_role = serializers.SerializerMethodField(required=False)
+
+    def get_user_permissions(self, instance):
+        return self.context["request"].user.get_permissions(instance)
+
+    def get_user_role(self, instance):
+        role = self.context["request"].user.get_role(instance)
+        return role.role_name if role else None
 
     def get_project_owner(self, instance):
         if instance.project_owner:
             return str(instance.project_owner)
         return None
 
-    def get__id(self, instance):
-        return str(instance._id)
-
     class Meta:
         model = Project
-        fields = ["_id", "name", "description", "content", "start", "project_owner", "path", "index"]
+        fields = ["_id", "name", "description", "content", "start", "project_owner", "path", "index", "node_type",
+                "created_at", "user_permissions", "user_role"]
 
 
 class TeamSerializer(serializers.ModelSerializer):
     # projects = ProjectSerializer(read_only=True, many=True)
-    _id = serializers.SerializerMethodField(required=False)
+    _id = ObjectIdField(read_only=True)
+    user_permissions = serializers.SerializerMethodField(required=False)
+    user_role = serializers.SerializerMethodField(required=False)
 
-    def get__id(self, instance):
-        print(str(instance._id))
-        return str(instance._id)
+    def get_user_permissions(self, instance):
+        return self.context["request"].user.get_permissions(instance)
+
+    def get_user_role(self, instance):
+        role = self.context["request"].user.get_role(instance)
+        return role.role_name if role else None
 
     class Meta:
         model = Team
-        fields = ["_id", "name", "user_linked", "created_at", "updated_at", "user_team"]
+        fields = ["_id", "name", "user_linked", "created_at", "updated_at", "user_team",
+                "node_type", "user_permissions", "user_role"]
 
 
 class DeliverableSerializer(serializers.ModelSerializer):
-    _id = serializers.SerializerMethodField(required=False)
+    _id = ObjectIdField(read_only=True)
+    due_date = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%d %H:%M:%S"], allow_null=True, required=False)
+    topic_type = serializers.SerializerMethodField(required=False)
+    user_permissions = serializers.SerializerMethodField(required=False)
+    user_role = serializers.SerializerMethodField(required=False)
 
-    def get__id(self, instance):
-        return str(instance._id)
+    def get_user_permissions(self, instance):
+        return self.context["request"].user.get_permissions(instance)
+
+    def get_user_role(self, instance):
+        role = self.context["request"].user.get_role(instance)
+        return role.role_name if role else None
+
+    def get_topic_type(self, obj):
+        return "Deliverable"
 
     class Meta:
         model = Deliverable
-        fields = ["_id", "name", "node_type", "path", "index"]
+        fields = ["_id", "name", "node_type", "path", "index", "due_date", "content", "topic_type",
+                "user_permissions", "user_role"]
 
 
-# class ProjectTreeSerializer(serializers.ModelSerializer):
-#     _id = serializers.SerializerMethodField(required=False)
-#
-#     def get__id(self, instance):
-#         return str(instance._id)
-#
-#     class Meta:
-#         model = Project
-#         fields = ["_id", "name", "description", "node_type", "path", "index"]
+class IssueSerializer(serializers.ModelSerializer):
+    _id = ObjectIdField(read_only=True)
+    due_date = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%d %H:%M:%S"], allow_null=True, required=False)
+    assignee = UserDetailsSerializer(required=False, allow_null=True)
+    topic_type = serializers.SerializerMethodField(required=False)
+    user_permissions = serializers.SerializerMethodField(required=False)
+    user_role = serializers.SerializerMethodField(required=False)
 
+    def get_user_permissions(self, instance):
+        return self.context["request"].user.get_permissions(instance)
 
-# class TeamTreeSerializer(serializers.ModelSerializer):
-#     _id = serializers.SerializerMethodField(required=False)
-#
-#     def get__id(self, instance):
-#         return str(instance._id)
-#
-#     class Meta:
-#         model = Team
-#         fields = ["_id", "name", "node_type", "path", "index"]
+    def get_user_role(self, instance):
+        role = self.context["request"].user.get_role(instance)
+        return role.role_name if role else None
+
+    def get_topic_type(self, obj):
+        return "Issue"
+
+    def get_assignee_name(self, instance):
+        try:
+            return instance.assignee.fullname
+        except:
+            return None
+
+    def validate(self, data):
+        # Getting the assignee from the initial data passed into serializer
+        assignee_id = self.initial_data.get("assignee_id", None)
+        # Validating the rest of the fields
+        data = super(IssueSerializer, self).validate(data)
+        # Setting the foreign key
+        if assignee_id:
+            data["assignee"] = MyUser.objects.get(_id=assignee_id)
+        return data
+
+    class Meta:
+        model = Issue
+        fields = ["_id", "name", "node_type", "path", "index", "due_date", "content", "severity", "assignee",
+                "topic_type", "user_permissions", "user_role"]
 
 
 class TreeStructureWithoutChildrenSerializer(serializers.Serializer):
-    _id = serializers.SerializerMethodField()
+    _id = ObjectIdField(read_only=True)
     path = serializers.CharField(max_length=4048)
     index = serializers.IntegerField()
     node_type = serializers.CharField(max_length=48)      
     name = serializers.SerializerMethodField()
 
-    def get__id(self, instance):
-        return str(instance._id)
-
     def get_name(self, instance):
-        model = apps.get_model('vpmotree', instance.node_type)
-        name = model.objects.get(treestructure_ptr_id=instance).name
-        return name
+        if instance._meta.model == TreeStructure:
+            return instance.get_object().name
+        return instance.name
 
 class TreeStructureWithChildrenSerializer(serializers.Serializer):
-    _id = serializers.SerializerMethodField()
+    _id = ObjectIdField(read_only=True)
     path = serializers.CharField(max_length=4048)
     index = serializers.IntegerField()
-    name = serializers.CharField(max_length=150)
+    name = serializers.SerializerMethodField()
     children = serializers.SerializerMethodField()
     node_type = serializers.CharField(max_length=48)
 
+    def get_name(self, instance):
+        if instance._meta.model == TreeStructure:
+            return instance.get_object().name
+        return instance.name
 
     def get_branch_extensions(self, branch, branch_level):
         """ Takes a branch as input and starts the loop for either the next branches (if they exist) or the leaves """
@@ -129,7 +197,7 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
         child_condition = Q(path__startswith=","+str(instance._id)) | Q(path__icontains=str(instance._id))
         role_condition = Q(node_type__in=allowed_node_types) | Q(user_role_node__user=self.user)
         
-        self.all_children = TreeStructure.objects.filter(child_condition, role_condition)
+        self.all_children = TreeStructure.objects.filter(child_condition, role_condition).distinct()
 
         if instance.node_type == "Team":
             # All objects starting from the current ROOT (Team)
@@ -152,5 +220,27 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
         return children
 
 
-    def get__id(self, instance):
-        return str(instance._id)
+class NodeParentsSerializer(serializers.Serializer):
+    _id = ObjectIdField(read_only=True)
+    node = serializers.SerializerMethodField()
+    immediate_parent = serializers.SerializerMethodField()
+    root = serializers.SerializerMethodField()
+
+    def get_node(self, instance):
+        return MinimalNodeSerializer(instance).data
+
+    def get_immediate_parent(self, instance):
+        if instance.path is None:
+            return None
+        split_path = list(filter(lambda x: x.strip(), instance.path.split(',')))
+        if len(split_path) <= 2:
+            return None
+        parent = TreeStructure.objects.get(_id=split_path[-1])
+        return MinimalNodeSerializer(parent).data
+
+    def get_root(self, instance):
+        if instance.path is None:
+            return MinimalNodeSerializer(instance).data
+        split_path = list(filter(lambda x: x.strip(), instance.path.split(',')))
+        parent = TreeStructure.objects.get(_id=split_path[0])
+        return MinimalNodeSerializer(parent).data

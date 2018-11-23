@@ -8,7 +8,8 @@ ROLES_MAP = {
 		"read_project",
 		"update_project",
 		"read_topic",
-		"read_team"
+		"read_team",
+		"update_team"
 	],
 	"team_admin": [
 		"create_project",

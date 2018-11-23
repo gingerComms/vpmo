@@ -11,24 +11,20 @@ from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticate
 from rest_framework import filters
 from rest_framework import status
 from vpmoauth.models import MyUser, UserRole
+from vpmoauth.serializers import UserDetailsSerializer
 
 from vpmotree.models import *
 from vpmotree.serializers import *
-from vpmotree.permissions import TeamPermissions, CreatePermissions
-from vpmotree.filters import TeamListFilter, ReadNodeListFilter
-from guardian import shortcuts
+from vpmotree.permissions import TeamPermissions, \
+                                CreatePermissions, \
+                                TaskListCreateAssignPermission, \
+                                GeneralNodePermission
+from vpmotree.filters import ReadNodeListFilter
 
 from datetime import datetime as dt
 
 
-class FilteredTeamsView(ListAPIView):
-    serializer_class = TeamSerializer
-    permission_classes = [IsAuthenticated, TeamPermissions]
-    queryset = Team.objects.all()
-    filter_backends = (TeamListFilter,)
-
-
-class AllNodesView(ListAPIView):
+class AllNodesListView(ListAPIView):
     permission_classes = [IsAuthenticated]
     filter_backends = [ReadNodeListFilter]
 
@@ -46,7 +42,35 @@ class AllNodesView(ListAPIView):
         return self.serializers[self.request.query_params["nodeType"]]
 
 
+class NodeParentsListView(ListAPIView):
+    """ Returns a list of all nodes in the path of the input node (including the input node itself) """
+
+    serializer_class = MinimalNodeSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        """ Returns the node object from the url id arg """
+        try:
+            node = TreeStructure.objects.get(_id=self.kwargs.get("nodeID", None))
+        except TreeStructure.DoesNotExist:
+            return []
+        # If the node's path is None (node is a team) return just the node
+        if node.path is None:
+            return [node]
+
+        # Otherwise, return all nodes in the node's path
+        node_path = list(filter(lambda x: x.strip(), node.path.split(',')))
+        node_path.append(str(node._id))
+        
+        nodes_in_path = TreeStructure.objects.filter(_id__in=node_path)
+        # Sorting the nodes by index in the path
+        nodes_in_path = sorted(nodes_in_path, key=lambda x: node_path.index(str(x._id)))
+
+        return nodes_in_path
+
+
 class AllProjectsView(ListAPIView):
+    # LEGACY VIEW - MAY BE REMOVED
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [ReadNodeListFilter,]
@@ -54,12 +78,14 @@ class AllProjectsView(ListAPIView):
 
 
 class AllTeamsView(ListAPIView):
+    # LEGACY VIEW - MAY BE REMOVED
     serializer_class = TeamSerializer
     permission_classes = [IsAuthenticated]
     queryset = Team.objects.all()
 
 
 class CreateProjectView(CreateAPIView):
+    """ LEGACY VIEW - MAY BE REMOVED """
     model = Project
     serializer_class = ProjectSerializer
     permission_classes = (IsAuthenticated, CreatePermissions,)
@@ -74,6 +100,9 @@ class CreateProjectView(CreateAPIView):
         serializer = ProjectSerializer(data=data)
         if serializer.is_valid():
             project = serializer.save()
+            project.create_channel()
+            project.update_channel_access()
+
             request.user.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -82,53 +111,115 @@ class CreateProjectView(CreateAPIView):
 class CreateTeamView(CreateAPIView):
     model = Team
     serializer_class = TeamSerializer
-    permission_classes = (IsAuthenticated, CreatePermissions)
+    # Any authenticated user is allowed to create teams
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         """ Handles creation of the team through the TeamSerializer """
-        self.check_object_permissions()
         data = request.data.copy()
         data["user_team"] = request.data["name"] + "@" +request.user.username
         data["user_linked"] = False
-        serializer = TeamSerializer(data=data)
+        data = {
+            "name": request.data["name"],
+            "user_linked": False,
+            "user_team": "{team_name}@{user_name}".format(team_name=request.data["name"], user_name=request.user.username)
+        }
+        serializer = TeamSerializer(data=data, context={"request": request})
         if serializer.is_valid():
             team = serializer.save()
+            team.create_channel()
             request.user.save()
             request.user.assign_role("team_admin", team)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UpdateProjectView(RetrieveUpdateAPIView):
-    queryset = Project
-    serializer_class = ProjectSerializer
-    lookup_field = "_id"
+class CreateNodeView(CreateAPIView):
+    """ Creates all node types that fall under a treestructure except Teams """
+    permission_classes = (IsAuthenticated,)
 
-    def partial_update(self, request, _id, *args, **kwargs):
-        """ This method gets called on a PATCH request - partially updates the model """
+    def get_serializer_class(self):
+        """ Returns the serializer responsible for creating the current node """
+        mapped_classes = {
+            "Project": ProjectSerializer,
+            "Deliverable": DeliverableSerializer,
+            "Issue": IssueSerializer
+        }
+        return mapped_classes[self.kwargs["nodeType"]]
+
+    def create(self, request, nodeType, *args, **kwargs):
+        data = request.data.copy()
+
+        parent_node = TreeStructure.objects.get(_id=data.pop("parentID"))
+        data["path"] = "{parent_path}{parent_id},".format(parent_path=parent_node.path or ",", parent_id=str(parent_node._id))
+
+        serializer = self.get_serializer_class()(data=data, context={"request": request})
+        if serializer.is_valid():
+            node = serializer.save()
+            node.save()
+            node.create_channel()
+            node.update_channel_access()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RetrieveUpdateNodeView(RetrieveUpdateAPIView):
+    permission_classes = (IsAuthenticated, GeneralNodePermission)
+
+    def get_object(self):
+        print(self.kwargs["nodeID"])
         try:
-            project = Project.objects.get(_id=_id)
-        except Project.DoesNotExist:
-            return Response({"message": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
+            node = TreeStructure.objects.get(_id=self.kwargs["nodeID"]).get_object()
+            self.check_object_permissions(self.request, node)
+            return node
+        except TreeStructure.DoesNotExist:
+            return None
 
-        serializer = self.serializer_class(project, data=request.data, partial=True)
+    def get_model(self):
+        node = TreeStructure.objects.get(_id=self.kwargs["nodeID"])
+        return node.get_model_class()
+
+    def get_serializer_class(self):
+        """ Returns the serializer responsible for creating the current node """
+        mapped_classes = {
+            "Project": ProjectSerializer,
+            "Deliverable": DeliverableSerializer,
+            "Team": TeamSerializer,
+            "Issue": IssueSerializer,
+        }
+
+        model = self.get_model()
+        return mapped_classes[self.get_model().__name__]
+
+    def partial_update(self, request, *args, **kwargs):
+        """ This method gets called on a PATCH request - partially updates the model """
+        node = self.get_object()
+        if node is None:
+            return Response({"message": "Node not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        data = request.data.copy()
+        # Taking out _id from the input data if it's there (not needed since this is a partial update)
+        if "_id" in data.keys():
+            _id = data.pop("_id")
+            
+        serializer = self.get_serializer_class()(node, data=data, partial=True, context={"request": request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class TeamTreeView(RetrieveUpdateAPIView):
-    model = Team
+class NodeTreeView(RetrieveUpdateAPIView):
+    model = TreeStructure
     serializer_class = TreeStructureWithChildrenSerializer
     permission_classes = (IsAuthenticated,)
 
     def get_object(self):
-        """ Returns the team object from the url id arg """
+        """ Returns the node object from the url id arg """
         try:
-            team = Team.objects.get(_id=self.kwargs.get("team_id", None))
-            return team
-        except Team.DoesNotExist:
+            node = TreeStructure.objects.get(_id=self.kwargs.get("nodeID", None))
+            return node
+        except TreeStructure.DoesNotExist:
             return None
 
 
@@ -166,7 +257,7 @@ class TeamTreeView(RetrieveUpdateAPIView):
         return list(filter(lambda x: str(x.path.split(",")[-2]) == str(node_id), all_children))
 
 
-    def update(self, request, team_id):
+    def update(self, request, nodeID):
         """ Updates the models based on the input hierarchy; takes a dictionary starting from a single team as input """
         # request.data should be an array of nodes
         nodes = request.data
@@ -191,24 +282,14 @@ class TeamTreeView(RetrieveUpdateAPIView):
 
 
         # The top most element is always a team, so second level is always projects
+        """
         if nodes[0]["path"] is not None:
             team_id = nodes[0]["path"].split(",")[1]
         else:
             team_id = nodes[0]["_id"]
-        team = Team.objects.get(_id=team_id)
-        return Response(TreeStructureWithChildrenSerializer(team).data)
-
-
-class ProjectTreeView(TeamTreeView):
-    model = Project
-
-    def get_object(self):
-        """ Returns the project object from the url id arg """
-        try:
-            project = Project.objects.get(_id=self.kwargs.get("project_id", None))
-            return project
-        except Project.DoesNotExist:
-            return None
+        """
+        node = self.get_object()
+        return Response(TreeStructureWithChildrenSerializer(node, context={"request": request}).data)
 
 
 class CreateDeliverableView(CreateAPIView):
@@ -217,42 +298,22 @@ class CreateDeliverableView(CreateAPIView):
     permission_classes = (IsAuthenticated,)
 
 
-class MessageListView(ListAPIView):
-    model = Message
-    serializer_class = MessageSerializer
+class CreateIssueView(CreateAPIView):
+    model = Issue
+    serializer_class = IssueSerializer
     permission_classes = (IsAuthenticated,)
-
-    def get_queryset(self):
-        earlier_than = self.request.query_params.get('earlier_than', None)
-        node_id = self.kwargs["node_id"]
-
-        filter_d = {}
-        try:
-            filter_d["node"] = TreeStructure.objects.get(_id=node_id)
-        except TreeStructure.DoesNotExist:
-            return None
-
-        if earlier_than is not None:
-            earlier_msg = Message.objects.get(_id=earlier_than)
-            filter_d["sent_on__lt"] = earlier_msg.sent_on
-
-        messages = Message.objects.filter(**filter_d).order_by("-sent_on")[:20]
-        messages = sorted(messages, key=lambda x: x.sent_on)
-
-        return messages
 
 
 class NodePermissionsView(APIView):
     """ Returns a list of user-role map for a particular node of given nodeType """
 
     def get(self, request, node_id):
-        assert request.query_params.get("nodeType") in ["Project", "Team", "Deliverable"]
-        # Fetching the node using the node_id and nodeType
-        node_type = globals()[request.query_params.get("nodeType")]
+        assert request.query_params.get("nodeType") in ["Project", "Team", "Topic"]
+
         try:
-            node = node_type.objects.get(_id=node_id)
-        except node_type.DoesNotExist:
-            return Response({"message": "{} not found.".format(request.query_params["nodeType"])},
+            node = TreeStructure.objects.get(_id=node_id)
+        except TreeStructure.DoesNotExist:
+            return Response({"message": "TreeStructure not found."},
                             status=status.HTTP_404_NOT_FOUND)
 
         # Getting a dictionary of all users that have any permissions to the model
@@ -277,16 +338,17 @@ class AssignableRolesView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, node_id):
-        model = apps.get_model("vpmotree", request.query_params["nodeType"])
         try:
-            node = model.objects.get(_id=node_id)
-        except model.DoesNotExist:
+            node = TreeStructure.objects.get(_id=node_id)
+            node = node.get_object()
+        except TreeStructure.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         permissions = list(request.user.get_permissions(node, all_types=True))
 
         assignable_roles = []
 
+        model = node.get_model_class()
         if "update_team_user_role" in permissions and model == Team:
             assignable_roles += ["team_member", "team_lead", "team_admin"]
         elif "update_project_user_role" in permissions and model == Project:
@@ -295,3 +357,126 @@ class AssignableRolesView(APIView):
             assignable_roles += ["topic_viewer", "topic_contributor"]
 
         return Response(assignable_roles)
+
+
+class AssignableTaskUsersView(ListAPIView):
+    """ Returns a list of users that can be assigned a task for a given node """
+    serializer_class = UserDetailsSerializer
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ("username",)
+
+    def get_queryset(self):
+        node = self.kwargs["nodeID"]
+        try:
+            node = TreeStructure.objects.get(_id=node)
+            node = node.get_object()
+        except TreeStructure.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        required_perm = "update_{}".format(node.node_type.lower())
+        users_with_update_perms = UserRole.get_user_ids_with_heirarchy_perms(node, required_perm)
+
+        return MyUser.objects.filter(_id__in=users_with_update_perms)
+
+
+class AssignedTasksListView(ListAPIView):
+    """ Returns a list of tasks for the current node """
+    serializer_class = TaskSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return Task.objects.filter(node___id=self.kwargs["nodeID"]).order_by("-created_at")
+
+
+class DeleteUpdateCreateTaskView(APIView):
+    """ View that takes a post request for creating a Task object with the given data """
+    serializer_class = TaskSerializer
+    permission_classes = (IsAuthenticated, TaskListCreateAssignPermission,)
+
+    def delete(self, request, *args, **kwargs):
+        """ Deletes the input task """
+        data = request.data.copy()
+        try:
+            task = Task.objects.get(_id=data["_id"])
+        except Task.DoesNotExist:
+            return Response({'message': "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        task.delete()
+
+        return Response(status=status.HTTP_200_OK)
+
+    def patch(self, request, *args, **kwargs):
+        """ Handles updating the status of a task 
+            NOTE - The reason this isn't merged into the put endpoint is because
+                we need to handle different permissions for both tasks and combining the 
+                endpoints would just make it messy
+        """
+        data = request.data.copy()
+        try:
+            task = Task.objects.get(_id=data["_id"])
+        except Task.DoesNotExist:
+            return Response({'message': "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        if task.assignee != request.user:
+            return Response({"message": "Only assignee can partially update the task"}, status=status.HTTP_403_FORBIDDEN)
+
+        # Partially updating the task
+        serializer = self.serializer_class(task, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def put(self, request, *args, **kwargs):
+        """ Handles updating the assigning for a given task object """
+        data = request.data.copy()
+
+        try:
+            assigning_to = MyUser.objects.get(username=data.pop("assignee"))
+        except MyUser.DoesNotExist:
+            return Response({"message": "Assignee not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            task = Task.objects.get(_id=data["_id"])
+        except Task.DoesNotExist:
+            return Response({"message": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        # The new assignee must have at least update_node permissions to node, or return 400
+        assignee_perms = assigning_to.get_permissions(task.node)
+        if not "update_{}".format(request.query_params["nodeType"].lower()) in assignee_perms:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        # Partially updating the task
+        data["assignee_id"] = assigning_to._id
+        serializer = self.serializer_class(task, data=data, partial=True)
+        if serializer.is_valid():
+            task = serializer.save()
+            return Response(self.serializer_class(task).data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def post(self, request, *args, **kwargs):
+        """ Handles Creating a task object """
+        data = request.data.copy()
+        # Defaulting created_by and assignee to the creator (request.user)
+        data["created_by"] = str(request.user.pk)
+        assignee = data.pop("assignee", None)
+        if not assignee:
+            data["assignee_id"] = str(request.user._id)
+        else:
+            data["assignee_id"] = MyUser.objects.get(username=assignee)._id
+        # Expecting the date to be input in this format
+        data["due_date"] = dt.strptime(data["due_date"][:10], "%Y-%m-%d").strftime("%Y-%m-%d")
+
+        data["status"] = "NEW"
+
+        serializer = self.serializer_class(data=data)
+        if serializer.is_valid(raise_exception=True):
+            task = serializer.save()
+            data = serializer.data
+
+            return Response(data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
