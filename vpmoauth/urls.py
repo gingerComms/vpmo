@@ -17,6 +17,7 @@ urlpatterns = [
     url(r'^api/token-verify/$', verify_jwt_token),
     # Generic User Views
     url(r'^api/users$', AllUserView.as_view()),
+    url(r'^api/user_exists/$', UserExistsView.as_view(), name="user-exists"),
     url(r'^api/users/register/$', CreateUserView.as_view(), name='user'),
     url(r'^api/users/login/$', LoginUserView.as_view()),
     url(r'^api/users/update/(?P<_id>.+)/$', UserUpdateView.as_view()),

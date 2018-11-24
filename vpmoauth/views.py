@@ -265,6 +265,24 @@ class LoginUserView(APIView):
             )
 
 
+class UserExistsView(APIView):
+    """ Returns True or False based on whether the input 
+        query argument + value pair exists in a user already or not
+    """
+    permission_classes = (permissions.AllowAny,)
+    
+    def get(self, request):
+        query_field = request.query_params["query_field"]
+        query = request.query_params["query"]
+
+        # Filtering for the first existing user
+        filter_d = {query_field: query}
+        user_exists = MyUser.objects.filter(**filter_d).count() > 0
+
+        return Response({"exists": user_exists})
+
+
+
 def profile(request):
     arg = {'user': request.user}
     return Response(arg)
