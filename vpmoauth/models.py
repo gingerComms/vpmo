@@ -254,6 +254,15 @@ class MyUser(AbstractBaseUser):
         role = UserRole.objects.filter(user=self, node=node).first()
         return role
 
+    def is_team_owner(self, team):
+        """ Returns True or False based on whether the current user is the team's owner """
+        if not team.user_linked:
+            return False
+
+        if team.user_team == "team@{}".format(self.username):
+            return True
+        return False
+
     def create_user_team(self):
         # create a TreeStructure with nodetype of Team Linked to the user
         team = Team(

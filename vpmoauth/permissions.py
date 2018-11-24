@@ -24,12 +24,16 @@ class RemoveRolesPermission(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         permissions = request.user.get_permissions(obj)
 
-        # Conditional that disallows a team-admin from deleting his own permission
         role = request.user.get_role(obj)
         if role == "team_admin":
+            # Conditional that disallows a team-admin from deleting his own permission
             removing_user = request.query_params["user"]
             if removing_user == str(request.user._id):
                 return False
+            # Return False ALWAYS if the user is the team's owner (team created on register)
+            if obj.node_type == "Team":
+                if request.user.is_team_owner(obj):
+                    return False
 
         if request.method == "DELETE" and "remove_{}_user".format(obj.node_type.lower()) in permissions:
             return True
