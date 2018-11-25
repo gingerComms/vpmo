@@ -16,9 +16,9 @@ class ChannelsTestCase(TestCase):
         create_base_permissions()
 
         user_creds = {
-            "username": "TestUser2",
-            "email": "TestUser@vpmotest.com",
-            "fullname": "Test User"
+            "username": "TestUser22",
+            "email": "TestUser22@vpmotest.com",
+            "fullname": "Test User 22"
         }
         self.user = MyUser.objects.create(**user_creds)
         self.client.force_login(self.user)
