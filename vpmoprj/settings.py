@@ -161,39 +161,15 @@ DATABASES = {
     }
 
 """
-if DEBUG:
-    DATABASES = {
-        "default": {
-            "ENGINE": "djongo",
-            "NAME": "test-example-31",
-            "host": "13.239.32.74",
-            "port": 27017
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'djongo',
+        'NAME': 'cluster2',# Changing from cluster0
+        'HOST':
+        'mongodb://vpmoadmin:.Y&?L.?V,Kf,@cluster0-shard-00-00-6qb6a.mongodb.net:27017,cluster0-shard-00-01-6qb6a.mongodb.net:27017,cluster0-shard-00-02-6qb6a.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true'
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'djongo',
-            'NAME': 'cluster2',# Changing from cluster0
-            'HOST':
-            'mongodb://vpmoadmin:.Y&?L.?V,Kf,@cluster0-shard-00-00-6qb6a.mongodb.net:27017,cluster0-shard-00-01-6qb6a.mongodb.net:27017,cluster0-shard-00-02-6qb6a.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true'
-        }
-    }
+}
 """
-
-# INSTALLED_APPS += ["django_mongoengine"]
-#
-#
-# SESSION_ENGINE = 'django_mongoengine.sessions'
-# SESSION_SERIALIZER = 'django_mongoengine.sessions.BSONSerializer'
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
