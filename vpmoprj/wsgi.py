@@ -28,8 +28,8 @@ def loading_app(wsgi_environ, start_response):
             os.environ[key] = wsgi_environ[key]
         except KeyError:
             # The WSGI environment doesn't have the key
+            raise
             pass
-    from django.core.wsgi import get_wsgi_application
     real_app = get_wsgi_application()
     return real_app(wsgi_environ, start_response)
 
