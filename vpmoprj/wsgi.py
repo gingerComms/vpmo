@@ -12,8 +12,8 @@ import sys
 
 sys.path.append("/home/ubuntu/vpmo")
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "vpmoprj.prod_settings")
-
 from django.core.wsgi import get_wsgi_application
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "vpmoprj.settings")
 
 application = get_wsgi_application()
