@@ -7560,7 +7560,12 @@ var ChatService = /** @class */ (function () {
         var unreadMessages = that.unreadMessageTracker.value;
         channel.getUnconsumedMessagesCount().then(function (c) {
             if (c == null) {
-                unreadMessages[channel.friendlyName] = channel.lastMessage.index + 1;
+                if (channel.lastMessage == undefined) {
+                    unreadMessages[channel.friendlyName] = 0;
+                }
+                else {
+                    unreadMessages[channel.friendlyName] = channel.lastMessage.index + 1;
+                }
             }
             else {
                 unreadMessages[channel.friendlyName] = c;
