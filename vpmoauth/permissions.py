@@ -1,5 +1,6 @@
 from rest_framework import permissions
 from vpmoauth.models import MyUser
+from django.db.models import Q
 
 
 class AssignRolesPermission(permissions.BasePermission):
@@ -12,7 +13,8 @@ class AssignRolesPermission(permissions.BasePermission):
 
         permissions = request.user.get_permissions(obj)
 
-        removing_user = MyUser.objects.get(_id=request.data["user"])
+        user_query = Q(_id=request.data["user"]) | Q(username=request.data["user"])
+        removing_user = MyUser.objects.get(user_query)
         role = request.user.get_role(obj)
         if role == "team_admin":
             # Conditional that disallows a team-admin from deleting his own permission
