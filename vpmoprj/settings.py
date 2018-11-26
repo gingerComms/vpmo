@@ -156,7 +156,7 @@ if DEBUG:
         "default": {
             "ENGINE": "djongo",
             "NAME": "test-example-31",
-            "host": os.env["MONGO_HOST"],
+            "host": os.environ["MONGO_HOST"],
             "port": 27017
         }
     }
