@@ -1,0 +1,17 @@
+--2018-10-22 11:29:57--  https://drive.google.com/uc?id=1mpdzCpmkfdzekqkG3Bcs-miUWAXGg4ey
+Resolving drive.google.com (drive.google.com)... 172.217.167.78, 2404:6800:4006:806::200e
+Connecting to drive.google.com (drive.google.com)|172.217.167.78|:443... connected.
+HTTP request sent, awaiting response... 302 Moved Temporarily
+Location: https://doc-10-54-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l7deffksulhg5h7mbp1/s3kjqu01ibpo9d5s4q8pbtrigr5aocn2/1540202400000/17775122726198387944/*/1mpdzCpmkfdzekqkG3Bcs-miUWAXGg4ey [following]
+Warning: wildcards not supported in HTTP.
+--2018-10-22 11:29:58--  https://doc-10-54-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l7deffksulhg5h7mbp1/s3kjqu01ibpo9d5s4q8pbtrigr5aocn2/1540202400000/17775122726198387944/*/1mpdzCpmkfdzekqkG3Bcs-miUWAXGg4ey
+Resolving doc-10-54-docs.googleusercontent.com (doc-10-54-docs.googleusercontent.com)... 172.217.25.129, 2404:6800:4006:804::2001
+Connecting to doc-10-54-docs.googleusercontent.com (doc-10-54-docs.googleusercontent.com)|172.217.25.129|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [application/x-zip-compressed]
+Saving to: ‘uc?id=1mpdzCpmkfdzekqkG3Bcs-miUWAXGg4ey’
+
+          uc?id=1mp     [<=>                 ]       0  --.-KB/s                        uc?id=1mpd     [ <=>                ]  79.04K   371KB/s                       uc?id=1mpdz     [  <=>               ] 431.04K  1.02MB/s                      uc?id=1mpdzC     [   <=>              ]   2.08M  3.40MB/s               uc?id=1mpdzCpmkfdze     [    <=>             ]   7.67M  9.44MB/s    in 0.8s    
+
+2018-10-22 11:29:59 (9.44 MB/s) - ‘uc?id=1mpdzCpmkfdzekqkG3Bcs-miUWAXGg4ey’ saved [8045685]
+
