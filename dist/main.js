@@ -7195,6 +7195,7 @@ var ChatComponent = /** @class */ (function () {
         this.authService = authService;
         this.route = route;
         this.messages = [];
+        this.channel = null;
         this.pageSize = 15;
         this.differ = differs.find([]).create(null);
     }
@@ -7210,7 +7211,7 @@ var ChatComponent = /** @class */ (function () {
     };
     ChatComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.authService.user.subscribe(function (user) {
+        this.userSubscription = this.authService.user.subscribe(function (user) {
             if (user) {
                 _this.currentUser = user.username;
             }
@@ -7218,18 +7219,34 @@ var ChatComponent = /** @class */ (function () {
                 _this.currentUser = '';
             }
         });
-        this.route.params.subscribe(function (params) {
-            _this.nodeID = params['id'];
-            _this._chatService.chatClient.subscribe(function (chatClient) {
-                if (chatClient) {
-                    _this.chatClient = chatClient;
-                    var that = _this;
-                    _this.chatClient.getSubscribedChannels().then(function (resp) {
-                        that.getChannel();
-                    });
-                }
-            });
+        this.clientSubscription = this._chatService.chatClient.subscribe(function (chatClient) {
+            if (chatClient) {
+                _this.chatClient = chatClient;
+                var that = _this;
+                _this.chatClient.getSubscribedChannels().then(function (resp) {
+                    that.getChannel();
+                });
+            }
         });
+        this.messageSubscription = this._chatService.messages.subscribe(function (message) {
+            if (message) {
+                _this.messageAdded(message);
+            }
+        });
+    };
+    ChatComponent.prototype.ngOnDestroy = function () {
+        this.userSubscription.unsubscribe();
+        this.clientSubscription.unsubscribe();
+        this.messageSubscription.unsubscribe();
+    };
+    ChatComponent.prototype.messageAdded = function (message) {
+        if (this.channel != null && message.channel.sid == this.channel.sid) {
+            if (this.messages.length == 0 || message.index == this.messages[this.messages.length - 1].index + 1) {
+                this.messages.push(message);
+                this.updateLastConsumed(message.index);
+                this.scrollToBottom();
+            }
+        }
     };
     ChatComponent.prototype.getChannel = function () {
         var that = this;
@@ -7249,7 +7266,6 @@ var ChatComponent = /** @class */ (function () {
             this.getUnconsumedMessageCount();
         }
         // Getting messages forwards from the last seen message
-        console.log('Last Message', lastSeenIndex, this.channel.lastMessage);
         if (this.channel.lastMessage && lastSeenIndex > this.channel.lastMessage.index - 14) {
             // If last seen index was in the last page, just get the last page
             if (this.channel.lastMessage.index <= 15) {
@@ -7263,13 +7279,17 @@ var ChatComponent = /** @class */ (function () {
             // Otherwise, get from the last seen page
             this.getMessages(lastSeenIndex, 'forwards');
         }
+        /*
         this.channel.on('messageAdded', function (message) {
-            if (message.index == that.messages[that.messages.length - 1].index + 1) {
-                that.messages.push(message);
-                that.updateLastConsumed(message.index);
-                that.scrollToBottom();
-            }
-        });
+          if (that.messages.length == 0 || message.index == that.messages[that.messages.length-1].index+1) {
+            that.messages.push(message)
+    
+            that.updateLastConsumed(message.index)
+    
+            that.scrollToBottom()
+          }
+        })
+        */
     };
     ChatComponent.prototype.getTotalMessageCount = function () {
         var that = this;
@@ -7328,6 +7348,10 @@ var ChatComponent = /** @class */ (function () {
     ChatComponent.prototype.sendMessage = function (msg) {
         this.channel.sendMessage(msg);
     };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", String)
+    ], ChatComponent.prototype, "nodeID", void 0);
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])('chatContainer'),
         __metadata("design:type", Object)
@@ -7479,6 +7503,8 @@ var ChatService = /** @class */ (function () {
         this.chatClient = new rxjs_index__WEBPACK_IMPORTED_MODULE_4__["BehaviorSubject"](null);
         this.userChannels = new rxjs_index__WEBPACK_IMPORTED_MODULE_4__["BehaviorSubject"]([]);
         this.unreadMessageTracker = new rxjs_index__WEBPACK_IMPORTED_MODULE_4__["BehaviorSubject"]({});
+        // Chat component listens to this and adds to display if message is added on active channel
+        this.messages = new rxjs_index__WEBPACK_IMPORTED_MODULE_4__["BehaviorSubject"](null);
         authUser.user.subscribe(function (user) {
             if (user !== null) {
                 _this.unreadMessageTracker.next({});
@@ -7495,10 +7521,17 @@ var ChatService = /** @class */ (function () {
         this.getToken(user).subscribe(function (response) {
             var token = response.token;
             Twilio.Chat.Client.create(token).then(function (client) {
-                console.log('Connected as ', client);
                 that.getUserChannels(client);
                 that.chatClient.next(client);
                 that.loadingService.hide();
+                client.on('messageAdded', function (message) {
+                    var unreadMessages = that.unreadMessageTracker.value;
+                    if (unreadMessages[message.channel.friendlyName] !== undefined) {
+                        unreadMessages[message.channel.friendlyName] = unreadMessages[message.channel.friendlyName] + 1;
+                    }
+                    that.unreadMessageTracker.next(unreadMessages);
+                    that.messages.next(message);
+                });
                 client.on('channelAdded', function (channel) {
                     that.channelAdded(channel);
                 });
@@ -7521,13 +7554,17 @@ var ChatService = /** @class */ (function () {
             that.userChannels.next(that.userChannels.value.concat([channel]));
         }
         that.updateChannelUnread(channel);
-        // TODO: Add event listeners (onMessageAdded) here which updated unread messages on newMessage addition
     };
     ChatService.prototype.updateChannelUnread = function (channel) {
         var that = this;
         var unreadMessages = that.unreadMessageTracker.value;
         channel.getUnconsumedMessagesCount().then(function (c) {
-            unreadMessages[channel.friendlyName] = c;
+            if (c == null) {
+                unreadMessages[channel.friendlyName] = channel.lastMessage.index + 1;
+            }
+            else {
+                unreadMessages[channel.friendlyName] = c;
+            }
             that.unreadMessageTracker.next(unreadMessages);
         });
     };
@@ -8757,6 +8794,7 @@ var FuseNavbarComponent = /** @class */ (function () {
                     title: 0
                 };
             }
+            console.log('Unread Messages Updated', unreadMessages);
             this.navigation.find(function (item) { return item.id == 'favoritesGroup'; }).children.push(child);
         }
     };
@@ -9750,7 +9788,7 @@ var NodeBreadcrumbsService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<app-nodepage></app-nodepage>\r\n<mat-divider></mat-divider>\r\n<app-node-edit *ngIf=\"contentType=='edit'\"></app-node-edit>\r\n<app-chat *ngIf=\"contentType=='chat'\"></app-chat>\r\n<app-tree-structure *ngIf=\"contentType=='tree'\"></app-tree-structure>\r\n<app-permissions *ngIf=\"contentType=='permissions'\"></app-permissions>\r\n<app-documents-list *ngIf=\"contentType=='documents'\"></app-documents-list>\r\n<app-tasks *ngIf=\"contentType=='tasks'\"></app-tasks>\r\n\r\n"
+module.exports = "<app-nodepage></app-nodepage>\r\n<mat-divider></mat-divider>\r\n<app-node-edit *ngIf=\"contentType=='edit'\"></app-node-edit>\r\n<app-chat [nodeID]=\"nodeID\" *ngIf=\"contentType=='chat'\"></app-chat>\r\n<app-tree-structure *ngIf=\"contentType=='tree'\"></app-tree-structure>\r\n<app-permissions *ngIf=\"contentType=='permissions'\"></app-permissions>\r\n<app-documents-list *ngIf=\"contentType=='documents'\"></app-documents-list>\r\n<app-tasks *ngIf=\"contentType=='tasks'\"></app-tasks>\r\n\r\n"
 
 /***/ }),
 
@@ -9796,6 +9834,7 @@ var NodeContainerComponent = /** @class */ (function () {
         var _this = this;
         this.route.params.subscribe(function (params) {
             _this.contentType = params['contentType'];
+            _this.nodeID = params['id'];
         });
     };
     NodeContainerComponent = __decorate([
