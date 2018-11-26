@@ -25,7 +25,8 @@ def loading_app(wsgi_environ, start_response):
     import os
     for key in KEYS_TO_LOAD:
         try:
-            os.environ[key] = wsgi_environ[key]
+            wsgi_environ[key] = os.environ[key]
+            # os.environ[key] = wsgi_environ[key]
         except KeyError:
             # The WSGI environment doesn't have the key
             raise
