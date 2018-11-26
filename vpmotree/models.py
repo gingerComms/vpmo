@@ -16,7 +16,7 @@ from django.core.mail import send_mail
 from djongo import models
 from django import forms
 
-from vpmoprj.settings import AUTH_USER_MODEL
+from django.conf import settings
 
 from twilio.rest import Client
 
