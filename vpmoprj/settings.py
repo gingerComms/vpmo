@@ -151,12 +151,12 @@ WSGI_APPLICATION = 'vpmoprj.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-if False and DEBUG:
+if DEBUG:
     DATABASES = {
         "default": {
             "ENGINE": "djongo",
             "NAME": "test-example-31",
-            "host": "localhost",
+            "host": os.env["MONGO_HOST"],
             "port": 27017
         }
     }
