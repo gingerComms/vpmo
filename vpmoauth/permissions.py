@@ -13,8 +13,7 @@ class AssignRolesPermission(permissions.BasePermission):
 
         permissions = request.user.get_permissions(obj)
 
-        user_query = Q(_id=request.data["user"]) | Q(username=request.data["user"])
-        removing_user = MyUser.objects.get(user_query)
+        removing_user = MyUser.objects.get(username=request.data["user"])
         role = request.user.get_role(obj)
         if role == "team_admin":
             # Conditional that disallows a team-admin from deleting his own permission
