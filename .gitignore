@@ -3,3 +3,4 @@ give_perm_to_user.py
 vpmoEnv/
 vpmoAngular/
 static/
+vpmoprj/prod_settings.py
