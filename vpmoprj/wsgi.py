@@ -12,8 +12,21 @@ import sys
 
 sys.path.append("/home/ubuntu/vpmo")
 
-from django.core.wsgi import get_wsgi_application
-
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "vpmoprj.settings")
 
-application = get_wsgi_application()
+from django.core.handlers.wsgi import WSGIHandler
+
+class WSGIEnvironment(WSGIHandler):
+
+    def __call__(self, environ, start_response):
+
+    	env_variables = ["TWILIO_CHAT_SERVICE_SID", "TWILIO_ACCOUNT_SID", "TWILIO_API_KEY", "TWILIO_SECRET_KEY", "VPMO_TWILIO_AUTH_TOKEN", "VPMO_AWS_ACCESS", "VPMO_AWS_SECRET", "MONGO_HOST"]
+
+    	for variable in env_variables:
+        	os.environ[variable] = environ[variable]
+        return super(WSGIEnvironment, self).__call__(environ, start_response)
+
+application = WSGIEnvironment()
+
+# from django.core.wsgi import get_wsgi_application
+# application = get_wsgi_application()
