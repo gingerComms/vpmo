@@ -151,6 +151,16 @@ WSGI_APPLICATION = 'vpmoprj.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+DATABASES = {
+        "default": {
+            "ENGINE": "djongo",
+            "NAME": "test-example-31",
+            "HOST": "13.239.32.74",
+            "PORT": 27017
+        }
+    }
+
+"""
 if DEBUG:
     DATABASES = {
         "default": {
@@ -169,13 +179,7 @@ else:
             'mongodb://vpmoadmin:.Y&?L.?V,Kf,@cluster0-shard-00-00-6qb6a.mongodb.net:27017,cluster0-shard-00-01-6qb6a.mongodb.net:27017,cluster0-shard-00-02-6qb6a.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true'
         }
     }
-
-
-TEST_MONGO_DATABASE = {
-    'db': 'test-example',
-    'host': ['localhost'],
-    'port': 27017
-}
+"""
 
 # INSTALLED_APPS += ["django_mongoengine"]
 #
