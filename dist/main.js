@@ -6933,10 +6933,10 @@ var AppComponent = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "appConfig", function() { return appConfig; });
 var appConfig = {
-    apiUrl: 'http://127.0.0.1:8000/vpmoapp/api',
-    docApiUrl: 'http://127.0.0.1:8000/vpmodoc/api',
-    apiAuthUrl: 'http://127.0.0.1:8000/vpmoauth/api',
-    chatUrl: 'http://127.0.0.1:8000/chat'
+    apiUrl: '/vpmoapp/api',
+    docApiUrl: '/vpmodoc/api',
+    apiAuthUrl: '/vpmoauth/api',
+    chatUrl: '/chat'
 };
 
 
