@@ -6933,10 +6933,10 @@ var AppComponent = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "appConfig", function() { return appConfig; });
 var appConfig = {
-    apiUrl: '/vpmoapp/api',
-    docApiUrl: '/vpmodoc/api',
-    apiAuthUrl: '/vpmoauth/api',
-    chatUrl: '/chat'
+    apiUrl: 'http://gingercomms.radconsultants.com.au/vpmoapp/api',
+    docApiUrl: 'http://gingercomms.radconsultants.com.au/vpmodoc/api',
+    apiAuthUrl: 'http://gingercomms.radconsultants.com.au/vpmoauth/api',
+    chatUrl: 'http://gingercomms.radconsultants.com.au/chat'
 };
 
 
@@ -7090,7 +7090,8 @@ var AppModule = /** @class */ (function () {
                 _tree_structure_tree_structure_module__WEBPACK_IMPORTED_MODULE_37__["TreeStructureModule"],
                 _node_node_module__WEBPACK_IMPORTED_MODULE_36__["NodeModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_38__["MatProgressSpinnerModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_38__["MatSnackBarModule"]
+                _angular_material__WEBPACK_IMPORTED_MODULE_38__["MatSnackBarModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_38__["MatInputModule"]
             ],
             // The components, directives, and pipes that belong to this NgModule
             declarations: [
@@ -7146,18 +7147,18 @@ var AppModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"chat-container\">\r\n\t<!--\r\n\t<mat-list>\t\t\r\n\t\t<mat-list-item *ngFor=\"let message of messages; let i = index; let last = last\">\r\n\t\t\t\r\n\t\t\t\t<img matListAvatar src=\"http://lorempixel.com/40/40/people/{{i}}\" />\r\n\t\t\t\t\r\n\t\t\t\t\r\n\t\t\t\t\t<h3 matLine class=\"cursor-pointer\"> {{ message.author }} </h3>\r\n\t\t\t\t\t<p matLine>\r\n\t\t\t\t\t\t<span>{{ message.content }}</span>\r\n\t\t\t\t\t</p>\r\n\t\t\t\t\r\n\t\t\t\t\t<h5>{{ message.sent_on | date:'dd-MMM-yyyy @ h:mma' }}</h5>\r\n\r\n\t\t\t\t<mat-divider *ngIf=\"!last\"></mat-divider>\r\n\t\t\t\r\n\t\t</mat-list-item>\r\n\t</mat-list>\r\n-->\r\n\t<h5 style=\"margin: 0;\">Unread Messages: {{ unreadMessageCount }}</h5>\r\n\t<div id=\"device\">\r\n\t  \t<div #chatContainer class=\"chat\" (scroll)=\"onScroll($event)\">\r\n\t\t    <div class=\"message\" [ngClass]=\"{'me': message.author == currentUser}\" *ngFor=\"let message of messages;\">\r\n\t\t        <img src=\"../../assets/icons/Team-T-Icon.svg\" height=\"72\" width=\"72\"/>\r\n\t\t        <!-- message.author available here as well -->\r\n\t\t        <div><p>{{ message.body }}</p></div>\r\n\t\t    </div>\r\n\t\t    <!-- add class me if user is currentuser\r\n\t\t    <div class=\"message\">\r\n\t\t        <img src=\"../../assets/icons/Team-T-Icon.svg\" height=\"72\" width=\"72\"/>\r\n\t\t        <div><p>Aliquam gravida semper pharetra.</p></div>\r\n\t\t    </div>\r\n\t\t    -->\r\n\t\t</div>\r\n\t</div>\r\n</div>\r\n\r\n<mat-form-field class=\"chat-inp full-width\">\r\n    <input #msgInput matInput placeholder=\"Message\" value=\"\" (keyup.enter)=\"sendMessage(msgInput.value); msgInput.value = ''\">\r\n</mat-form-field>\r\n"
+module.exports = "<div class=\"chat\" fxFlex fxLayout=\"column\">\r\n\r\n\t<div id=\"chat-content\" fusePerfectScrollbar fxFlex=\"1 1 auto\" (scroll)=\"onScroll($event)\" #chatContainer>\r\n\t\t<div class=\"chat-messages\">\r\n\t\t\t<div class=\"message-row\" *ngFor=\"let message of messages;\" \r\n\t\t\t\t[ngClass]=\"{\r\n\t\t\t\t\t'me': message.author === currentUser,\r\n\t\t\t\t\t'contact': message.author !== currentUser\r\n\t\t\t\t}\">\r\n\t\t\t\t<img *ngIf=\"message.author !== currentUser\" src=\"../../assets/icons/Team-T-Icon.svg\" class=\"avatar\"/>\r\n\t\t\t\t<!-- message.author available here as well -->\r\n\t\t\t\t<div class=\"bubble\">\r\n\t\t\t\t\t<div class=\"message\">{{ message.body }}</div>\r\n\t\t\t\t\t<div class=\"time secondary-text\">time</div>\r\n\t\t\t\t</div>\r\n\t\t\t\t\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n\r\n\t <!-- CHAT FOOTER -->\r\n    <div class=\"chat-footer\" fxFlex=\"0 0 auto\" fxLayout=\"column\">\r\n\r\n        <!-- REPLY FORM -->\r\n        <div class=\"reply-form\" fxFlex=\"0 0 auto\" fxLayout=\"row\" fxLayoutAlign=\"center center\">\r\n\r\n            <form #replyForm=\"ngForm\"\r\n                  (ngSubmit)=\"sendMessage(msgInput.value); msgInput.value=''\" \r\n                  fxFlex fxLayout=\"row\" fxLayoutAlign=\"start center\">\r\n\r\n                <mat-form-field class=\"message-text\" fxFlex floatLabel=\"never\" appearance=\"standard\">\r\n                \t<input matInput #msgInput placeholder=\"Type your message here\">\r\n                </mat-form-field>\r\n\r\n                <button class=\"send-message-button\" mat-icon-button type=\"submit\" aria-label=\"Send message\">\r\n                    <mat-icon class=\"secondary-text\">send</mat-icon>\r\n                </button>\r\n\r\n            </form>\r\n\r\n        </div>\r\n        <!-- / REPLY FORM -->\r\n\r\n    </div>\r\n\r\n</div>\r\n"
 
 /***/ }),
 
-/***/ "./src/app/chat/chat.component.less":
+/***/ "./src/app/chat/chat.component.scss":
 /*!******************************************!*\
-  !*** ./src/app/chat/chat.component.less ***!
+  !*** ./src/app/chat/chat.component.scss ***!
   \******************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ":host {\n  height: 100%;\n  width: 100%;\n  position: relative;\n}\n.chat-container {\n  position: fixed;\n  left: 0;\n  height: 55%;\n  width: 100%;\n  padding: 0 4em;\n}\n.chat-inp {\n  position: fixed;\n  bottom: 0;\n  left: 0;\n  width: 100%;\n  padding: 0 4em;\n}\n.chat {\n  display: block;\n  width: 100%;\n  height: 100%;\n  overflow-y: scroll;\n  overflow-x: hidden;\n  background: #eee;\n}\n.chat .message {\n  display: flex;\n  margin: 10px 0 0 10px;\n  min-height: 30px;\n  height: auto;\n  text-align: left;\n}\n.chat .message.me img {\n  order: 2;\n  margin: 0 0 0 3px;\n}\n.chat .message.me div {\n  order: 1;\n  padding: 0 8px 0 0;\n}\n.chat .message.me div p {\n  float: right;\n}\n.chat .message.me div:before {\n  position: relative;\n  float: right;\n  content: '';\n  margin: 7px -8px 0 0;\n  width: 0;\n  height: 0;\n  border-style: solid;\n  border-width: 8px 0 8px 8px;\n  border-color: transparent transparent transparent #fff;\n}\n.chat .message img {\n  display: block;\n  order: 1;\n  margin: 0 10px 0 0;\n  height: 30px;\n  width: 30px;\n  border-radius: 50%;\n  box-sizing: border-box;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n}\n.chat .message div {\n  display: block;\n  flex: 1;\n  order: 2;\n}\n.chat .message div p {\n  display: inline-block;\n  margin: 0;\n  width: auto;\n  padding: 8px 10px 8px 10px;\n  background: #fff;\n  word-wrap: break-word;\n  font-family: Monospace;\n  border-radius: 3px;\n  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);\n}\n.chat .message div:before {\n  position: relative;\n  float: left;\n  content: '';\n  margin: 7px 0 0 -8px;\n  width: 0;\n  height: 0;\n  border-style: solid;\n  border-width: 8px 8px 8px 0;\n  border-color: transparent #fff transparent transparent;\n}\n/*\n* The styles to setup this scene\n*/\n.chat {\n  border-radius: 5px;\n  padding-bottom: 0.5em;\n}\n#device {\n  width: 100%;\n  height: 100%;\n  border-radius: 10px;\n}\n#device #size {\n  -webkit-appearance: none;\n  margin: 15px 0 0 0;\n  width: 100%;\n  height: 10px;\n  vertical-align: middle;\n  border-radius: 5px;\n  background-color: #46627f;\n  outline: none;\n}\n#device #size::-moz-range-track {\n  margin: 15px 0 0 0;\n  width: 100%;\n  height: 10px;\n  vertical-align: middle;\n  border-radius: 5px;\n  background-color: #46627f;\n  outline: none;\n}\n#device #size::-webkit-slider-thumb {\n  -webkit-appearance: none !important;\n  height: 20px;\n  width: 20px;\n  background-color: #4f6f8f;\n  border-radius: 50%;\n}\n#device #size::-moz-range-thumb {\n  -moz-appearance: none;\n  height: 20px;\n  width: 20px;\n  background-color: #4f6f8f;\n  border-radius: 50%;\n}\n.track {\n  margin: 15px 0 0 0;\n  width: 100%;\n  height: 10px;\n  vertical-align: middle;\n  border-radius: 5px;\n  background-color: #46627f;\n  outline: none;\n}\n.thumb {\n  height: 20px;\n  width: 20px;\n  background-color: #4f6f8f;\n  border-radius: 50%;\n}\n@media (max-height: 400px) {\n  #device {\n    display: none;\n  }\n}\n"
+module.exports = "/**\n * Applies styles for users in high contrast mode. Note that this only applies\n * to Microsoft browsers. Chrome can be included by checking for the `html[hc]`\n * attribute, however Chrome handles high contrast differently.\n */\n/* Theme for the ripple elements.*/\n/* stylelint-disable material/no-prefixes */\n/* stylelint-enable */\n.avatar {\n  color: rgba(0, 0, 0, 0.87); }\n:host {\n  flex: 1 0 auto;\n  overflow: hidden;\n  max-width: 100%; }\n:host .chat {\n    flex-direction: column;\n    box-sizing: border-box;\n    display: flex;\n    flex: 1 1 0%; }\n:host .chat .chat-toolbar {\n      min-height: 64px;\n      border-bottom: 1px solid; }\n:host .chat .chat-toolbar .responsive-chats-button {\n        padding: 0; }\n:host .chat .chat-toolbar .chat-contact {\n        cursor: pointer; }\n:host .chat .chat-toolbar .chat-contact .avatar {\n          margin-right: 16px; }\n:host .chat #chat-content {\n      background: transparent;\n      overflow: auto;\n      flex: 1 1 auto;\n      box-sizing: border-box;\n      -webkit-overflow-scrolling: touch;\n      max-height: 20em; }\n:host .chat #chat-content .chat-messages {\n        position: relative;\n        padding: 16px 0 40px 40px; }\n:host .chat #chat-content .chat-messages .message-row {\n          position: relative;\n          display: flex;\n          flex-direction: column;\n          align-items: flex-start;\n          justify-content: flex-end;\n          padding: 0 16px 4px 16px; }\n:host .chat #chat-content .chat-messages .message-row .avatar {\n            position: absolute;\n            left: -32px;\n            margin: 0; }\n:host .chat #chat-content .chat-messages .message-row .bubble {\n            position: relative;\n            display: flex;\n            align-items: center;\n            justify-content: center;\n            padding: 12px;\n            max-width: 100%; }\n:host .chat #chat-content .chat-messages .message-row .bubble .message {\n              white-space: pre-wrap;\n              line-height: 1.2; }\n:host .chat #chat-content .chat-messages .message-row .bubble .time {\n              position: absolute;\n              display: none;\n              width: 100%;\n              font-size: 11px;\n              margin-top: 8px;\n              top: 100%;\n              left: 0;\n              white-space: nowrap; }\n:host .chat #chat-content .chat-messages .message-row.contact .bubble {\n            border-top-left-radius: 20px;\n            border-bottom-left-radius: 20px;\n            border-top-right-radius: 20px;\n            border-bottom-right-radius: 20px;\n            background-color: #3c4252;\n            color: #fff; }\n:host .chat #chat-content .chat-messages .message-row.contact .bubble .time {\n              margin-left: 12px; }\n:host .chat #chat-content .chat-messages .message-row.contact.first-of-group .bubble {\n            border-top-left-radius: 20px; }\n:host .chat #chat-content .chat-messages .message-row.contact.last-of-group .bubble {\n            border-bottom-left-radius: 20px; }\n:host .chat #chat-content .chat-messages .message-row.me {\n            padding-left: 40px; }\n:host .chat #chat-content .chat-messages .message-row.me .avatar {\n              order: 2;\n              margin: 0 0 0 16px; }\n:host .chat #chat-content .chat-messages .message-row.me .bubble {\n              margin-left: auto;\n              border-top-left-radius: 20px;\n              border-bottom-left-radius: 20px;\n              border-top-right-radius: 20px;\n              border-bottom-right-radius: 20px;\n              color: rgba(12, 12, 12, 0.87);\n              background-color: #e0e0e0; }\n:host .chat #chat-content .chat-messages .message-row.me .bubble .time {\n                justify-content: flex-end;\n                right: 0;\n                margin-right: 12px; }\n:host .chat #chat-content .chat-messages .message-row.me.first-of-group .bubble {\n              border-top-right-radius: 20px; }\n:host .chat #chat-content .chat-messages .message-row.me.last-of-group .bubble {\n              border-bottom-right-radius: 20px; }\n:host .chat #chat-content .chat-messages .message-row.contact + .me,\n          :host .chat #chat-content .chat-messages .message-row.me + .contact {\n            padding-top: 20px;\n            margin-top: 20px; }\n:host .chat #chat-content .chat-messages .message-row.first-of-group .bubble {\n            border-top-left-radius: 20px;\n            padding-top: 13px; }\n:host .chat #chat-content .chat-messages .message-row.last-of-group .bubble {\n            border-bottom-left-radius: 20px;\n            padding-bottom: 13px; }\n:host .chat #chat-content .chat-messages .message-row.last-of-group .bubble .time {\n              display: flex; }\n:host .chat .chat-footer {\n      border-top: 1px solid;\n      padding: 8px 8px 8px 16px;\n      background: #f5f5f5;\n      border-top-color: rgba(0, 0, 0, 0.12); }\n:host .chat .chat-footer .reply-form {\n        position: relative; }\n:host .chat .chat-footer .reply-form .message-text {\n          padding: 16px 8px;\n          background-color: #f5f5f5;\n          border-color: rgba(0, 0, 0, 0.12); }\n:host .chat .chat-footer .reply-form .message-text .mat-form-field-wrapper {\n            padding: 0; }\n:host .chat .chat-footer .reply-form .message-text .mat-form-field-wrapper .mat-form-field-flex {\n              padding: 0; }\n:host .chat .chat-footer .reply-form .message-text .mat-form-field-wrapper .mat-form-field-flex .mat-form-field-infix {\n                padding: 0;\n                border: none;\n                border-radius: 20px;\n                border: 1px solid;\n                border-color: rgba(0, 0, 0, 0.12);\n                background-color: #fff; }\n:host .chat .chat-footer .reply-form .message-text .mat-form-field-wrapper .mat-form-field-flex .mat-form-field-infix textarea {\n                  overflow: hidden;\n                  margin: 16px 48px 16px 16px;\n                  width: calc(100% - 64px);\n                  padding: 0;\n                  resize: none; }\n:host .chat .chat-footer .reply-form .message-text .mat-form-field-wrapper .mat-form-field-underline {\n              display: none !important; }\n:host .chat .chat-footer .reply-form .send-message-button {\n          position: absolute;\n          right: 16px;\n          bottom: 35px; }\n"
 
 /***/ }),
 
@@ -7346,6 +7347,7 @@ var ChatComponent = /** @class */ (function () {
         }
     };
     ChatComponent.prototype.sendMessage = function (msg) {
+        console.log('Sending', msg);
         this.channel.sendMessage(msg);
     };
     __decorate([
@@ -7360,7 +7362,7 @@ var ChatComponent = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'app-chat',
             template: __webpack_require__(/*! ./chat.component.html */ "./src/app/chat/chat.component.html"),
-            styles: [__webpack_require__(/*! ./chat.component.less */ "./src/app/chat/chat.component.less")]
+            styles: [__webpack_require__(/*! ./chat.component.scss */ "./src/app/chat/chat.component.scss")]
         }),
         __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_1__["Router"],
             _chat_service__WEBPACK_IMPORTED_MODULE_2__["ChatService"],
@@ -7393,12 +7395,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
 /* harmony import */ var _chat_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./chat.component */ "./src/app/chat/chat.component.ts");
 /* harmony import */ var _chat_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./chat.service */ "./src/app/chat/chat.service.ts");
+/* harmony import */ var _fuse_shared_module__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../@fuse/shared.module */ "./src/@fuse/shared.module.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -7433,6 +7437,9 @@ var ChatModule = /** @class */ (function () {
                 _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatListModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatIconModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatDividerModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatMenuModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatRadioModule"],
+                _fuse_shared_module__WEBPACK_IMPORTED_MODULE_8__["FuseSharedModule"]
             ],
             declarations: [
                 _chat_component__WEBPACK_IMPORTED_MODULE_6__["ChatComponent"],
@@ -8799,7 +8806,6 @@ var FuseNavbarComponent = /** @class */ (function () {
                     title: 0
                 };
             }
-            console.log('Unread Messages Updated', unreadMessages);
             this.navigation.find(function (item) { return item.id == 'favoritesGroup'; }).children.push(child);
         }
     };
@@ -9187,7 +9193,7 @@ var FuseToolbarComponent = /** @class */ (function () {
     }
     FuseToolbarComponent.prototype.ngOnInit = function () {
         // debugger;
-        this.fullname = this.authService.getUserName();
+        // this.fullname = this.authService.getUserName()
     };
     FuseToolbarComponent.prototype.toggleSidebarOpened = function (key) {
         this.sidebarService.getSidebar(key).toggleOpen();
@@ -12947,7 +12953,7 @@ var DashboardComponent = /** @class */ (function () {
     }
     DashboardComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.fullname = this.authService.getUserName();
+        this.fullname = this.authService.getUser().fullname;
         console.log(this.fullname);
         this.chatService.unreadMessageTracker.subscribe(function (unreadMessages) {
             _this.unreadMessages = unreadMessages;
