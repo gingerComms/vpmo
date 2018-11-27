@@ -7147,7 +7147,7 @@ var AppModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"chat\" fxFlex fxLayout=\"column\">\r\n\r\n\t<div id=\"chat-content\" fusePerfectScrollbar fxFlex=\"1 1 auto\" (scroll)=\"onScroll($event)\" #chatContainer>\r\n\t\t<div class=\"chat-messages\">\r\n\t\t\t<div class=\"message-row\" *ngFor=\"let message of messages;\" \r\n\t\t\t\t[ngClass]=\"{\r\n\t\t\t\t\t'me': message.author === currentUser,\r\n\t\t\t\t\t'contact': message.author !== currentUser\r\n\t\t\t\t}\">\r\n\t\t\t\t<img *ngIf=\"message.author !== currentUser\" src=\"../../assets/icons/Team-T-Icon.svg\" class=\"avatar\"/>\r\n\t\t\t\t<!-- message.author available here as well -->\r\n\t\t\t\t<div class=\"bubble\">\r\n\t\t\t\t\t<div class=\"message\">{{ message.body }}</div>\r\n\t\t\t\t\t<div class=\"time secondary-text\">time</div>\r\n\t\t\t\t</div>\r\n\t\t\t\t\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n\r\n\t <!-- CHAT FOOTER -->\r\n    <div class=\"chat-footer\" fxFlex=\"0 0 auto\" fxLayout=\"column\">\r\n\r\n        <!-- REPLY FORM -->\r\n        <div class=\"reply-form\" fxFlex=\"0 0 auto\" fxLayout=\"row\" fxLayoutAlign=\"center center\">\r\n\r\n            <form #replyForm=\"ngForm\"\r\n                  (ngSubmit)=\"sendMessage(msgInput.value); msgInput.value=''\" \r\n                  fxFlex fxLayout=\"row\" fxLayoutAlign=\"start center\">\r\n\r\n                <mat-form-field class=\"message-text\" fxFlex floatLabel=\"never\" appearance=\"standard\">\r\n                \t<input matInput #msgInput placeholder=\"Type your message here\">\r\n                </mat-form-field>\r\n\r\n                <button class=\"send-message-button\" mat-icon-button type=\"submit\" aria-label=\"Send message\">\r\n                    <mat-icon class=\"secondary-text\">send</mat-icon>\r\n                </button>\r\n\r\n            </form>\r\n\r\n        </div>\r\n        <!-- / REPLY FORM -->\r\n\r\n    </div>\r\n\r\n</div>\r\n"
+module.exports = "<div class=\"chat\" fxFlex fxLayout=\"column\" *ngIf=\"canChat()\">\r\n\r\n\t<div id=\"chat-content\" fusePerfectScrollbar fxFlex=\"1 1 auto\" (scroll)=\"onScroll($event)\" #chatContainer>\r\n\t\t<div class=\"chat-messages\">\r\n\t\t\t<div class=\"message-row\" *ngFor=\"let message of messages;\" \r\n\t\t\t\t[ngClass]=\"{\r\n\t\t\t\t\t'me': message.author === currentUser,\r\n\t\t\t\t\t'contact': message.author !== currentUser\r\n\t\t\t\t}\">\r\n\t\t\t\t<img *ngIf=\"message.author !== currentUser\" src=\"../../assets/icons/Team-T-Icon.svg\" class=\"avatar\"/>\r\n\t\t\t\t<!-- message.author available here as well -->\r\n\t\t\t\t<div class=\"bubble\">\r\n\t\t\t\t\t<div class=\"message\">{{ message.body }}</div>\r\n\t\t\t\t\t<div class=\"time secondary-text\">time</div>\r\n\t\t\t\t</div>\r\n\t\t\t\t\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n\r\n\t <!-- CHAT FOOTER -->\r\n    <div class=\"chat-footer\" fxFlex=\"0 0 auto\" fxLayout=\"column\">\r\n\r\n        <!-- REPLY FORM -->\r\n        <div class=\"reply-form\" fxFlex=\"0 0 auto\" fxLayout=\"row\" fxLayoutAlign=\"center center\">\r\n\r\n            <form #replyForm=\"ngForm\"\r\n                  (ngSubmit)=\"sendMessage(msgInput.value); msgInput.value=''\" \r\n                  fxFlex fxLayout=\"row\" fxLayoutAlign=\"start center\">\r\n\r\n                <mat-form-field class=\"message-text\" fxFlex floatLabel=\"never\" appearance=\"standard\">\r\n                \t<input matInput #msgInput placeholder=\"Type your message here\">\r\n                </mat-form-field>\r\n\r\n                <button class=\"send-message-button\" mat-icon-button type=\"submit\" aria-label=\"Send message\">\r\n                    <mat-icon class=\"secondary-text\">send</mat-icon>\r\n                </button>\r\n\r\n            </form>\r\n\r\n        </div>\r\n        <!-- / REPLY FORM -->\r\n\r\n    </div>\r\n\r\n</div>\r\n\r\n<div *ngIf=\"!canChat()\">\r\n\tCan not Chat\r\n</div>\r\n"
 
 /***/ }),
 
@@ -7176,6 +7176,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _chat_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./chat.service */ "./src/app/chat/chat.service.ts");
 /* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../_services */ "./src/app/_services/index.ts");
+/* harmony import */ var _node_node_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../node/node.service */ "./src/app/node/node.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7189,15 +7190,18 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var ChatComponent = /** @class */ (function () {
-    function ChatComponent(router, _chatService, authService, route, differs) {
+    function ChatComponent(router, _chatService, authService, route, nodeService, differs) {
         this.router = router;
         this._chatService = _chatService;
         this.authService = authService;
         this.route = route;
+        this.nodeService = nodeService;
         this.messages = [];
         this.channel = null;
         this.pageSize = 15;
+        this.currentUserPermissions = [];
         this.differ = differs.find([]).create(null);
     }
     ChatComponent.prototype.scrollToBottom = function () {
@@ -7234,11 +7238,28 @@ var ChatComponent = /** @class */ (function () {
                 _this.messageAdded(message);
             }
         });
+        this.permissionsSubscription = this.nodeService.userPermissions.subscribe(function (permissions) {
+            if (permissions) {
+                _this.currentUserPermissions = permissions.permissions;
+                if (!_this.canChat() && permissions.permissions.indexOf('update_' + _this.nodeType.toLowerCase()) >= 0) {
+                    _this.getChannel();
+                }
+            }
+        });
     };
     ChatComponent.prototype.ngOnDestroy = function () {
         this.userSubscription.unsubscribe();
         this.clientSubscription.unsubscribe();
         this.messageSubscription.unsubscribe();
+        this.permissionsSubscription.unsubscribe();
+    };
+    ChatComponent.prototype.canChat = function () {
+        if (this.currentUserPermissions.indexOf('update_' + this.nodeType.toLowerCase()) >= 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
     };
     ChatComponent.prototype.messageAdded = function (message) {
         if (this.channel != null && message.channel.sid == this.channel.sid) {
@@ -7355,6 +7376,10 @@ var ChatComponent = /** @class */ (function () {
         __metadata("design:type", String)
     ], ChatComponent.prototype, "nodeID", void 0);
     __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", String)
+    ], ChatComponent.prototype, "nodeType", void 0);
+    __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])('chatContainer'),
         __metadata("design:type", Object)
     ], ChatComponent.prototype, "chatContainer", void 0);
@@ -7368,6 +7393,7 @@ var ChatComponent = /** @class */ (function () {
             _chat_service__WEBPACK_IMPORTED_MODULE_2__["ChatService"],
             _services__WEBPACK_IMPORTED_MODULE_3__["AuthenticationService"],
             _angular_router__WEBPACK_IMPORTED_MODULE_1__["ActivatedRoute"],
+            _node_node_service__WEBPACK_IMPORTED_MODULE_4__["NodeService"],
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["IterableDiffers"]])
     ], ChatComponent);
     return ChatComponent;
@@ -9799,7 +9825,7 @@ var NodeBreadcrumbsService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<app-nodepage></app-nodepage>\r\n<mat-divider></mat-divider>\r\n<app-node-edit *ngIf=\"contentType=='edit'\"></app-node-edit>\r\n<app-chat [nodeID]=\"nodeID\" *ngIf=\"contentType=='chat'\"></app-chat>\r\n<app-tree-structure *ngIf=\"contentType=='tree'\"></app-tree-structure>\r\n<app-permissions *ngIf=\"contentType=='permissions'\"></app-permissions>\r\n<app-documents-list *ngIf=\"contentType=='documents'\"></app-documents-list>\r\n<app-tasks *ngIf=\"contentType=='tasks'\"></app-tasks>\r\n\r\n"
+module.exports = "<app-nodepage></app-nodepage>\r\n<mat-divider></mat-divider>\r\n<app-node-edit *ngIf=\"contentType=='edit'\"></app-node-edit>\r\n<app-chat [nodeID]=\"nodeID\" [nodeType]=\"nodeType\" *ngIf=\"contentType=='chat'\"></app-chat>\r\n<app-tree-structure *ngIf=\"contentType=='tree'\"></app-tree-structure>\r\n<app-permissions *ngIf=\"contentType=='permissions'\"></app-permissions>\r\n<app-documents-list *ngIf=\"contentType=='documents'\"></app-documents-list>\r\n<app-tasks *ngIf=\"contentType=='tasks'\"></app-tasks>\r\n\r\n"
 
 /***/ }),
 
@@ -9846,6 +9872,7 @@ var NodeContainerComponent = /** @class */ (function () {
         this.route.params.subscribe(function (params) {
             _this.contentType = params['contentType'];
             _this.nodeID = params['id'];
+            _this.nodeType = params['type'];
         });
     };
     NodeContainerComponent = __decorate([

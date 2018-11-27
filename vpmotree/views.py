@@ -353,7 +353,7 @@ class AssignableRolesView(APIView):
             assignable_roles += ["team_member", "team_lead", "team_admin"]
         elif "update_project_user_role" in permissions and model == Project:
             assignable_roles += ["project_viewer", "project_contributor", "project_admin"]
-        elif "update_top_user_role" in  permissions and request.query_params["nodeType"] in Topic.topic_classes:
+        elif "update_topic_user_role" in  permissions and request.query_params["nodeType"] in Topic.topic_classes:
             assignable_roles += ["topic_viewer", "topic_contributor"]
 
         return Response(assignable_roles)
