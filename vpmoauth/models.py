@@ -159,12 +159,14 @@ class MyUser(AbstractBaseUser):
 
         return member
 
-    def update_channel_access(self, node, new_perms):
+    def update_channel_access(self, node, new_perms=None):
         """ Updates the user channel access for the given node branch
             Note: The assigned node is passed as the parent for get_assigned_nodes 
             because only the children of the assigned node or the assigned node itself
             have any chance of needing channels added
         """
+        if not new_perms:
+            new_perms = self.get_permissions(node)
         # The nodes  channels the user is added to
         user_channels = [i.channel_sid for i in self.get_user_channels()]
         nodes_already_added = TreeStructure.objects.filter(channel_sid__in=user_channels) \
@@ -218,7 +220,8 @@ class MyUser(AbstractBaseUser):
         # Removing/adding the user to the channel for this node based on the new role
         # If this isn't a test
         if not test:
-            self.update_channel_access(node, permissions.values_list("name", flat=True))
+            self.update_channel_access(node, new_perms=permissions.values_list("name", flat=True))
+            node.update_channel_access()
 
         return role
 
@@ -229,6 +232,9 @@ class MyUser(AbstractBaseUser):
         # All the roles the user has for the node and the children of this node
         to_remove = UserRole.objects.filter(Q(node__path__contains=node._id) | Q(node___id=node._id), user=self)
         deleted = to_remove.delete()
+
+        self.update_channel_access(node)
+        node.update_channel_access()
 
         return deleted
 
