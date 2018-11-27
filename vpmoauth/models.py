@@ -51,18 +51,31 @@ class UserRole(models.Model):
 
     @staticmethod
     def get_assigned_nodes(user, parent_node, perm_type="update"):
-        """ Returns all nodes the user has the `perm_type` permission for """
+        """ Returns all nodes the user has the `perm_type` permission for
+            -> parent_node is the ID of the parent node
+        """
         parent_node_condition = Q(node___id=parent_node) | Q(node__path__contains=parent_node)
         permission_condition = Q(permissions__name=perm_type+"_team") \
                                 | Q(permissions__name=perm_type+"_project") \
                                 | Q(permissions__name=perm_type+"_topic")
 
-        node_ids = UserRole.objects.filter(
+        # Getting a list of all node ids that the user has direct access to 
+        assigned_node_ids = UserRole.objects.filter(
                         parent_node_condition,
                         permission_condition,
                         user=user
                     ).values_list("node___id", flat=True)
-        return node_ids
+
+        # Getting a queryset of all nodes that fall under the parent node
+        all_nodes_in_tree = TreeStructure.objects.filter(Q(_id=parent_node) | Q(path__contains=parent_node))
+
+        # Creating a condition that checks if the user has either direct permissions
+        assigned_condition = Q(_id__in=assigned_node_ids)
+        # Or permissions to ANY one of the parents of the node
+        for node_id in assigned_node_ids:
+            assigned_condition |= Q(path__contains=node_id)
+
+        return TreeStructure.objects.filter(assigned_condition).values_list("_id", flat=True)
 
 
 # user.userrole_set.filter(node__id__in=[all_node_ids (parents + self)], permissions__permission_name__in=["read_topic"])
