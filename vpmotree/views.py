@@ -167,7 +167,6 @@ class RetrieveUpdateNodeView(RetrieveUpdateAPIView):
     permission_classes = (IsAuthenticated, GeneralNodePermission)
 
     def get_object(self):
-        print(self.kwargs["nodeID"])
         try:
             node = TreeStructure.objects.get(_id=self.kwargs["nodeID"]).get_object()
             self.check_object_permissions(self.request, node)
@@ -325,6 +324,7 @@ class NodePermissionsView(APIView):
         data = AllUsersSerializer(assigned_users, many=True).data
 
         # Adding the user role into the data
+        print(raw_user_roles)
         for i in data:
             i["role"] = raw_user_roles[str(i["_id"])]
 
