@@ -317,14 +317,13 @@ class NodePermissionsView(APIView):
 
         # Getting a dictionary of all users that have any permissions to the model
         raw_user_roles = UserRole.objects.filter(node=node).values("role_name", "user___id")
-        raw_user_roles = {i["user___id"]: i["role_name"] for i in raw_user_roles}
+        raw_user_roles = {str(i["user___id"]): i["role_name"] for i in raw_user_roles}
 
         assigned_users = MyUser.objects.filter(_id__in=raw_user_roles.keys())
 
         data = AllUsersSerializer(assigned_users, many=True).data
 
         # Adding the user role into the data
-        print(raw_user_roles)
         for i in data:
             i["role"] = raw_user_roles[str(i["_id"])]
 
