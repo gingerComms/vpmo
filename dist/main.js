@@ -7146,7 +7146,7 @@ var AppModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"chat\" fxFlex fxLayout=\"column\" *ngIf=\"canChat()\">\r\n\r\n\t<div id=\"chat-content\" fusePerfectScrollbar fxFlex=\"1 1 auto\" (scroll)=\"onScroll($event)\" #chatContainer>\r\n\t\t<div class=\"chat-messages\">\r\n\t\t\t<div class=\"message-row\" *ngFor=\"let message of messages;\" \r\n\t\t\t\t[ngClass]=\"{\r\n\t\t\t\t\t'me': message.author === currentUser,\r\n\t\t\t\t\t'contact': message.author !== currentUser\r\n\t\t\t\t}\">\r\n\t\t\t\t<img *ngIf=\"message.author !== currentUser\" src=\"../../assets/icons/Team-T-Icon.svg\" class=\"avatar\"/>\r\n\t\t\t\t<!-- message.author available here as well -->\r\n\t\t\t\t<div class=\"bubble\">\r\n\t\t\t\t\t<div class=\"message\">{{ message.body }}</div>\r\n\t\t\t\t\t<div class=\"time secondary-text\">time</div>\r\n\t\t\t\t</div>\r\n\t\t\t\t\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n\r\n\t <!-- CHAT FOOTER -->\r\n    <div class=\"chat-footer\" fxFlex=\"0 0 auto\" fxLayout=\"column\">\r\n\r\n        <!-- REPLY FORM -->\r\n        <div class=\"reply-form\" fxFlex=\"0 0 auto\" fxLayout=\"row\" fxLayoutAlign=\"center center\">\r\n\r\n            <form #replyForm=\"ngForm\"\r\n                  (ngSubmit)=\"sendMessage(msgInput.value); msgInput.value=''\" \r\n                  fxFlex fxLayout=\"row\" fxLayoutAlign=\"start center\">\r\n\r\n                <mat-form-field class=\"message-text\" fxFlex floatLabel=\"never\" appearance=\"standard\">\r\n                \t<input matInput #msgInput placeholder=\"Type your message here\">\r\n                </mat-form-field>\r\n\r\n                <button class=\"send-message-button\" mat-icon-button type=\"submit\" aria-label=\"Send message\">\r\n                    <mat-icon class=\"secondary-text\">send</mat-icon>\r\n                </button>\r\n\r\n            </form>\r\n\r\n        </div>\r\n        <!-- / REPLY FORM -->\r\n\r\n    </div>\r\n\r\n</div>\r\n\r\n<div *ngIf=\"!canChat()\">\r\n\tCan not Chat\r\n</div>\r\n"
+module.exports = "<div class=\"chat\" fxFlex fxLayout=\"column\" *ngIf=\"canChat()\">\r\n\r\n\t<div id=\"chat-content\" fusePerfectScrollbar fxFlex=\"1 1 auto\" (scroll)=\"onScroll($event)\" #chatContainer>\r\n\t\t<div class=\"chat-messages\">\r\n\t\t\t<div class=\"message-row\" *ngFor=\"let message of messages; let i = index\" \r\n\t\t\t\t[ngClass]=\"{\r\n\t\t\t\t\t'me': message.author === currentUser.username,\r\n\t\t\t\t\t'contact': message.author !== currentUser.username,\r\n                    'last-of-group': isLastMessageOfGroup(message, i)\r\n\t\t\t\t}\">\r\n\t\t\t\t<img *ngIf=\"message.author !== currentUser.username && message.attributes.authorAvatar == null\" src=\"../../assets/icons/Team-T-Icon.svg\" class=\"avatar\"/>\r\n\t\t\t\t<img *ngIf=\"message.author !== currentUser.username && message.attributes.authorAvatar != null\" [src]=\"message.attributes.authorAvatar\" class=\"avatar\"/>\r\n\t\t\t\t<!-- message.author available here as well -->\r\n\t\t\t\t<div class=\"bubble\">\r\n\t\t\t\t\t<div class=\"message\">{{ message.body }}</div>\r\n\t\t\t\t\t<div class=\"time secondary-text\">{{message.attributes.authorName}}</div>\r\n\t\t\t\t</div>\r\n\t\t\t\t\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n\r\n\t <!-- CHAT FOOTER -->\r\n    <div class=\"chat-footer\" fxFlex=\"0 0 auto\" fxLayout=\"column\">\r\n\r\n        <!-- REPLY FORM -->\r\n        <div class=\"reply-form\" fxFlex=\"0 0 auto\" fxLayout=\"row\" fxLayoutAlign=\"center center\">\r\n\r\n            <form #replyForm=\"ngForm\"\r\n                  (ngSubmit)=\"sendMessage(msgInput.value); msgInput.value=''\" \r\n                  fxFlex fxLayout=\"row\" fxLayoutAlign=\"start center\">\r\n\r\n                <mat-form-field class=\"message-text\" fxFlex floatLabel=\"never\" appearance=\"standard\">\r\n                \t<input matInput #msgInput placeholder=\"Type your message here\">\r\n                </mat-form-field>\r\n\r\n                <button class=\"send-message-button\" mat-icon-button type=\"submit\" aria-label=\"Send message\">\r\n                    <mat-icon class=\"secondary-text\">send</mat-icon>\r\n                </button>\r\n\r\n            </form>\r\n\r\n        </div>\r\n        <!-- / REPLY FORM -->\r\n\r\n    </div>\r\n\r\n</div>\r\n\r\n<div *ngIf=\"!canChat()\">\r\n\tCan not Chat\r\n</div>\r\n"
 
 /***/ }),
 
@@ -7217,7 +7217,7 @@ var ChatComponent = /** @class */ (function () {
         var _this = this;
         this.userSubscription = this.authService.user.subscribe(function (user) {
             if (user) {
-                _this.currentUser = user.username;
+                _this.currentUser = user;
             }
             else {
                 _this.currentUser = '';
@@ -7367,7 +7367,13 @@ var ChatComponent = /** @class */ (function () {
         }
     };
     ChatComponent.prototype.sendMessage = function (msg) {
-        this.channel.sendMessage(msg);
+        this.channel.sendMessage(msg, {
+            authorName: this.currentUser.fullname,
+            authorAvatar: this.currentUser.avatar
+        });
+    };
+    ChatComponent.prototype.isLastMessageOfGroup = function (message, index) {
+        return (index == this.messages.length - 1 || this.messages[index + 1] && this.messages[index + 1].author != message.author);
     };
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
