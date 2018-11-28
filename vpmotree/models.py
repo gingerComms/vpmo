@@ -145,12 +145,13 @@ class TreeStructure(models.Model):
 
     def delete_channel(self):
         """ Deletes the channel related to this node """
-        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-        channel = client.chat.services(settings.TWILIO_CHAT_SERVICE_SID) \
-                    .channels(str(self._id)) \
-                    .delete()
-        self.channel_sid = ""
-        self.save()
+        if self.channel_sid:
+            client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+            channel = client.chat.services(settings.TWILIO_CHAT_SERVICE_SID) \
+                        .channels(str(self._id)) \
+                        .delete()
+            self.channel_sid = ""
+            self.save()
 
     def get_users_in_channel(self):
         """ Returns all users part of this node's channel """

@@ -59,7 +59,7 @@ class UserDeserializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ('email', 'email2', 'password', 'fullname', 'username')
+        fields = ('email', 'email2', 'password', 'fullname', 'username', 'avatar')
         read_only_fields = ("email2",)
 
     def validate_email(self, value):

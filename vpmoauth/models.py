@@ -102,6 +102,8 @@ class MyUser(AbstractBaseUser):
     username = models.CharField(max_length=100, unique=True, null=False)
     groups = models.ManyToManyField(Group, related_name="groups")
 
+    avatar = models.ImageField(upload_to="avatars/")
+
     # The nodes favorited by the user - shows up in the side bar
     favorite_nodes = models.ManyToManyField(TreeStructure, blank=True)
 

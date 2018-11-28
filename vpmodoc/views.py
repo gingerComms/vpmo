@@ -129,8 +129,6 @@ class DestroyDocumentView(APIView):
 			return Response(status=status.HTTP_404_NOT_FOUND)
 
 		# Delete the file from s3 if it exists
-		if doc.document:
-			doc.document.delete()
 		doc.delete()
 
 		return Response({"message": "Document deleted successfully."})

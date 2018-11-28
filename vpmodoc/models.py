@@ -49,6 +49,11 @@ class NodeDocument(models.Model):
             
         return None
 
+    def delete_document(self):
+        if self.document:
+            self.document.delete()
+        return True
+
     @staticmethod
     def gen_filename(node, filename):
         return "{node_id}/{filename}".format(node_id=str(node._id), filename=filename)
