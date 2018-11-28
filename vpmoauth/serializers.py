@@ -14,7 +14,8 @@ class AllUsersSerializer(serializers.ModelSerializer):
             'password',
             'fullname',
             'username',
-            '_id'
+            '_id',
+            "avatar",
         )
 
 
@@ -31,6 +32,7 @@ class UserDetailsSerializer(serializers.ModelSerializer):
                 'fullname',
                 'username',
                 "favorite_nodes",
+                "avatar",
         )
 
 
@@ -56,6 +58,7 @@ class UserDetailsSerializer(serializers.ModelSerializer):
 class UserDeserializer(serializers.ModelSerializer):
     email2 = serializers.EmailField(label='Confirm Email', source="get_email2")
     password = serializers.CharField(write_only=True)
+    avatar = serializers.ImageField(max_length=100, required=False)
 
     class Meta:
         model = get_user_model()

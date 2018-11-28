@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, get_user_model
 from django.conf import settings
 from django.apps import apps
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from rest_framework.permissions import AllowAny
 
 from vpmotree.models import Team, Project, TreeStructure
@@ -17,11 +18,14 @@ from rest_framework.views import APIView
 from rest_framework_jwt.settings import api_settings
 from rest_framework import status
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView, get_object_or_404
+from rest_framework.parsers import MultiPartParser, FormParser
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 import jwt
 
+import base64
+from io import BytesIO
 
 # Create your views here.
 
@@ -230,11 +234,44 @@ class UserDetailsView(generics.RetrieveAPIView):
 
 class CreateUserView(generics.CreateAPIView):
     # CreateAPIView provide only Post method
+    parser_classes = (MultiPartParser,)
     model = get_user_model()
     # set permission as AllowAny user to Register
     permission_classes = (permissions.AllowAny,)
     # queryset = get_user_model().object().all
     serializer_class = UserDeserializer
+
+    def create(self, request):
+        """ Creates the user through the userDeserializer """
+        data = request.data.copy()
+
+        # Separating out the avatar from the data
+        avatar = ''
+        if "avatar" in data.keys():
+            # Reading in the b64 image after adding required padding
+            b64_string = data["avatar"].encode()
+            # Adding padding
+            b64_string += b'=' * (-len(b64_string) % 4)
+            avatar = BytesIO(base64.b64decode(b64_string))
+            avatar.seek(0)
+            # Return an error if avatar size is too big (bigger than 25kb)
+            if avatar.getbuffer().nbytes > 25000:
+                return Response({"message": "Avatar too big - must be below 25kb."}, status=status.HTTP_400_BAD_REQUEST)
+            avatar.seek(0)
+            data.pop("avatar")
+
+        serializer = self.serializer_class(data=data)
+        if serializer.is_valid():
+            user = serializer.save()
+            # Setting the avatar on the user after changing name
+            if avatar:
+                # Changing the filename by creating a new InMemoryFile from the old one
+                filename = "{}_AVA.png".format(str(user._id))
+                file = InMemoryUploadedFile(avatar, "image_file", filename, None, avatar.tell(), None)
+                user.avatar = file
+                user.save()
+            return Response(self.serializer_class(user).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginUserView(APIView):
@@ -256,7 +293,11 @@ class LoginUserView(APIView):
                 'username': currentUser.username,
                 'email': currentUser.email,
                 '_id': str(currentUser._id),
+                "avatar": None
                 }
+            # Adding the avatar url to the data if it exists
+            if currentUser.avatar:
+                token["avatar"] = currentUser.avatar.url
             return Response(token)
         else:
             return Response(

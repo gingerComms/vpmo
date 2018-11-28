@@ -7157,7 +7157,7 @@ module.exports = "<div class=\"chat\" fxFlex fxLayout=\"column\" *ngIf=\"canChat
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "/**\n * Applies styles for users in high contrast mode. Note that this only applies\n * to Microsoft browsers. Chrome can be included by checking for the `html[hc]`\n * attribute, however Chrome handles high contrast differently.\n */\n/* Theme for the ripple elements.*/\n/* stylelint-disable material/no-prefixes */\n/* stylelint-enable */\n.avatar {\n  color: rgba(0, 0, 0, 0.87); }\n:host {\n  flex: 1 0 auto;\n  overflow: hidden;\n  max-width: 100%; }\n:host .chat {\n    flex-direction: column;\n    box-sizing: border-box;\n    display: flex;\n    flex: 1 1 0%; }\n:host .chat .chat-toolbar {\n      min-height: 64px;\n      border-bottom: 1px solid; }\n:host .chat .chat-toolbar .responsive-chats-button {\n        padding: 0; }\n:host .chat .chat-toolbar .chat-contact {\n        cursor: pointer; }\n:host .chat .chat-toolbar .chat-contact .avatar {\n          margin-right: 16px; }\n:host .chat #chat-content {\n      background: transparent;\n      overflow: auto;\n      flex: 1 1 auto;\n      box-sizing: border-box;\n      -webkit-overflow-scrolling: touch;\n      max-height: 20em;\n      min-height: 20em; }\n:host .chat #chat-content .chat-messages {\n        position: relative;\n        padding: 16px 0 40px 40px; }\n:host .chat #chat-content .chat-messages .message-row {\n          position: relative;\n          display: flex;\n          flex-direction: column;\n          align-items: flex-start;\n          justify-content: flex-end;\n          padding: 0 16px 4px 16px; }\n:host .chat #chat-content .chat-messages .message-row .avatar {\n            position: absolute;\n            left: -32px;\n            margin: 0; }\n:host .chat #chat-content .chat-messages .message-row .bubble {\n            position: relative;\n            display: flex;\n            align-items: center;\n            justify-content: center;\n            padding: 12px;\n            max-width: 100%; }\n:host .chat #chat-content .chat-messages .message-row .bubble .message {\n              white-space: pre-wrap;\n              line-height: 1.2; }\n:host .chat #chat-content .chat-messages .message-row .bubble .time {\n              position: absolute;\n              display: none;\n              width: 100%;\n              font-size: 11px;\n              margin-top: 8px;\n              top: 100%;\n              left: 0;\n              white-space: nowrap; }\n:host .chat #chat-content .chat-messages .message-row.contact .bubble {\n            border-top-left-radius: 20px;\n            border-bottom-left-radius: 20px;\n            border-top-right-radius: 20px;\n            border-bottom-right-radius: 20px;\n            background-color: #3c4252;\n            color: #fff; }\n:host .chat #chat-content .chat-messages .message-row.contact .bubble .time {\n              margin-left: 12px; }\n:host .chat #chat-content .chat-messages .message-row.contact.first-of-group .bubble {\n            border-top-left-radius: 20px; }\n:host .chat #chat-content .chat-messages .message-row.contact.last-of-group .bubble {\n            border-bottom-left-radius: 20px; }\n:host .chat #chat-content .chat-messages .message-row.me {\n            padding-left: 40px; }\n:host .chat #chat-content .chat-messages .message-row.me .avatar {\n              order: 2;\n              margin: 0 0 0 16px; }\n:host .chat #chat-content .chat-messages .message-row.me .bubble {\n              margin-left: auto;\n              border-top-left-radius: 20px;\n              border-bottom-left-radius: 20px;\n              border-top-right-radius: 20px;\n              border-bottom-right-radius: 20px;\n              color: rgba(12, 12, 12, 0.87);\n              background-color: #e0e0e0; }\n:host .chat #chat-content .chat-messages .message-row.me .bubble .time {\n                justify-content: flex-end;\n                right: 0;\n                margin-right: 12px; }\n:host .chat #chat-content .chat-messages .message-row.me.first-of-group .bubble {\n              border-top-right-radius: 20px; }\n:host .chat #chat-content .chat-messages .message-row.me.last-of-group .bubble {\n              border-bottom-right-radius: 20px; }\n:host .chat #chat-content .chat-messages .message-row.contact + .me,\n          :host .chat #chat-content .chat-messages .message-row.me + .contact {\n            padding-top: 20px;\n            margin-top: 20px; }\n:host .chat #chat-content .chat-messages .message-row.first-of-group .bubble {\n            border-top-left-radius: 20px;\n            padding-top: 13px; }\n:host .chat #chat-content .chat-messages .message-row.last-of-group .bubble {\n            border-bottom-left-radius: 20px;\n            padding-bottom: 13px; }\n:host .chat #chat-content .chat-messages .message-row.last-of-group .bubble .time {\n              display: flex; }\n:host .chat .chat-footer {\n      border-top: 1px solid;\n      padding: 8px 8px 8px 16px;\n      background: #f5f5f5;\n      border-top-color: rgba(0, 0, 0, 0.12); }\n:host .chat .chat-footer .reply-form {\n        position: relative; }\n:host .chat .chat-footer .reply-form .message-text {\n          padding: 16px 8px;\n          background-color: #f5f5f5;\n          border-color: rgba(0, 0, 0, 0.12); }\n:host .chat .chat-footer .reply-form .message-text .mat-form-field-wrapper {\n            padding: 0; }\n:host .chat .chat-footer .reply-form .message-text .mat-form-field-wrapper .mat-form-field-flex {\n              padding: 0; }\n:host .chat .chat-footer .reply-form .message-text .mat-form-field-wrapper .mat-form-field-flex .mat-form-field-infix {\n                padding: 0;\n                border: none;\n                border-radius: 20px;\n                border: 1px solid;\n                border-color: rgba(0, 0, 0, 0.12);\n                background-color: #fff; }\n:host .chat .chat-footer .reply-form .message-text .mat-form-field-wrapper .mat-form-field-flex .mat-form-field-infix textarea {\n                  overflow: hidden;\n                  margin: 16px 48px 16px 16px;\n                  width: calc(100% - 64px);\n                  padding: 0;\n                  resize: none; }\n:host .chat .chat-footer .reply-form .message-text .mat-form-field-wrapper .mat-form-field-underline {\n              display: none !important; }\n:host .chat .chat-footer .reply-form .send-message-button {\n          position: absolute;\n          right: 16px;\n          bottom: 35px; }\n"
+module.exports = "/**\n * Applies styles for users in high contrast mode. Note that this only applies\n * to Microsoft browsers. Chrome can be included by checking for the `html[hc]`\n * attribute, however Chrome handles high contrast differently.\n */\n/* Theme for the ripple elements.*/\n/* stylelint-disable material/no-prefixes */\n/* stylelint-enable */\n.avatar {\n  color: rgba(0, 0, 0, 0.87); }\n:host {\n  flex: 1 0 auto;\n  overflow: hidden;\n  max-width: 100%; }\n:host .chat {\n    flex-direction: column;\n    box-sizing: border-box;\n    display: flex;\n    flex: 1 1 0%; }\n:host .chat .chat-toolbar {\n      min-height: 64px;\n      border-bottom: 1px solid; }\n:host .chat .chat-toolbar .responsive-chats-button {\n        padding: 0; }\n:host .chat .chat-toolbar .chat-contact {\n        cursor: pointer; }\n:host .chat .chat-toolbar .chat-contact .avatar {\n          margin-right: 16px; }\n:host .chat #chat-content {\n      background: transparent;\n      overflow: auto;\n      flex: 1 1 auto;\n      box-sizing: border-box;\n      -webkit-overflow-scrolling: touch;\n      height: 20em; }\n:host .chat #chat-content .chat-messages {\n        position: relative;\n        padding: 16px 0 40px 40px; }\n:host .chat #chat-content .chat-messages .message-row {\n          position: relative;\n          display: flex;\n          flex-direction: column;\n          align-items: flex-start;\n          justify-content: flex-end;\n          padding: 0 16px 4px 16px; }\n:host .chat #chat-content .chat-messages .message-row .avatar {\n            position: absolute;\n            left: -32px;\n            margin: 0; }\n:host .chat #chat-content .chat-messages .message-row .bubble {\n            position: relative;\n            display: flex;\n            align-items: center;\n            justify-content: center;\n            padding: 12px;\n            max-width: 100%; }\n:host .chat #chat-content .chat-messages .message-row .bubble .message {\n              white-space: pre-wrap;\n              line-height: 1.2; }\n:host .chat #chat-content .chat-messages .message-row .bubble .time {\n              position: absolute;\n              display: none;\n              width: 100%;\n              font-size: 11px;\n              margin-top: 8px;\n              top: 100%;\n              left: 0;\n              white-space: nowrap; }\n:host .chat #chat-content .chat-messages .message-row.contact .bubble {\n            border-top-left-radius: 20px;\n            border-bottom-left-radius: 20px;\n            border-top-right-radius: 20px;\n            border-bottom-right-radius: 20px;\n            background-color: #3c4252;\n            color: #fff; }\n:host .chat #chat-content .chat-messages .message-row.contact .bubble .time {\n              margin-left: 12px; }\n:host .chat #chat-content .chat-messages .message-row.contact.first-of-group .bubble {\n            border-top-left-radius: 20px; }\n:host .chat #chat-content .chat-messages .message-row.contact.last-of-group .bubble {\n            border-bottom-left-radius: 20px; }\n:host .chat #chat-content .chat-messages .message-row.me {\n            padding-left: 40px; }\n:host .chat #chat-content .chat-messages .message-row.me .avatar {\n              order: 2;\n              margin: 0 0 0 16px; }\n:host .chat #chat-content .chat-messages .message-row.me .bubble {\n              margin-left: auto;\n              border-top-left-radius: 20px;\n              border-bottom-left-radius: 20px;\n              border-top-right-radius: 20px;\n              border-bottom-right-radius: 20px;\n              color: rgba(12, 12, 12, 0.87);\n              background-color: #e0e0e0; }\n:host .chat #chat-content .chat-messages .message-row.me .bubble .time {\n                justify-content: flex-end;\n                right: 0;\n                margin-right: 12px; }\n:host .chat #chat-content .chat-messages .message-row.me.first-of-group .bubble {\n              border-top-right-radius: 20px; }\n:host .chat #chat-content .chat-messages .message-row.me.last-of-group .bubble {\n              border-bottom-right-radius: 20px; }\n:host .chat #chat-content .chat-messages .message-row.contact + .me,\n          :host .chat #chat-content .chat-messages .message-row.me + .contact {\n            padding-top: 20px;\n            margin-top: 20px; }\n:host .chat #chat-content .chat-messages .message-row.first-of-group .bubble {\n            border-top-left-radius: 20px;\n            padding-top: 13px; }\n:host .chat #chat-content .chat-messages .message-row.last-of-group .bubble {\n            border-bottom-left-radius: 20px;\n            padding-bottom: 13px; }\n:host .chat #chat-content .chat-messages .message-row.last-of-group .bubble .time {\n              display: flex; }\n:host .chat .chat-footer {\n      border-top: 1px solid;\n      padding: 8px 8px 8px 16px;\n      background: #f5f5f5;\n      border-top-color: rgba(0, 0, 0, 0.12); }\n:host .chat .chat-footer .reply-form {\n        position: relative; }\n:host .chat .chat-footer .reply-form .message-text {\n          padding: 16px 8px;\n          background-color: #f5f5f5;\n          border-color: rgba(0, 0, 0, 0.12); }\n:host .chat .chat-footer .reply-form .message-text .mat-form-field-wrapper {\n            padding: 0; }\n:host .chat .chat-footer .reply-form .message-text .mat-form-field-wrapper .mat-form-field-flex {\n              padding: 0; }\n:host .chat .chat-footer .reply-form .message-text .mat-form-field-wrapper .mat-form-field-flex .mat-form-field-infix {\n                padding: 0;\n                border: none;\n                border-radius: 20px;\n                border: 1px solid;\n                border-color: rgba(0, 0, 0, 0.12);\n                background-color: #fff; }\n:host .chat .chat-footer .reply-form .message-text .mat-form-field-wrapper .mat-form-field-flex .mat-form-field-infix textarea {\n                  overflow: hidden;\n                  margin: 16px 48px 16px 16px;\n                  width: calc(100% - 64px);\n                  padding: 0;\n                  resize: none; }\n:host .chat .chat-footer .reply-form .message-text .mat-form-field-wrapper .mat-form-field-underline {\n              display: none !important; }\n:host .chat .chat-footer .reply-form .send-message-button {\n          position: absolute;\n          right: 16px;\n          bottom: 35px; }\n"
 
 /***/ }),
 
@@ -9090,7 +9090,7 @@ var FuseQuickPanelModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-toolbar class=\"p-0 mat-elevation-z1\">\r\n\r\n    <mat-progress-bar *ngIf=\"showLoadingBar\" class=\"loading-bar\" color=\"accent\" mode=\"indeterminate\"></mat-progress-bar>\r\n\r\n    <div fxFlex fxFill fxLayout=\"row\" fxLayoutAlign=\"start center\">\r\n\r\n        <div fxFlex=\"1 0 auto\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\r\n\r\n            <button mat-icon-button class=\"toggle-button-navbar\"\r\n                    *ngIf=\"!noNav\"\r\n                    (click)=\"toggleSidebarOpened('navbar')\" fxHide.gt-md>\r\n                <mat-icon>menu</mat-icon>\r\n            </button>\r\n\r\n            <div class=\"toolbar-separator\" fxHide.gt-md></div>\r\n\r\n            <div fxLayout=\"row\" fxLayoutAlign=\"start center\" *ngIf=\"horizontalNav\">\r\n                <div class=\"logo ml-16\">\r\n                    <img class=\"logo-icon\" src=\"assets/images/logos/vpmo-logo-small.png\">\r\n                </div>\r\n            </div>\r\n\r\n            <div class=\"px-8 px-mat-16\">\r\n                <fuse-shortcuts [navigation]=\"navigation\"></fuse-shortcuts>\r\n            </div>\r\n\r\n        </div>\r\n\r\n        <div class=\"\" fxFlex=\"0 1 auto\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\r\n\r\n            <div *ngIf=\"isLoggedIn\">\r\n                <button mat-button [matMenuTriggerFor]=\"userMenu\"\r\n                        class=\"user-button\">\r\n                    <div fxLayout=\"row\" fxLayoutAlign=\"center center\">\r\n                        <img class=\"avatar\" src=\"assets/images/avatars/profile.jpg\">\r\n                        <span class=\"username mr-12\" fxHide fxShow.gt-sm>{{ fullname }}</span>\r\n                        <mat-icon class=\"s-16\" fxHide.xs>keyboard_arrow_down</mat-icon>\r\n                    </div>\r\n                    \r\n                </button>\r\n\r\n                <mat-menu #userMenu=\"matMenu\" [overlapTrigger]=\"false\">\r\n\r\n                    <button mat-menu-item [routerLink]=\"['/user/profile']\">\r\n                        <mat-icon>account_circle</mat-icon>\r\n                        <span>My Profile</span>\r\n                    </button>\r\n\r\n                    <button mat-menu-item [routerLink]=\"['/user/dashboard']\">\r\n                        <mat-icon>dashboard</mat-icon>\r\n                        <span>Dashboard</span>\r\n                    </button>\r\n                    \r\n                    <button mat-menu-item [routerLink]=\"['/user/profile']\">\r\n                        <mat-icon>chat</mat-icon>\r\n                        <span>Messages</span>\r\n                    </button>\r\n\r\n                    <button mat-menu-item (click)=\"logout()\" class=\"\">\r\n                        <mat-icon>exit_to_app</mat-icon>\r\n                        <span>Logout</span>\r\n                    </button>\r\n\r\n                </mat-menu>\r\n            </div>\r\n            <div *ngIf=\"!isLoggedIn\">\r\n                <button mat-menu-item [routerLink]=\"['/user/login']\">Log In</button>\r\n                \r\n            </div>\r\n\r\n            <div class=\"toolbar-separator\"></div>\r\n\r\n            <fuse-search-bar (onInput)=\"search($event)\"></fuse-search-bar>\r\n\r\n            <!-- <div class=\"toolbar-separator\"></div> -->\r\n\r\n            <!-- <button mat-button fxHide fxShow.gt-xs\r\n                    class=\"language-button\"\r\n                    [matMenuTriggerFor]=\"languageMenu\">\r\n                <div fxLayout=\"row\" fxLayoutAlign=\"center center\">\r\n                    <img class=\"flag mr-8\" [src]=\"'assets/images/flags/'+selectedLanguage.flag+'.png'\">\r\n                    <span class=\"iso text-uppercase\">{{selectedLanguage.id}}</span>\r\n                </div>\r\n            </button> -->\r\n\r\n            <mat-menu #languageMenu=\"matMenu\" [overlapTrigger]=\"false\">\r\n\r\n                <button mat-menu-item *ngFor=\"let lang of languages\" (click)=\"setLanguage(lang)\">\r\n                    <div fxLayout=\"row\" fxLayoutAlign=\"start center\">\r\n                        <img class=\"flag mr-16\" [src]=\"'assets/images/flags/'+lang.flag+'.png'\">\r\n                        <span class=\"iso\">{{lang.title}}</span>\r\n                    </div>\r\n                </button>\r\n\r\n            </mat-menu>\r\n\r\n            <div class=\"toolbar-separator\" fxHide fxShow.gt-xs></div>\r\n\r\n            <button mat-icon-button\r\n                    class=\"quick-panel-toggle-button\"\r\n                    fuseMatSidenavToggler=\"quick-panel\"\r\n                    aria-label=\"Toggle quick panel\">\r\n                <mat-icon class=\"icon\">format_list_bulleted</mat-icon>\r\n            </button>\r\n\r\n        </div>\r\n    </div>\r\n</mat-toolbar>\r\n"
+module.exports = "<mat-toolbar class=\"p-0 mat-elevation-z1\">\r\n\r\n    <mat-progress-bar *ngIf=\"showLoadingBar\" class=\"loading-bar\" color=\"accent\" mode=\"indeterminate\"></mat-progress-bar>\r\n\r\n    <div fxFlex fxFill fxLayout=\"row\" fxLayoutAlign=\"start center\">\r\n\r\n        <div fxFlex=\"1 0 auto\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\r\n\r\n            <button mat-icon-button class=\"toggle-button-navbar\"\r\n                    *ngIf=\"!noNav\"\r\n                    (click)=\"toggleSidebarOpened('navbar')\" fxHide.gt-md>\r\n                <mat-icon>menu</mat-icon>\r\n            </button>\r\n\r\n            <div class=\"toolbar-separator\" fxHide.gt-md></div>\r\n\r\n            <div fxLayout=\"row\" fxLayoutAlign=\"start center\" *ngIf=\"horizontalNav\">\r\n                <div class=\"logo ml-16\">\r\n                    <img class=\"logo-icon\" src=\"assets/images/logos/vpmo-logo-small.png\">\r\n                </div>\r\n            </div>\r\n\r\n            <div class=\"px-8 px-mat-16\">\r\n                <fuse-shortcuts [navigation]=\"navigation\"></fuse-shortcuts>\r\n            </div>\r\n\r\n        </div>\r\n\r\n        <div class=\"\" fxFlex=\"0 1 auto\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\r\n\r\n            <div *ngIf=\"isLoggedIn\">\r\n                <button mat-button [matMenuTriggerFor]=\"userMenu\"\r\n                        class=\"user-button\">\r\n                    <div fxLayout=\"row\" fxLayoutAlign=\"center center\">\r\n                        <img *ngIf=\"user != null && user.avatar == null\" class=\"avatar\" src=\"assets/images/avatars/profile.jpg\">\r\n                        <img *ngIf=\"user != null && user.avatar != null\" class=\"avatar\" [src]=\"user.avatar\">\r\n                        <span class=\"username mr-12\" fxHide fxShow.gt-sm>{{ fullname }}</span>\r\n                        <mat-icon class=\"s-16\" fxHide.xs>keyboard_arrow_down</mat-icon>\r\n                    </div>\r\n                    \r\n                </button>\r\n\r\n                <mat-menu #userMenu=\"matMenu\" [overlapTrigger]=\"false\">\r\n\r\n                    <button mat-menu-item [routerLink]=\"['/user/profile']\">\r\n                        <mat-icon>account_circle</mat-icon>\r\n                        <span>My Profile</span>\r\n                    </button>\r\n\r\n                    <button mat-menu-item [routerLink]=\"['/user/dashboard']\">\r\n                        <mat-icon>dashboard</mat-icon>\r\n                        <span>Dashboard</span>\r\n                    </button>\r\n                    \r\n                    <button mat-menu-item [routerLink]=\"['/user/profile']\">\r\n                        <mat-icon>chat</mat-icon>\r\n                        <span>Messages</span>\r\n                    </button>\r\n\r\n                    <button mat-menu-item (click)=\"logout()\" class=\"\">\r\n                        <mat-icon>exit_to_app</mat-icon>\r\n                        <span>Logout</span>\r\n                    </button>\r\n\r\n                </mat-menu>\r\n            </div>\r\n            <div *ngIf=\"!isLoggedIn\">\r\n                <button mat-menu-item [routerLink]=\"['/user/login']\">Log In</button>\r\n                \r\n            </div>\r\n\r\n            <div class=\"toolbar-separator\"></div>\r\n\r\n            <fuse-search-bar (onInput)=\"search($event)\"></fuse-search-bar>\r\n\r\n            <!-- <div class=\"toolbar-separator\"></div> -->\r\n\r\n            <!-- <button mat-button fxHide fxShow.gt-xs\r\n                    class=\"language-button\"\r\n                    [matMenuTriggerFor]=\"languageMenu\">\r\n                <div fxLayout=\"row\" fxLayoutAlign=\"center center\">\r\n                    <img class=\"flag mr-8\" [src]=\"'assets/images/flags/'+selectedLanguage.flag+'.png'\">\r\n                    <span class=\"iso text-uppercase\">{{selectedLanguage.id}}</span>\r\n                </div>\r\n            </button> -->\r\n\r\n            <mat-menu #languageMenu=\"matMenu\" [overlapTrigger]=\"false\">\r\n\r\n                <button mat-menu-item *ngFor=\"let lang of languages\" (click)=\"setLanguage(lang)\">\r\n                    <div fxLayout=\"row\" fxLayoutAlign=\"start center\">\r\n                        <img class=\"flag mr-16\" [src]=\"'assets/images/flags/'+lang.flag+'.png'\">\r\n                        <span class=\"iso\">{{lang.title}}</span>\r\n                    </div>\r\n                </button>\r\n\r\n            </mat-menu>\r\n\r\n            <div class=\"toolbar-separator\" fxHide fxShow.gt-xs></div>\r\n\r\n            <button mat-icon-button\r\n                    class=\"quick-panel-toggle-button\"\r\n                    fuseMatSidenavToggler=\"quick-panel\"\r\n                    aria-label=\"Toggle quick panel\">\r\n                <mat-icon class=\"icon\">format_list_bulleted</mat-icon>\r\n            </button>\r\n\r\n        </div>\r\n    </div>\r\n</mat-toolbar>\r\n"
 
 /***/ }),
 
@@ -9150,6 +9150,7 @@ var FuseToolbarComponent = /** @class */ (function () {
         this.authService = authService;
         this.globalService = globalService;
         this.title = 'app';
+        this.user = null;
         this.userStatusOptions = [
             {
                 'title': 'Online',
@@ -9210,6 +9211,7 @@ var FuseToolbarComponent = /** @class */ (function () {
                 _this.isLoggedIn = true;
             }
             else {
+                _this.user = null;
                 _this.fullname = '';
                 _this.isLoggedIn = false;
             }
@@ -13434,7 +13436,7 @@ module.exports = "form {\r\n\twidth: 100%;\r\n}\r\n\r\nmat-form-field {\r\n\twid
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\r\n    <div class=\"row valign-wrapper\">\r\n        <div class=\"col s6 offset-s3 valign\">\r\n            <div class=\"card darken-1\">\r\n                <div class=\"card-content\">\r\n                  <span class=\"card-title\">\r\n                      register as a new user {{ registerForm.hasError('emailNotSame')}}\r\n                  </span>\r\n                  <form class=\"col s12 white\" #form=\"ngForm\" [formGroup]=\"registerForm\" (ngSubmit)=\"OnSubmit(registerForm)\">\r\n                    <mat-form-field>\r\n                      <input matInput placeholder=\"Email\" formControlName=\"email\" required>\r\n                      <mat-error *ngIf=\"registerForm.get('email').errors && registerForm.get('email').errors.required\">\r\n                        Email is required\r\n                      </mat-error>\r\n                      <mat-error *ngIf=\"registerForm.get('email').errors && !registerForm.get('email').errors.required && registerForm.get('email').errors.email\">\r\n                        Please enter a valid email address\r\n                      </mat-error>\r\n                      <mat-error *ngIf=\"registerForm.get('email').errors && registerForm.get('email').errors.exists\">\r\n                        This Email already Exists\r\n                      </mat-error>\r\n                    </mat-form-field>\r\n\r\n                    <mat-form-field>\r\n                      <input matInput placeholder=\"Confirm Email\" formControlName=\"email2\" required>\r\n                      <mat-error *ngIf=\"registerForm.get('email2').errors && registerForm.get('email2').errors.emailNotSame\">\r\n                        Emails do not match\r\n                      </mat-error>\r\n                    </mat-form-field>\r\n\r\n                    <mat-form-field>\r\n                      <input matInput placeholder=\"Username\" formControlName=\"username\" required>\r\n                      <mat-error *ngIf=\"registerForm.get('username').errors && registerForm.get('username').errors.required\">\r\n                        Username is required\r\n                      </mat-error>\r\n                      <mat-error *ngIf=\"registerForm.get('username').errors && registerForm.get('username').errors.exists\">\r\n                        Username already exists\r\n                      </mat-error>\r\n                    </mat-form-field>\r\n\r\n                    <mat-form-field>\r\n                      <input matInput placeholder=\"Full Name\" formControlName=\"fullname\">\r\n                      <mat-error *ngIf=\"registerForm.get('fullname').errors && registerForm.get('fullname').errors.required\">\r\n                        Full Name is required\r\n                      </mat-error>\r\n                    </mat-form-field>\r\n\r\n                    <mat-form-field>\r\n                      <input matInput type=\"password\" placeholder=\"Password\" formControlName=\"password\" required>\r\n                        <mat-error *ngIf=\"registerForm.get('password').errors && registerForm.get('password').errors.required\">\r\n                          Password is required\r\n                      </mat-error>\r\n                    </mat-form-field>\r\n                      \r\n                    <button type=\"submit\" mat-raised-button color=\"primary\" [disabled]=\"form.invalid\">\r\n                      Sign Up\r\n                    </button>\r\n                  </form>\r\n          </div>\r\n        </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n  <!-- <div *ngIF \"message!==null;then createdMessage\">ignore</div>\r\n  <ng-template #createdMessage>{{message}} was created</ng-template> -->\r\n \r\n"
+module.exports = "<div class=\"container\">\r\n    <div class=\"row valign-wrapper\">\r\n        <div class=\"col s6 offset-s3 valign\">\r\n            <div class=\"card darken-1\">\r\n                <div class=\"card-content\">\r\n                  <span class=\"card-title\">\r\n                      register as a new user {{ registerForm.hasError('emailNotSame')}}\r\n                  </span>\r\n                  <form class=\"col s12 white\" #form=\"ngForm\" [formGroup]=\"registerForm\" (ngSubmit)=\"OnSubmit(registerForm)\">\r\n\r\n                    <input (change)=\"avatarSelected($event)\" id=\"input-file-id\" multiple type=\"file\" multiple />\r\n                    <image-cropper\r\n                      [imageChangedEvent]=\"avatarSelectedEvent\"\r\n                      [maintainAspectRatio]=\"true\"\r\n                      [aspectRatio]=\"4 / 3\"\r\n                      [resizeToWidth]=\"128\"\r\n                      format=\"png\"\r\n                      (imageCropped)=\"avatarCropped($event)\"\r\n                    ></image-cropper>\r\n\r\n                    <mat-form-field>\r\n                      <input matInput placeholder=\"Email\" formControlName=\"email\" required>\r\n                      <mat-error *ngIf=\"registerForm.get('email').errors && registerForm.get('email').errors.required\">\r\n                        Email is required\r\n                      </mat-error>\r\n                      <mat-error *ngIf=\"registerForm.get('email').errors && !registerForm.get('email').errors.required && registerForm.get('email').errors.email\">\r\n                        Please enter a valid email address\r\n                      </mat-error>\r\n                      <mat-error *ngIf=\"registerForm.get('email').errors && registerForm.get('email').errors.exists\">\r\n                        This Email already Exists\r\n                      </mat-error>\r\n                    </mat-form-field>\r\n\r\n                    <mat-form-field>\r\n                      <input matInput placeholder=\"Confirm Email\" formControlName=\"email2\" required>\r\n                      <mat-error *ngIf=\"registerForm.get('email2').errors && registerForm.get('email2').errors.emailNotSame\">\r\n                        Emails do not match\r\n                      </mat-error>\r\n                    </mat-form-field>\r\n\r\n                    <mat-form-field>\r\n                      <input matInput placeholder=\"Username\" formControlName=\"username\" required>\r\n                      <mat-error *ngIf=\"registerForm.get('username').errors && registerForm.get('username').errors.required\">\r\n                        Username is required\r\n                      </mat-error>\r\n                      <mat-error *ngIf=\"registerForm.get('username').errors && registerForm.get('username').errors.exists\">\r\n                        Username already exists\r\n                      </mat-error>\r\n                    </mat-form-field>\r\n\r\n                    <mat-form-field>\r\n                      <input matInput placeholder=\"Full Name\" formControlName=\"fullname\">\r\n                      <mat-error *ngIf=\"registerForm.get('fullname').errors && registerForm.get('fullname').errors.required\">\r\n                        Full Name is required\r\n                      </mat-error>\r\n                    </mat-form-field>\r\n\r\n                    <mat-form-field>\r\n                      <input matInput type=\"password\" placeholder=\"Password\" formControlName=\"password\" required>\r\n                        <mat-error *ngIf=\"registerForm.get('password').errors && registerForm.get('password').errors.required\">\r\n                          Password is required\r\n                      </mat-error>\r\n                    </mat-form-field>\r\n                      \r\n                    <button type=\"submit\" mat-raised-button color=\"primary\" [disabled]=\"form.invalid\">\r\n                      Sign Up\r\n                    </button>\r\n                  </form>\r\n          </div>\r\n        </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n  <!-- <div *ngIF \"message!==null;then createdMessage\">ignore</div>\r\n  <ng-template #createdMessage>{{message}} was created</ng-template> -->\r\n \r\n"
 
 /***/ }),
 
@@ -13491,6 +13493,8 @@ var SignUpComponent = /** @class */ (function () {
         this.alertService = alertService;
         this.formBuilder = formBuilder;
         this.emailPattern = '^[a-z0-9.%+-]+@[a-z0-9.%-]+\.[a-z]{2,4}$';
+        this.avatar = null;
+        this.avatarSelectedEvent = '';
     }
     SignUpComponent.prototype.ngOnInit = function () {
         this.registerForm = this.formBuilder.group({
@@ -13532,9 +13536,29 @@ var SignUpComponent = /** @class */ (function () {
             }
         });
     };
+    SignUpComponent.prototype.avatarSelected = function (e) {
+        if (e.target.files.length > 0) {
+            this.avatarSelectedEvent = e;
+        }
+        else {
+            this.avatar = null;
+        }
+    };
+    SignUpComponent.prototype.avatarCropped = function (e) {
+        var fReader = new FileReader();
+        var that = this;
+        fReader.onload = function (e) {
+            that.avatar = fReader.result.split(',')[1];
+        };
+        fReader.readAsDataURL(e.file);
+    };
     SignUpComponent.prototype.OnSubmit = function (registerForm) {
         var _this = this;
-        this.userService.create(registerForm.getRawValue())
+        var registerData = registerForm.value;
+        if (this.avatar != null) {
+            registerData.avatar = this.avatar;
+        }
+        this.userService.create(registerData)
             .subscribe(function (data) {
             console.log('success: ', data);
             _this.router.navigate(['/user/login']);
@@ -13574,7 +13598,18 @@ var SignUpComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-form-field class=\"full-width\">\r\n\t<input (ngModelChange)=\"filterUsers($event)\" type=\"text\" placeholder=\"Task Assignee\" matInput [matAutocomplete]=\"auto\" [(ngModel)]=\"selectedUser\">\r\n\t<mat-autocomplete #auto=\"matAutocomplete\">\r\n\t\t<mat-option *ngFor=\"let option of filteredAssignableUsers\" [value]=\"option.username\">\r\n\t\t\t<span>{{option.fullname}}</span> |\r\n\t\t\t<small>email: {{option.email}} |\r\n\t\t\t\tusername: {{option.username}}\r\n\t\t\t</small>\r\n\t\t</mat-option>\r\n\t</mat-autocomplete>\r\n</mat-form-field>"
+module.exports = "<mat-form-field class=\"full-width\">\r\n\t<input (ngModelChange)=\"filterUsers($event)\" type=\"text\" placeholder=\"User\" matInput [matAutocomplete]=\"auto\" [(ngModel)]=\"selectedUser\">\r\n\t<mat-autocomplete #auto=\"matAutocomplete\">\r\n\t\t<mat-option *ngFor=\"let option of filteredAssignableUsers\" [value]=\"option.username\">\r\n\t\t\t<img *ngIf=\"option.avatar == null\" class=\"avatar\" src=\"assets/images/avatars/profile.jpg\">\r\n\t\t\t<img *ngIf=\"option.avatar != null\" class=\"avatar\" [src]=\"option.avatar\">\r\n\t\t\t<span>{{option.fullname}}</span> |\r\n\t\t\t<small>email: {{option.email}} |\r\n\t\t\t\tusername: {{option.username}}\r\n\t\t\t</small>\r\n\t\t</mat-option>\r\n\t</mat-autocomplete>\r\n</mat-form-field>"
+
+/***/ }),
+
+/***/ "./src/app/user/user-search.component.scss":
+/*!*************************************************!*\
+  !*** ./src/app/user/user-search.component.scss ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/**\n * Applies styles for users in high contrast mode. Note that this only applies\n * to Microsoft browsers. Chrome can be included by checking for the `html[hc]`\n * attribute, however Chrome handles high contrast differently.\n */\n/* Theme for the ripple elements.*/\n/* stylelint-disable material/no-prefixes */\n/* stylelint-enable */\n"
 
 /***/ }),
 
@@ -13650,6 +13685,7 @@ var UserSearchComponent = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'user-search',
             template: __webpack_require__(/*! ./user-search.component.html */ "./src/app/user/user-search.component.html"),
+            styles: [__webpack_require__(/*! ./user-search.component.scss */ "./src/app/user/user-search.component.scss")]
         }),
         __metadata("design:paramtypes", [_user_service__WEBPACK_IMPORTED_MODULE_1__["UserService"]])
     ], UserSearchComponent);
@@ -13719,6 +13755,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
 /* harmony import */ var _dashboard_team_card_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./dashboard/team-card.component */ "./src/app/user/dashboard/team-card.component.ts");
 /* harmony import */ var _login_2_login_component__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./login-2/login.component */ "./src/app/user/login-2/login.component.ts");
+/* harmony import */ var ngx_image_cropper__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ngx-image-cropper */ "./node_modules/ngx-image-cropper/fesm5/ngx-image-cropper.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -13732,6 +13769,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 // import { AdminMenuComponent } from './adminMenu/admin-menu.component';
+
 
 
 
@@ -13788,7 +13826,8 @@ var UserModule = /** @class */ (function () {
                 _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatInputModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatButtonModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatCardModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatAutocompleteModule"]
+                _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatAutocompleteModule"],
+                ngx_image_cropper__WEBPACK_IMPORTED_MODULE_16__["ImageCropperModule"]
             ],
             exports: [
                 _signUp_sign_up_component__WEBPACK_IMPORTED_MODULE_7__["SignUpComponent"],
@@ -13831,12 +13870,13 @@ var UserModule = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UserService", function() { return UserService; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
-/* harmony import */ var rxjs_add_operator_map__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs/add/operator/map */ "./node_modules/rxjs-compat/_esm5/add/operator/map.js");
-/* harmony import */ var _shared_message_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../shared/message.service */ "./src/app/shared/message.service.ts");
-/* harmony import */ var _app_config__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../app.config */ "./src/app/app.config.ts");
-/* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../_services */ "./src/app/_services/index.ts");
-/* harmony import */ var _services_custom_http_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../_services/custom-http.service */ "./src/app/_services/custom-http.service.ts");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var rxjs_add_operator_map__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/add/operator/map */ "./node_modules/rxjs-compat/_esm5/add/operator/map.js");
+/* harmony import */ var _shared_message_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../shared/message.service */ "./src/app/shared/message.service.ts");
+/* harmony import */ var _app_config__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../app.config */ "./src/app/app.config.ts");
+/* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../_services */ "./src/app/_services/index.ts");
+/* harmony import */ var _services_custom_http_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../_services/custom-http.service */ "./src/app/_services/custom-http.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -13847,6 +13887,8 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+// import { Headers, Http } from '@angular/http';
+
 
 
 
@@ -13854,8 +13896,9 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 var UserService = /** @class */ (function () {
-    function UserService(http, messageService, authService, alertService) {
+    function UserService(http, genericHttp, messageService, authService, alertService) {
         this.http = http;
+        this.genericHttp = genericHttp;
         this.messageService = messageService;
         this.authService = authService;
         this.alertService = alertService;
@@ -13864,39 +13907,47 @@ var UserService = /** @class */ (function () {
         return this.http.get(searchUrl + query);
     };
     UserService.prototype.userExists = function (queryField, query) {
-        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_4__["appConfig"].apiAuthUrl + '/user_exists/?query_field=' + queryField + '&query=' + query);
+        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_5__["appConfig"].apiAuthUrl + '/user_exists/?query_field=' + queryField + '&query=' + query);
     };
     UserService.prototype.getAll = function () {
-        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_4__["appConfig"].apiAuthUrl + '/users');
+        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_5__["appConfig"].apiAuthUrl + '/users');
     };
     UserService.prototype.getById = function (_id) {
-        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_4__["appConfig"].apiAuthUrl + '/users/' + _id);
+        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_5__["appConfig"].apiAuthUrl + '/users/' + _id);
     };
     UserService.prototype.create = function (user) {
-        return this.http.post(_app_config__WEBPACK_IMPORTED_MODULE_4__["appConfig"].apiAuthUrl + '/users/register/', user);
+        var formData = new FormData();
+        for (var key in user) {
+            if (user.hasOwnProperty(key)) {
+                formData.append(key, user[key]);
+            }
+        }
+        console.log(formData);
+        return this.genericHttp.post(_app_config__WEBPACK_IMPORTED_MODULE_5__["appConfig"].apiAuthUrl + '/users/register/', formData);
     };
     // update(user: User) {
     //     return this.http.put(appConfig.apiUrl + '/users/' + user.id, user);
     // }
     UserService.prototype.delete = function (_id) {
-        return this.http.delete(_app_config__WEBPACK_IMPORTED_MODULE_4__["appConfig"].apiAuthUrl + '/users/' + _id);
+        return this.http.delete(_app_config__WEBPACK_IMPORTED_MODULE_5__["appConfig"].apiAuthUrl + '/users/' + _id);
     };
     UserService.prototype.update = function (_id, user) {
         var _this = this;
-        var url = _app_config__WEBPACK_IMPORTED_MODULE_4__["appConfig"].apiAuthUrl + '/users/update/' + _id + '/';
+        var url = _app_config__WEBPACK_IMPORTED_MODULE_5__["appConfig"].apiAuthUrl + '/users/update/' + _id + '/';
         return this.http.patch(url, user)
             .catch(function (err) { return _this.handleError(err); });
     };
     UserService.prototype.handleError = function (error) {
         var errMsg = (error.message) ? error.message : error.status ? error.status + " - " + error.statusText : 'Server error';
-        return rxjs__WEBPACK_IMPORTED_MODULE_1__["Observable"].throw(error);
+        return rxjs__WEBPACK_IMPORTED_MODULE_2__["Observable"].throw(error);
     };
     UserService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
-        __metadata("design:paramtypes", [_services_custom_http_service__WEBPACK_IMPORTED_MODULE_6__["CustomHttpClient"],
-            _shared_message_service__WEBPACK_IMPORTED_MODULE_3__["MessageService"],
-            _services__WEBPACK_IMPORTED_MODULE_5__["AuthenticationService"],
-            _services__WEBPACK_IMPORTED_MODULE_5__["AlertService"]])
+        __metadata("design:paramtypes", [_services_custom_http_service__WEBPACK_IMPORTED_MODULE_7__["CustomHttpClient"],
+            _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"],
+            _shared_message_service__WEBPACK_IMPORTED_MODULE_4__["MessageService"],
+            _services__WEBPACK_IMPORTED_MODULE_6__["AuthenticationService"],
+            _services__WEBPACK_IMPORTED_MODULE_6__["AlertService"]])
     ], UserService);
     return UserService;
 }());
