@@ -326,7 +326,7 @@ class NodePermissionsView(APIView):
 
         # Adding the user role into the data
         for i in data:
-            i["role"] = raw_user_roles[str(i._id)]
+            i["role"] = raw_user_roles[str(i["_id"])]
 
         return Response(data)
 
