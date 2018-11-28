@@ -11,6 +11,7 @@ from vpmoauth.managers import MyUserManager
 from vpmoauth.role_permissions_map import ROLES_MAP
 from vpmotree.models import Team, TreeStructure
 from twilio.rest import Client
+import json
 
 
 class UserRolePermission(models.Model):
@@ -103,6 +104,8 @@ class MyUser(AbstractBaseUser):
     groups = models.ManyToManyField(Group, related_name="groups")
 
     avatar = models.ImageField(upload_to="avatars/")
+
+    twilio_sid = models.CharField(max_length=34, blank=False)
 
     # The nodes favorited by the user - shows up in the side bar
     favorite_nodes = models.ManyToManyField(TreeStructure, blank=True)
@@ -283,6 +286,51 @@ class MyUser(AbstractBaseUser):
         if team.user_team == "team@{}".format(self.username):
             return True
         return False
+
+    def get_avatar_url(self):
+        """ Returns the avatar link for this user if it exists """
+        if self.avatar:
+            return self.avatar.url
+        return None
+
+    def create_twilio_user(self):
+        """ Creates the twilio user object for this user """
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+
+        user = client.chat.services(settings.TWILIO_CHAT_SERVICE_SID) \
+                        .users \
+                        .create(
+                            identity=self.username,
+                            friendly_name=self.fullname,
+                            attributes=json.dumps({
+                                "avatar": self.get_avatar_url()
+                            })
+                        )
+        self.twilio_sid = user.sid
+
+
+    def update_twilio_user(self):
+        """ Updates the twilio user for this user with the latest information """
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+
+        user = client.chat.services(settings.TWILIO_CHAT_SERVICE_SID) \
+                        .users(self.twilio_sid) \
+                        .update(
+                            friendly_name=self.fullname,
+                            attributes=json.dumps({
+                                "avatar": self.get_avatar_url()
+                            })
+                        )
+
+
+    def delete_twilio_user(self):
+        """ Deletes the twilio user associated with this user """
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+
+        client.chat.services(settings.TWILIO_CHAT_SERVICE_SID) \
+                    .users(self.twilio_sid) \
+                    .delete()
+
 
     def create_user_team(self):
         # create a TreeStructure with nodetype of Team Linked to the user
