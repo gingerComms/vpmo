@@ -210,9 +210,12 @@ class NodePermissionsViewTestCase(TestCase):
     def test_get(self):
         url = reverse("vpmotree:node_permissions", kwargs={"node_id": self.project._id})+"?nodeType=Project"
 
-        response = self.client.get(url).json()
+        response = self.client.get(url)
 
-        print(response)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), 1)
+
+        print(response.json())
 
 
 class ReadNodeListFilterTestcase(TestCase):

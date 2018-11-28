@@ -11,7 +11,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticate
 from rest_framework import filters
 from rest_framework import status
 from vpmoauth.models import MyUser, UserRole
-from vpmoauth.serializers import UserDetailsSerializer
+from vpmoauth.serializers import UserDetailsSerializer, AllUsersSerializer
 
 from vpmotree.models import *
 from vpmotree.serializers import *
@@ -317,21 +317,18 @@ class NodePermissionsView(APIView):
                             status=status.HTTP_404_NOT_FOUND)
 
         # Getting a dictionary of all users that have any permissions to the model
-        raw_user_roles = UserRole.objects.filter(node=node).values("role_name", 
-            "user___id", "user__email", "user__username", "user__fullname")
+        raw_user_roles = UserRole.objects.filter(node=node).values("role_name", "user___id")
+        raw_user_roles = {i["user___id"]: i["role_name"] for i in raw_user_roles}
 
-        # Rename the keys for easier access in the frontend
-        user_roles = []
-        for obj in raw_user_roles:
-            user_roles.append({
-                "_id": str(obj["user___id"]),
-                "role": obj["role_name"],
-                "email": obj["user__email"],
-                "username": obj["user__username"],
-                "fullname": obj["user__fullname"]
-            })
+        assigned_users = MyUser.objects.filter(_id__in=raw_user_roles.keys())
 
-        return Response(user_roles)
+        data = AllUsersSerializer(assigned_users, many=True).data
+
+        # Adding the user role into the data
+        for i in data:
+            i["role"] = raw_user_roles[str(i._id)]
+
+        return Response(data)
 
 class AssignableRolesView(APIView):
     """ Returns a list of roles assignable by a user for a node """

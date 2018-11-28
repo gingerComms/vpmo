@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth import update_session_auth_hash
 from rest_framework.response import Response
 from vpmoprj.serializers import *
+from vpmoauth.models import UserRole
 
 class AllUsersSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
@@ -11,7 +12,6 @@ class AllUsersSerializer(serializers.ModelSerializer):
         model = get_user_model()
         fields = (
             'email',
-            'password',
             'fullname',
             'username',
             '_id',
@@ -34,25 +34,6 @@ class UserDetailsSerializer(serializers.ModelSerializer):
                 "favorite_nodes",
                 "avatar",
         )
-
-
-# class UserUpdateSerializer(ModelSerializer):
-#     # email = serializers.EmailField()
-#     # fullname = serializers.CharField()
-#     # username = serializers.CharField()
-#     password = CharField(write_only=True)
-#
-#     def update(self, instance, validated_data):
-#         instance.email = validated_data.get('email', instance.email),
-#         instance.fullname = validated_data.get('fullname', instance.fullname),
-#         instance.username = validated_data.get('username', instance.username),
-#         instance.password = validated_data.get('password', instance.set_password(validated_data['password'])),
-#         instance.save()
-#         return instance
-#
-#     class Meta:
-#         model = get_user_model()
-#         fields = ('id', 'email', 'password', 'fullname', 'username')
 
 
 class UserDeserializer(serializers.ModelSerializer):
@@ -84,27 +65,3 @@ class UserDeserializer(serializers.ModelSerializer):
         user.is_active = True
         user.save()
         return user
-
-        # fields = '__all__'
-
-        # read_only_fields = ('created_at', 'updated_at',)
-
-        # def create(self, validated_data):
-        #     return MyUser.objects.create(**validated_data)
-        #
-        # def update(self, instance, validated_data):
-        #     instance.username = validated_data.get('username', instance.username)
-        #     instance.tagline = validated_data.get('tagline', instance.tagline)
-        #
-        #     instance.save()
-        #
-        #     password = validated_data.get('password', None)
-        #     confirm_password = validated_data.get('confirm_password', None)
-        #
-        #     if password and confirm_password and password == confirm_password:
-        #         instance.set_password(password)
-        #         instance.save()
-        #
-        #     update_session_auth_hash(self.context.get('request'), instance)
-        #
-        #     return instance
