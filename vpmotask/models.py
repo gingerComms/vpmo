@@ -12,6 +12,8 @@ from twilio.rest import Client
 
 class TaskList(models.Model):
 	""" Represents a list in the scrumboard for a single project """
+	_id = models.ObjectIdField()
+	
 	project = models.ForeignKey("vpmotree.Project", on_delete=models.CASCADE)
 	title = models.CharField(max_length=255, unique=False, blank=False)
 	index = models.IntegerField(default=0, null=False)
