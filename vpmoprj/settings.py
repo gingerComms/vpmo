@@ -65,7 +65,8 @@ INSTALLED_APPS = [
     'vpmoauth',
     'vpmotree',
     "vpmodoc",
-    "chat"
+    "chat",
+    "vpmotask"
 ]
 
 """
