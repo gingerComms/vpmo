@@ -155,7 +155,7 @@ WSGI_APPLICATION = 'vpmoprj.wsgi.application'
 DATABASES = {
         "default": {
             "ENGINE": "djongo",
-            "NAME": "test-example-31",
+            "NAME": "test-example-32",
             "HOST": "13.239.32.74",
             "PORT": 27017
         }
