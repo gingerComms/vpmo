@@ -211,6 +211,7 @@ class ScrumboardTaskListTestCase(TestCase):
     def test_task_list_get(self):
         """ Tests the project GET endpoint for a project's task lists """
         self.test_task_list_create()
+        print(self.task_list)
 
         url = reverse("vpmotask:project_scrumboard_task_list", kwargs={"project_id": str(self.project._id)})
 
