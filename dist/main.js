@@ -7575,9 +7575,6 @@ var ChatService = /** @class */ (function () {
                 client.on('channelJoined', function (channel) {
                     that.channelAdded(channel);
                 });
-                client.on('channelUpdated', function (channel) {
-                    that.channelAdded(channel);
-                });
                 // Add listener for client.on('tokenAboutToExpire', xx) 
                 //  To update chat token when it's about to expire
             });
@@ -13583,7 +13580,7 @@ var SignUpComponent = /** @class */ (function () {
             _this.router.navigate(['/user/login']);
         }, function (error) {
             console.log('error: ', error);
-            _this.alertService.error(error);
+            _this.alertService.error(error.message);
         });
     };
     Object.defineProperty(SignUpComponent.prototype, "diagnostic", {
