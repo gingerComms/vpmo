@@ -47,7 +47,7 @@ class Task(models.Model):
 
     # Relations with a task list
     task_list_index = models.IntegerField(default=0, null=False)
-    task_list = models.ForeignKey("TaskList", on_delete=models.CASCADE)
+    task_list = models.ForeignKey("TaskList", on_delete=models.CASCADE, null=False)
 
     def __str__(self):
         return "<{title}>: {due_date}".format(title=self.title, due_date=self.due_date.strftime("%d/%m/%Y"))

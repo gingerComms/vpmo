@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from vpmotree.models import Team, Project, Deliverable
 from vpmoauth.models import MyUser
+from vpmotask.models import TaskList
 import test_addons
 from vpmotree import views
 from django.shortcuts import reverse
@@ -38,6 +39,9 @@ class TaskTestCase(TestCase):
         self.project_admin.assign_role("project_admin", self.project, test=True)
         self.project_contributor.assign_role("project_contributor", self.project, test=True)
 
+        self.task_list = TaskList(project=self.project, title="TaskListTest", index=0)
+        self.task_list.save()
+
         self.client.force_login(self.project_admin)
 
     def tearDown(self):
@@ -68,7 +72,8 @@ class TaskTestCase(TestCase):
             "title": "Test Task",
             "status": "NEW",
             "due_date": "2018-10-07T18:30:00.000Z",
-            "node": str(self.project._id)
+            "node": str(self.project._id),
+            "task_list": self.task_list._id
         }
 
         r = self.client.post(url, data)
