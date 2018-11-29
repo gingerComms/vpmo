@@ -9,7 +9,7 @@ from vpmoauth.serializers import UserDetailsSerializer
 from vpmotask.permissions import TaskListCreateAssignPermission
 from vpmotree.models import TreeStructure
 from vpmotask.models import Task
-from vpmotask.serializers import TaskSerializer
+from vpmotask.serializers import TaskSerializer, TaskListWithTasksSerializer
 from vpmoauth.models import MyUser, UserRole
 
 from datetime import datetime as dt
@@ -96,7 +96,7 @@ class DeleteUpdateCreateTaskView(APIView):
             return Response({"message": "Assignee not found"}, status=status.HTTP_404_NOT_FOUND)
 
         try:
-            task = Task.objects.get(_id=data["_id"])
+            task = Task.objects.get(_id=data.pop("_id", None))
         except Task.DoesNotExist:
             return Response({"message": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -130,9 +130,30 @@ class DeleteUpdateCreateTaskView(APIView):
         data["status"] = "NEW"
 
         serializer = self.serializer_class(data=data)
-        if serializer.is_valid(raise_exception=True):
+        if serializer.is_valid():
             task = serializer.save()
-            data = serializer.data
 
-            return Response(data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DeleteUpdateCreateTaskListView(APIView):
+	""" Contains endpoints required for deleting/updating/creating
+		Task lists
+	"""
+	permission_classes = (IsAuthenticated, TaskListCreateAssignPermission,)
+	serializer_class = TaskListWithTasksSerializer
+
+	def post(self, request):
+		""" Handles creating a task list object """
+		data = request.data.copy()
+
+		serializer = self.serializer_class(TaskListWithTasksSerializer)
+		if serializer.is_valid():
+			task_list = serializer.save()
+
+			return Response(serializer.data, status=status.HTTP_201_CREATED)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+

@@ -132,3 +132,46 @@ class TaskTestCase(TestCase):
         r = self.client.delete(url, json.dumps(data), content_type='application/json')
 
         self.assertEqual(r.status_code, 200)
+
+
+class TaskListTestCase(TestCase):
+    client = Client()
+
+    def setUp(self):
+        create_base_permissions()
+        project_admin_creds = {
+            "username": "TestUser",
+            "email": "TestUser@vpmotest.com",
+            "fullname": "Test User"
+        }
+        self.project_admin = MyUser.objects.create(**project_admin_creds)
+
+        project_contributor_creds = {
+            "username": "TestUser2",
+            "email": "TestUser2@vpmotest.com",
+            "fullname": "Test2 User"
+        }
+        self.project_contributor = MyUser.objects.create(**project_contributor_creds)
+
+        self.project = Project(name="Test Proj", project_owner=self.project_admin)
+        self.project.save()
+
+        self.project_admin.assign_role("project_admin", self.project, test=True)
+
+        self.client.force_login(self.project_admin)
+
+
+    def test_task_list_create(self):
+        url = reverse("vpmotask:delete_update_create_task_list")
+
+        data = {
+            "project_id": str(self.project._id),
+            "title": "TestTask",
+            "index": 0
+        }
+
+        r = self.client.post(url, data)
+        print(r.json())
+
+        self.assertEqual(r.status_code, 201)
+        self.assertEqual(r.json()["title"], "TestTask")
