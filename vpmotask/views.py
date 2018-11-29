@@ -9,7 +9,7 @@ from vpmoauth.serializers import UserDetailsSerializer
 from vpmotask.permissions import TaskListCreateAssignPermission
 from vpmotree.models import TreeStructure
 from vpmotask.models import Task
-from vpmotask.serialzers import TaskSerializer
+from vpmotask.serializers import TaskSerializer
 from vpmoauth.models import MyUser, UserRole
 
 from datetime import datetime as dt
