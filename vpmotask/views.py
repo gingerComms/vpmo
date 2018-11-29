@@ -129,6 +129,8 @@ class DeleteUpdateCreateTaskView(APIView):
 
         data["status"] = "NEW"
 
+        print(data)
+
         serializer = self.serializer_class(data=data)
         if serializer.is_valid(raise_exception=True):
             task = serializer.save()
