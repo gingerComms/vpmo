@@ -11468,7 +11468,7 @@ var CreateTasksComponent = /** @class */ (function () {
     CreateTasksComponent.prototype.ngOnInit = function () {
         this.nodeID = this.data.nodeID;
         this.nodeType = this.data.nodeType;
-        this.searchUrl = "" + _app_config__WEBPACK_IMPORTED_MODULE_3__["appConfig"].apiUrl + '/assignable_task_users/' + this.nodeID + '/' + '?nodeType=' + this.nodeType + '&search=';
+        this.searchUrl = "" + _app_config__WEBPACK_IMPORTED_MODULE_3__["appConfig"].taskApiUrl + '/assignable_task_users/' + this.nodeID + '/' + '?nodeType=' + this.nodeType + '&search=';
     };
     CreateTasksComponent.prototype.createTask = function () {
         if (!this.taskTitle || !this.taskDueDate || !this.selectedUser || this.filteredAssignableUsers.length == 0) {
@@ -11564,7 +11564,7 @@ var EditTaskComponent = /** @class */ (function () {
         this.newTitle = this.data.taskTitle;
         this.newDueDate = this.data.taskDueDate;
         this.selectedUser = this.data.taskAssignee;
-        this.searchUrl = "" + _app_config__WEBPACK_IMPORTED_MODULE_3__["appConfig"].apiUrl + '/assignable_task_users/' + this.nodeID + '/' + '?nodeType=' + this.nodeType + '&search=';
+        this.searchUrl = "" + _app_config__WEBPACK_IMPORTED_MODULE_3__["appConfig"].taskApiUrl + '/assignable_task_users/' + this.nodeID + '/' + '?nodeType=' + this.nodeType + '&search=';
     };
     EditTaskComponent.prototype.editTask = function () {
         if (!this.selectedUser || !this.filteredAssignableUsers) {
