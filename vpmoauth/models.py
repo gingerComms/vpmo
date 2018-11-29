@@ -199,8 +199,6 @@ class MyUser(AbstractBaseUser):
         # Nodes to add is defined as nodes the user can access but is not added to
         nodes_to_add = [i for i in accessible_nodes if i not in nodes_already_added]
 
-        print(nodes_to_remove, nodes_to_add)
-
         # Actually adding to and removing from the channels
         for i in nodes_to_remove:
             self.remove_from_channel(i)
