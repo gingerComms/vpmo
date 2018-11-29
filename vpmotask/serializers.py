@@ -22,7 +22,7 @@ class ScrumboardTaskListWithTasksSerializer(serializers.ModelSerializer):
 
     def get_tasks(self, instance):
         """ Contains a list of tasks assigned to this node """
-        return TaskSerializer(Task.objects.filter(task_list=instance).order_by("index"), many=True)
+        return TaskSerializer(Task.objects.filter(task_list=instance).order_by("index"), many=True).data
 
     class Meta:
         model = ScrumboardTaskList
