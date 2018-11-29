@@ -189,7 +189,7 @@ class MyUser(AbstractBaseUser):
         user_channels = [i.channel_sid for i in self.get_user_channels()]
         nodes_already_added = TreeStructure.objects.filter(
                                     channel_sid__in=user_channels,
-                                    node__path__contains=str(node._id)
+                                    path__contains=str(node._id)
                                 ).values_list("_id", flat=True)
         # The nodes the user has at least update access to
         accessible_nodes = UserRole.get_assigned_nodes(self, str(node._id), "update")
