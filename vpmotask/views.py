@@ -6,10 +6,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from vpmoauth.serializers import UserDetailsSerializer
-from vpmotask.permissions import TaskListCreateAssignPermission
+from vpmotask.permissions import TaskListPermission, TaskPermission
 from vpmotree.models import TreeStructure
 from vpmotask.models import Task
-from vpmotask.serializers import TaskSerializer, TaskListWithTasksSerializer
+from vpmotask.serializers import TaskSerializer, ScrumboardTaskListWithTasksSerializer
 from vpmoauth.models import MyUser, UserRole
 
 from datetime import datetime as dt
@@ -48,7 +48,7 @@ class AssignedTasksListView(generics.ListAPIView):
 class DeleteUpdateCreateTaskView(APIView):
     """ View that takes a post request for creating a Task object with the given data """
     serializer_class = TaskSerializer
-    permission_classes = (IsAuthenticated, TaskListCreateAssignPermission,)
+    permission_classes = (IsAuthenticated, TaskPermission,)
 
     def delete(self, request, *args, **kwargs):
         """ Deletes the input task """
@@ -137,12 +137,12 @@ class DeleteUpdateCreateTaskView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class DeleteUpdateCreateTaskListView(APIView):
+class TaskListView(APIView):
 	""" Contains endpoints required for deleting/updating/creating
 		Task lists
 	"""
-	permission_classes = (IsAuthenticated, TaskListCreateAssignPermission,)
-	serializer_class = TaskListWithTasksSerializer
+	permission_classes = (IsAuthenticated, TaskListPermission,)
+	serializer_class = ScrumboardTaskListWithTasksSerializer
 
 	def post(self, request):
 		""" Handles creating a task list object """

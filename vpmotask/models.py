@@ -10,7 +10,7 @@ from twilio.rest import Client
 
 # Create your models here.
 
-class TaskList(models.Model):
+class ScrumboardTaskList(models.Model):
 	""" Represents a list in the scrumboard for a single project """
 	_id = models.ObjectIdField()
 	
@@ -49,7 +49,7 @@ class Task(models.Model):
 
     # Relations with a task list
     task_list_index = models.IntegerField(default=0, null=False)
-    task_list = models.ForeignKey("TaskList", on_delete=models.CASCADE, null=False)
+    task_list = models.ForeignKey("ScrumboardTaskList", on_delete=models.CASCADE, null=False)
 
     def __str__(self):
         return "<{title}>: {due_date}".format(title=self.title, due_date=self.due_date.strftime("%d/%m/%Y"))

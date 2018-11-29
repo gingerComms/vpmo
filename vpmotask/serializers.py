@@ -4,19 +4,19 @@ from vpmoprj.serializers import *
 from vpmotree.models import TreeStructure, Project
 from vpmoauth.models import MyUser
 from vpmoauth.serializers import UserDetailsSerializer
-from vpmotask.models import Task, TaskList
+from vpmotask.models import Task, ScrumboardTaskList
 
 
-class TaskListMinimalSerializer(serializers.ModelSerializer):
+class ScrumboardTaskListMinimalSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
     project = RelatedObjectIdField(queryset=Project.objects.all())
 
     class Meta:
-        model = TaskList
+        model = ScrumboardTaskList
         fields = "__all__"
 
 
-class TaskListWithTasksSerializer(serializers.ModelSerializer):
+class ScrumboardTaskListWithTasksSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
     tasks = serializers.SerializerMethodField(required=False)
 
@@ -25,7 +25,7 @@ class TaskListWithTasksSerializer(serializers.ModelSerializer):
         return TaskSerializer(Task.objects.filter(task_list=instance).order_by("index"), many=True)
 
     class Meta:
-        model = TaskList
+        model = ScrumboardTaskList
         fields = ("_id", "title", "index", "tasks")
 
 
@@ -35,7 +35,7 @@ class TaskSerializer(serializers.ModelSerializer):
     created_by = RelatedObjectIdField(queryset=MyUser.objects.all())
     assignee = UserDetailsSerializer(required=False)
     due_date = serializers.DateField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d"], allow_null=True, required=False)
-    task_list = TaskListMinimalSerializer(required=False)
+    task_list = ScrumboardTaskListMinimalSerializer(required=False)
 
     def get_assignee_name(self, instance):
         try:
@@ -54,7 +54,7 @@ class TaskSerializer(serializers.ModelSerializer):
         if assignee_id:
             data["assignee"] = MyUser.objects.get(_id=assignee_id)
         if task_list_id:
-            data["task_list"] = TaskList.objects.get(_id=task_list_id)
+            data["task_list"] = ScrumboardTaskList.objects.get(_id=task_list_id)
 
         return data
 
