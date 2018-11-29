@@ -206,3 +206,15 @@ class ScrumboardTaskListTestCase(TestCase):
         r = self.client.delete(url, json.dumps(data), content_type='application/json')
 
         self.assertEqual(r.status_code, 200)
+
+
+    def test_task_list_get(self):
+        """ Tests the project GET endpoint for a project's task lists """
+        self.test_task_list_create()
+
+        url = reverse("vpmotask:project_scrumboard_task_list", kwargs={"project_id": str(self.project._id)})
+
+        r = self.client.get(url)
+
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(len(r.json()), 1)

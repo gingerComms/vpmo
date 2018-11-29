@@ -25,6 +25,8 @@ class TaskListPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method == "POST":
             node = request.data["project_id"]
+        elif request.method == "GET":
+            node = view.kwargs["project_id"]
         else:
             node = request.query_params["project_id"]
         node = TreeStructure.objects.get(_id=node)
@@ -32,7 +34,12 @@ class TaskListPermission(permissions.BasePermission):
 
         perms = request.user.get_permissions(node)
 
-        if "update_{}".format(node.node_type.lower()) in perms:
-            return True
+        # If request is a GET, return for only view level perms, otherwise look for update perms
+        if request.method == "GET":
+            if "read_{}".format(node.node_type.lower()) in perms:
+                return True
+        else:
+            if "update_{}".format(node.node_type.lower()) in perms:
+                return True
 
         return False

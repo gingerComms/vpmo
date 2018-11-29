@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from vpmoauth.serializers import UserDetailsSerializer
 from vpmotask.permissions import TaskListPermission, TaskPermission
-from vpmotree.models import TreeStructure
+from vpmotree.models import TreeStructure, Project
 from vpmotask.models import Task, ScrumboardTaskList
 from vpmotask.serializers import TaskSerializer, ScrumboardTaskListWithTasksSerializer
 from vpmoauth.models import MyUser, UserRole
@@ -67,6 +67,7 @@ class DeleteUpdateCreateTaskView(APIView):
             NOTE - The reason this isn't merged into the put endpoint is because
                 we need to handle different permissions for both tasks and combining the 
                 endpoints would just make it messy
+            Also used to when the task is rearranged in a list/moved to a different list
         """
         data = request.data.copy()
         try:
@@ -138,7 +139,7 @@ class DeleteUpdateCreateTaskView(APIView):
 
 
 class ScrumboardTaskListView(APIView):
-    """ Contains endpoints required for deleting/updating/creating
+    """ Contains endpoints required for deleting/partially updating/creating
         Task lists
     """
     permission_classes = (IsAuthenticated, TaskListPermission,)
@@ -182,6 +183,23 @@ class ScrumboardTaskListView(APIView):
         task_list.delete()
 
         return Response(status=status.HTTP_200_OK)
+
+
+class ProjectScrumboardTaskListView(generics.ListAPIView):
+    """ Returns all task lists for the given project, ordered by the index
+        NOTE - For implementation, onInit of the projectScrumboard component in the frontend
+            call this endpoint with the project id as input to get all task lists
+    """
+    permission_classes = (IsAuthenticated, TaskListPermission)
+    serializer_class = ScrumboardTaskListWithTasksSerializer
+
+    def get_queryset(self):
+        try:
+            project = Project.objects.get(_id=self.kwargs["project_id"])
+        except Project.DoesNotExist:
+            return Response({"message": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        return ScrumboardTaskList.objects.filter(project=project).order_by("index")
 
 
 
