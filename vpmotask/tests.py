@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from vpmotree.models import Team, Project, Deliverable
 from vpmoauth.models import MyUser
-from vpmotask.models import TaskList
+from vpmotask.models import ScrumboardTaskList
 import test_addons
 from vpmotree import views
 from django.shortcuts import reverse
@@ -39,7 +39,7 @@ class TaskTestCase(TestCase):
         self.project_admin.assign_role("project_admin", self.project, test=True)
         self.project_contributor.assign_role("project_contributor", self.project, test=True)
 
-        self.task_list = TaskList(project=self.project, title="TaskListTest", index=0)
+        self.task_list = ScrumboardTaskList(project=self.project, title="TaskListTest", index=0)
         self.task_list.save()
 
         self.client.force_login(self.project_admin)
@@ -134,7 +134,7 @@ class TaskTestCase(TestCase):
         self.assertEqual(r.status_code, 200)
 
 
-class TaskListTestCase(TestCase):
+class ScrumboardTaskListTestCase(TestCase):
     client = Client()
 
     def setUp(self):
