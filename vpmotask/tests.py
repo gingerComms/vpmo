@@ -180,7 +180,7 @@ class ScrumboardTaskListTestCase(TestCase):
     def test_task_list_partial_update(self):
         self.test_task_list_create()
         url = reverse("vpmotask:scrumboard_task_list") + "?task_list=" + str(self.task_list["_id"]) \
-                                                        + "?project_id=" + str(self.project._id)
+                                                        + "&project_id=" + str(self.project._id)
 
         data = {
             "index": 1
