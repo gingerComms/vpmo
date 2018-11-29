@@ -78,7 +78,6 @@ class TaskTestCase(TestCase):
         }
 
         r = self.client.post(url, data)
-        print(r.json())
 
         self.assertEqual(r.status_code, 201)
         self.task = r.json()
@@ -173,7 +172,8 @@ class ScrumboardTaskListTestCase(TestCase):
         }
 
         r = self.client.post(url, data)
-
+        print(r.json())
+        
         self.assertEqual(r.status_code, 201)
         self.assertEqual(r.json()["title"], "TestTask")
         self.task_list = r.json()
