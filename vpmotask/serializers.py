@@ -19,7 +19,8 @@ class ScrumboardTaskListMinimalSerializer(serializers.ModelSerializer):
 class ScrumboardTaskListWithTasksSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
     tasks = serializers.SerializerMethodField(required=False)
-
+    project = RelatedObjectIdField(queryset=Project.objects.all())
+    
     def get_tasks(self, instance):
         """ Contains a list of tasks assigned to this node """
         return TaskSerializer(Task.objects.filter(task_list=instance).order_by("task_list_index"), many=True).data
