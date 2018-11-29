@@ -6935,7 +6935,8 @@ var appConfig = {
     apiUrl: 'http://gingercomms.radconsultants.com.au/vpmoapp/api',
     docApiUrl: 'http://gingercomms.radconsultants.com.au/vpmodoc/api',
     apiAuthUrl: 'http://gingercomms.radconsultants.com.au/vpmoauth/api',
-    chatUrl: 'http://gingercomms.radconsultants.com.au/chat'
+    chatUrl: 'http://gingercomms.radconsultants.com.au/chat',
+    taskApiUrl: 'http://gingercomms.radconsultants.com.au/vpmotask/api'
 };
 
 
@@ -11882,7 +11883,7 @@ var TasksService = /** @class */ (function () {
     function TasksService(http, authService) {
         this.http = http;
         this.authService = authService;
-        this.apiUrl = "" + _app_config__WEBPACK_IMPORTED_MODULE_4__["appConfig"].apiUrl;
+        this.apiUrl = "" + _app_config__WEBPACK_IMPORTED_MODULE_4__["appConfig"].taskApiUrl;
         this.getAssignedTasksUrl = this.apiUrl + '/list_assigned_tasks/';
         this.getAssignableUsersUrl = this.apiUrl + '/assignable_task_users/';
         this.createDeleteUpdateTaskUrl = this.apiUrl + '/delete_update_create_task/';
