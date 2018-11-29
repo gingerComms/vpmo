@@ -24,9 +24,9 @@ class TaskPermission(permissions.BasePermission):
 class TaskListPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method == "POST":
-            node = request.data["project"]
+            node = request.data["project_id"]
         else:
-            node = request.query_params["nodeID"]
+            node = request.query_params["project_id"]
         node = TreeStructure.objects.get(_id=node)
         node = node.get_object()
 

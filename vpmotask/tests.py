@@ -171,7 +171,22 @@ class ScrumboardTaskListTestCase(TestCase):
         }
 
         r = self.client.post(url, data)
-        print(r.json())
 
         self.assertEqual(r.status_code, 201)
         self.assertEqual(r.json()["title"], "TestTask")
+        self.task_list = r.json()
+
+
+    def test_task_list_partial_update(self):
+        self.test_task_list_create()
+        url = reverse("vpmotask:scrumboard_task_list") + "?task_list=" + str(self.task_list["_id"]) \
+                                                        + "?project_id=" + str(self.project._id)
+
+        data = {
+            "index": 1
+        }
+
+        r = self.client.patch(url, data)
+
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.json()["index"], 1)
