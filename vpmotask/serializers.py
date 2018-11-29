@@ -19,7 +19,7 @@ class TaskSerializer(serializers.ModelSerializer):
     created_by = RelatedObjectIdField(queryset=MyUser.objects.all())
     assignee = UserDetailsSerializer(required=False)
     due_date = serializers.DateField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d"], allow_null=True, required=False)
-    task_list = TaskListSerializer()
+    task_list = TaskListSerializer(required=False)
 
     def get_assignee_name(self, instance):
         try:
