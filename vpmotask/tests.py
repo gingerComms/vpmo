@@ -162,6 +162,7 @@ class ScrumboardTaskListTestCase(TestCase):
 
 
     def test_task_list_create(self):
+        """ Tests the post endpoint + adds the task list to the class """
         url = reverse("vpmotask:scrumboard_task_list")
 
         data = {
@@ -178,6 +179,7 @@ class ScrumboardTaskListTestCase(TestCase):
 
 
     def test_task_list_partial_update(self):
+        """ Tests the patch endpoint for task lists """
         self.test_task_list_create()
         url = reverse("vpmotask:scrumboard_task_list") + "?task_list=" + str(self.task_list["_id"]) \
                                                         + "&project_id=" + str(self.project._id)
@@ -187,7 +189,20 @@ class ScrumboardTaskListTestCase(TestCase):
         }
 
         r = self.client.patch(url, json.dumps(data), content_type='application/json')
-        print(r.json())
 
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r.json()["index"], 1)
+
+
+    def test_task_list_delete(self):
+        """ Tests the delete endpoint for task lists """
+        self.test_task_list_create()
+        url = reverse("vpmotask:scrumboard_task_list") + "?project_id=" + str(self.project._id)
+
+        data = {
+            "_id": self.task_list["_id"]
+        }
+
+        r = self.client.delete(url, json.dumps(data), content_type='application/json')
+
+        self.assertEqual(r.status_code == 200)

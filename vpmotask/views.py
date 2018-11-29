@@ -171,5 +171,17 @@ class ScrumboardTaskListView(APIView):
 			return Response(serializer.data)
 		return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
+	def delete(self, request):
+		""" Deletes the task list object in the data """
+		data = request.data.copy()
+        try:
+            task_list = ScrumboardTaskList.objects.get(_id=data["_id"])
+        except ScrumboardTaskList.DoesNotExist:
+            return Response({'message': "Task List not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        task_list.delete()
+
+        return Response(status=status.HTTP_200_OK)
+
 
 
