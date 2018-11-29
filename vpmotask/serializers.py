@@ -8,6 +8,7 @@ from vpmotask.models import Task, TaskList
 
 
 class TaskListSerializer(serializers.ModelSerializer):
+    _id = ObjectIdField(read_only=True)
 
     class Meta:
         model = TaskList
