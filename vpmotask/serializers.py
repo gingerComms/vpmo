@@ -30,11 +30,15 @@ class TaskSerializer(serializers.ModelSerializer):
     def validate(self, data):
         # Getting the assignee from the initial data passed into serializer
         assignee_id = self.initial_data.get("assignee_id", None)
+        # Getting the task_list id
+        task_list_id = self.initial_data.get("task_list_id", None)
         # Validating the rest of the fields
         data = super(TaskSerializer, self).validate(data)
         # Setting the foreign key
         if assignee_id:
             data["assignee"] = MyUser.objects.get(_id=assignee_id)
+        if task_list_id:
+            data["task_list"] = TaskList.objects.get(_id=task_list_id)
 
         return data
 

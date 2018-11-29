@@ -73,7 +73,8 @@ class TaskTestCase(TestCase):
             "status": "NEW",
             "due_date": "2018-10-07T18:30:00.000Z",
             "node": str(self.project._id),
-            "task_list_id": str(self.task_list._id)
+            "task_list_id": str(self.task_list._id),
+            "task_list_index": 0
         }
 
         r = self.client.post(url, data)
