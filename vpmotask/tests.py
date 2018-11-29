@@ -41,14 +41,14 @@ class TaskTestCase(TestCase):
         self.client.force_login(self.project_admin)
 
     def tearDown(self):
+        self.project.delete()
         self.project_admin.delete()
-        self.prroject.delete()
         self.project_contributor.delete()
 
     def test_task_assignee_update(self):
         self.test_task_create()
 
-        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project&nodeID="+str(self.project._id)
+        url = reverse("vpmotask:delete_update_create_task")+"?nodeType=Project&nodeID="+str(self.project._id)
 
         data = {
             "assignee": str(self.project_admin.username),
@@ -62,7 +62,7 @@ class TaskTestCase(TestCase):
 
     def test_task_create(self):
         """ Tests the task creation POST endpoint """
-        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project&nodeID="+str(self.project._id)
+        url = reverse("vpmotask:delete_update_create_task")+"?nodeType=Project&nodeID="+str(self.project._id)
 
         data = {
             "title": "Test Task",
@@ -79,7 +79,7 @@ class TaskTestCase(TestCase):
     def test_assignable_task_users(self):
         """ Tests the GET list view for assignable task users """
         self.test_task_create()
-        url = reverse("vpmotree:assignable_task_users", kwargs={"nodeID": str(self.project._id)})+"?nodeType=Project"
+        url = reverse("vpmotask:assignable_task_users", kwargs={"nodeID": str(self.project._id)})+"?nodeType=Project"
 
         r = self.client.get(url)
 
@@ -92,7 +92,7 @@ class TaskTestCase(TestCase):
             To pass the test, the view should return the tasks assigned to the current user
         """
         self.test_task_create()
-        url = reverse("vpmotree:list_assigned_tasks", kwargs={"nodeID": str(self.project._id)})
+        url = reverse("vpmotask:list_assigned_tasks", kwargs={"nodeID": str(self.project._id)})
 
         r = self.client.get(url)
 
@@ -101,7 +101,7 @@ class TaskTestCase(TestCase):
 
     def test_task_status_update(self):
         """ Tests updating of the task status by the assignee """
-        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project&nodeID="+str(self.project._id)
+        url = reverse("vpmotask:delete_update_create_task")+"?nodeType=Project&nodeID="+str(self.project._id)
         self.test_task_create()
 
         data = {
@@ -116,7 +116,7 @@ class TaskTestCase(TestCase):
 
     def test_task_delete(self):
         """ Tests deletion of tasks """
-        url = reverse("vpmotree:delete_update_create_task")+"?nodeType=Project&nodeID="+str(self.project._id)
+        url = reverse("vpmotask:delete_update_create_task")+"?nodeType=Project&nodeID="+str(self.project._id)
         self.test_task_create()
 
         data = {
