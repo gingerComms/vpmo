@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from vpmoauth.serializers import UserDetailsSerializer
 from vpmotask.permissions import TaskListPermission, TaskPermission
 from vpmotree.models import TreeStructure
-from vpmotask.models import Task
+from vpmotask.models import Task, ScrumboardTaskList
 from vpmotask.serializers import TaskSerializer, ScrumboardTaskListWithTasksSerializer
 from vpmoauth.models import MyUser, UserRole
 
