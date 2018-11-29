@@ -78,7 +78,7 @@ class TaskTestCase(TestCase):
         }
 
         r = self.client.post(url, data)
-        print(r.json())
+
         self.assertEqual(r.status_code, 201)
         self.task = r.json()
 
