@@ -187,8 +187,10 @@ class MyUser(AbstractBaseUser):
             new_perms = self.get_permissions(node)
         # The nodes  channels the user is added to
         user_channels = [i.channel_sid for i in self.get_user_channels()]
-        nodes_already_added = TreeStructure.objects.filter(channel_sid__in=user_channels) \
-                                .values_list("_id", flat=True)
+        nodes_already_added = TreeStructure.objects.filter(
+                                    channel_sid__in=user_channels,
+                                    node__path__contains=str(node._id)
+                                ).values_list("_id", flat=True)
         # The nodes the user has at least update access to
         accessible_nodes = UserRole.get_assigned_nodes(self, str(node._id), "update")
 
@@ -196,6 +198,8 @@ class MyUser(AbstractBaseUser):
         nodes_to_remove = [i for i in nodes_already_added if i not in accessible_nodes]
         # Nodes to add is defined as nodes the user can access but is not added to
         nodes_to_add = [i for i in accessible_nodes if i not in nodes_already_added]
+
+        print(nodes_to_remove, nodes_to_add)
 
         # Actually adding to and removing from the channels
         for i in nodes_to_remove:
