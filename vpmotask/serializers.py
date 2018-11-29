@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from vpmoprj.serializers import *
-from vpmotree.models import TreeStructure
+from vpmotree.models import TreeStructure, Project
 from vpmoauth.models import MyUser
 from vpmoauth.serializers import UserDetailsSerializer
 from vpmotask.models import Task, TaskList
@@ -9,6 +9,7 @@ from vpmotask.models import Task, TaskList
 
 class TaskListSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
+    project = RelatedObjectIdField(queryset=Project.objects.all())
 
     class Meta:
         model = TaskList
