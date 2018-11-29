@@ -186,7 +186,7 @@ class ScrumboardTaskListTestCase(TestCase):
             "index": 1
         }
 
-        r = self.client.patch(url, data)
+        r = self.client.patch(url, json.dumps(data), content_type='application/json')
         print(r.json())
 
         self.assertEqual(r.status_code, 200)
