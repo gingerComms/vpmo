@@ -7563,8 +7563,8 @@ var ChatService = /** @class */ (function () {
                 that.loadingService.hide();
                 client.on('messageAdded', function (message) {
                     var unreadMessages = that.unreadMessageTracker.value;
-                    if (unreadMessages[message.channel.friendlyName] !== undefined) {
-                        unreadMessages[message.channel.friendlyName] = unreadMessages[message.channel.friendlyName] + 1;
+                    if (unreadMessages[message.channel.uniqueName] !== undefined) {
+                        unreadMessages[message.channel.uniqueName] = unreadMessages[message.channel.uniqueName] + 1;
                     }
                     that.unreadMessageTracker.next(unreadMessages);
                     that.messages.next(message);
@@ -7572,6 +7572,14 @@ var ChatService = /** @class */ (function () {
                 client.on('channelAdded', function (channel) {
                     that.channelAdded(channel);
                 });
+                client.on('channelJoined', function (channel) {
+                    that.channelAdded(channel);
+                });
+                client.on('channelUpdated', function (channel) {
+                    that.channelAdded(channel);
+                });
+                // Add listener for client.on('tokenAboutToExpire', xx) 
+                //  To update chat token when it's about to expire
             });
         });
     };
@@ -7587,8 +7595,13 @@ var ChatService = /** @class */ (function () {
     };
     ChatService.prototype.channelAdded = function (channel) {
         var that = this;
-        if (that.userChannels.value.indexOf(channel) <= -1) {
-            that.userChannels.next(that.userChannels.value.concat([channel]));
+        var userChannels = that.userChannels.value;
+        if (userChannels.filter(function (i) { return i.uniqueName == channel.uniqueName; }).length == 0) {
+            that.userChannels.next(userChannels.concat([channel]));
+        }
+        else {
+            userChannels[userChannels.indexOf(userChannels.filter(function (i) { return i.uniqueName == channel.uniqueName; }))] = channel;
+            that.userChannels.next(userChannels);
         }
         that.updateChannelUnread(channel);
     };
@@ -7598,14 +7611,14 @@ var ChatService = /** @class */ (function () {
         channel.getUnconsumedMessagesCount().then(function (c) {
             if (c == null) {
                 if (channel.lastMessage == undefined) {
-                    unreadMessages[channel.friendlyName] = 0;
+                    unreadMessages[channel.uniqueName] = 0;
                 }
                 else {
-                    unreadMessages[channel.friendlyName] = channel.lastMessage.index + 1;
+                    unreadMessages[channel.uniqueName] = channel.lastMessage.index + 1;
                 }
             }
             else {
-                unreadMessages[channel.friendlyName] = c;
+                unreadMessages[channel.uniqueName] = c;
             }
             that.unreadMessageTracker.next(unreadMessages);
         });
@@ -8818,7 +8831,7 @@ var FuseNavbarComponent = /** @class */ (function () {
         this.navigation.find(function (item) { return item.id == 'favoritesGroup'; }).children = [];
         for (var i = 0; i < favoriteNodes.length; i++) {
             var child = {
-                'id': favoriteNodes[i].name,
+                'id': favoriteNodes[i]._id,
                 'title': favoriteNodes[i].name,
                 // 'translate': 'NAV.SAMPLE.TITLE',
                 'type': 'item',
@@ -8826,9 +8839,9 @@ var FuseNavbarComponent = /** @class */ (function () {
                 'url': '/node/' + favoriteNodes[i].node_type + '/' + favoriteNodes[i]._id + '/tree/',
                 'hidden': false,
             };
-            if (unreadMessages[child.title] !== undefined) {
+            if (unreadMessages[child.id] !== undefined) {
                 child['badge'] = {
-                    title: unreadMessages[child.title]
+                    title: unreadMessages[child.id]
                 };
             }
             else {
@@ -12446,7 +12459,7 @@ var TreeStructureHttpService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<tree-root [nodes]=\"nodes\" [options]=\"options\" (moveNode)=\"onMoveNode($event)\">\r\n  <ng-template #treeNodeTemplate let-node let-index=\"index\">\r\n    <div class=\"edit my-container\" *ngIf=\"node.data.isRenaming\">\r\n      \r\n      <input class=\"node-name-input\" type=\"text\" [(ngModel)]=\"newNodeName\">\r\n      <div class=\"buttons\">\r\n        <a (click)=\"renameNode(node)\">\r\n          save\r\n        </a>\r\n        <a (click)=\"cancelRenameNode(node)\">\r\n          cancel\r\n        </a>\r\n      </div>\r\n    </div>\r\n    <div class=\"my-container\" *ngIf=\"!node.data.isRenaming\">\r\n      <!-- <img *ngIf=\"node.data.node_type=='Team'\" src=\"../../assets/icons/Team-T-Icon.svg\" height=\"15\" width=\"15\"/> -->\r\n      <!-- <img *ngIf=\"node.data.node_type=='Project'\" src=\"../../assets/icons/Project-P-Icon.png\" height=\"15\" width=\"15\"/> -->\r\n      <div *ngIf=\"node.data.node_type=='Team'\" class=\"node-team\">Team</div>\r\n      <div *ngIf=\"node.data.node_type=='Project'\" class=\"node-project\">Project</div>\r\n      <div *ngIf=\"node.data.node_type=='Topic'\" class=\"node-topic\">Topic</div>      \r\n      \r\n      <div class=\"node-name\">{{ node.data.name }}</div>\r\n\r\n      <div>\r\n        <button mat-icon-button class=\"yellow-icon\" *ngIf=\"favoriteNodeIds.indexOf(node.data._id) >= 0\" (click)=\"toggleFavorite(node.data._id)\">\r\n          <mat-icon> star </mat-icon>\r\n        </button>\r\n        <button mat-icon-button class=\"yellow-icon\" *ngIf=\"favoriteNodeIds.indexOf(node.data._id) <= -1\" (click)=\"toggleFavorite(node.data._id)\">\r\n          <mat-icon> star_border </mat-icon>\r\n        </button>\r\n        \r\n        <button *ngIf=\"node.data.node_type!='Topic'\" mat-icon-button (click)=\"startAdd(node)\">\r\n          <mat-icon> add </mat-icon>\r\n        </button>\r\n        <button mat-icon-button  class=\"white-icon\" class=\"white-icon\" (click)=\"startRenaming(node)\">\r\n          <mat-icon> edit </mat-icon>\r\n        </button>\r\n        <button *ngIf=\"unreadMessages[node.data.name] !== undefined\" mat-icon-button class=\"unread-badge\" (click)=\"startRenaming(node)\">\r\n          {{ unreadMessages[node.data.name] }}\r\n        </button>\r\n        <button mat-icon-button class=\"white-icon\" (click)=\"viewDetail(node)\">\r\n          <mat-icon> navigate_next </mat-icon>\r\n        </button>\r\n        <!-- <a class=\"button-red\" (click)=\"removeNode(node)\">\r\n          <i class=\"material-icons\"> clear </i>\r\n        </a> -->\r\n      </div>\r\n    </div>\r\n\r\n  </ng-template>\r\n</tree-root>"
+module.exports = "<tree-root [nodes]=\"nodes\" [options]=\"options\" (moveNode)=\"onMoveNode($event)\">\r\n  <ng-template #treeNodeTemplate let-node let-index=\"index\">\r\n    <div class=\"edit my-container\" *ngIf=\"node.data.isRenaming\">\r\n      \r\n      <input class=\"node-name-input\" type=\"text\" [(ngModel)]=\"newNodeName\">\r\n      <div class=\"buttons\">\r\n        <a (click)=\"renameNode(node)\">\r\n          save\r\n        </a>\r\n        <a (click)=\"cancelRenameNode(node)\">\r\n          cancel\r\n        </a>\r\n      </div>\r\n    </div>\r\n    <div class=\"my-container\" *ngIf=\"!node.data.isRenaming\">\r\n      <!-- <img *ngIf=\"node.data.node_type=='Team'\" src=\"../../assets/icons/Team-T-Icon.svg\" height=\"15\" width=\"15\"/> -->\r\n      <!-- <img *ngIf=\"node.data.node_type=='Project'\" src=\"../../assets/icons/Project-P-Icon.png\" height=\"15\" width=\"15\"/> -->\r\n      <div *ngIf=\"node.data.node_type=='Team'\" class=\"node-team\">Team</div>\r\n      <div *ngIf=\"node.data.node_type=='Project'\" class=\"node-project\">Project</div>\r\n      <div *ngIf=\"node.data.node_type=='Topic'\" class=\"node-topic\">Topic</div>      \r\n      \r\n      <div class=\"node-name\">{{ node.data.name }}</div>\r\n\r\n      <div>\r\n        <button mat-icon-button class=\"yellow-icon\" *ngIf=\"favoriteNodeIds.indexOf(node.data._id) >= 0\" (click)=\"toggleFavorite(node.data._id)\">\r\n          <mat-icon> star </mat-icon>\r\n        </button>\r\n        <button mat-icon-button class=\"yellow-icon\" *ngIf=\"favoriteNodeIds.indexOf(node.data._id) <= -1\" (click)=\"toggleFavorite(node.data._id)\">\r\n          <mat-icon> star_border </mat-icon>\r\n        </button>\r\n        \r\n        <button *ngIf=\"node.data.node_type!='Topic'\" mat-icon-button (click)=\"startAdd(node)\">\r\n          <mat-icon> add </mat-icon>\r\n        </button>\r\n        <button mat-icon-button  class=\"white-icon\" class=\"white-icon\" (click)=\"startRenaming(node)\">\r\n          <mat-icon> edit </mat-icon>\r\n        </button>\r\n        <button *ngIf=\"unreadMessages[node.data.name] !== undefined\" mat-icon-button class=\"unread-badge\" (click)=\"startRenaming(node)\">\r\n          {{ unreadMessages[node.data._id] }}\r\n        </button>\r\n        <button mat-icon-button class=\"white-icon\" (click)=\"viewDetail(node)\">\r\n          <mat-icon> navigate_next </mat-icon>\r\n        </button>\r\n        <!-- <a class=\"button-red\" (click)=\"removeNode(node)\">\r\n          <i class=\"material-icons\"> clear </i>\r\n        </a> -->\r\n      </div>\r\n    </div>\r\n\r\n  </ng-template>\r\n</tree-root>"
 
 /***/ }),
 
