@@ -205,4 +205,4 @@ class ScrumboardTaskListTestCase(TestCase):
 
         r = self.client.delete(url, json.dumps(data), content_type='application/json')
 
-        self.assertEqual(r.status_code == 200)
+        self.assertEqual(r.status_code, 200)
