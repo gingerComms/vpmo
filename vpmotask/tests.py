@@ -162,7 +162,7 @@ class TaskListTestCase(TestCase):
 
 
     def test_task_list_create(self):
-        url = reverse("vpmotask:delete_update_create_task_list")
+        url = reverse("vpmotask:scrumboard_task_list")
 
         data = {
             "project_id": str(self.project._id),

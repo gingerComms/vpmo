@@ -137,7 +137,7 @@ class DeleteUpdateCreateTaskView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class TaskListView(APIView):
+class ScrumboardTaskListView(APIView):
 	""" Contains endpoints required for deleting/updating/creating
 		Task lists
 	"""
