@@ -138,42 +138,42 @@ class DeleteUpdateCreateTaskView(APIView):
 
 
 class ScrumboardTaskListView(APIView):
-	""" Contains endpoints required for deleting/updating/creating
-		Task lists
-	"""
-	permission_classes = (IsAuthenticated, TaskListPermission,)
-	serializer_class = ScrumboardTaskListWithTasksSerializer
+    """ Contains endpoints required for deleting/updating/creating
+        Task lists
+    """
+    permission_classes = (IsAuthenticated, TaskListPermission,)
+    serializer_class = ScrumboardTaskListWithTasksSerializer
 
-	def post(self, request):
-		""" Handles creating a task list object """
-		data = request.data.copy()
+    def post(self, request):
+        """ Handles creating a task list object """
+        data = request.data.copy()
 
-		serializer = self.serializer_class(data=data)
-		if serializer.is_valid():
-			task_list = serializer.save()
+        serializer = self.serializer_class(data=data)
+        if serializer.is_valid():
+            task_list = serializer.save()
 
-			return Response(serializer.data, status=status.HTTP_201_CREATED)
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-	def patch(self, request):
-		""" Handles partially updating a task list object """
-		data = request.data.copy()
+    def patch(self, request):
+        """ Handles partially updating a task list object """
+        data = request.data.copy()
 
-		# Getting the task from the query parameter
-		try:
-			task_list = ScrumboardTaskList.objects.get(_id=request.query_params["task_list"])
-		except ScrumboardTaskList.DoesNotExist:
-			return Response({"message": "Task list does not exist"}, status=HTTP_404_NOT_FOUND)
+        # Getting the task from the query parameter
+        try:
+            task_list = ScrumboardTaskList.objects.get(_id=request.query_params["task_list"])
+        except ScrumboardTaskList.DoesNotExist:
+            return Response({"message": "Task list does not exist"}, status=HTTP_404_NOT_FOUND)
 
-		serializer = self.serializer_class(task_list, data=data, partial=True)
-		if serializer.is_valid():
-			task_list = serializer.save()
-			return Response(serializer.data)
-		return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+        serializer = self.serializer_class(task_list, data=data, partial=True)
+        if serializer.is_valid():
+            task_list = serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
-	def delete(self, request):
-		""" Deletes the task list object in the data """
-		data = request.data.copy()
+    def delete(self, request):
+        """ Deletes the task list object in the data """
+        data = request.data.copy()
         try:
             task_list = ScrumboardTaskList.objects.get(_id=data["_id"])
         except ScrumboardTaskList.DoesNotExist:
