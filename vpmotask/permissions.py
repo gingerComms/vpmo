@@ -48,7 +48,7 @@ class TaskListPermission(permissions.BasePermission):
 
 class TaskReorderPermissions(permissions.BasePermission):
     def has_permission(self, request, view):
-        node = ScrumboardTaskList.objects.get(view.kwargs["task_list_id"]).project
+        node = ScrumboardTaskList.objects.get(_id=view.kwargs["task_list_id"]).project
 
         perms = request.user.get_permissions(node)
 
