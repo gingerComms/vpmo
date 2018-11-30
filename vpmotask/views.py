@@ -213,7 +213,7 @@ class TaskIndexUpdateView(generics.UpdateAPIView):
 
         with transaction.atomic():
             for task in tasks:
-                task.index = task_ids.index(str(task._id))
+                task.task_list_index = task_ids.index(str(task._id))
                 task.save()
 
         return Response(self.serializer_class(tasks.order_by("index"), many=True).data)
