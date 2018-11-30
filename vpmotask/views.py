@@ -188,7 +188,7 @@ class ScrumboardTaskListView(APIView):
 
 class TaskIndexUpdateView(generics.UpdateAPIView):
     """ Updates the index(es) and task list of all tasks in a scrumboard-list """
-    permission_classes = (IsAuthenticated, TaskListPermission,)
+    permission_classes = (IsAuthenticated, TaskReorderPermissions,)
     serializer_class = ScrumboardTaskListWithTasksSerializer
 
     def get_object(self):
