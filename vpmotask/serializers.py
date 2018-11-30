@@ -46,6 +46,7 @@ class TaskListSerializer(serializers.ModelSerializer):
     created_by = RelatedObjectIdField(queryset=MyUser.objects.all())
     assignee = RelatedObjectIdField(queryset=MyUser.objects.all())
     due_date = serializers.DateField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d"], allow_null=True, required=False)
+    task_list = RelatedObjectIdField(queryset=ScrumboardTaskList.objects.all())
 
     class Meta:
         model = Task
