@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from vpmoauth.serializers import UserDetailsSerializer
-from vpmotask.permissions import TaskListPermission, TaskPermission, ProjectTaskListPermissions
+from vpmotask.permissions import TaskListPermission, TaskPermission, ProjectTaskListPermissions, TaskReorderPermissions
 from vpmotree.models import TreeStructure, Project
 from vpmotask.models import Task, ScrumboardTaskList
 from vpmotask.serializers import TaskSerializer, ScrumboardTaskListWithTasksSerializer
