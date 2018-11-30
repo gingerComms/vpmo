@@ -189,7 +189,7 @@ class ScrumboardTaskListView(APIView):
 class TaskIndexUpdateView(generics.UpdateAPIView):
     """ Updates the index(es) and task list of all tasks in a scrumboard-list """
     permission_classes = (IsAuthenticated, TaskReorderPermissions,)
-    serializer_class = ScrumboardTaskListWithTasksSerializer
+    serializer_class = TaskSerializer
 
     def get_object(self):
         try:
@@ -216,7 +216,7 @@ class TaskIndexUpdateView(generics.UpdateAPIView):
                 task.task_list_index = task_ids.index(str(task._id))
                 task.save()
 
-        return Response(self.serializer_class(tasks.order_by("index"), many=True).data)
+        return Response(self.serializer_class(tasks.order_by("task_list_index"), many=True).data)
 
 
 class ProjectScrumboardTaskListView(mixins.UpdateModelMixin, generics.ListAPIView):
