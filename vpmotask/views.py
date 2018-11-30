@@ -205,7 +205,7 @@ class TaskIndexUpdateView(generics.UpdateAPIView):
         if task_list is None:
             return Response({"message": "Task list does not exist"}, status=HTTP_404_NOT_FOUND)
 
-        tasks = Task.objects.get(_id__in=task_ids)
+        tasks = Task.objects.filter(_id__in=task_ids)
 
         # We don't need to explicitly remove the tasks to this task list since they should have been removed
         #   removed in another api call at that point
