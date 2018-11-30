@@ -27,7 +27,7 @@ if __name__ == "__main__":
 
 	sys.path.insert(0, 'C:\\Users\\WiggyAer\\djangopy27\\vpmo')
 	sys.path.insert(0, 'G:\\Web\\vpmo_pc')
-	os.environ['DJANGO_SETTINGS_MODULE'] = 'vpmoprj.settings'
+	os.environ['DJANGO_SETTINGS_MODULE'] = 'vpmoprj.prod_settings'
 	django.setup()
 
 	print(create_base_permissions())
