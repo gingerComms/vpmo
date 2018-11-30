@@ -207,7 +207,7 @@ class ProjectScrumboardTaskListView(mixins.UpdateModelMixin, generics.ListAPIVie
                 i.index = index_order.index(str(i._id))
                 i.save()
 
-        return Response(self.serializer_class(to_update.order_by("index")).data)
+        return Response(self.serializer_class(to_update.order_by("index"), many=True).data)
 
     # TODO: Create update endpoint to update index of all task lists under a project
     #   Use that in the frontend
