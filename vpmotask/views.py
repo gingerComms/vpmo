@@ -200,7 +200,7 @@ class ProjectScrumboardTaskListView(mixins.UpdateModelMixin, generics.ListAPIVie
         """
         to_update = self.get_queryset()
 
-        index_order = [str(i["_id"]) for i in request.data["taskLists"]]
+        index_order = [str(i["_id"]) for i in request.data]
 
         with transaction.atomic():
             for i in to_update:

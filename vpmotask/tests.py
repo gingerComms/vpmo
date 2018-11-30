@@ -225,9 +225,7 @@ class ScrumboardTaskListTestCase(TestCase):
 
         url = reverse("vpmotask:project_scrumboard_task_list", kwargs={"project_id": str(self.project._id)})
 
-        data = {
-            "taskLists": [self.task_list]
-        }
+        data = [self.task_list]
 
         r = self.client.put(url, json.dumps(data), content_type='application/json')
 
