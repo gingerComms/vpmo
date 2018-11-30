@@ -29,11 +29,19 @@ class TreeStructure(models.Model):
     path = models.CharField(max_length=4048, null=True)
     # The index field is for tracking the location of an object within the heirarchy
     index = models.IntegerField(default=0, null=False)
-
+    name = models.CharField(max_length=150, unique=False)
+    description = models.TextField(blank=True, null=True)
     node_type = models.CharField(max_length=48, default="Team")
+    model_name = models.CharField(max_length=48, null=True)
 
     # The twilio channel SID for this node
     channel_sid = models.CharField(max_length=34, blank=False)
+
+
+    # Created at the registration time
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 
     # other than the Teams the rest of the nodes get created under (as a child)
     # OR at the same level of another node (sibling)
@@ -69,7 +77,6 @@ class TreeStructure(models.Model):
             return Project.objects.get(_id=parent._id)
         return parent
 
-
     def get_model_class(self):
         # Return the Node Type if it isn't set to topic
         if self.node_type != "Topic":
@@ -86,7 +93,7 @@ class TreeStructure(models.Model):
 
     def get_object(self):
         """ Returns the particular model instance for this treeStructure node """
-        model = self.get_model_class()
+        model = apps.get_model("vpmotree", self.model_name)
         return model.objects.get(_id=self._id)
 
     def save(self, *args, **kwargs):
@@ -146,7 +153,6 @@ class TreeStructure(models.Model):
 
         return users_to_add
 
-
     def __str__(self):
         return '%s - %s' % (self._id, self.node_type)
 
@@ -156,16 +162,14 @@ class Team(TreeStructure):
         * There is no save method because path is None by default
     """
 
-    name = models.CharField(max_length=150, unique=False)
     # user_linked specifies whether the team is the default against user
     user_linked = models.BooleanField(default=False)
     user_team = models.CharField(max_length=251, unique=True)
-    # Created at the registration time
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+
 
     def save(self, *args, **kwargs):
         self.node_type = "Team"
+        self.model_name = "Team"
         super(Team, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -178,22 +182,19 @@ class Project(TreeStructure):
         can have both Root and Branch parents
     """
 
-    name = models.CharField(max_length=150, null=False)
-    description = models.TextField(blank=True, null=True)
     # content contains the WYSIWYG content coming in from the frontend
     content = models.TextField(blank=True, null=True)
     # team_project = models.CharField(max_length=452, null=False, unique=True, default=slugify(name) + '@')
     start = models.DateField(null=True)
+    finish = models.DateField(null=True)
     project_owner = models.ForeignKey('vpmoauth.MyUser',
                                       on_delete=models.PROTECT,
                                       null=True,
                                       related_name='%(class)s_project_owner')
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
     def save(self, *args, **kwargs):
         self.node_type = "Project"
+        self.model_name = "Project"
         super(Project, self).save(*args, **kwargs)
 
 
@@ -207,7 +208,6 @@ class Topic(TreeStructure):
         "Issue",
     ]
 
-    name = models.CharField(max_length=150, null=False, unique=False)
     content = models.TextField(blank=True, null=True)
     def __str__(self):
         return "{name} - {type}".format(name=self.name, type=type(self).__name__)
@@ -221,6 +221,7 @@ class Deliverable(Topic):
 
     def save(self, *args, **kwargs):
         self.node_type = "Topic"
+        self.model_name = "Deliverable"
         super(Deliverable, self).save(*args, **kwargs)
 
 
@@ -236,4 +237,38 @@ class Issue(Topic):
 
     def save(self, *args, **kwargs):
         self.node_type = "Topic"
+        self.model_name = "Issue"
         super(Issue, self).save(*args, **kwargs)
+
+
+class Risk(Topic):
+    IMPACT_CHOICES = [
+        ('1', 'Minor',),
+        ('2', 'Moderate',),
+        ('3', "High",)
+    ]
+    PROBABILITY_CHOICES = [
+        ('1', 'Low probability',),
+        ('2', 'Medium probability',),
+        ('3', "High probability",)
+    ]
+    due_date = models.DateTimeField(auto_now=False, auto_now_add=False)
+    assignee = models.ForeignKey("vpmoauth.MyUser", on_delete=models.CASCADE)
+    impact = models.CharField(max_length=1, choices=IMPACT_CHOICES, blank=False, default='1')
+    probability = models.CharField(max_length=1, choices=PROBABILITY_CHOICES, blank=False, default='1')
+
+    def save(self, *args, **kwargs):
+        self.node_type = "Topic"
+        self.model_name = "Risk"
+        super(Risk, self).save(*args, **kwargs)
+
+
+class Meeting(Topic):
+
+    date = models.DateTimeField(auto_now=False, auto_now_add=False)
+    venue = models.CharField(max_length=150, unique=False)
+
+    def save(self, *args, **kwargs):
+        self.node_type = "Topic"
+        self.model_name = "Meeting"
+        super(Meeting, self).save(*args, **kwargs)
