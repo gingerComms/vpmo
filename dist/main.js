@@ -6975,28 +6975,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _project_project_module__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./project/project.module */ "./src/app/project/project.module.ts");
 /* harmony import */ var _chat_chat_module__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./chat/chat.module */ "./src/app/chat/chat.module.ts");
 /* harmony import */ var _permissions_permissions_module__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./permissions/permissions.module */ "./src/app/permissions/permissions.module.ts");
-/* harmony import */ var _tasks_tasks_module__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./tasks/tasks.module */ "./src/app/tasks/tasks.module.ts");
-/* harmony import */ var _documents_documents_module__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./documents/documents.module */ "./src/app/documents/documents.module.ts");
-/* harmony import */ var _node_breadcrumbs_node_breadcrumbs_module__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./node-breadcrumbs/node-breadcrumbs.module */ "./src/app/node-breadcrumbs/node-breadcrumbs.module.ts");
-/* harmony import */ var _home_home_component__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./home/home.component */ "./src/app/home/home.component.ts");
-/* harmony import */ var _error_error_component__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./error/error.component */ "./src/app/error/error.component.ts");
-/* harmony import */ var _shared_message_service__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./shared/message.service */ "./src/app/shared/message.service.ts");
-/* harmony import */ var _directives_alert_component__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./_directives/alert.component */ "./src/app/_directives/alert.component.ts");
-/* harmony import */ var _services_alert_service__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./_services/alert.service */ "./src/app/_services/alert.service.ts");
-/* harmony import */ var _services_loading_service__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./_services/loading.service */ "./src/app/_services/loading.service.ts");
-/* harmony import */ var _directives_loading_component__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./_directives/loading.component */ "./src/app/_directives/loading.component.ts");
-/* harmony import */ var _guards_auth_guard__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./_guards/auth.guard */ "./src/app/_guards/auth.guard.ts");
-/* harmony import */ var _services_authentication_service__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./_services/authentication.service */ "./src/app/_services/authentication.service.ts");
-/* harmony import */ var _services_http_cache_service__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./_services/http-cache.service */ "./src/app/_services/http-cache.service.ts");
-/* harmony import */ var _services_cache_interceptor__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./_services/cache.interceptor */ "./src/app/_services/cache.interceptor.ts");
-/* harmony import */ var _helpers_jwt_interceptor__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./_helpers/jwt.interceptor */ "./src/app/_helpers/jwt.interceptor.ts");
-/* harmony import */ var _team_team_module__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./team/team.module */ "./src/app/team/team.module.ts");
-/* harmony import */ var _node_node_module__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./node/node.module */ "./src/app/node/node.module.ts");
-/* harmony import */ var _tree_structure_tree_structure_module__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./tree-structure/tree-structure.module */ "./src/app/tree-structure/tree-structure.module.ts");
-/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
-/* harmony import */ var _services_global_service__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./_services/global.service */ "./src/app/_services/global.service.ts");
-/* harmony import */ var _navigation_navigation_component__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./navigation/navigation.component */ "./src/app/navigation/navigation.component.ts");
-/* harmony import */ var _services_custom_http_service__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./_services/custom-http.service */ "./src/app/_services/custom-http.service.ts");
+/* harmony import */ var _scrumboard_scrumboard_module__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./scrumboard/scrumboard.module */ "./src/app/scrumboard/scrumboard.module.ts");
+/* harmony import */ var _tasks_tasks_module__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./tasks/tasks.module */ "./src/app/tasks/tasks.module.ts");
+/* harmony import */ var _documents_documents_module__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./documents/documents.module */ "./src/app/documents/documents.module.ts");
+/* harmony import */ var _node_breadcrumbs_node_breadcrumbs_module__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./node-breadcrumbs/node-breadcrumbs.module */ "./src/app/node-breadcrumbs/node-breadcrumbs.module.ts");
+/* harmony import */ var _home_home_component__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./home/home.component */ "./src/app/home/home.component.ts");
+/* harmony import */ var _error_error_component__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./error/error.component */ "./src/app/error/error.component.ts");
+/* harmony import */ var _shared_message_service__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./shared/message.service */ "./src/app/shared/message.service.ts");
+/* harmony import */ var _directives_alert_component__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./_directives/alert.component */ "./src/app/_directives/alert.component.ts");
+/* harmony import */ var _services_alert_service__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./_services/alert.service */ "./src/app/_services/alert.service.ts");
+/* harmony import */ var _services_loading_service__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./_services/loading.service */ "./src/app/_services/loading.service.ts");
+/* harmony import */ var _directives_loading_component__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./_directives/loading.component */ "./src/app/_directives/loading.component.ts");
+/* harmony import */ var _guards_auth_guard__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./_guards/auth.guard */ "./src/app/_guards/auth.guard.ts");
+/* harmony import */ var _services_authentication_service__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./_services/authentication.service */ "./src/app/_services/authentication.service.ts");
+/* harmony import */ var _services_http_cache_service__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./_services/http-cache.service */ "./src/app/_services/http-cache.service.ts");
+/* harmony import */ var _services_cache_interceptor__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./_services/cache.interceptor */ "./src/app/_services/cache.interceptor.ts");
+/* harmony import */ var _helpers_jwt_interceptor__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./_helpers/jwt.interceptor */ "./src/app/_helpers/jwt.interceptor.ts");
+/* harmony import */ var _team_team_module__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./team/team.module */ "./src/app/team/team.module.ts");
+/* harmony import */ var _node_node_module__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./node/node.module */ "./src/app/node/node.module.ts");
+/* harmony import */ var _tree_structure_tree_structure_module__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./tree-structure/tree-structure.module */ "./src/app/tree-structure/tree-structure.module.ts");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _services_global_service__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./_services/global.service */ "./src/app/_services/global.service.ts");
+/* harmony import */ var _navigation_navigation_component__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./navigation/navigation.component */ "./src/app/navigation/navigation.component.ts");
+/* harmony import */ var _services_custom_http_service__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./_services/custom-http.service */ "./src/app/_services/custom-http.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7004,6 +7005,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 // Import bugsnag-js and bugsnag-angular
+
 
 
 
@@ -7079,28 +7081,29 @@ var AppModule = /** @class */ (function () {
                 _fuse_shared_module__WEBPACK_IMPORTED_MODULE_11__["FuseSharedModule"],
                 _main_main_module__WEBPACK_IMPORTED_MODULE_14__["FuseMainModule"],
                 _home_home_module__WEBPACK_IMPORTED_MODULE_15__["HomeModule"],
-                _team_team_module__WEBPACK_IMPORTED_MODULE_35__["TeamModule"],
+                _team_team_module__WEBPACK_IMPORTED_MODULE_36__["TeamModule"],
                 _user_user_module__WEBPACK_IMPORTED_MODULE_16__["UserModule"],
                 _project_project_module__WEBPACK_IMPORTED_MODULE_17__["ProjectModule"],
                 _chat_chat_module__WEBPACK_IMPORTED_MODULE_18__["ChatModule"],
                 _permissions_permissions_module__WEBPACK_IMPORTED_MODULE_19__["PermissionsModule"],
-                _tasks_tasks_module__WEBPACK_IMPORTED_MODULE_20__["TasksModule"],
-                _documents_documents_module__WEBPACK_IMPORTED_MODULE_21__["DocumentsModule"],
-                _node_breadcrumbs_node_breadcrumbs_module__WEBPACK_IMPORTED_MODULE_22__["NodeBreadcrumbsModule"],
-                _tree_structure_tree_structure_module__WEBPACK_IMPORTED_MODULE_37__["TreeStructureModule"],
-                _node_node_module__WEBPACK_IMPORTED_MODULE_36__["NodeModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_38__["MatProgressSpinnerModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_38__["MatSnackBarModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_38__["MatInputModule"]
+                _scrumboard_scrumboard_module__WEBPACK_IMPORTED_MODULE_20__["ScrumboardModule"],
+                _tasks_tasks_module__WEBPACK_IMPORTED_MODULE_21__["TasksModule"],
+                _documents_documents_module__WEBPACK_IMPORTED_MODULE_22__["DocumentsModule"],
+                _node_breadcrumbs_node_breadcrumbs_module__WEBPACK_IMPORTED_MODULE_23__["NodeBreadcrumbsModule"],
+                _tree_structure_tree_structure_module__WEBPACK_IMPORTED_MODULE_38__["TreeStructureModule"],
+                _node_node_module__WEBPACK_IMPORTED_MODULE_37__["NodeModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_39__["MatProgressSpinnerModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_39__["MatSnackBarModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_39__["MatInputModule"]
             ],
             // The components, directives, and pipes that belong to this NgModule
             declarations: [
                 _app_component__WEBPACK_IMPORTED_MODULE_13__["AppComponent"],
-                _home_home_component__WEBPACK_IMPORTED_MODULE_23__["HomeComponent"],
-                _error_error_component__WEBPACK_IMPORTED_MODULE_24__["ErrorComponent"],
-                _directives_alert_component__WEBPACK_IMPORTED_MODULE_26__["AlertComponent"],
-                _directives_loading_component__WEBPACK_IMPORTED_MODULE_29__["LoadingComponent"],
-                _navigation_navigation_component__WEBPACK_IMPORTED_MODULE_40__["NavigationComponent"],
+                _home_home_component__WEBPACK_IMPORTED_MODULE_24__["HomeComponent"],
+                _error_error_component__WEBPACK_IMPORTED_MODULE_25__["ErrorComponent"],
+                _directives_alert_component__WEBPACK_IMPORTED_MODULE_27__["AlertComponent"],
+                _directives_loading_component__WEBPACK_IMPORTED_MODULE_30__["LoadingComponent"],
+                _navigation_navigation_component__WEBPACK_IMPORTED_MODULE_41__["NavigationComponent"],
             ],
             // The main application view, called the root component, which hosts all other app views
             // Only the root NgModule should set the bootstrap property
@@ -7110,26 +7113,26 @@ var AppModule = /** @class */ (function () {
             // The subset of declarations that should be visible and 
             // usable in the component templatesof other NgModules
             exports: [
-                _angular_material__WEBPACK_IMPORTED_MODULE_38__["MatButtonModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_38__["MatCardModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_38__["MatListModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_38__["MatIconModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_38__["MatProgressSpinnerModule"]
+                _angular_material__WEBPACK_IMPORTED_MODULE_39__["MatButtonModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_39__["MatCardModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_39__["MatListModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_39__["MatIconModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_39__["MatProgressSpinnerModule"]
             ],
             // Creators of services that this NgModule contributes to the global
             // collection of services; they become accessible in all parts of the app
             providers: [
-                _shared_message_service__WEBPACK_IMPORTED_MODULE_25__["MessageService"],
-                _services_authentication_service__WEBPACK_IMPORTED_MODULE_31__["AuthenticationService"],
-                _services_global_service__WEBPACK_IMPORTED_MODULE_39__["GlobalService"],
-                _guards_auth_guard__WEBPACK_IMPORTED_MODULE_30__["AuthGuard"],
-                _services_alert_service__WEBPACK_IMPORTED_MODULE_27__["AlertService"],
-                _services_loading_service__WEBPACK_IMPORTED_MODULE_28__["LoadingService"],
-                _services_http_cache_service__WEBPACK_IMPORTED_MODULE_32__["HttpCacheService"],
-                _services_custom_http_service__WEBPACK_IMPORTED_MODULE_41__["CustomHttpClient"],
-                { provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_5__["HTTP_INTERCEPTORS"], useClass: _helpers_jwt_interceptor__WEBPACK_IMPORTED_MODULE_34__["JwtInterceptor"], multi: true },
+                _shared_message_service__WEBPACK_IMPORTED_MODULE_26__["MessageService"],
+                _services_authentication_service__WEBPACK_IMPORTED_MODULE_32__["AuthenticationService"],
+                _services_global_service__WEBPACK_IMPORTED_MODULE_40__["GlobalService"],
+                _guards_auth_guard__WEBPACK_IMPORTED_MODULE_31__["AuthGuard"],
+                _services_alert_service__WEBPACK_IMPORTED_MODULE_28__["AlertService"],
+                _services_loading_service__WEBPACK_IMPORTED_MODULE_29__["LoadingService"],
+                _services_http_cache_service__WEBPACK_IMPORTED_MODULE_33__["HttpCacheService"],
+                _services_custom_http_service__WEBPACK_IMPORTED_MODULE_42__["CustomHttpClient"],
+                { provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_5__["HTTP_INTERCEPTORS"], useClass: _helpers_jwt_interceptor__WEBPACK_IMPORTED_MODULE_35__["JwtInterceptor"], multi: true },
                 // { provide: ErrorHandler, useFactory: errorHandlerFactory },
-                { provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_5__["HTTP_INTERCEPTORS"], useClass: _services_cache_interceptor__WEBPACK_IMPORTED_MODULE_33__["CacheInterceptor"], multi: true },
+                { provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_5__["HTTP_INTERCEPTORS"], useClass: _services_cache_interceptor__WEBPACK_IMPORTED_MODULE_34__["CacheInterceptor"], multi: true },
             ],
         })
     ], AppModule);
@@ -8055,6 +8058,7 @@ __webpack_require__.r(__webpack_exports__);
  * about changing these options per component basis.
  */
 var fuseConfig = {
+    colorTheme: 'theme-default',
     layout: {
         navigation: 'left',
         navigationFolded: false,
@@ -9842,7 +9846,7 @@ var NodeBreadcrumbsService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<app-nodepage></app-nodepage>\r\n<mat-divider></mat-divider>\r\n<app-node-edit *ngIf=\"contentType=='edit'\"></app-node-edit>\r\n<app-chat [nodeID]=\"nodeID\" [nodeType]=\"nodeType\" *ngIf=\"contentType=='chat'\"></app-chat>\r\n<app-tree-structure *ngIf=\"contentType=='tree'\"></app-tree-structure>\r\n<app-permissions *ngIf=\"contentType=='permissions'\"></app-permissions>\r\n<app-documents-list *ngIf=\"contentType=='documents'\"></app-documents-list>\r\n<app-tasks *ngIf=\"contentType=='tasks'\"></app-tasks>\r\n\r\n"
+module.exports = "<app-nodepage></app-nodepage>\r\n<mat-divider></mat-divider>\r\n<app-node-edit *ngIf=\"contentType=='edit'\"></app-node-edit>\r\n<app-chat [nodeID]=\"nodeID\" [nodeType]=\"nodeType\" *ngIf=\"contentType=='chat'\"></app-chat>\r\n<app-tree-structure *ngIf=\"contentType=='tree'\"></app-tree-structure>\r\n<app-permissions *ngIf=\"contentType=='permissions'\"></app-permissions>\r\n<app-documents-list *ngIf=\"contentType=='documents'\"></app-documents-list>\r\n<app-tasks *ngIf=\"contentType=='tasks'\"></app-tasks>\r\n<app-scrumboard *ngIf=\"contentType=='board' && nodeType == 'Project'\"></app-scrumboard>\r\n\r\n\r\n"
 
 /***/ }),
 
@@ -10109,6 +10113,17 @@ var NodeNavigationService = /** @class */ (function () {
                 'url': urlBase + 'permissions',
                 'hidden': false,
             }];
+        if (node.node_type == 'Project') {
+            nav.push({
+                'id': 'scrumboard',
+                'title': 'Scrumboard',
+                // 'translate': 'NAV.SAMPLE.TITLE',
+                'type': 'item',
+                'icon': 'check_box',
+                'url': urlBase + 'board',
+                'hidden': false,
+            });
+        }
         this.navigation.next(nav);
     };
     NodeNavigationService = __decorate([
@@ -10148,18 +10163,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tasks_tasks_module__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../tasks/tasks.module */ "./src/app/tasks/tasks.module.ts");
 /* harmony import */ var _node_breadcrumbs_node_breadcrumbs_module__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../node-breadcrumbs/node-breadcrumbs.module */ "./src/app/node-breadcrumbs/node-breadcrumbs.module.ts");
 /* harmony import */ var _documents_documents_module__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../documents/documents.module */ "./src/app/documents/documents.module.ts");
-/* harmony import */ var ngx_quill__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ngx-quill */ "./node_modules/ngx-quill/fesm5/ngx-quill.js");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
-/* harmony import */ var _node_service__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./node.service */ "./src/app/node/node.service.ts");
-/* harmony import */ var _node_navigation_service__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./node-navigation.service */ "./src/app/node/node-navigation.service.ts");
-/* harmony import */ var _node_edit_component__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./node-edit.component */ "./src/app/node/node-edit.component.ts");
-/* harmony import */ var _node_container_component__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./node-container.component */ "./src/app/node/node-container.component.ts");
+/* harmony import */ var _scrumboard_scrumboard_module__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../scrumboard/scrumboard.module */ "./src/app/scrumboard/scrumboard.module.ts");
+/* harmony import */ var ngx_quill__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ngx-quill */ "./node_modules/ngx-quill/fesm5/ngx-quill.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _node_service__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./node.service */ "./src/app/node/node.service.ts");
+/* harmony import */ var _node_navigation_service__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./node-navigation.service */ "./src/app/node/node-navigation.service.ts");
+/* harmony import */ var _node_edit_component__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./node-edit.component */ "./src/app/node/node-edit.component.ts");
+/* harmony import */ var _node_container_component__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./node-container.component */ "./src/app/node/node-container.component.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -10188,7 +10205,7 @@ var NodeRoutes = [
         children: [
             {
                 path: ':type/:id/:contentType',
-                component: _node_container_component__WEBPACK_IMPORTED_MODULE_20__["NodeContainerComponent"],
+                component: _node_container_component__WEBPACK_IMPORTED_MODULE_21__["NodeContainerComponent"],
                 pathMatch: 'full'
             },
         ]
@@ -10201,7 +10218,7 @@ var NodeModule = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["NgModule"])({
             imports: [
                 _angular_common__WEBPACK_IMPORTED_MODULE_1__["CommonModule"],
-                _angular_forms__WEBPACK_IMPORTED_MODULE_16__["FormsModule"],
+                _angular_forms__WEBPACK_IMPORTED_MODULE_17__["FormsModule"],
                 _angular_common_http__WEBPACK_IMPORTED_MODULE_5__["HttpClientModule"],
                 _angular_router__WEBPACK_IMPORTED_MODULE_3__["RouterModule"].forChild(NodeRoutes),
                 _angular_material__WEBPACK_IMPORTED_MODULE_6__["MatDatepickerModule"],
@@ -10223,23 +10240,24 @@ var NodeModule = /** @class */ (function () {
                 _tasks_tasks_module__WEBPACK_IMPORTED_MODULE_12__["TasksModule"],
                 _documents_documents_module__WEBPACK_IMPORTED_MODULE_14__["DocumentsModule"],
                 _tree_structure_tree_structure_module__WEBPACK_IMPORTED_MODULE_10__["TreeStructureModule"],
-                ngx_quill__WEBPACK_IMPORTED_MODULE_15__["QuillModule"],
+                ngx_quill__WEBPACK_IMPORTED_MODULE_16__["QuillModule"],
                 _node_breadcrumbs_node_breadcrumbs_module__WEBPACK_IMPORTED_MODULE_13__["NodeBreadcrumbsModule"],
-                _user_user_module__WEBPACK_IMPORTED_MODULE_7__["UserModule"]
+                _user_user_module__WEBPACK_IMPORTED_MODULE_7__["UserModule"],
+                _scrumboard_scrumboard_module__WEBPACK_IMPORTED_MODULE_15__["ScrumboardModule"]
             ],
             providers: [
-                _node_service__WEBPACK_IMPORTED_MODULE_17__["NodeService"],
-                _node_navigation_service__WEBPACK_IMPORTED_MODULE_18__["NodeNavigationService"],
+                _node_service__WEBPACK_IMPORTED_MODULE_18__["NodeService"],
+                _node_navigation_service__WEBPACK_IMPORTED_MODULE_19__["NodeNavigationService"],
             ],
             declarations: [
                 _nodepage_component__WEBPACK_IMPORTED_MODULE_4__["NodepageComponent"],
-                _node_edit_component__WEBPACK_IMPORTED_MODULE_19__["NodeEditComponent"],
-                _node_container_component__WEBPACK_IMPORTED_MODULE_20__["NodeContainerComponent"]
+                _node_edit_component__WEBPACK_IMPORTED_MODULE_20__["NodeEditComponent"],
+                _node_container_component__WEBPACK_IMPORTED_MODULE_21__["NodeContainerComponent"]
             ],
             exports: [
                 _nodepage_component__WEBPACK_IMPORTED_MODULE_4__["NodepageComponent"],
-                _node_edit_component__WEBPACK_IMPORTED_MODULE_19__["NodeEditComponent"],
-                _node_container_component__WEBPACK_IMPORTED_MODULE_20__["NodeContainerComponent"]
+                _node_edit_component__WEBPACK_IMPORTED_MODULE_20__["NodeEditComponent"],
+                _node_container_component__WEBPACK_IMPORTED_MODULE_21__["NodeContainerComponent"]
             ],
         })
     ], NodeModule);
@@ -11368,6 +11386,1593 @@ var ProjectService = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/scrumboard/add-list/add-list.component.html":
+/*!*************************************************************!*\
+  !*** ./src/app/scrumboard/add-list/add-list.component.html ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"list new-list mat-elevation-z1\">\r\n\r\n    <button *ngIf=\"!formActive\" mat-button class=\"new-list-form-button\" (click)=\"openForm()\">\r\n        <div fxLayout=\"row\" fxLayoutAlign=\"start center\">\r\n            <mat-icon class=\"red\">add</mat-icon>\r\n            <span>Add a list</span>\r\n        </div>\r\n    </button>\r\n\r\n    <form *ngIf=\"formActive\" class=\"new-list-form\" [formGroup]=\"form\" (submit)=\"onFormSubmit()\"\r\n          fxLayout=\"row\" fxLayoutAlign=\"start center\" fxFlex=\"1 0 auto\">\r\n\r\n        <input formControlName=\"name\" #nameInput fxFlex placeholder=\"Write a list Name\">\r\n\r\n        <button mat-icon-button fxFlex=\"0 1 auto\">\r\n            <mat-icon>check</mat-icon>\r\n        </button>\r\n        <button mat-icon-button fxFlex=\"0 1 auto\" (click)=\"closeForm()\">\r\n            <mat-icon>close</mat-icon>\r\n        </button>\r\n    </form>\r\n</div>\r\n\r\n"
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/add-list/add-list.component.scss":
+/*!*************************************************************!*\
+  !*** ./src/app/scrumboard/add-list/add-list.component.scss ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "scrumboard-add-list .new-list {\n  border-radius: 2px; }\n  scrumboard-add-list .new-list .new-list-form-button {\n    text-transform: none;\n    font-size: 15px;\n    padding: 0 16px;\n    height: 64px;\n    margin: 0;\n    width: 100%; }\n  scrumboard-add-list .new-list .new-list-form-button mat-icon {\n      border-radius: 50%;\n      height: 40px;\n      width: 40px;\n      line-height: 40px;\n      margin-right: 16px; }\n  scrumboard-add-list .new-list .new-list-form {\n    padding: 16px;\n    height: 64px; }\n  scrumboard-add-list .new-list .new-list-form > input {\n      height: 100%; }\n"
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/add-list/add-list.component.ts":
+/*!***********************************************************!*\
+  !*** ./src/app/scrumboard/add-list/add-list.component.ts ***!
+  \***********************************************************/
+/*! exports provided: ScrumboardAddListComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ScrumboardAddListComponent", function() { return ScrumboardAddListComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var ScrumboardAddListComponent = /** @class */ (function () {
+    /**
+     * Constructor
+     *
+     * @param {FormBuilder} _formBuilder
+     */
+    function ScrumboardAddListComponent(_formBuilder) {
+        this._formBuilder = _formBuilder;
+        // Set the defaults
+        this.formActive = false;
+        this.listAdded = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
+    }
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
+    /**
+     * Open form
+     */
+    ScrumboardAddListComponent.prototype.openForm = function () {
+        this.form = this._formBuilder.group({
+            name: ['']
+        });
+        this.formActive = true;
+        this.focusNameField();
+    };
+    /**
+     * Close form
+     */
+    ScrumboardAddListComponent.prototype.closeForm = function () {
+        this.formActive = false;
+    };
+    /**
+     * Focus to the name field
+     */
+    ScrumboardAddListComponent.prototype.focusNameField = function () {
+        var _this = this;
+        setTimeout(function () {
+            _this.nameInputField.nativeElement.focus();
+        });
+    };
+    /**
+     * On form submit
+     */
+    ScrumboardAddListComponent.prototype.onFormSubmit = function () {
+        if (this.form.valid) {
+            this.listAdded.next(this.form.getRawValue().name);
+            this.formActive = false;
+        }
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
+        __metadata("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"])
+    ], ScrumboardAddListComponent.prototype, "listAdded", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])('nameInput'),
+        __metadata("design:type", Object)
+    ], ScrumboardAddListComponent.prototype, "nameInputField", void 0);
+    ScrumboardAddListComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'scrumboard-add-list',
+            template: __webpack_require__(/*! ./add-list.component.html */ "./src/app/scrumboard/add-list/add-list.component.html"),
+            styles: [__webpack_require__(/*! ./add-list.component.scss */ "./src/app/scrumboard/add-list/add-list.component.scss")],
+            encapsulation: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewEncapsulation"].None
+        }),
+        __metadata("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormBuilder"]])
+    ], ScrumboardAddListComponent);
+    return ScrumboardAddListComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/dialogs/card/card.component.html":
+/*!*************************************************************!*\
+  !*** ./src/app/scrumboard/dialogs/card/card.component.html ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"dialog-content-wrapper\">\n\n    <mat-toolbar *ngIf=\"card\" matDialogTitle class=\"accent m-0\" fxFlex=\"1 0 auto\" fxLayout=\"row\">\n\n        <div fxFlex fxLayout=\"row\" fxLayoutAlign=\"space-between center\">\n\n            <div fxFlex fxLayout=\"row\" fxLayoutAlign=\"start center\">\n\n                <!-- DUE DATE -->\n                <div class=\"due-date\" fxFlex=\"0 1 auto\">\n\n                    <button *ngIf=\"card.due\" mat-icon-button [matMenuTriggerFor]=\"dueDateMenu\">\n                        <mat-icon>today</mat-icon>\n                    </button>\n\n                    <mat-menu #dueDateMenu=\"matMenu\" [overlapTrigger]=\"false\">\n                        <button mat-menu-item (click)=\"removeDueDate()\">Remove Due Date</button>\n                    </mat-menu>\n\n                    <mat-form-field *ngIf=\"!card.due\">\n                        <input matInput [matDatepicker]=\"menuPicker\" [(ngModel)]=\"card.due\">\n                        <mat-datepicker-toggle matSuffix [for]=\"menuPicker\"></mat-datepicker-toggle>\n                        <mat-datepicker #menuPicker></mat-datepicker>\n                    </mat-form-field>\n\n                </div>\n                <!-- / DUE DATE -->\n\n                <!-- LABELS -->\n                <div class=\"labels\" fxFlex=\"0 1 auto\">\n\n                    <button mat-icon-button [matMenuTriggerFor]=\"labelsMenu\">\n                        <mat-icon>label</mat-icon>\n                    </button>\n\n                    <mat-menu #labelsMenu=\"matMenu\" [overlapTrigger]=\"false\" class=\"scrumboard-labels-menu\">\n\n                        <scrumboard-label-selector [card]=\"card\"\n                                                   (cardLabelsChanged)=\"updateCard()\"></scrumboard-label-selector>\n\n                    </mat-menu>\n\n                </div>\n                <!-- / LABELS -->\n\n                <!-- MEMBERS -->\n                <div class=\"members\" fxFlex=\"0 1 auto\">\n\n                    <button mat-icon-button class=\"\" [matMenuTriggerFor]=\"membersMenu\">\n                        <mat-icon>account_circle</mat-icon>\n                    </button>\n\n                    <mat-menu #membersMenu=\"matMenu\" [overlapTrigger]=\"false\">\n                        <div fxFlex fxLayout=\"column\" class=\"scrumboard-members-menu\"\n                             (click)=\"$event.stopPropagation()\">\n                            <mat-checkbox class=\"member px-16\" [checked]=\"card.idMembers.indexOf(member.id) > -1\"\n                                          *ngFor=\"let member of board.members\"\n                                          (change)=\"toggleInArray(member.id, card.idMembers);updateCard()\">\n                                <div fxLayout=\"row\" fxLayoutAlign=\"start center\">\n                                    <img [alt]=\"member.name\" [src]=\" member.avatar\" class=\"avatar\"/>\n                                    <p class=\"member-name\">{{ member.name }}</p>\n                                </div>\n                            </mat-checkbox>\n                        </div>\n                    </mat-menu>\n\n                </div>\n                <!-- / MEMBERS -->\n\n                <!-- ATTACHMENT -->\n                <button mat-icon-button aria-label=\"Attachment\">\n                    <mat-icon>attachment</mat-icon>\n                </button>\n                <!-- / ATTACHMENT -->\n\n                <!-- CHECKLIST -->\n                <div class=\"due-date \" fxFlex=\"0 1 auto\">\n\n                    <button mat-icon-button class=\"\" [matMenuTriggerFor]=\"checklistMenu\"\n                            #checklistMenuTrigger=\"matMenuTrigger\" (menuOpened)=\"onChecklistMenuOpen()\">\n                        <mat-icon>check_box</mat-icon>\n                    </button>\n\n                    <mat-menu #checklistMenu=\"matMenu\" [overlapTrigger]=\"false\">\n\n                        <form class=\"px-16 py-8\" #newChecklistForm=\"ngForm\" (submit)=\"addChecklist(newChecklistForm)\"\n                              (click)=\"$event.stopPropagation()\"\n                              fxLayout=\"column\" fxLayoutAlign=\"start end\">\n\n                            <mat-form-field appearance=\"outline\" (click)=\"$event.stopPropagation()\" fxFlex>\n                                <mat-label>Checklist title</mat-label>\n                                <input #newCheckListTitleField matInput ngModel #checklistTitle=\"ngModel\"\n                                       name=\"checklistTitle\" required>\n                            </mat-form-field>\n\n                            <button mat-raised-button class=\"mat-accent\" aria-label=\"Add Checklist\"\n                                    [disabled]=\"!newChecklistForm.valid\">Add Checklist\n                            </button>\n\n                        </form>\n\n                    </mat-menu>\n\n                </div>\n                <!-- / CHECKLIST -->\n\n                <!-- SUBSCRIBE -->\n                <div class=\"subscribe \" fxFlex=\"0 1 auto\">\n\n                    <button mat-icon-button [matMenuTriggerFor]=\"subscribeMenu\">\n                        <mat-icon *ngIf=\"card.subscribed\">visibility</mat-icon>\n                        <mat-icon *ngIf=\"!card.subscribed\">visibility_off</mat-icon>\n                    </button>\n\n                    <mat-menu #subscribeMenu=\"matMenu\" [overlapTrigger]=\"false\">\n                        <button *ngIf=\"card.subscribed\" mat-menu-item (click)=\"toggleSubscribe()\">\n                            Unsubscribe\n                        </button>\n                        <button *ngIf=\"!card.subscribed\" mat-menu-item (click)=\"toggleSubscribe()\">\n                            Subscribe\n                        </button>\n                    </mat-menu>\n\n                </div>\n                <!-- / SUBSCRIBE -->\n\n                <!-- OPTIONS -->\n                <div class=\"options \" fxFlex=\"0 1 auto\">\n\n                    <button mat-icon-button class=\"\" [matMenuTriggerFor]=\"optionsMenu\">\n                        <mat-icon>more_horiz</mat-icon>\n                    </button>\n\n                    <mat-menu #optionsMenu=\"matMenu\" [overlapTrigger]=\"false\">\n                        <button mat-menu-item (click)=\"removeCard()\">\n                            Remove Card\n                        </button>\n                    </mat-menu>\n\n                </div>\n                <!-- / OPTIONS -->\n\n            </div>\n\n            <!-- CLOSE DIALOG BUTTON -->\n            <button mat-icon-button (click)=\"matDialogRef.close()\" aria-label=\"Close Dialog\">\n                <mat-icon>close</mat-icon>\n            </button>\n            <!-- / CLOSE DIALOG BUTTON -->\n\n        </div>\n\n    </mat-toolbar>\n\n    <div *ngIf=\"card\" mat-dialog-content class=\"py-24 px-0 m-0\" fusePerfectScrollbar>\n\n        <!-- BREADCRUMB -->\n        <div class=\"card-breadcrumb mt-8 mb-32 px-24\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n            <span>{{board.name}}</span>\n            <mat-icon class=\"s-20\">chevron_right</mat-icon>\n            <span>{{list.name}}</span>\n        </div>\n        <!-- / BREADCRUMB -->\n\n        <div fxLayout=\"row\" fxLayoutAlign=\"start center\">\n\n            <!-- NAME -->\n            <div class=\"card-name px-24\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n                <mat-form-field appearance=\"outline\" class=\"w-100-p\">\n                    <mat-label>Title</mat-label>\n                    <input matInput [(ngModel)]=\"card.name\" required (change)=\"updateCard()\">\n                </mat-form-field>\n            </div>\n            <!-- / NAME -->\n\n            <!-- DUE DATE -->\n            <div *ngIf=\"card.due\" class=\"due-date px-24 pl-0\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n                <mat-form-field appearance=\"outline\" class=\"w-100-p\">\n                    <mat-label>Due Date</mat-label>\n                    <input matInput [matDatepicker]=\"picker\" [(ngModel)]=\"card.due\">\n                    <mat-datepicker-toggle matSuffix [for]=\"picker\"></mat-datepicker-toggle>\n                    <mat-datepicker #picker></mat-datepicker>\n                </mat-form-field>\n            </div>\n            <!-- / DUE DATE -->\n\n        </div>\n\n        <!-- DESCRIPTION -->\n        <div class=\"description px-24 mb-16\">\n            <mat-form-field appearance=\"outline\" class=\"w-100-p\">\n                <mat-label>Description</mat-label>\n                <textarea matInput [(ngModel)]=\"card.description\" columns=\"1\"\n                          mat-maxlength=\"150\" max-rows=\"4\" (change)=\"updateCard()\"></textarea>\n            </mat-form-field>\n        </div>\n        <!-- / DESCRIPTION -->\n\n        <!-- SECTIONS -->\n        <div class=\"sections\">\n\n            <!-- LABELS & MEMBERS SECTION -->\n            <div *ngIf=\"card.idLabels[0] || card.idMembers[0]\" class=\"section\"\n                 fxLayout=\"column\" fxLayout.gt-xs=\"row\">\n\n                <div *ngIf=\"card.idLabels[0]\" fxFlex class=\"labels\">\n\n                    <div class=\"section-header\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n                        <mat-icon class=\"mr-8\">label</mat-icon>\n                        <span class=\"section-title\">Labels</span>\n                    </div>\n\n                    <div class=\"section-content\">\n                        <mat-chip-list class=\"label-chips\">\n                            <mat-chip class=\"label-chip mb-4\"\n                                      *ngFor=\"let labelId of card.idLabels\"\n                                      [ngClass]=\"board.labels | getById:labelId:'color'\"\n                                      fxLayout=\"row\" fxLayoutAlign=\"start center\">\n                                <span>{{board.labels|getById:labelId:'name'}}</span>\n                            </mat-chip>\n                        </mat-chip-list>\n                    </div>\n\n                </div>\n\n                <div *ngIf=\"card.idMembers[0]\" fxFlex class=\"members\">\n\n                    <div class=\"section-header\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n                        <mat-icon class=\"mr-8\">supervisor_account</mat-icon>\n                        <span class=\"section-title\">Members</span>\n                    </div>\n\n                    <div class=\"section-content\">\n                        <div class=\"member-chips\" fxLayout=\"row\" fxLayoutWrap>\n                            <div class=\"member-chip mb-4\" *ngFor=\"let memberId of card.idMembers\"\n                                 fxLayout=\"row\" fxLayoutAlign=\"start center\">\n                                <img class=\"member-chip-avatar\" [src]=\"board.members | getById:memberId:'avatar'\"\n                                     [matTooltip]=\"board.members | getById:memberId:'name'\">\n                            </div>\n                        </div>\n                    </div>\n\n                </div>\n\n            </div>\n            <!-- / LABELS & MEMBERS SECTION -->\n\n            <!-- ATTACHMENTS SECTION -->\n            <div *ngIf=\"card.attachments[0]\" class=\"section\">\n\n                <div class=\"attachments\">\n\n                    <div class=\"section-header\" fxLayout=\"row\" fxLayoutAlign=\"start\">\n                        <mat-icon class=\"mr-8\">attachment</mat-icon>\n                        <span class=\"section-title\">Attachments</span>\n                    </div>\n\n                    <div class=\"section-content\">\n\n                        <div fxLayout=\"column\" fxLayoutAlign=\"start\" fxLayoutWrap fxLayout.gt-sm=\"row\">\n\n                            <div class=\"attachment\" fxFlex=\"33\" *ngFor=\"let item of card.attachments\"\n                                 [ngSwitch]=\"item.type\">\n\n                                <div fxLayout=\"column\" fxLayoutAlign=\"start\" *ngSwitchCase=\"'image'\">\n\n                                    <div class=\"attachment-preview mat-elevation-z1\">\n                                        <img [src]=\"item.src\">\n                                    </div>\n\n                                    <div class=\"attachment-content mt-8\" fxLayout=\"row\"\n                                         fxLayoutAlign=\"start center\">\n\n                                        <div fxFlex>\n\n                                            <div fxLayout=\"row\" fxLayoutAlign=\"start start\">\n                                                <span class=\"attachment-name\">{{item.name}}</span>\n                                                <mat-icon *ngIf=\"card.idAttachmentCover === item.id\"\n                                                          class=\"yellow-700-fg attachment-is-cover\">\n                                                    star\n                                                </mat-icon>\n                                            </div>\n\n                                            <span class=\"attachment-time\">{{item.time}}</span>\n\n                                        </div>\n\n                                        <button mat-icon-button class=\"attachment-actions-button\"\n                                                [matMenuTriggerFor]=\"attachmentActionsMenu\">\n                                            <mat-icon>more_vert</mat-icon>\n                                        </button>\n\n                                        <mat-menu #attachmentActionsMenu=\"matMenu\">\n                                            <button mat-menu-item (click)=\"toggleCoverImage(item.id)\">\n                                                <span *ngIf=\"card.idAttachmentCover !== item.id\">Make Cover</span>\n                                                <span *ngIf=\"card.idAttachmentCover === item.id\">Remove Cover</span>\n                                            </button>\n                                            <button mat-menu-item (click)=\"removeAttachment(item)\">\n                                                Remove Attachment\n                                            </button>\n                                        </mat-menu>\n\n                                    </div>\n\n                                </div>\n\n                                <div *ngSwitchCase=\"'link'\" fxLayout=\"row\">\n                                    <div class=\"attachment-preview mat-elevation-z2\" fxLayout=\"column\"\n                                         fxLayoutAlign=\"center center\">\n                                        <span>LINK</span>\n                                    </div>\n                                    <div class=\"attachment-content\" fxLayout=\"column\">\n                                        <span class=\"attachment-url\">{{item.url}}</span>\n                                        <span class=\"attachment-time\">{{item.time}}</span>\n                                    </div>\n                                </div>\n\n                            </div>\n\n                        </div>\n\n                        <button mat-stroked-button class=\"add-attachment-button\" aria-label=\"add attachment\">\n                            Add an attachment\n                        </button>\n\n                    </div>\n\n                </div>\n\n            </div>\n            <!-- / ATTACHMENTS SECTION -->\n\n            <!-- CHECKLISTS SECTION -->\n            <div class=\"section\" *ngFor=\"let checklist of card.checklists\">\n\n                <div class=\"checklist\">\n\n                    <div class=\"section-header\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n\n                        <mat-icon class=\"mr-8\">check_box</mat-icon>\n                        <span fxFlex class=\"section-title\">{{checklist.name}}</span>\n\n                        <div>\n\n                            <button mat-icon-button class=\"checklist-actions-button\"\n                                    [matMenuTriggerFor]=\"checklistActionsMenu\">\n                                <mat-icon class=\"s-20\">more_vert</mat-icon>\n                            </button>\n\n                            <mat-menu #checklistActionsMenu=\"matMenu\">\n                                <button mat-menu-item (click)=\"removeChecklist(checklist)\">\n                                    <mat-icon>delete</mat-icon>\n                                    <span>Remove Checklist</span>\n                                </button>\n                            </mat-menu>\n\n                        </div>\n\n                    </div>\n\n                    <div class=\"section-content\">\n\n                        <div class=\"checklist-progress\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n\n                            <span class=\"checklist-progress-value\">\n                                {{checklist.checkItemsChecked}} / {{checklist.checkItems.length}}\n                            </span>\n\n                            <mat-progress-bar color=\"accent\" class=\"checklist-progressbar\" mode=\"determinate\"\n                                              value=\"{{100 * checklist.checkItemsChecked / checklist.checkItems.length}}\">\n                            </mat-progress-bar>\n\n                        </div>\n\n                        <div class=\"check-items\">\n\n                            <div class=\"check-item\" *ngFor=\"let checkItem of checklist.checkItems\" fxLayout=\"row\"\n                                 fxLayoutAlign=\"space-between center\">\n\n                                <div fxFlex fxLayout=\"row\" fxLayoutAlign=\"start center\">\n\n                                    <mat-form-field appearance=\"outline\" fxFlex>\n                                        <input matInput [(ngModel)]=\"checkItem.name\">\n                                        <mat-checkbox matPrefix [(ngModel)]=\"checkItem.checked\"\n                                                      (change)=\"updateCheckedCount(checklist)\"\n                                                      aria-label=\"{{checkItem.name}}\">\n                                        </mat-checkbox>\n                                        <button mat-icon-button matSuffix class=\"checklist-actions-button\"\n                                                (click)=\"removeChecklistItem(checkItem, checklist)\">\n                                            <mat-icon class=\"secondary-text\">delete</mat-icon>\n                                        </button>\n                                    </mat-form-field>\n\n                                </div>\n\n                            </div>\n\n                        </div>\n\n                        <form #newCheckItemForm=\"ngForm\" (submit)=\"addCheckItem(newCheckItemForm,checklist)\"\n                              name=\"newCheckItemForm\" class=\"new-check-item-form\"\n                              fxLayout=\"row\" fxLayoutAlign=\"start center\">\n\n                            <div fxLayout=\"row\" fxLayoutAlign=\"start center\" fxFlex>\n\n                                <mat-form-field appearance=\"outline\" class=\"no-errors-spacer mr-16\" fxFlex>\n                                    <input matInput ngModel #checkItem=\"ngModel\" name=\"checkItem\" autocomplete=\"off\"\n                                           placeholder=\"New checklist item\">\n                                </mat-form-field>\n\n                            </div>\n\n                            <button mat-mini-fab color=\"accent\"\n                                    [disabled]=\"!newCheckItemForm.valid || newCheckItemForm.pristine\"\n                                    aria-label=\"Add\">\n                                <mat-icon>add</mat-icon>\n                            </button>\n                        </form>\n\n                    </div>\n                </div>\n            </div>\n            <!-- / CHECKLISTS SECTION -->\n\n            <!-- COMMENTS SECTION -->\n            <div class=\"section\">\n\n                <div class=\"comments\">\n\n                    <div class=\"section-header\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n                        <mat-icon class=\"mr-8\">comment</mat-icon>\n                        <span class=\"section-title\">Comments</span>\n                    </div>\n\n                    <div class=\"section-content\">\n\n                        <form name=\"cardCommentForm\"\n                              #newCommentForm=\"ngForm\" (submit)=\"addNewComment(newCommentForm)\"\n                              class=\"comment new-comment\" fxLayout=\"column\" fxLayoutAlign=\"start\" no-validate>\n\n                            <div fxLayout=\"row\" fxLayoutAlign=\"center center\">\n\n                                <img class=\"comment-member-avatar\" src=\"assets/images/avatars/profile.jpg\">\n\n                                <mat-form-field class=\"mr-12\" appearance=\"outline\" fxFlex>\n                                    <mat-label>Comment</mat-label>\n                                    <input matInput name=\"newComment\" ngModel #newComment=\"ngModel\" required>\n                                </mat-form-field>\n\n                                <button mat-mini-fab class=\"mat-accent\"\n                                        [disabled]=\"!newCommentForm.valid || newCommentForm.pristine\"\n                                        aria-label=\"Add\">\n                                    <mat-icon>add</mat-icon>\n                                </button>\n\n                            </div>\n\n                        </form>\n\n                        <div class=\"comment\" fxLayout=\"row\" fxLayoutAlign=\"start center\"\n                             *ngFor=\"let comment of card.comments\">\n\n                            <img class=\"comment-member-avatar\"\n                                 [src]=\"board.members | getById: comment.idMember:'avatar'\">\n\n                            <div fxLayout=\"column\">\n                                <div class=\"comment-member-name\">\n                                    {{board.members | getById: comment.idMember:'name'}}\n                                </div>\n                                <div class=\"comment-bubble\">{{comment.message}}</div>\n                                <div class=\"comment-time secondary-text\">{{comment.time}}</div>\n                            </div>\n                        </div>\n\n                    </div>\n\n                </div>\n\n            </div>\n            <!-- / COMMENTS SECTION -->\n\n            <!-- ACTIVITIES SECTION -->\n            <div *ngIf=\"card.activities[0]\" class=\"section\">\n\n                <div class=\"activities\">\n\n                    <div class=\"section-header\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n                        <mat-icon class=\"mr-8\">list</mat-icon>\n                        <span class=\"section-title\">Activity</span>\n                    </div>\n\n                    <div class=\"section-content\">\n\n                        <div class=\"activity\" *ngFor=\"let activity of card.activities\" fxLayout=\"row\"\n                             fxLayoutAlign=\"start center\">\n\n                            <img class=\"activity-member-avatar\"\n                                 [src]=\"board.members | getById:activity.idMember:'avatar'\">\n\n                            <div>\n\n                                <div fxLayout=\"row\" fxLayoutAlign=\"start center\">\n\n                                    <div class=\"activity-member-name\">\n                                        {{board.members | getById:activity.idMember:'name'}}\n                                    </div>\n                                    <div class=\"activity-message\">{{activity.message}}</div>\n\n                                </div>\n\n                                <div class=\"activity-time mt-4 secondary-text\">{{activity.time}}</div>\n\n                            </div>\n\n                        </div>\n\n                    </div>\n\n                </div>\n\n            </div>\n            <!-- / ACTIVITIES SECTION -->\n\n        </div>\n        <!-- / SECTIONS -->\n\n    </div>\n\n</div>\n"
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/dialogs/card/card.component.scss":
+/*!*************************************************************!*\
+  !*** ./src/app/scrumboard/dialogs/card/card.component.scss ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/**\n * Applies styles for users in high contrast mode. Note that this only applies\n * to Microsoft browsers. Chrome can be included by checking for the `html[hc]`\n * attribute, however Chrome handles high contrast differently.\n */\n/* Theme for the ripple elements.*/\n/* stylelint-disable material/no-prefixes */\n/* stylelint-enable */\n@media screen and (max-width: 599px) {\n  .scrumboard-card-dialog {\n    width: 100%; } }\n@media screen and (min-width: 600px) {\n  .scrumboard-card-dialog {\n    width: 720px; } }\n.scrumboard-card-dialog .mat-dialog-container {\n  padding: 0; }\n.scrumboard-card-dialog .mat-dialog-container .mat-toolbar .due-date .mat-form-field {\n    width: auto;\n    margin: 0 8px; }\n.scrumboard-card-dialog .mat-dialog-container .mat-toolbar .due-date .mat-form-field .mat-form-field-wrapper {\n      padding: 0; }\n.scrumboard-card-dialog .mat-dialog-container .mat-toolbar .due-date .mat-form-field .mat-form-field-wrapper .mat-form-field-flex {\n        align-items: center; }\n.scrumboard-card-dialog .mat-dialog-container .mat-toolbar .due-date .mat-form-field .mat-form-field-wrapper .mat-form-field-flex .mat-form-field-infix {\n          display: none; }\n.scrumboard-card-dialog .mat-dialog-container .mat-toolbar .due-date .mat-form-field .mat-form-field-wrapper .mat-form-field-flex .mat-input-element {\n          display: none; }\n.scrumboard-card-dialog .mat-dialog-container .mat-toolbar .due-date .mat-form-field-prefix .mat-datepicker-toggle-default-icon,\n  .scrumboard-card-dialog .mat-dialog-container .mat-toolbar .due-date .mat-form-field-suffix .mat-datepicker-toggle-default-icon {\n    width: 24px; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content {\n    position: relative; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .card-breadcrumb {\n      font-weight: 600;\n      font-size: 16px; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .card-subscribe {\n      margin-right: 8px; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .picker {\n      width: 140px;\n      min-width: 140px; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .card-name {\n      width: 100%;\n      font-size: 22px; }\n@media screen and (max-width: 599px) {\n        .scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .card-name {\n          font-size: 14px; } }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section {\n      border-bottom: 1px solid;\n      padding: 0 24px;\n      margin-bottom: 32px; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section:last-child {\n        border-bottom: none;\n        margin-bottom: 0; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section:last-child .section-content {\n          padding-bottom: 0; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .section-header {\n        font-size: 16px; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .section-header .section-title {\n          font-weight: 600; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .section-content {\n        padding: 24px 16px 32px 32px; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .labels .section-content {\n        padding: 8px 0 32px 0; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .labels .label-chips {\n        box-shadow: none;\n        padding: 0; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .labels .label-chips .label-chip {\n          display: block; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .labels .label-chips .label-chip .chip-remove {\n            cursor: pointer; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .members .section-content {\n        padding: 8px 0 32px 0; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .members .member-chips {\n        box-shadow: none;\n        padding: 0; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .members .member-chips .member-chip {\n          margin: 4px; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .members .member-chips .member-chip .member-chip-avatar {\n            width: 32px;\n            border-radius: 50%; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .members .member-chips .member-chip .chip-remove {\n            cursor: pointer; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .attachments .attachment {\n        padding: 0 24px 24px 0; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .attachments .attachment .attachment-preview {\n          font-weight: 600;\n          border-radius: 4px;\n          overflow: hidden; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .attachments .attachment .attachment-content .attachment-url,\n        .scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .attachments .attachment .attachment-content .attachment-name {\n          font-weight: 600;\n          font-size: 16px; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .attachments .attachment .attachment-content .attachment-is-cover {\n          margin-left: 6px; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .attachments .add-attachment-button {\n        margin: 0; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .attachments .add-attachment-button mat-icon {\n          margin-right: 8px; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .checklist .checklist-progress {\n        margin: 0 0 16px 0; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .checklist .checklist-progress .checklist-progress-value {\n          margin-right: 12px;\n          font-weight: 600;\n          white-space: nowrap;\n          font-size: 14px; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .checklist .editable-wrap {\n        flex: 1; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .checklist .check-items .check-item mat-checkbox {\n        position: relative;\n        top: -5px;\n        margin: 0 12px 0 3px; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .checklist .check-items .check-item mat-checkbox .mat-label {\n          font-size: 14px; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .checklist .check-items .check-item mat-checkbox.mat-checked .mat-label {\n          text-decoration: line-through; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .checklist .check-items .check-item .checklist-actions-button {\n        position: relative;\n        top: 2px; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .checklist .check-items .check-item mat-form-field.mat-form-field-appearance-outline .mat-form-field-outline {\n        top: 0; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .checklist .check-items .check-item mat-form-field .mat-form-field-wrapper {\n        padding: 0; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .checklist .check-items .check-item mat-form-field .mat-form-field-wrapper .mat-form-field-infix {\n          border-top: 0; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .checklist .new-check-item-form {\n        margin: 32px 0 0 0; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .checklist .new-check-item-form mat-form-field.mat-form-field-appearance-outline .mat-form-field-outline {\n          top: 0; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .checklist .new-check-item-form mat-form-field .mat-form-field-wrapper {\n          padding: 0; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .checklist .new-check-item-form mat-form-field .mat-form-field-wrapper .mat-form-field-infix {\n            border-top: 0; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .comments .comment {\n        margin: 0 0 24px 0; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .comments .comment .comment-member-avatar {\n          width: 32px;\n          height: 32px;\n          border-radius: 50%;\n          margin-right: 16px; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .comments .comment .comment-member-name {\n          font-size: 14px;\n          font-weight: 600; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .comments .comment .comment-time {\n          font-size: 12px; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .comments .comment .comment-bubble {\n          position: relative;\n          padding: 8px 12px;\n          border: 1px solid;\n          font-size: 14px;\n          margin: 6px 0;\n          border-radius: 20px; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .comments .comment.new-comment {\n          margin: 0 0 24px 0; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .comments .comment.new-comment mat-form-field .mat-form-field-wrapper {\n            padding: 0; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .activities .activity {\n        margin-bottom: 16px; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .activities .activity .activity-member-avatar {\n          width: 32px;\n          height: 32px;\n          border-radius: 50%;\n          margin-right: 16px; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .activities .activity .activity-member-name {\n          font-size: 14px;\n          font-weight: 600;\n          margin-right: 5px;\n          white-space: nowrap; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .activities .activity .activity-message {\n          font-size: 14px;\n          margin-right: 8px;\n          white-space: nowrap; }\n.scrumboard-card-dialog .mat-dialog-container .mat-dialog-content .sections .section .activities .activity .activity-time {\n          font-size: 12px; }\n.scrumboard-card-dialog .dialog-content-wrapper {\n  max-height: 85vh;\n  display: flex;\n  flex-direction: column; }\n.scrumboard-members-menu {\n  width: 240px; }\n.scrumboard-members-menu .mat-checkbox-layout,\n  .scrumboard-members-menu .mat-checkbox-label {\n    display: flex;\n    flex: 1; }\n.scrumboard-labels-menu .mat-menu-content {\n  padding-bottom: 0; }\n.scrumboard-labels-menu .mat-menu-content .mat-checkbox-layout,\n  .scrumboard-labels-menu .mat-menu-content .mat-checkbox-label {\n    display: flex;\n    flex: 1; }\n.scrumboard-labels-menu .mat-menu-content .views {\n    display: flex;\n    flex-direction: column;\n    position: relative;\n    overflow: hidden;\n    width: 240px;\n    min-width: 240px;\n    max-width: 240px;\n    min-height: 240px; }\n.scrumboard-labels-menu .mat-menu-content .views .view {\n      position: absolute;\n      width: 240px;\n      height: 100%;\n      bottom: 0;\n      left: 0;\n      right: 0;\n      top: 0; }\n.scrumboard-labels-menu .mat-menu-content .views .view > .header {\n        border-bottom: 1px solid; }\n"
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/dialogs/card/card.component.ts":
+/*!***********************************************************!*\
+  !*** ./src/app/scrumboard/dialogs/card/card.component.ts ***!
+  \***********************************************************/
+/*! exports provided: ScrumboardCardDialogComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ScrumboardCardDialogComponent", function() { return ScrumboardCardDialogComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var _fuse_components_confirm_dialog_confirm_dialog_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @fuse/components/confirm-dialog/confirm-dialog.component */ "./src/@fuse/components/confirm-dialog/confirm-dialog.component.ts");
+/* harmony import */ var _fuse_utils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @fuse/utils */ "./src/@fuse/utils/index.ts");
+/* harmony import */ var _scrumboard_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../scrumboard.service */ "./src/app/scrumboard/scrumboard.service.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (undefined && undefined.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+
+
+
+
+
+
+var ScrumboardCardDialogComponent = /** @class */ (function () {
+    /**
+     * Constructor
+     *
+     * @param {MatDialogRef<ScrumboardCardDialogComponent>} matDialogRef
+     * @param _data
+     * @param {MatDialog} _matDialog
+     * @param {ScrumboardService} _scrumboardService
+     */
+    function ScrumboardCardDialogComponent(matDialogRef, _data, _matDialog, _scrumboardService) {
+        this.matDialogRef = matDialogRef;
+        this._data = _data;
+        this._matDialog = _matDialog;
+        this._scrumboardService = _scrumboardService;
+        this.toggleInArray = _fuse_utils__WEBPACK_IMPORTED_MODULE_4__["FuseUtils"].toggleInArray;
+        // Set the private defaults
+        this._unsubscribeAll = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
+    }
+    // -----------------------------------------------------------------------------------------------------
+    // @ Lifecycle hooks
+    // -----------------------------------------------------------------------------------------------------
+    /**
+     * On init
+     */
+    ScrumboardCardDialogComponent.prototype.ngOnInit = function () {
+        /*
+        this._scrumboardService.onBoardChanged
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(board => {
+                this.board = board;
+
+                this.card = this.board.cards.find((_card) => {
+                    return this._data.cardId === _card.id;
+                });
+
+                this.list = this.board.lists.find((_list) => {
+                    return this._data.listId === _list.id;
+                });
+            });
+        */
+    };
+    /**
+     * On destroy
+     */
+    ScrumboardCardDialogComponent.prototype.ngOnDestroy = function () {
+        // Unsubscribe from all subscriptions
+        this._unsubscribeAll.next();
+        this._unsubscribeAll.complete();
+    };
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
+    /**
+     * Remove due date
+     */
+    ScrumboardCardDialogComponent.prototype.removeDueDate = function () {
+        this.card.due = '';
+        this.updateCard();
+    };
+    /**
+     * Toggle subscribe
+     */
+    ScrumboardCardDialogComponent.prototype.toggleSubscribe = function () {
+        this.card.subscribed = !this.card.subscribed;
+        this.updateCard();
+    };
+    /**
+     * Toggle cover image
+     *
+     * @param attachmentId
+     */
+    ScrumboardCardDialogComponent.prototype.toggleCoverImage = function (attachmentId) {
+        if (this.card.idAttachmentCover === attachmentId) {
+            this.card.idAttachmentCover = '';
+        }
+        else {
+            this.card.idAttachmentCover = attachmentId;
+        }
+        this.updateCard();
+    };
+    /**
+     * Remove attachment
+     *
+     * @param attachment
+     */
+    ScrumboardCardDialogComponent.prototype.removeAttachment = function (attachment) {
+        if (attachment.id === this.card.idAttachmentCover) {
+            this.card.idAttachmentCover = '';
+        }
+        this.card.attachments.splice(this.card.attachments.indexOf(attachment), 1);
+        this.updateCard();
+    };
+    /**
+     * Remove checklist
+     *
+     * @param checklist
+     */
+    ScrumboardCardDialogComponent.prototype.removeChecklist = function (checklist) {
+        this.card.checklists.splice(this.card.checklists.indexOf(checklist), 1);
+        this.updateCard();
+    };
+    /**
+     * Update checked count
+     *
+     * @param list
+     */
+    ScrumboardCardDialogComponent.prototype.updateCheckedCount = function (list) {
+        var checkItems = list.checkItems;
+        var checkedItems = 0;
+        var allCheckedItems = 0;
+        var allCheckItems = 0;
+        for (var _i = 0, checkItems_1 = checkItems; _i < checkItems_1.length; _i++) {
+            var checkItem = checkItems_1[_i];
+            if (checkItem.checked) {
+                checkedItems++;
+            }
+        }
+        list.checkItemsChecked = checkedItems;
+        for (var _a = 0, _b = this.card.checklists; _a < _b.length; _a++) {
+            var item = _b[_a];
+            allCheckItems += item.checkItems.length;
+            allCheckedItems += item.checkItemsChecked;
+        }
+        this.card.checkItems = allCheckItems;
+        this.card.checkItemsChecked = allCheckedItems;
+        this.updateCard();
+    };
+    /**
+     * Remove checklist item
+     *
+     * @param checkItem
+     * @param checklist
+     */
+    ScrumboardCardDialogComponent.prototype.removeChecklistItem = function (checkItem, checklist) {
+        checklist.checkItems.splice(checklist.checkItems.indexOf(checkItem), 1);
+        this.updateCheckedCount(checklist);
+        this.updateCard();
+    };
+    /**
+     * Add check item
+     *
+     * @param {NgForm} form
+     * @param checkList
+     */
+    ScrumboardCardDialogComponent.prototype.addCheckItem = function (form, checkList) {
+        var checkItemVal = form.value.checkItem;
+        if (!checkItemVal || checkItemVal === '') {
+            return;
+        }
+        var newCheckItem = {
+            'name': checkItemVal,
+            'checked': false
+        };
+        checkList.checkItems.push(newCheckItem);
+        this.updateCheckedCount(checkList);
+        form.setValue({ checkItem: '' });
+        this.updateCard();
+    };
+    /**
+     * Add checklist
+     *
+     * @param {NgForm} form
+     */
+    ScrumboardCardDialogComponent.prototype.addChecklist = function (form) {
+        this.card.checklists.push({
+            id: _fuse_utils__WEBPACK_IMPORTED_MODULE_4__["FuseUtils"].generateGUID(),
+            name: form.value.checklistTitle,
+            checkItemsChecked: 0,
+            checkItems: []
+        });
+        form.setValue({ checklistTitle: '' });
+        form.resetForm();
+        this.checklistMenu.closeMenu();
+        this.updateCard();
+    };
+    /**
+     * On checklist menu open
+     */
+    ScrumboardCardDialogComponent.prototype.onChecklistMenuOpen = function () {
+        var _this = this;
+        setTimeout(function () {
+            _this.newCheckListTitleField.nativeElement.focus();
+        });
+    };
+    /**
+     * Add new comment
+     *
+     * @param {NgForm} form
+     */
+    ScrumboardCardDialogComponent.prototype.addNewComment = function (form) {
+        var newCommentText = form.value.newComment;
+        var newComment = {
+            idMember: '36027j1930450d8bf7b10158',
+            message: newCommentText,
+            time: 'now'
+        };
+        this.card.comments.unshift(newComment);
+        form.setValue({ newComment: '' });
+        this.updateCard();
+    };
+    /**
+     * Remove card
+     */
+    ScrumboardCardDialogComponent.prototype.removeCard = function () {
+        var _this = this;
+        this.confirmDialogRef = this._matDialog.open(_fuse_components_confirm_dialog_confirm_dialog_component__WEBPACK_IMPORTED_MODULE_3__["FuseConfirmDialogComponent"], {
+            disableClose: false
+        });
+        this.confirmDialogRef.componentInstance.confirmMessage = 'Are you sure you want to delete the card?';
+        this.confirmDialogRef.afterClosed().subscribe(function (result) {
+            if (result) {
+                _this.matDialogRef.close();
+                _this._scrumboardService.removeCard(_this.card.id, _this.list.id);
+            }
+        });
+    };
+    /**
+     * Update card
+     */
+    ScrumboardCardDialogComponent.prototype.updateCard = function () {
+        this._scrumboardService.updateCard(this.card);
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])('checklistMenuTrigger'),
+        __metadata("design:type", _angular_material__WEBPACK_IMPORTED_MODULE_1__["MatMenuTrigger"])
+    ], ScrumboardCardDialogComponent.prototype, "checklistMenu", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])('newCheckListTitleField'),
+        __metadata("design:type", Object)
+    ], ScrumboardCardDialogComponent.prototype, "newCheckListTitleField", void 0);
+    ScrumboardCardDialogComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'scrumboard-card-dialog',
+            template: __webpack_require__(/*! ./card.component.html */ "./src/app/scrumboard/dialogs/card/card.component.html"),
+            styles: [__webpack_require__(/*! ./card.component.scss */ "./src/app/scrumboard/dialogs/card/card.component.scss")],
+            encapsulation: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewEncapsulation"].None
+        }),
+        __param(1, Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_1__["MAT_DIALOG_DATA"])),
+        __metadata("design:paramtypes", [_angular_material__WEBPACK_IMPORTED_MODULE_1__["MatDialogRef"], Object, _angular_material__WEBPACK_IMPORTED_MODULE_1__["MatDialog"],
+            _scrumboard_service__WEBPACK_IMPORTED_MODULE_5__["ScrumboardService"]])
+    ], ScrumboardCardDialogComponent);
+    return ScrumboardCardDialogComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/dialogs/card/label-selector/label-selector.component.html":
+/*!**************************************************************************************!*\
+  !*** ./src/app/scrumboard/dialogs/card/label-selector/label-selector.component.html ***!
+  \**************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div [ngSwitch]=\"labelsMenuView\" class=\"views\" (click)=\"$event.stopPropagation()\">\n\n    <div class=\"view\" *ngSwitchCase=\"'labels'\" fxFlex fxLayout=\"column\">\n\n        <div class=\"header\" fxLayout=\"row\" fxLayoutAlign=\"space-between center\">\n            <div>Labels</div>\n            <button mat-button (click)=\"labelsMenuView ='add'\">\n                <mat-icon class=\"s-16\">add</mat-icon>\n                <span>Add</span>\n            </button>\n        </div>\n\n        <div fxFlex fxLayout=\"column\" fusePerfectScrollbar>\n\n            <div class=\"label\" *ngFor=\"let label of board.labels\" fxFlex=\"0 0 auto\" fxLayout=\"row\"\n                 fxLayoutAlign=\"space-between center\">\n\n                <div class=\"label-color\" [ngClass]=\"label.color\"></div>\n\n                <mat-checkbox fxFlex fxLayout=\"row\" fxLayoutAlign=\"start center\"\n                              [checked]=\"card.idLabels.indexOf(label.id) > -1\"\n                              (change)=\"toggleInArray(label.id, card.idLabels);onCardLabelsChanged()\">\n                    {{label.name}}\n                </mat-checkbox>\n\n                <button mat-icon-button>\n                    <mat-icon class=\"s-16\" (click)=\"labelsMenuView ='edit';selectedLabel = label\">mode_edit</mat-icon>\n                </button>\n\n            </div>\n\n        </div>\n\n    </div>\n\n    <div class=\"view edit\" *ngSwitchCase=\"'edit'\" fxFlex fxLayout=\"column\">\n\n        <div class=\"header\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n            <button mat-icon-button (click)=\"labelsMenuView ='labels'\">\n                <mat-icon class=\"s-16\">arrow_back</mat-icon>\n            </button>\n            <div>Edit Label</div>\n        </div>\n\n        <div class=\"content\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n            <mat-form-field>\n                <input matInput placeholder=\"Name\" [(ngModel)]=\"selectedLabel.name\" (change)=\"onLabelChange()\">\n            </mat-form-field>\n\n            <fuse-material-color-picker [(ngModel)]=\"selectedLabel.color\" class=\"ml-8\"\n                                        (colorChanged)=\"$event.preventDefault;onLabelChange()\"></fuse-material-color-picker>\n        </div>\n\n    </div>\n\n    <div class=\"view add\" *ngSwitchCase=\"'add'\" fxFlex fxLayout=\"column\">\n\n        <div class=\"header\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n            <button mat-icon-button (click)=\"labelsMenuView ='labels'\">\n                <mat-icon class=\"s-16\">arrow_back</mat-icon>\n            </button>\n            <div>Add Label</div>\n        </div>\n\n        <form (submit)=\"addNewLabel()\" #newLabelForm=\"ngForm\" fxFlex fxLayout=\"column\" fxLayoutAlign=\"start end\">\n\n            <div fxFlex=\"0 1 auto\" fxLayout=\"row\" fxLayoutAlign=\"space-between center\">\n                <mat-form-field fxFlex>\n                    <input matInput placeholder=\"Name\" [(ngModel)]=\"newLabel.name\" name=\"labelName\" required>\n                </mat-form-field>\n\n                <fuse-material-color-picker class=\"ml-8\" [(ngModel)]=\"newLabel.color\"\n                                            name=\"labelColor\"></fuse-material-color-picker>\n            </div>\n\n            <button mat-raised-button class=\"mat-accent mt-16\" [disabled]=\"!newLabelForm.valid\">ADD NEW LABEL</button>\n\n        </form>\n\n    </div>\n\n</div>\n"
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/dialogs/card/label-selector/label-selector.component.scss":
+/*!**************************************************************************************!*\
+  !*** ./src/app/scrumboard/dialogs/card/label-selector/label-selector.component.scss ***!
+  \**************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ".scrumboard-labels-menu .mat-menu-content {\n  padding-bottom: 0; }\n  .scrumboard-labels-menu .mat-menu-content .mat-checkbox-layout,\n  .scrumboard-labels-menu .mat-menu-content .mat-checkbox-label {\n    display: flex;\n    flex: 1; }\n  .scrumboard-labels-menu .mat-menu-content .views {\n    display: flex;\n    flex-direction: column;\n    position: relative;\n    overflow: hidden;\n    width: 240px;\n    min-width: 240px;\n    max-width: 240px;\n    min-height: 240px; }\n  .scrumboard-labels-menu .mat-menu-content .views .view {\n      position: absolute;\n      width: 240px;\n      height: 100%;\n      bottom: 0;\n      left: 0;\n      right: 0;\n      top: 0; }\n  .scrumboard-labels-menu .mat-menu-content .views .view > .header {\n        border-bottom: 1px solid rgba(0, 0, 0, 0.1);\n        padding: 4px 8px 8px 16px;\n        margin-bottom: 8px; }\n  .scrumboard-labels-menu .mat-menu-content .views .view .label {\n        margin: 0 8px 8px 16px; }\n  .scrumboard-labels-menu .mat-menu-content .views .view .label .label-color {\n          width: 8px;\n          height: 8px;\n          border-radius: 100%;\n          margin-right: 12px; }\n  .scrumboard-labels-menu .mat-menu-content .views .view.edit > .header, .scrumboard-labels-menu .mat-menu-content .views .view.add > .header {\n        padding: 0 8px 8px 0; }\n  .scrumboard-labels-menu .mat-menu-content .views .view.edit form, .scrumboard-labels-menu .mat-menu-content .views .view.add form {\n        padding: 0 16px 8px 16px; }\n  .scrumboard-labels-menu .mat-menu-content .views .view.edit form .mat-form-field-infix, .scrumboard-labels-menu .mat-menu-content .views .view.add form .mat-form-field-infix {\n          width: auto !important; }\n  .scrumboard-labels-menu .mat-menu-content .views .view.edit .content, .scrumboard-labels-menu .mat-menu-content .views .view.add .content {\n        padding: 8px 16px 8px 16px; }\n  .scrumboard-labels-menu .mat-menu-content .views .view.edit .content .mat-form-field-infix, .scrumboard-labels-menu .mat-menu-content .views .view.add .content .mat-form-field-infix {\n          width: auto !important; }\n"
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/dialogs/card/label-selector/label-selector.component.ts":
+/*!************************************************************************************!*\
+  !*** ./src/app/scrumboard/dialogs/card/label-selector/label-selector.component.ts ***!
+  \************************************************************************************/
+/*! exports provided: ScrumboardLabelSelectorComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ScrumboardLabelSelectorComponent", function() { return ScrumboardLabelSelectorComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var _fuse_animations__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @fuse/animations */ "./src/@fuse/animations/index.ts");
+/* harmony import */ var _fuse_utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @fuse/utils */ "./src/@fuse/utils/index.ts");
+/* harmony import */ var app_scrumboard_scrumboard_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! app/scrumboard/scrumboard.service */ "./src/app/scrumboard/scrumboard.service.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+var ScrumboardLabelSelectorComponent = /** @class */ (function () {
+    /**
+     * Constructor
+     *
+     * @param {ScrumboardService} _scrumboardService
+     */
+    function ScrumboardLabelSelectorComponent(_scrumboardService) {
+        this._scrumboardService = _scrumboardService;
+        // Set the defaults
+        this.cardLabelsChanged = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
+        this.labelsMenuView = 'labels';
+        this.newLabel = {
+            'id': '',
+            'name': '',
+            'color': 'blue-400'
+        };
+        this.toggleInArray = _fuse_utils__WEBPACK_IMPORTED_MODULE_3__["FuseUtils"].toggleInArray;
+        // Set the private defaults
+        this._unsubscribeAll = new rxjs__WEBPACK_IMPORTED_MODULE_1__["Subject"]();
+    }
+    // -----------------------------------------------------------------------------------------------------
+    // @ Lifecycle hooks
+    // -----------------------------------------------------------------------------------------------------
+    /**
+     * On init
+     */
+    ScrumboardLabelSelectorComponent.prototype.ngOnInit = function () {
+        /*
+        this._scrumboardService.onBoardChanged
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(board => {
+                this.board = board;
+            });
+        */
+    };
+    /**
+     * On destroy
+     */
+    ScrumboardLabelSelectorComponent.prototype.ngOnDestroy = function () {
+        // Unsubscribe from all subscriptions
+        this._unsubscribeAll.next();
+        this._unsubscribeAll.complete();
+    };
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
+    /**
+     * Card labels changed
+     */
+    ScrumboardLabelSelectorComponent.prototype.onCardLabelsChanged = function () {
+        this.cardLabelsChanged.next();
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])('card'),
+        __metadata("design:type", Object)
+    ], ScrumboardLabelSelectorComponent.prototype, "card", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
+        __metadata("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"])
+    ], ScrumboardLabelSelectorComponent.prototype, "cardLabelsChanged", void 0);
+    ScrumboardLabelSelectorComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'scrumboard-label-selector',
+            template: __webpack_require__(/*! ./label-selector.component.html */ "./src/app/scrumboard/dialogs/card/label-selector/label-selector.component.html"),
+            styles: [__webpack_require__(/*! ./label-selector.component.scss */ "./src/app/scrumboard/dialogs/card/label-selector/label-selector.component.scss")],
+            encapsulation: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewEncapsulation"].None,
+            animations: _fuse_animations__WEBPACK_IMPORTED_MODULE_2__["fuseAnimations"]
+        }),
+        __metadata("design:paramtypes", [app_scrumboard_scrumboard_service__WEBPACK_IMPORTED_MODULE_4__["ScrumboardService"]])
+    ], ScrumboardLabelSelectorComponent);
+    return ScrumboardLabelSelectorComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/list/add-card/add-card.component.html":
+/*!******************************************************************!*\
+  !*** ./src/app/scrumboard/list/add-card/add-card.component.html ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div  class=\"add-card-form-wrapper\">\n\n    <form [formGroup]=\"form\" (submit)=\"onFormSubmit()\" class=\"add-card-form\" fxLayout=\"column\">\n\n        <mat-form-field fxFlex floatLabel=\"never\">\n            <input #nameInput matInput formControlName=\"title\" placeholder=\"Task Title\" autocomplete=\"off\" required>\n        </mat-form-field>\n\n        <mat-form-field fxFlex floatLabel=\"never\">\n            <textarea matInput formControlName=\"content\" placeholder=\"Task Content\" autocomplete=\"off\"></textarea>\n        </mat-form-field>\n\n        <mat-form-field fxFlex floatLabel=\"never\">\n          <input matInput formControlName=\"due_date\" [matDatepicker]=\"picker\" placeholder=\"Task Due Date\">\n          <mat-datepicker-toggle matSuffix [for]=\"picker\"></mat-datepicker-toggle>\n          <mat-datepicker #picker></mat-datepicker>\n        </mat-form-field>\n\n        <user-search [searchUrl]=\"searchUrl\" (userSelected)=\"userSelected($event)\"></user-search>\n\n        <div class=\"pl-8\" fxLayout=\"row\" fxLayoutAlign=\"space-between center\">\n\n            <button mat-raised-button class=\"add-button mat-accent\" aria-label=\"add\"\n                    [disabled]=\"form.invalid || filteredAssignableUsers.length == 0\">\n                <span>Add</span>\n            </button>\n\n            <button mat-icon-button (click)=\"closeForm()\" class=\"cancel-button\" aria-label=\"cancel\">\n                <mat-icon>close</mat-icon>\n            </button>\n        </div>\n    </form>\n</div>\n"
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/list/add-card/add-card.component.scss":
+/*!******************************************************************!*\
+  !*** ./src/app/scrumboard/list/add-card/add-card.component.scss ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "scrumboard-add-card .add-card-form-wrapper .add-card-form {\n  z-index: 999;\n  display: block;\n  position: relative;\n  padding: 8px; }\n  scrumboard-add-card .add-card-form-wrapper .add-card-form mat-form-field {\n    width: 100%;\n    margin: 0;\n    padding: 12px 8px; }\n"
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/list/add-card/add-card.component.ts":
+/*!****************************************************************!*\
+  !*** ./src/app/scrumboard/list/add-card/add-card.component.ts ***!
+  \****************************************************************/
+/*! exports provided: ScrumboardAddCardComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ScrumboardAddCardComponent", function() { return ScrumboardAddCardComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var app_app_config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! app/app.config */ "./src/app/app.config.ts");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (undefined && undefined.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+
+
+
+
+var ScrumboardAddCardComponent = /** @class */ (function () {
+    /**
+     * Constructor
+     *
+     * @param {FormBuilder} _formBuilder
+     */
+    function ScrumboardAddCardComponent(_formBuilder, dialogRef, data) {
+        this._formBuilder = _formBuilder;
+        this.dialogRef = dialogRef;
+        this.data = data;
+        this.filteredAssignableUsers = [];
+        // Set the defaults
+        this.cardAdded = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
+    }
+    ScrumboardAddCardComponent.prototype.ngOnInit = function () {
+        this.nodeID = this.data.nodeID;
+        this.nodeType = this.data.nodeType;
+        this.searchUrl = "" + app_app_config__WEBPACK_IMPORTED_MODULE_2__["appConfig"].taskApiUrl + '/assignable_task_users/' + this.nodeID + '/' + '?nodeType=' + this.nodeType + '&search=';
+        this.form = this._formBuilder.group({
+            title: '',
+            content: '',
+            assignee: '',
+            due_date: ''
+        });
+        // TODO: Assignee needs to be created
+        this.focusNameField();
+    };
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
+    ScrumboardAddCardComponent.prototype.userSelected = function (e) {
+        this.filteredAssignableUsers = e.filteredUsers;
+        this.selectedUser = e.selectedUser;
+    };
+    /**
+     * Close the form
+     */
+    ScrumboardAddCardComponent.prototype.closeForm = function () {
+        this.dialogRef.close();
+    };
+    /**
+     * Focus to the name field
+     */
+    ScrumboardAddCardComponent.prototype.focusNameField = function () {
+        var _this = this;
+        setTimeout(function () {
+            _this.nameInputField.nativeElement.focus();
+        });
+    };
+    /**
+     * On form submit
+     */
+    ScrumboardAddCardComponent.prototype.onFormSubmit = function () {
+        if (this.form.valid) {
+            var formData = this.form.getRawValue();
+            formData.assignee = this.selectedUser;
+            this.cardAdded.next(formData);
+            this.closeForm();
+        }
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
+        __metadata("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"])
+    ], ScrumboardAddCardComponent.prototype, "cardAdded", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])('nameInput'),
+        __metadata("design:type", Object)
+    ], ScrumboardAddCardComponent.prototype, "nameInputField", void 0);
+    ScrumboardAddCardComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'scrumboard-add-card',
+            template: __webpack_require__(/*! ./add-card.component.html */ "./src/app/scrumboard/list/add-card/add-card.component.html"),
+            styles: [__webpack_require__(/*! ./add-card.component.scss */ "./src/app/scrumboard/list/add-card/add-card.component.scss")],
+            encapsulation: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewEncapsulation"].None
+        }),
+        __param(2, Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_3__["MAT_DIALOG_DATA"])),
+        __metadata("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormBuilder"],
+            _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatDialogRef"], Object])
+    ], ScrumboardAddCardComponent);
+    return ScrumboardAddCardComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/list/card/card.component.html":
+/*!**********************************************************!*\
+  !*** ./src/app/scrumboard/list/card/card.component.html ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n<!-- CARD DETAILS -->\n<div class=\"list-card-details\">\n\n    <!-- CARD SORT HANDLE -->\n    <div class=\"list-card-sort-handle\">\n        <mat-icon mat-font-icon=\"icon-cursor-move\" class=\"icon s16\"></mat-icon>\n    </div>\n    <!-- /CARD SORT HANDLE -->\n\n    <!-- CARD NAME -->\n    <div class=\"list-card-name\">{{card.title}}</div>\n    <!-- / CARD NAME -->\n\n    <!--\n    <div *ngIf=\"card.due || card.checkItems\"\n         class=\"list-card-badges\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n\n        <span class=\"badge due-date\"\n              [ngClass]=\"{'overdue': isOverdue(card.due)}\"\n              *ngIf=\"card.due\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n            <mat-icon class=\"s-16\">access_time</mat-icon>\n            <span>{{card.due | date:'mediumDate'}}</span>\n\n        </span>\n\n        <span *ngIf=\"card.checkItems\"\n              class=\"badge check-items\"\n              [ngClass]=\"{'completed': card.checkItemsChecked === card.checkItems}\"\n              fxLayout=\"row\" fxLayoutAlign=\"start center\">\n            <mat-icon class=\"s-16\">check_circle</mat-icon>\n            <span>{{card.checkItemsChecked}}</span>\n            <span>/</span>\n            <span>{{card.checkItems}}</span>\n        </span>\n    </div>\n  -->\n\n</div>\n<!-- / CARD DETAILS -->\n\n<!-- CARD FOOTER -->\n<div class=\"list-card-footer\" fxLayout=\"row\" fxLayoutAlign=\"space-between center\">\n\n    <div fxLayout=\"row\" fxLayoutAlign=\"start center\">\n\n        <!-- CARD DETAILS -->\n        <span *ngIf=\"card.content !== ''\"\n              class=\"list-card-footer-item\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n            <mat-icon class=\"s-18\">description</mat-icon>\n        </span>\n        <!-- / CARD DETAILS -->\n\n    </div>\n\n    <div fxLayout=\"row\" fxLayoutAlign=\"end center\">\n\n    </div>\n</div>\n<!-- CARD FOOTER -->\n"
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/list/card/card.component.scss":
+/*!**********************************************************!*\
+  !*** ./src/app/scrumboard/list/card/card.component.scss ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/**\n * Applies styles for users in high contrast mode. Note that this only applies\n * to Microsoft browsers. Chrome can be included by checking for the `html[hc]`\n * attribute, however Chrome handles high contrast differently.\n */\n/* Theme for the ripple elements.*/\n/* stylelint-disable material/no-prefixes */\n/* stylelint-enable */\nscrumboard-card {\n  position: relative;\n  display: block;\n  width: 100%;\n  margin: 16px 0 !important;\n  border-radius: 4px;\n  border: 1px solid;\n  cursor: pointer; }\nscrumboard-card .list-card-sort-handle {\n    display: none;\n    position: absolute;\n    top: 0;\n    right: 0;\n    padding: 4px;\n    background: rgba(255, 255, 255, 0.8); }\nscrumboard-card .list-card-details {\n    padding: 16px 16px 0 16px; }\nscrumboard-card .list-card-details .list-card-labels {\n      margin-bottom: 6px; }\nscrumboard-card .list-card-details .list-card-labels .list-card-label {\n        width: 32px;\n        height: 6px;\n        border-radius: 6px;\n        margin: 0 6px 6px 0; }\nscrumboard-card .list-card-details .list-card-name {\n      font-size: 14px;\n      font-weight: 600;\n      margin-bottom: 12px; }\nscrumboard-card .list-card-details .list-card-badges {\n      margin-bottom: 12px; }\nscrumboard-card .list-card-details .list-card-badges .badge {\n        margin-right: 8px;\n        padding: 4px 8px;\n        border-radius: 2px; }\nscrumboard-card .list-card-details .list-card-badges .badge mat-icon {\n          margin-right: 4px; }\nscrumboard-card .list-card-details .list-card-members {\n      margin-bottom: 12px; }\nscrumboard-card .list-card-details .list-card-members .list-card-member {\n        margin-right: 8px; }\nscrumboard-card .list-card-details .list-card-members .list-card-member .list-card-member-avatar {\n          border-radius: 50%;\n          width: 32px;\n          height: 32px; }\nscrumboard-card .list-card-footer {\n    border-top: 1px solid;\n    padding: 0 16px; }\nscrumboard-card .list-card-footer .list-card-footer-item {\n      height: 48px;\n      margin-right: 12px; }\nscrumboard-card .list-card-footer .list-card-footer-item .value {\n        padding-left: 8px; }\nscrumboard-card .list-card-footer .list-card-footer-item:last-of-type {\n        margin-right: 0; }\nscrumboard-card .ngx-dnd-content {\n    -webkit-user-select: none;\n       -moz-user-select: none;\n        -ms-user-select: none;\n            user-select: none; }\nscrumboard-card.gu-mirror {\n    position: fixed !important;\n    margin: 0 !important;\n    z-index: 9999 !important;\n    opacity: 0.8;\n    -ms-filter: \"progid:DXImageTransform.Microsoft.Alpha(Opacity=80)\";\n    filter: alpha(opacity=80);\n    box-shadow: 0px 4px 5px -2px rgba(0, 0, 0, 0.2), 0px 7px 10px 1px rgba(0, 0, 0, 0.14), 0px 2px 16px 1px rgba(0, 0, 0, 0.12); }\nscrumboard-card.gu-hide {\n    display: none !important; }\nscrumboard-card.gu-unselectable {\n    -webkit-user-select: none !important;\n    -moz-user-select: none !important;\n    -ms-user-select: none !important;\n    user-select: none !important; }\nscrumboard-card.gu-transit {\n    opacity: 0.2;\n    -ms-filter: \"progid:DXImageTransform.Microsoft.Alpha(Opacity=20)\";\n    filter: alpha(opacity=20); }\n"
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/list/card/card.component.ts":
+/*!********************************************************!*\
+  !*** ./src/app/scrumboard/list/card/card.component.ts ***!
+  \********************************************************/
+/*! exports provided: ScrumboardCardComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ScrumboardCardComponent", function() { return ScrumboardCardComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var ScrumboardCardComponent = /** @class */ (function () {
+    /**
+     * Constructor
+     *
+     * @param {ActivatedRoute} _activatedRoute
+     */
+    function ScrumboardCardComponent(_activatedRoute) {
+        this._activatedRoute = _activatedRoute;
+    }
+    // -----------------------------------------------------------------------------------------------------
+    // @ Lifecycle hooks
+    // -----------------------------------------------------------------------------------------------------
+    /**
+     * On init
+     */
+    ScrumboardCardComponent.prototype.ngOnInit = function () { };
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
+    /**
+     * Is the card overdue?
+     *
+     * @param cardDate
+     * @returns {boolean}
+     */
+    ScrumboardCardComponent.prototype.isOverdue = function (cardDate) {
+        return moment__WEBPACK_IMPORTED_MODULE_2__() > moment__WEBPACK_IMPORTED_MODULE_2__(new Date(cardDate));
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Object)
+    ], ScrumboardCardComponent.prototype, "card", void 0);
+    ScrumboardCardComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'scrumboard-card',
+            template: __webpack_require__(/*! ./card.component.html */ "./src/app/scrumboard/list/card/card.component.html"),
+            styles: [__webpack_require__(/*! ./card.component.scss */ "./src/app/scrumboard/list/card/card.component.scss")],
+            encapsulation: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewEncapsulation"].None
+        }),
+        __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_1__["ActivatedRoute"]])
+    ], ScrumboardCardComponent);
+    return ScrumboardCardComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/list/edit-list-name/edit-list-name.component.html":
+/*!******************************************************************************!*\
+  !*** ./src/app/scrumboard/list/edit-list-name/edit-list-name.component.html ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div fxFlex=\"1 0 auto\" *ngIf=\"!formActive\" class=\"list-header-name\" (click)=\"openForm()\">\n    {{list.title}} {{ list.index }}\n</div>\n\n<form [formGroup]=\"form\" (ngSubmit)=\"onFormSubmit()\"\n      class=\"list-header-name-form\" fxLayout=\"row\" fxFlex=\"1 0 auto\"\n      *ngIf=\"formActive\">\n\n    <input formControlName=\"title\" #nameInput fxFlex placeholder=\"Write a list Name\">\n\n    <button mat-icon-button fxFlex=\"0 1 auto\">\n        <mat-icon>check</mat-icon>\n    </button>\n    <button mat-icon-button fxFlex=\"0 1 auto\" (click)=\"closeForm()\" type=\"button\">\n        <mat-icon>close</mat-icon>\n    </button>\n</form>\n"
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/list/edit-list-name/edit-list-name.component.scss":
+/*!******************************************************************************!*\
+  !*** ./src/app/scrumboard/list/edit-list-name/edit-list-name.component.scss ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "scrumboard-edit-list-name .list-header-name {\n  text-overflow: ellipsis;\n  overflow: hidden;\n  font-size: 15px;\n  font-weight: 600;\n  cursor: pointer; }\n"
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/list/edit-list-name/edit-list-name.component.ts":
+/*!****************************************************************************!*\
+  !*** ./src/app/scrumboard/list/edit-list-name/edit-list-name.component.ts ***!
+  \****************************************************************************/
+/*! exports provided: ScrumboardEditListNameComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ScrumboardEditListNameComponent", function() { return ScrumboardEditListNameComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var ScrumboardEditListNameComponent = /** @class */ (function () {
+    /**
+     * Constructor
+     *
+     * @param {FormBuilder} _formBuilder
+     */
+    function ScrumboardEditListNameComponent(_formBuilder) {
+        this._formBuilder = _formBuilder;
+        // Set the defaults
+        this.formActive = false;
+        this.listNameChanged = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
+    }
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
+    /**
+     * Open the form
+     */
+    ScrumboardEditListNameComponent.prototype.openForm = function () {
+        this.form = this._formBuilder.group({
+            title: [this.list.title]
+        });
+        this.formActive = true;
+        this.focusNameField();
+    };
+    /**
+     * Close the form
+     */
+    ScrumboardEditListNameComponent.prototype.closeForm = function () {
+        this.formActive = false;
+    };
+    /**
+     * Focus to the name field
+     */
+    ScrumboardEditListNameComponent.prototype.focusNameField = function () {
+        var _this = this;
+        setTimeout(function () {
+            _this.nameInputField.nativeElement.focus();
+        });
+    };
+    /**
+     * On form submit
+     */
+    ScrumboardEditListNameComponent.prototype.onFormSubmit = function () {
+        if (this.form.valid) {
+            this.list.title = this.form.getRawValue().title;
+            this.listNameChanged.next(this.list.title);
+            this.formActive = false;
+        }
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Object)
+    ], ScrumboardEditListNameComponent.prototype, "list", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
+        __metadata("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"])
+    ], ScrumboardEditListNameComponent.prototype, "listNameChanged", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])('nameInput'),
+        __metadata("design:type", Object)
+    ], ScrumboardEditListNameComponent.prototype, "nameInputField", void 0);
+    ScrumboardEditListNameComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'scrumboard-edit-list-name',
+            template: __webpack_require__(/*! ./edit-list-name.component.html */ "./src/app/scrumboard/list/edit-list-name/edit-list-name.component.html"),
+            styles: [__webpack_require__(/*! ./edit-list-name.component.scss */ "./src/app/scrumboard/list/edit-list-name/edit-list-name.component.scss")],
+            encapsulation: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewEncapsulation"].None
+        }),
+        __metadata("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormBuilder"]])
+    ], ScrumboardEditListNameComponent);
+    return ScrumboardEditListNameComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/list/list.component.html":
+/*!*****************************************************!*\
+  !*** ./src/app/scrumboard/list/list.component.html ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"list mat-elevation-z1\" fxLayout=\"column\">\n\n    <!-- LIST HEADER -->\n    <div class=\"list-header\" fxFlex fxLayout=\"row\" fxLayoutAlign=\"space-between center\">\n\n        <scrumboard-edit-list-name\n            fxFlex=\"1 0 auto\"\n            [list]=\"list\"\n            (listNameChanged)=\"onListNameChanged($event)\">\n        </scrumboard-edit-list-name>\n\n        <div fxFlex=\"0 1 auto\">\n            <button mat-icon-button class=\"list-header-option-button\" [matMenuTriggerFor]=\"listMenu\">\n                <mat-icon>more_vert</mat-icon>\n            </button>\n            <mat-menu #listMenu=\"matMenu\">\n                <button mat-menu-item (click)=\"removeList(list._id)\">Remove List</button>\n            </mat-menu>\n        </div>\n\n    </div>\n    <!-- / LIST HEADER -->\n\n    <!-- LIST CONTENT -->\n    <div class=\"list-content\" fxLayout=\"column\">\n\n        <div class=\"list-cards ngx-dnd-container\"\n             [model]=\"list.tasks\" ngxDroppable=\"card\" (drop)=\"onDrop($event)\"\n             fusePerfectScrollbar #listScroll>\n            <scrumboard-card ngxDraggable\n                                   (click)=\"openCardDialog(cardId)\"\n                                   class=\"scrumboard-card ngx-dnd-item\"\n                                   *ngFor=\"let task of list.tasks\"\n                                   [model]=\"task\"\n                                   [card]=\"task\">\n            </scrumboard-card>\n        </div>\n    </div>\n    <!-- / LIST CONTENT -->\n\n    <!-- NEW CARD BUTTON-->\n    <div class=\"list-footer\">\n        <div class=\"add-card-button\"\n            (click)=\"openCardCreateDialog()\"\n            fxLayout=\"row\" fxLayoutAlign=\"start center\">\n            <mat-icon class=\"s-20\">add</mat-icon>\n            <div>Add a card</div>\n        </div>\n        <!--<scrumboard-add-card (cardAdded)=\"onCardAdd($event)\" [nodeID]=\"nodeID\" [nodeType]=\"nodeType\"></scrumboard-add-card>-->\n    </div>\n    <!-- / NEW CARD BUTTON-->\n\n</div>\n"
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/list/list.component.scss":
+/*!*****************************************************!*\
+  !*** ./src/app/scrumboard/list/list.component.scss ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/**\n * Applies styles for users in high contrast mode. Note that this only applies\n * to Microsoft browsers. Chrome can be included by checking for the `html[hc]`\n * attribute, however Chrome handles high contrast differently.\n */\n/* Theme for the ripple elements.*/\n/* stylelint-disable material/no-prefixes */\n/* stylelint-enable */\nscrumboard-list {\n  width: 344px;\n  min-width: 344px;\n  max-width: 344px;\n  padding-right: 24px !important;\n  height: 100%; }\nscrumboard-list .add-card-button {\n    position: relative;\n    height: 48px;\n    min-height: 48px;\n    padding: 0 16px;\n    text-align: left;\n    text-transform: none;\n    font-weight: 600;\n    font-size: 14px;\n    cursor: pointer;\n    border-radius: 2px; }\nscrumboard-list .add-card-button mat-icon {\n      margin-right: 8px; }\nscrumboard-list .list {\n    max-height: 100%;\n    border-radius: 2px;\n    transition: box-shadow 150ms ease; }\nscrumboard-list .list .list-header {\n      height: 64px;\n      min-height: 64px;\n      padding: 0 8px 0 16px;\n      border-bottom: 1px solid; }\n@media screen and (max-width: 959px) {\n        scrumboard-list .list .list-header {\n          height: 48px;\n          min-height: 48px; } }\nscrumboard-list .list .list-content {\n      position: relative;\n      min-height: 0;\n      overflow: hidden;\n      overflow-y: auto;\n      -webkit-overflow-scrolling: touch; }\nscrumboard-list .list .list-content .list-cards {\n        position: relative;\n        min-height: 32px;\n        padding: 0 16px; }\nscrumboard-list .list .list-footer {\n      display: flex;\n      flex-direction: column;\n      flex: 1 0 auto;\n      border-top: 1px solid;\n      min-height: 48px; }\nscrumboard-list .ngx-dnd-content {\n    -webkit-user-select: none;\n       -moz-user-select: none;\n        -ms-user-select: none;\n            user-select: none; }\nscrumboard-list.gu-mirror {\n    position: fixed !important;\n    margin: 0 !important;\n    z-index: 9999 !important;\n    opacity: 0.8;\n    -ms-filter: \"progid:DXImageTransform.Microsoft.Alpha(Opacity=80)\";\n    filter: alpha(opacity=80); }\nscrumboard-list.gu-mirror > .list {\n      box-shadow: 0px 4px 5px -2px rgba(0, 0, 0, 0.2), 0px 7px 10px 1px rgba(0, 0, 0, 0.14), 0px 2px 16px 1px rgba(0, 0, 0, 0.12); }\nscrumboard-list.gu-hide {\n    display: none !important; }\nscrumboard-list.gu-unselectable {\n    -webkit-user-select: none !important;\n    -moz-user-select: none !important;\n    -ms-user-select: none !important;\n    user-select: none !important; }\nscrumboard-list.gu-transit {\n    opacity: 0.2;\n    -ms-filter: \"progid:DXImageTransform.Microsoft.Alpha(Opacity=20)\";\n    filter: alpha(opacity=20); }\n"
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/list/list.component.ts":
+/*!***************************************************!*\
+  !*** ./src/app/scrumboard/list/list.component.ts ***!
+  \***************************************************/
+/*! exports provided: ScrumboardListComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ScrumboardListComponent", function() { return ScrumboardListComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var _fuse_components_confirm_dialog_confirm_dialog_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @fuse/components/confirm-dialog/confirm-dialog.component */ "./src/@fuse/components/confirm-dialog/confirm-dialog.component.ts");
+/* harmony import */ var _fuse_directives_fuse_perfect_scrollbar_fuse_perfect_scrollbar_directive__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive */ "./src/@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive.ts");
+/* harmony import */ var _scrumboard_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../scrumboard.service */ "./src/app/scrumboard/scrumboard.service.ts");
+/* harmony import */ var _dialogs_card_card_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../dialogs/card/card.component */ "./src/app/scrumboard/dialogs/card/card.component.ts");
+/* harmony import */ var _add_card_add_card_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./add-card/add-card.component */ "./src/app/scrumboard/list/add-card/add-card.component.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+
+
+
+var ScrumboardListComponent = /** @class */ (function () {
+    /**
+     * Constructor
+     *
+     * @param {ActivatedRoute} _activatedRoute
+     * @param {ScrumboardService} _scrumboardService
+     * @param {MatDialog} _matDialog
+     */
+    function ScrumboardListComponent(_activatedRoute, _scrumboardService, _matDialog) {
+        this._activatedRoute = _activatedRoute;
+        this._scrumboardService = _scrumboardService;
+        this._matDialog = _matDialog;
+        // Set the private defaults
+        this._unsubscribeAll = new rxjs__WEBPACK_IMPORTED_MODULE_3__["Subject"]();
+    }
+    // -----------------------------------------------------------------------------------------------------
+    // @ Lifecycle hooks
+    // -----------------------------------------------------------------------------------------------------
+    /**
+     * On init
+     */
+    ScrumboardListComponent.prototype.ngOnInit = function () {
+        /*
+        this._scrumboardService.onBoardChanged
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(board => {
+                this.board = board;
+            });
+        */
+    };
+    /**
+     * On destroy
+     */
+    ScrumboardListComponent.prototype.ngOnDestroy = function () {
+        // Unsubscribe from all subscriptions
+        this._unsubscribeAll.next();
+        this._unsubscribeAll.complete();
+    };
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
+    /**
+     * On list name changed
+     *
+     * @param newListName
+     */
+    ScrumboardListComponent.prototype.onListNameChanged = function (newListName) {
+        var _this = this;
+        this._scrumboardService.listChanged(this.list._id, { title: newListName })
+            .subscribe(function (response) {
+            _this.list.title = response.title;
+        });
+    };
+    /**
+     * On card added
+     *
+     * @param newCardName
+     */
+    ScrumboardListComponent.prototype.onCardAdd = function (newCardData) {
+        var _this = this;
+        if (newCardData.title === '') {
+            return;
+        }
+        var data = {
+            task_list_id: this.list._id,
+            title: newCardData.title,
+            content: newCardData.content,
+            assignee: newCardData.assignee,
+            due_date: newCardData.due_date,
+            status: 'NEW',
+            task_list_index: this.list.tasks.length
+        };
+        this._scrumboardService.addCard(data, this.list._id);
+        setTimeout(function () {
+            _this.listScroll.scrollToBottom(0, 400);
+        });
+    };
+    /**
+     * Remove list
+     *
+     * @param listId
+     */
+    ScrumboardListComponent.prototype.removeList = function (listId) {
+        var _this = this;
+        this.confirmDialogRef = this._matDialog.open(_fuse_components_confirm_dialog_confirm_dialog_component__WEBPACK_IMPORTED_MODULE_4__["FuseConfirmDialogComponent"], {
+            disableClose: false
+        });
+        this.confirmDialogRef.componentInstance.confirmMessage = 'Are you sure you want to delete the list and it\'s all cards?';
+        this.confirmDialogRef.afterClosed().subscribe(function (result) {
+            if (result) {
+                _this._scrumboardService.removeList(listId);
+            }
+        });
+    };
+    /**
+        Opens the dialog for task creation
+    **/
+    ScrumboardListComponent.prototype.openCardCreateDialog = function () {
+        var _this = this;
+        var dialogRef = this._matDialog.open(_add_card_add_card_component__WEBPACK_IMPORTED_MODULE_8__["ScrumboardAddCardComponent"], {
+            width: '350',
+            height: '500',
+            data: { nodeID: this.nodeID, nodeType: this.nodeType }
+        });
+        dialogRef.componentInstance.cardAdded.subscribe(function (newCardData) {
+            _this.onCardAdd(newCardData);
+        });
+    };
+    /**
+     * Open card dialog
+     *
+     * @param cardId
+     */
+    ScrumboardListComponent.prototype.openCardDialog = function (cardId) {
+        this.dialogRef = this._matDialog.open(_dialogs_card_card_component__WEBPACK_IMPORTED_MODULE_7__["ScrumboardCardDialogComponent"], {
+            panelClass: 'scrumboard-card-dialog',
+            data: {
+                cardId: cardId,
+                listId: this.list.id
+            }
+        });
+        this.dialogRef.afterClosed()
+            .subscribe(function (response) {
+        });
+    };
+    /**
+     * On drop
+     *
+     * @param ev
+     */
+    ScrumboardListComponent.prototype.onDrop = function (ev) {
+        this._scrumboardService.updateTaskIndexes(this.list);
+        // this._scrumboardService.updateBoard();
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Object)
+    ], ScrumboardListComponent.prototype, "list", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Object)
+    ], ScrumboardListComponent.prototype, "nodeID", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Object)
+    ], ScrumboardListComponent.prototype, "nodeType", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])(_fuse_directives_fuse_perfect_scrollbar_fuse_perfect_scrollbar_directive__WEBPACK_IMPORTED_MODULE_5__["FusePerfectScrollbarDirective"]),
+        __metadata("design:type", _fuse_directives_fuse_perfect_scrollbar_fuse_perfect_scrollbar_directive__WEBPACK_IMPORTED_MODULE_5__["FusePerfectScrollbarDirective"])
+    ], ScrumboardListComponent.prototype, "listScroll", void 0);
+    ScrumboardListComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'scrumboard-list',
+            template: __webpack_require__(/*! ./list.component.html */ "./src/app/scrumboard/list/list.component.html"),
+            styles: [__webpack_require__(/*! ./list.component.scss */ "./src/app/scrumboard/list/list.component.scss")],
+            encapsulation: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewEncapsulation"].None
+        }),
+        __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_1__["ActivatedRoute"],
+            _scrumboard_service__WEBPACK_IMPORTED_MODULE_6__["ScrumboardService"],
+            _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDialog"]])
+    ], ScrumboardListComponent);
+    return ScrumboardListComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/scrumboard.component.html":
+/*!******************************************************!*\
+  !*** ./src/app/scrumboard/scrumboard.component.html ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<mat-sidenav-container>\r\n\r\n    <div id=\"board\">\r\n\r\n        <!-- HEADER -->\r\n        <!--\r\n        <div class=\"header p-16 p-md-24\" [ngClass]=\"board.settings.color\" fxLayout=\"column\">\r\n\r\n            <div class=\"header-content\" fxLayout=\"row wrap\" fxLayoutAlign=\"space-between\" fxFlex=\"1 0 auto\">\r\n\r\n\r\n            </div>\r\n\r\n        </div>\r\n        -->\r\n        <!-- / HEADER -->\r\n\r\n        <div fxFlex class=\"board-content-wrapper p-16 p-md-24\">\r\n\r\n            <!-- BOARD -->\r\n            <div class=\"board-content ngx-dnd-container p-16 p-md-24\" fxLayout=\"row\"\r\n                 ngxDroppable=\"list\" [model]=\"lists\" (drop)=\"onDrop($event)\"\r\n                 [@animateStagger]=\"{value:'50'}\">\r\n\r\n                <!-- LIST -->\r\n                <scrumboard-list\r\n                    class=\"scrumboard-list list-wrapper ngx-dnd-item\"\r\n                    ngxDraggable\r\n                    *ngFor=\"let list of lists\"\r\n                    [model]=\"list\"\r\n                    [list]=\"list\"\r\n                    [nodeID]=\"nodeID\"\r\n                    [nodeType]=\"nodeType\"\r\n                    [@animate]=\"{value:'*',params:{duration:'350ms',x:'100%'}}\">\r\n                </scrumboard-list>\r\n                <!-- / LIST -->\r\n\r\n                <!-- NEW LIST BUTTON-->\r\n                <scrumboard-add-list class=\"new-list-wrapper\" (listAdded)=\"onListAdd($event)\"\r\n                                           ngxDraggable [moves]=\"false\"\r\n                                           [@animate]=\"{value:'*',params:{duration:'350ms',x:'100%'}}\">\r\n                </scrumboard-add-list>\r\n                <!-- / NEW LIST BUTTON-->\r\n\r\n            </div>\r\n            <!-- / BOARD -->\r\n        </div>\r\n        <!-- primary content -->\r\n    </div>\r\n</mat-sidenav-container>\r\n"
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/scrumboard.component.scss":
+/*!******************************************************!*\
+  !*** ./src/app/scrumboard/scrumboard.component.scss ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/**\n * Applies styles for users in high contrast mode. Note that this only applies\n * to Microsoft browsers. Chrome can be included by checking for the `html[hc]`\n * attribute, however Chrome handles high contrast differently.\n */\n/* Theme for the ripple elements.*/\n/* stylelint-disable material/no-prefixes */\n/* stylelint-enable */\n:host mat-sidenav-container {\n  width: 100%;\n  height: 100%; }\n:host mat-sidenav-container mat-sidenav {\n    width: 320px !important;\n    min-width: 320px !important;\n    max-width: 320px !important; }\n:host mat-sidenav-container #board {\n    display: flex;\n    flex-direction: column !important;\n    height: 100%; }\n:host mat-sidenav-container #board > .header {\n      position: relative;\n      min-height: 96px;\n      background-image: none;\n      z-index: 49; }\n:host mat-sidenav-container #board > .header .header-content .header-boards-button {\n        margin: 0; }\n:host mat-sidenav-container #board > .header .header-content .header-board-name {\n        font-size: 16px; }\n:host mat-sidenav-container #board > .header .header-content .header-board-name .board-subscribe {\n          margin-right: 8px; }\n:host mat-sidenav-container #board > .header .header-content .header-board-name .editable-buttons mat-icon {\n          color: #FFFFFF !important; }\n:host mat-sidenav-container #board > .header .header-content .right-side > .mat-button:last-child {\n        margin-right: 0; }\n:host mat-sidenav-container #board #board-selector {\n      position: absolute;\n      top: 96px;\n      right: 0;\n      left: 0;\n      height: 192px;\n      z-index: 48;\n      padding: 24px;\n      opacity: 1; }\n:host mat-sidenav-container #board #board-selector .board-list-item {\n        width: 128px;\n        height: 192px;\n        padding: 16px;\n        cursor: pointer;\n        position: relative; }\n:host mat-sidenav-container #board #board-selector .board-list-item .board-name {\n          text-align: center;\n          padding: 16px 0; }\n:host mat-sidenav-container #board #board-selector .board-list-item .selected-icon {\n          position: absolute;\n          top: 0;\n          left: 50%;\n          width: 32px;\n          height: 32px;\n          margin-left: -16px;\n          border-radius: 50%;\n          text-align: center;\n          color: white; }\n:host mat-sidenav-container #board #board-selector .board-list-item .selected-icon i {\n            line-height: 32px !important; }\n:host mat-sidenav-container #board #board-selector .board-list-item.add-new-board {\n          opacity: 0.6; }\n:host mat-sidenav-container #board .board-content-wrapper {\n      position: relative; }\n:host mat-sidenav-container #board .board-content-wrapper .board-content {\n        position: absolute;\n        top: 0;\n        right: 0;\n        bottom: 0;\n        left: 0;\n        height: 100%;\n        overflow-y: hidden;\n        overflow-x: auto;\n        -webkit-overflow-scrolling: touch; }\n:host mat-sidenav-container #board .board-content-wrapper .board-content .list-sortable-placeholder {\n          background: rgba(0, 0, 0, 0.06);\n          margin-right: 24px; }\n:host mat-sidenav-container #board .board-content-wrapper .board-content .new-list-wrapper {\n          width: 344px;\n          min-width: 344px;\n          max-width: 344px;\n          padding-right: 24px; }\n"
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/scrumboard.component.ts":
+/*!****************************************************!*\
+  !*** ./src/app/scrumboard/scrumboard.component.ts ***!
+  \****************************************************/
+/*! exports provided: ScrumboardComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ScrumboardComponent", function() { return ScrumboardComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _fuse_animations__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @fuse/animations */ "./src/@fuse/animations/index.ts");
+/* harmony import */ var _scrumboard_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./scrumboard.service */ "./src/app/scrumboard/scrumboard.service.ts");
+/* harmony import */ var _node_node_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../node/node.service */ "./src/app/node/node.service.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+
+
+var ScrumboardComponent = /** @class */ (function () {
+    function ScrumboardComponent(_activatedRoute, _location, _scrumboardService, _nodeService) {
+        this._activatedRoute = _activatedRoute;
+        this._location = _location;
+        this._scrumboardService = _scrumboardService;
+        this._nodeService = _nodeService;
+        this.lists = [];
+        // Set the private defaults
+        this._unsubscribeAll = new rxjs__WEBPACK_IMPORTED_MODULE_3__["Subject"]();
+    }
+    // -----------------------------------------------------------------------------------------------------
+    // @ Lifecycle hooks
+    // -----------------------------------------------------------------------------------------------------
+    /**
+     * On init
+     */
+    ScrumboardComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this._scrumboardService.onListsChanged
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["takeUntil"])(this._unsubscribeAll))
+            .subscribe(function (lists) {
+            _this.lists = lists;
+        });
+        this._activatedRoute.params.subscribe(function (params) {
+            _this.nodeID = params['id'];
+            _this.nodeType = params['type'];
+        });
+    };
+    /**
+     * On destroy
+     */
+    ScrumboardComponent.prototype.ngOnDestroy = function () {
+        // Unsubscribe from all subscriptions
+        this._unsubscribeAll.next();
+        this._unsubscribeAll.complete();
+    };
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
+    /**
+     * On list add
+     *
+     * @param newListName
+     */
+    ScrumboardComponent.prototype.onListAdd = function (newListName) {
+        if (newListName === '') {
+            return;
+        }
+        this._scrumboardService.addList(newListName, this.lists.length);
+    };
+    /**
+     * Called on list rearrange
+     */
+    ScrumboardComponent.prototype.onDrop = function (ev) {
+        console.log(this.lists);
+        this._scrumboardService.updateTaskListsIndexes(this.lists);
+    };
+    ScrumboardComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'app-scrumboard',
+            template: __webpack_require__(/*! ./scrumboard.component.html */ "./src/app/scrumboard/scrumboard.component.html"),
+            styles: [__webpack_require__(/*! ./scrumboard.component.scss */ "./src/app/scrumboard/scrumboard.component.scss")],
+            encapsulation: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewEncapsulation"].None,
+            animations: _fuse_animations__WEBPACK_IMPORTED_MODULE_5__["fuseAnimations"]
+        }),
+        __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"],
+            _angular_common__WEBPACK_IMPORTED_MODULE_1__["Location"],
+            _scrumboard_service__WEBPACK_IMPORTED_MODULE_6__["ScrumboardService"],
+            _node_node_service__WEBPACK_IMPORTED_MODULE_7__["NodeService"]])
+    ], ScrumboardComponent);
+    return ScrumboardComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/scrumboard.module.ts":
+/*!*************************************************!*\
+  !*** ./src/app/scrumboard/scrumboard.module.ts ***!
+  \*************************************************/
+/*! exports provided: ScrumboardModule */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ScrumboardModule", function() { return ScrumboardModule; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _swimlane_ngx_dnd__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @swimlane/ngx-dnd */ "./node_modules/@swimlane/ngx-dnd/release/index.js");
+/* harmony import */ var _swimlane_ngx_dnd__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_swimlane_ngx_dnd__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _user_user_module__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../user/user.module */ "./src/app/user/user.module.ts");
+/* harmony import */ var _fuse_shared_module__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @fuse/shared.module */ "./src/@fuse/shared.module.ts");
+/* harmony import */ var _fuse_components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @fuse/components */ "./src/@fuse/components/index.ts");
+/* harmony import */ var _scrumboard_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./scrumboard.service */ "./src/app/scrumboard/scrumboard.service.ts");
+/* harmony import */ var _scrumboard_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./scrumboard.component */ "./src/app/scrumboard/scrumboard.component.ts");
+/* harmony import */ var _list_list_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./list/list.component */ "./src/app/scrumboard/list/list.component.ts");
+/* harmony import */ var _list_edit_list_name_edit_list_name_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./list/edit-list-name/edit-list-name.component */ "./src/app/scrumboard/list/edit-list-name/edit-list-name.component.ts");
+/* harmony import */ var _list_add_card_add_card_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./list/add-card/add-card.component */ "./src/app/scrumboard/list/add-card/add-card.component.ts");
+/* harmony import */ var _list_card_card_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./list/card/card.component */ "./src/app/scrumboard/list/card/card.component.ts");
+/* harmony import */ var _add_list_add_list_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./add-list/add-list.component */ "./src/app/scrumboard/add-list/add-list.component.ts");
+/* harmony import */ var _dialogs_card_card_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./dialogs/card/card.component */ "./src/app/scrumboard/dialogs/card/card.component.ts");
+/* harmony import */ var _dialogs_card_label_selector_label_selector_component__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./dialogs/card/label-selector/label-selector.component */ "./src/app/scrumboard/dialogs/card/label-selector/label-selector.component.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var routes = [
+    {
+        path: 'board/:type/:id',
+        component: _scrumboard_component__WEBPACK_IMPORTED_MODULE_8__["ScrumboardComponent"],
+        resolve: {
+            scrumboard: _scrumboard_service__WEBPACK_IMPORTED_MODULE_7__["ScrumboardService"]
+        }
+    }
+];
+var ScrumboardModule = /** @class */ (function () {
+    function ScrumboardModule() {
+    }
+    ScrumboardModule = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["NgModule"])({
+            declarations: [
+                _scrumboard_component__WEBPACK_IMPORTED_MODULE_8__["ScrumboardComponent"],
+                _add_list_add_list_component__WEBPACK_IMPORTED_MODULE_13__["ScrumboardAddListComponent"],
+                _list_list_component__WEBPACK_IMPORTED_MODULE_9__["ScrumboardListComponent"],
+                _list_edit_list_name_edit_list_name_component__WEBPACK_IMPORTED_MODULE_10__["ScrumboardEditListNameComponent"],
+                _list_add_card_add_card_component__WEBPACK_IMPORTED_MODULE_11__["ScrumboardAddCardComponent"],
+                _dialogs_card_card_component__WEBPACK_IMPORTED_MODULE_14__["ScrumboardCardDialogComponent"],
+                _dialogs_card_label_selector_label_selector_component__WEBPACK_IMPORTED_MODULE_15__["ScrumboardLabelSelectorComponent"],
+                _list_card_card_component__WEBPACK_IMPORTED_MODULE_12__["ScrumboardCardComponent"]
+            ],
+            imports: [
+                _angular_router__WEBPACK_IMPORTED_MODULE_1__["RouterModule"].forChild(routes),
+                _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatButtonModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatCheckboxModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatChipsModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDatepickerModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDialogModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatFormFieldModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatIconModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatInputModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatListModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatMenuModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatProgressBarModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatRippleModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatSidenavModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatToolbarModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatTooltipModule"],
+                _swimlane_ngx_dnd__WEBPACK_IMPORTED_MODULE_3__["NgxDnDModule"],
+                _user_user_module__WEBPACK_IMPORTED_MODULE_4__["UserModule"],
+                _fuse_shared_module__WEBPACK_IMPORTED_MODULE_5__["FuseSharedModule"],
+                _fuse_components__WEBPACK_IMPORTED_MODULE_6__["FuseConfirmDialogModule"],
+                _fuse_components__WEBPACK_IMPORTED_MODULE_6__["FuseMaterialColorPickerModule"]
+            ],
+            providers: [
+                _scrumboard_service__WEBPACK_IMPORTED_MODULE_7__["ScrumboardService"],
+                _scrumboard_service__WEBPACK_IMPORTED_MODULE_7__["BoardResolve"]
+            ],
+            entryComponents: [_list_add_card_add_card_component__WEBPACK_IMPORTED_MODULE_11__["ScrumboardAddCardComponent"]],
+            exports: [
+                _scrumboard_component__WEBPACK_IMPORTED_MODULE_8__["ScrumboardComponent"]
+            ]
+        })
+    ], ScrumboardModule);
+    return ScrumboardModule;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/scrumboard/scrumboard.service.ts":
+/*!**************************************************!*\
+  !*** ./src/app/scrumboard/scrumboard.service.ts ***!
+  \**************************************************/
+/*! exports provided: ScrumboardService, BoardResolve */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ScrumboardService", function() { return ScrumboardService; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BoardResolve", function() { return BoardResolve; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var _services_custom_http_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../_services/custom-http.service */ "./src/app/_services/custom-http.service.ts");
+/* harmony import */ var _app_config__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../app.config */ "./src/app/app.config.ts");
+/* harmony import */ var _node_node_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../node/node.service */ "./src/app/node/node.service.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+var ScrumboardService = /** @class */ (function () {
+    /**
+     * Constructor
+     *
+     * @param {HttpClient} _httpClient
+     */
+    function ScrumboardService(_httpClient, http, nodeService) {
+        var _this = this;
+        this._httpClient = _httpClient;
+        this.http = http;
+        this.nodeService = nodeService;
+        this.apiUrl = "" + _app_config__WEBPACK_IMPORTED_MODULE_4__["appConfig"].taskApiUrl;
+        this.projectListsUrl = this.apiUrl + '/project_scrumboard_task_list';
+        this.addEditDeleteListUrl = this.apiUrl + '/scrumboard_task_list/';
+        this.createDeleteUpdateTaskUrl = this.apiUrl + '/delete_update_create_task/';
+        this.taskReorderUrl = this.apiUrl + '/reorder_tasks/';
+        this.onListsChanged = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]([]);
+        this.nodeService.node.subscribe(function (node) {
+            if (node !== null && node.node_type == 'Project') {
+                _this.node = node;
+                _this.getLists(node._id);
+            }
+        });
+    }
+    /** Get Lists for project **/
+    ScrumboardService.prototype.getLists = function (projectId) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.http.get(_this.projectListsUrl + '/' + projectId + '/')
+                .subscribe(function (response) {
+                _this.lists = response;
+                _this.onListsChanged.next(response);
+                resolve(_this.lists);
+            }, reject);
+        });
+    };
+    /**
+     * Add card
+     *
+     * @param listId
+     * @param newCard
+     * @returns {Promise<any>}
+     */
+    ScrumboardService.prototype.addCard = function (newCard, listId) {
+        var _this = this;
+        newCard.node = this.node._id;
+        return new Promise(function (resolve, reject) {
+            console.log(_this.node);
+            _this.http.post(_this.createDeleteUpdateTaskUrl + '?nodeType=' + _this.node.node_type + '&nodeID=' + _this.node._id, newCard)
+                .subscribe(function (response) {
+                var lists = _this.onListsChanged.value;
+                var list = lists.indexOf(lists.filter(function (list) { return list._id == listId; })[0]);
+                lists[list].tasks.push(response);
+                console.log(lists, list);
+                _this.lists = lists;
+                _this.onListsChanged.next(lists);
+            });
+        });
+    };
+    /**
+     * Add list
+     *
+     * @param newList
+     * @returns {Promise<any>}
+     */
+    ScrumboardService.prototype.addList = function (newListName, listIndex) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            var data = {
+                title: newListName,
+                index: listIndex,
+                project_id: _this.node._id
+            };
+            _this.http.post(_this.addEditDeleteListUrl, data)
+                .subscribe(function (response) {
+                _this.onListsChanged.next(_this.onListsChanged.value.concat(response));
+                _this.lists.push(response);
+                resolve(_this.lists);
+            }, reject);
+        });
+    };
+    ScrumboardService.prototype.listChanged = function (listId, listEditData) {
+        return this.http.patch(this.addEditDeleteListUrl + '?project_id=' + this.node._id + '&task_list=' + listId, listEditData);
+    };
+    ScrumboardService.prototype.updateTaskListsIndexes = function (lists) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.http.put(_this.projectListsUrl + '/' + _this.node._id + '/', lists)
+                .subscribe(function (response) {
+                /*
+                this.lists = response
+                this.onListsChanged.next(response)
+                */
+                resolve(_this.lists);
+            }, reject);
+        });
+    };
+    ScrumboardService.prototype.updateTaskIndexes = function (list) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.http.put(_this.taskReorderUrl + '/' + list._id + '/', list.tasks)
+                .subscribe(function (response) {
+                resolve(_this.lists);
+            }, reject);
+        });
+    };
+    /**
+     * Remove list
+     *
+     * @param listId
+     * @returns {Promise<any>}
+     */
+    ScrumboardService.prototype.removeList = function (listId) {
+        // TODO: Add a check here that checks if there are any tasks in list
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            var data = {
+                _id: listId
+            };
+            _this.http.request('delete', _this.addEditDeleteListUrl + '?project_id=' + _this.node._id, data)
+                .subscribe(function (response) {
+                var lists = _this.onListsChanged.value;
+                var list = lists.indexOf(lists.filter(function (list) { return list._id == listId; })[0]);
+                lists.splice(list, 1);
+                _this.onListsChanged.next(lists);
+                _this.lists = lists;
+                resolve(_this.lists);
+            }, reject);
+        });
+    };
+    /**
+     * Remove card
+     *
+     * @param cardId
+     * @param listId
+     */
+    ScrumboardService.prototype.removeCard = function (cardId, listId) {
+    };
+    /**
+     * Update card
+     *
+     * @param newCard
+     */
+    ScrumboardService.prototype.updateCard = function (newCard) {
+    };
+    ScrumboardService = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
+        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"],
+            _services_custom_http_service__WEBPACK_IMPORTED_MODULE_3__["CustomHttpClient"],
+            _node_node_service__WEBPACK_IMPORTED_MODULE_5__["NodeService"]])
+    ], ScrumboardService);
+    return ScrumboardService;
+}());
+
+var BoardResolve = /** @class */ (function () {
+    /**
+     * Constructor
+     *
+     * @param {ScrumboardService} _scrumboardService
+     */
+    function BoardResolve(_scrumboardService) {
+        this._scrumboardService = _scrumboardService;
+    }
+    BoardResolve = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
+        __metadata("design:paramtypes", [ScrumboardService])
+    ], BoardResolve);
+    return BoardResolve;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/shared/message.service.ts":
 /*!*******************************************!*\
   !*** ./src/app/shared/message.service.ts ***!
@@ -11704,10 +13309,6 @@ var TasksComponent = /** @class */ (function () {
     };
     TasksComponent.prototype.openEditDialog = function (task) {
         var _this = this;
-        var dialogConfig = new _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatDialogConfig"]();
-        dialogConfig.autoFocus = true;
-        dialogConfig.width = '350';
-        dialogConfig.height = '500';
         var dialogRef = this.dialog.open(_edit_task_component__WEBPACK_IMPORTED_MODULE_6__["EditTaskComponent"], {
             width: '350',
             height: '500',
@@ -11900,7 +13501,7 @@ var TasksService = /** @class */ (function () {
         // Sends a post request with given data to create the task
         var data = {
             due_date: dueDate,
-            state: 'NEW',
+            status: 'NEW',
             title: taskTitle,
             'assignee': assignee,
             node: nodeID
@@ -13661,14 +15262,12 @@ var UserSearchComponent = /** @class */ (function () {
         this.filteredAssignableUsers = [];
     }
     UserSearchComponent.prototype.ngOnInit = function () {
-        console.log('SearchUser', this.preselectedUser);
         if (this.preselectedUser) {
             this.selectedUser = this.preselectedUser;
             this.filterUsers(this.selectedUser);
         }
     };
     UserSearchComponent.prototype.filterUsers = function (e) {
-        console.log(e, this.selectedUser);
         var that = this;
         if (e.length < 3) {
             this.filteredAssignableUsers = [];
@@ -13676,6 +15275,7 @@ var UserSearchComponent = /** @class */ (function () {
                 selectedUser: e,
                 filteredUsers: this.filteredAssignableUsers
             });
+            return;
         }
         this._userService.searchUsers(this.searchUrl, e)
             .subscribe(function (assignableUsers) {
