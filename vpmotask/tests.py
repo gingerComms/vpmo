@@ -139,7 +139,7 @@ class TaskTestCase(TestCase):
 
         url = reverse("vpmotask:reorder_tasks", kwargs={"task_list_id": str(self.task_list._id)})
 
-        data = [str(self.task["_id"])]
+        data = [self.task]
 
         r = self.client.put(url, json.dumps(data), content_type='application/json')
         print(r.json())
