@@ -10,7 +10,7 @@ from vpmoauth.serializers import UserDetailsSerializer
 from vpmotask.permissions import TaskListPermission, TaskPermission, ProjectTaskListPermissions, TaskReorderPermissions
 from vpmotree.models import TreeStructure, Project
 from vpmotask.models import Task, ScrumboardTaskList
-from vpmotask.serializers import TaskSerializer, ScrumboardTaskListWithTasksSerializer
+from vpmotask.serializers import TaskSerializer, ScrumboardTaskListWithTasksSerializer, TaskListSerializer
 from vpmoauth.models import MyUser, UserRole
 
 from datetime import datetime as dt
@@ -189,7 +189,7 @@ class ScrumboardTaskListView(APIView):
 class TaskIndexUpdateView(generics.UpdateAPIView):
     """ Updates the index(es) and task list of all tasks in a scrumboard-list """
     permission_classes = (IsAuthenticated, TaskReorderPermissions,)
-    serializer_class = TaskSerializer
+    serializer_class = TaskListSerializer
 
     def get_object(self):
         try:

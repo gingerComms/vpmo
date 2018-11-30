@@ -23,7 +23,7 @@ class ScrumboardTaskListWithTasksSerializer(serializers.ModelSerializer):
 
     def get_tasks(self, instance):
         """ Contains a list of tasks assigned to this node """
-        return TaskSerializer(Task.objects.filter(task_list=instance).order_by("task_list_index"), many=True).data
+        return TaskListSerializer(Task.objects.filter(task_list=instance).order_by("task_list_index"), many=True).data
 
     def validate(self, data):
         project_id = self.initial_data.get("project_id", None)
