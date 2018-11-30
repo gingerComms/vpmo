@@ -133,6 +133,19 @@ class TaskTestCase(TestCase):
 
         self.assertEqual(r.status_code, 200)
 
+    def test_task_reorder(self):
+        """ Tests the reordering of tasks """
+        self.test_task_create()
+
+        url = reverse("vpmotask:reorder_tasks", kwargs={"task_list_id": str(self.task_list._id)})
+
+        data = [str(self.task["_id"])]
+
+        r = self.client.put(url, json.dumps(data), content_type='application/json')
+
+        self.assertEqual(r.status_code, 200)
+        print(r.json())
+
 
 class ScrumboardTaskListTestCase(TestCase):
     client = Client()

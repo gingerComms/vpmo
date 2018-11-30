@@ -186,6 +186,39 @@ class ScrumboardTaskListView(APIView):
         return Response(status=status.HTTP_200_OK)
 
 
+class TaskIndexUpdateView(generics.UpdateAPIView):
+    """ Updates the index(es) and task list of all tasks in a scrumboard-list """
+    permission_classes = (IsAuthenticated, TaskListPermission,)
+    serializer_class = ScrumboardTaskListWithTasksSerializer
+
+    def get_object(self):
+        try:
+            return ScrumboardTaskList.objects.get(_id=self.kwargs["task_list_id"])
+        except ScrumboardTaskList.DoesNotExist:
+            return None
+
+    def put(self, request, task_list_id):
+        """ Updates the indexes of tasks in a list based on the input order """
+        task_ids = [str(i["_id"]) for i in request.data.copy()]
+
+        task_list = self.get_object()
+        if task_list is None:
+            return Response({"message": "Task list does not exist"}, status=HTTP_404_NOT_FOUND)
+
+        tasks = Task.objects.get(_id__in=task_ids)
+
+        # We don't need to explicitly remove the tasks to this task list since they should have been removed
+        #   removed in another api call at that point
+        tasks.update(task_list=task_list)
+
+        with transaction.atomic():
+            for task in tasks:
+                task.index = task_ids.indexOf(str(task._id))
+                task.save()
+
+        return Response(self.serializer_class(tasks.order_by("index")).data)
+
+
 class ProjectScrumboardTaskListView(mixins.UpdateModelMixin, generics.ListAPIView):
     """ Returns all task lists for the given project, ordered by the index
         NOTE - For implementation, onInit of the projectScrumboard component in the frontend
