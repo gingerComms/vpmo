@@ -204,7 +204,7 @@ class ProjectScrumboardTaskListView(mixins.UpdateModelMixin, generics.ListAPIVie
 
         #with transaction.atomic():
         for i in to_update:
-            i.index = index_order.index(str(i["_id"]))
+            i.index = index_order.index(str(i._id))
             i.save()
 
         return Response(self.serializer_class(to_update.order_by("index")))
