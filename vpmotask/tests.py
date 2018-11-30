@@ -219,7 +219,7 @@ class ScrumboardTaskListTestCase(TestCase):
         self.assertEqual(r.status_code, 200)
         self.assertEqual(len(r.json()), 1)
 
-    def update_task_list_index_update(self):
+    def test_update_task_list_index_update(self):
         """ Tests the project task-list index PUT endpoint for task lists """
         self.test_task_list_create()
 
