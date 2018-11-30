@@ -40,6 +40,18 @@ class ScrumboardTaskListWithTasksSerializer(serializers.ModelSerializer):
         fields = ("_id", "title", "index", "tasks", "project")
 
 
+class TaskListSerializer(serializers.ModelSerializer):
+    _id = ObjectIdField(read_only=True)
+    node = RelatedObjectIdField(queryset=TreeStructure.objects.all())
+    created_by = RelatedObjectIdField(queryset=MyUser.objects.all())
+    assignee = RelatedObjectIdField(queryset=MyUser.objects.all())
+    due_date = serializers.DateField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d"], allow_null=True, required=False)
+
+    class Meta:
+        model = Task
+        fields = "__all__"
+
+
 class TaskSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
     node = RelatedObjectIdField(queryset=TreeStructure.objects.all())
@@ -47,12 +59,6 @@ class TaskSerializer(serializers.ModelSerializer):
     assignee = UserDetailsSerializer(required=False)
     due_date = serializers.DateField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d"], allow_null=True, required=False)
     task_list = ScrumboardTaskListMinimalSerializer(required=False)
-
-    def get_assignee_name(self, instance):
-        try:
-            return instance.assignee.fullname
-        except:
-            return None
 
     def validate(self, data):
         # Getting the assignee from the initial data passed into serializer
