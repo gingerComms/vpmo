@@ -142,9 +142,9 @@ class TaskTestCase(TestCase):
         data = [str(self.task["_id"])]
 
         r = self.client.put(url, json.dumps(data), content_type='application/json')
+        print(r.json())
 
         self.assertEqual(r.status_code, 200)
-        print(r.json())
 
 
 class ScrumboardTaskListTestCase(TestCase):
