@@ -142,7 +142,6 @@ class TaskTestCase(TestCase):
         data = [self.task]
 
         r = self.client.put(url, json.dumps(data), content_type='application/json')
-        print(r.json())
 
         self.assertEqual(r.status_code, 200)
 
