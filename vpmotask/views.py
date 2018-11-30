@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from vpmoauth.serializers import UserDetailsSerializer
-from vpmotask.permissions import TaskListPermission, TaskPermission
+from vpmotask.permissions import TaskListPermission, TaskPermission, ProjectTaskListPermissions
 from vpmotree.models import TreeStructure, Project
 from vpmotask.models import Task, ScrumboardTaskList
 from vpmotask.serializers import TaskSerializer, ScrumboardTaskListWithTasksSerializer
@@ -191,7 +191,7 @@ class ProjectScrumboardTaskListView(mixins.UpdateModelMixin, generics.ListAPIVie
         NOTE - For implementation, onInit of the projectScrumboard component in the frontend
             call this endpoint with the project id as input to get all task lists
     """
-    permission_classes = (IsAuthenticated, TaskListPermission)
+    permission_classes = (IsAuthenticated, ProjectTaskListPermissions)
     serializer_class = ScrumboardTaskListWithTasksSerializer
 
     def put(self, request, project_id):
