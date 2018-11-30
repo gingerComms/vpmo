@@ -1,6 +1,7 @@
 from django.shortcuts import render
+from django.db import transaction
 
-from rest_framework import generics, status, filters
+from rest_framework import generics, status, filters, mixins
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -185,13 +186,32 @@ class ScrumboardTaskListView(APIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class ProjectScrumboardTaskListView(generics.ListAPIView):
+class ProjectScrumboardTaskListView(mixins.UpdateModelMixin, generics.ListAPIView):
     """ Returns all task lists for the given project, ordered by the index
         NOTE - For implementation, onInit of the projectScrumboard component in the frontend
             call this endpoint with the project id as input to get all task lists
     """
     permission_classes = (IsAuthenticated, TaskListPermission)
     serializer_class = ScrumboardTaskListWithTasksSerializer
+
+    def put(self, request, project_id):
+        """ Updates the index of all project task-lists
+            based on the order of appearance in the input task-lists array
+        """
+        to_update = self.get_queryset()
+
+        index_order = [str(i["_id"]) for i in request.data["taskLists"]]
+
+        #with transaction.atomic():
+        for i in to_update:
+            i.index = index_order.index(str(i["_id"]))
+            i.save()
+
+        return Response(self.serializer_class(to_update.order_by("index")))
+
+    # TODO: Create update endpoint to update index of all task lists under a project
+    #   Use that in the frontend
+    #   The same will need to be done for tasks in a task list as well.
 
     def get_queryset(self):
         try:
