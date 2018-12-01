@@ -30,7 +30,10 @@ class AllNodesListView(ListAPIView):
     serializers = {
         "Team": TeamSerializer,
         "Project": ProjectSerializer,
-        "Deliverable": DeliverableSerializer
+        "Deliverable": DeliverableSerializer,
+        "Issue": IssueSerializer,
+        "Risk": RiskSerializer,
+        "Meeting": MeetingSerializer
     }
 
     def get_queryset(self):
@@ -142,7 +145,9 @@ class CreateNodeView(CreateAPIView):
         mapped_classes = {
             "Project": ProjectSerializer,
             "Deliverable": DeliverableSerializer,
-            "Issue": IssueSerializer
+            "Issue": IssueSerializer,
+            "Risk": RiskSerializer,
+            "Meeting": MeetingSerializer
         }
         return mapped_classes[self.kwargs["nodeType"]]
 
@@ -184,6 +189,8 @@ class RetrieveUpdateNodeView(RetrieveUpdateAPIView):
             "Deliverable": DeliverableSerializer,
             "Team": TeamSerializer,
             "Issue": IssueSerializer,
+            "Risk": RiskSerializer,
+            "Meeting": MeetingSerializer
         }
 
         model = self.get_model()
