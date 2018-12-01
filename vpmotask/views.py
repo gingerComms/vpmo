@@ -282,7 +282,7 @@ class AssignableScrumboardListsView(generics.ListAPIView):
         # Conditional using the logic defined in the doc string
         if node.node_type == "Project":
             project_id = node._id
-        elif node.node_tye == "Topic":
+        elif node.node_type == "Topic":
             project_id = node.path.split(",")[-2]
         else:
             return Response({"message": "Tasks can only be created for Projects and Topics"}, status=status.HTTP_400_BAD_REQUEST)
