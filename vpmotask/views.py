@@ -274,7 +274,7 @@ class AssignableScrumboardListsView(generics.ListAPIView):
         except TreeStructure.DoesNotExist:
             return None
 
-    def get_queryset(self, request):
+    def get_queryset(self):
         node = self.get_node()
         if node is None:
             return Response({"message": "Node not found"}, status=status.HTTP_404_NOT_FOUND)
