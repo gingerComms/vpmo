@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework import fields
 
-from .models import Team, Project, Deliverable, TreeStructure, Topic, Issue
+from .models import Team, Project, Deliverable, Issue, Risk, Meeting
 from vpmoauth.models import UserRole, MyUser
 from vpmoauth.serializers import UserDetailsSerializer
 from vpmoprj.serializers import *
@@ -15,6 +15,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
     project_owner = serializers.SerializerMethodField(required=False)
     start = serializers.DateField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d"], allow_null=True, required=False)
+    finish = serializers.DateField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d"], allow_null=True, required=False)
     user_permissions = serializers.SerializerMethodField(required=False)
     user_role = serializers.SerializerMethodField(required=False)
 
@@ -32,7 +33,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ["_id", "name", "description", "content", "start", "project_owner", "path", "index", "node_type",
+        fields = ["_id", "name", "description", "content", "start", "finish", "project_owner", "path", "index", "node_type",
                 "created_at", "user_permissions", "user_role"]
 
 
@@ -146,21 +147,21 @@ class RiskSerializer(serializers.ModelSerializer):
         # Getting the assignee from the initial data passed into serializer
         assignee_id = self.initial_data.get("assignee_id", None)
         # Validating the rest of the fields
-        data = super(IssueSerializer, self).validate(data)
+        data = super(RiskSerializer, self).validate(data)
         # Setting the foreign key
         if assignee_id:
             data["assignee"] = MyUser.objects.get(_id=assignee_id)
         return data
 
     class Meta:
-        model = Issue
+        model = Risk
         fields = ["_id", "name", "node_type", "path", "index", "due_date", "content", "impact", "probability", "assignee",
                 "topic_type", "user_permissions", "user_role"]
 
 
 class MeetingSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
-    date = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%d %H:%M:%S"], allow_null=True, required=False)
+    date_time = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%d %H:%M:%S"], allow_null=False, required=True)
     topic_type = serializers.SerializerMethodField(required=False)
     user_permissions = serializers.SerializerMethodField(required=False)
     user_role = serializers.SerializerMethodField(required=False)
@@ -175,25 +176,15 @@ class MeetingSerializer(serializers.ModelSerializer):
     def get_topic_type(self, obj):
         return "Meeting"
 
-    def get_assignee_name(self, instance):
-        try:
-            return instance.assignee.fullname
-        except:
-            return None
-
     def validate(self, data):
-        # Getting the assignee from the initial data passed into serializer
-        assignee_id = self.initial_data.get("assignee_id", None)
         # Validating the rest of the fields
-        data = super(IssueSerializer, self).validate(data)
+        data = super(MeetingSerializer, self).validate(data)
         # Setting the foreign key
-        if assignee_id:
-            data["assignee"] = MyUser.objects.get(_id=assignee_id)
         return data
 
     class Meta:
         model = Issue
-        fields = ["_id", "name", "node_type", "path", "index", "date", "content", "venue",
+        fields = ["_id", "name", "node_type", "path", "index", "date_time", "content", "venue",
                 "topic_type", "user_permissions", "user_role"]
 
 

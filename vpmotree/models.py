@@ -78,18 +78,8 @@ class TreeStructure(models.Model):
         return parent
 
     def get_model_class(self):
-        # Return the Node Type if it isn't set to topic
-        if self.node_type != "Topic":
-            return apps.get_model("vpmotree", self.node_type)
-        # Otherwise, try to find each topic attr
-        else:
-            topic_types = ["deliverable", "issue"]
-            for topic_type in topic_types:
-                try:
-                    return getattr(self, topic_type)._meta.model
-                except Exception as e:
-                    continue
-        return
+        return apps.get_model("vpmotree", self.model_name)
+
 
     def get_object(self):
         """ Returns the particular model instance for this treeStructure node """
@@ -265,7 +255,7 @@ class Risk(Topic):
 
 class Meeting(Topic):
 
-    date = models.DateTimeField(auto_now=False, auto_now_add=False)
+    date_time = models.DateTimeField(auto_now=False, auto_now_add=False)
     venue = models.CharField(max_length=150, unique=False)
 
     def save(self, *args, **kwargs):
