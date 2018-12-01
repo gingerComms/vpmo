@@ -244,7 +244,7 @@ class ScrumboardTaskListTestCase(TestCase):
         self.assertEqual(r.status_code, 200)
 
     def test_assignable_task_lists(self):
-        """ Tests the project task-list index PUT endpoint for task lists """
+        """ Tests the assignable task lists for any given node """
         self.test_task_list_create()
 
         url = reverse("vpmotask:assignable_scrumboard_task_listis", kwargs={"node_id": str(self.project._id)})
