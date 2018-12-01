@@ -6830,7 +6830,7 @@ var LoadingService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<alert></alert>\r\n<loading></loading>\r\n\r\n<fuse-main></fuse-main>\r\n"
+module.exports = "<alert></alert>\r\n<loading></loading>\r\n\r\n<!-- THEME OPTIONS PANEL -->\r\n<!--\r\n<button mat-icon-button class=\"warn mat-elevation-z2 theme-options-button\"\r\n        [ngClass]=\"{'right-side-panel': fuseConfig.layout.sidepanel.position === 'right',\r\n                    'side-panel-hidden': fuseConfig.layout.sidepanel.hidden === true}\"\r\n        (click)=\"toggleSidebarOpen('themeOptionsPanel')\">\r\n    <mat-icon>settings</mat-icon>\r\n</button>\r\n\r\n<fuse-sidebar name=\"themeOptionsPanel\" class=\"theme-options-sidebar\" position=\"right\" [invisibleOverlay]=\"true\">\r\n    <fuse-theme-options></fuse-theme-options>\r\n</fuse-sidebar>\r\n-->\r\n<!-- / THEME OPTIONS PANEL -->\r\n\r\n<fuse-main></fuse-main>\r\n"
 
 /***/ }),
 
@@ -6841,7 +6841,7 @@ module.exports = "<alert></alert>\r\n<loading></loading>\r\n\r\n<fuse-main></fus
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = "/**\n * Applies styles for users in high contrast mode. Note that this only applies\n * to Microsoft browsers. Chrome can be included by checking for the `html[hc]`\n * attribute, however Chrome handles high contrast differently.\n */\n/* Theme for the ripple elements.*/\n/* stylelint-disable material/no-prefixes */\n/* stylelint-enable */\n:host {\n  position: relative;\n  display: flex;\n  flex: 1 1 auto;\n  width: 100%;\n  height: 100%;\n  min-width: 0; }\n"
 
 /***/ }),
 
@@ -6856,13 +6856,17 @@ module.exports = ""
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppComponent", function() { return AppComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/esm5/ngx-translate-core.js");
-/* harmony import */ var _fuse_services_splash_screen_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @fuse/services/splash-screen.service */ "./src/@fuse/services/splash-screen.service.ts");
-/* harmony import */ var _fuse_services_translation_loader_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @fuse/services/translation-loader.service */ "./src/@fuse/services/translation-loader.service.ts");
-/* harmony import */ var _fuse_components_navigation_navigation_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @fuse/components/navigation/navigation.service */ "./src/@fuse/components/navigation/navigation.service.ts");
-/* harmony import */ var _navigation_i18n_en__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./navigation/i18n/en */ "./src/app/navigation/i18n/en.ts");
-/* harmony import */ var _navigation_i18n_tr__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./navigation/i18n/tr */ "./src/app/navigation/i18n/tr.ts");
-/* harmony import */ var _services_authentication_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./_services/authentication.service */ "./src/app/_services/authentication.service.ts");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ngx-translate/core */ "./node_modules/@ngx-translate/core/esm5/ngx-translate-core.js");
+/* harmony import */ var _fuse_services_splash_screen_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @fuse/services/splash-screen.service */ "./src/@fuse/services/splash-screen.service.ts");
+/* harmony import */ var _fuse_services_translation_loader_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @fuse/services/translation-loader.service */ "./src/@fuse/services/translation-loader.service.ts");
+/* harmony import */ var _fuse_components_navigation_navigation_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @fuse/components/navigation/navigation.service */ "./src/@fuse/components/navigation/navigation.service.ts");
+/* harmony import */ var _fuse_services_config_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @fuse/services/config.service */ "./src/@fuse/services/config.service.ts");
+/* harmony import */ var _navigation_i18n_en__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./navigation/i18n/en */ "./src/app/navigation/i18n/en.ts");
+/* harmony import */ var _navigation_i18n_tr__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./navigation/i18n/tr */ "./src/app/navigation/i18n/tr.ts");
+/* harmony import */ var _services_authentication_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./_services/authentication.service */ "./src/app/_services/authentication.service.ts");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -6872,6 +6876,13 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (undefined && undefined.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+
+
+
+
 
 
 
@@ -6881,26 +6892,60 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 var AppComponent = /** @class */ (function () {
-    function AppComponent(translate, fuseNavigationService, fuseSplashScreen, fuseTranslationLoader, authService) {
+    function AppComponent(translate, fuseNavigationService, fuseSplashScreen, fuseTranslationLoader, authService, _fuseConfigService, document) {
         this.translate = translate;
         this.fuseNavigationService = fuseNavigationService;
         this.fuseSplashScreen = fuseSplashScreen;
         this.fuseTranslationLoader = fuseTranslationLoader;
         this.authService = authService;
+        this._fuseConfigService = _fuseConfigService;
+        this.document = document;
         this.title = 'app';
         // Add languages
         this.translate.addLangs(['en', 'tr']);
         // Set the default language
         this.translate.setDefaultLang('en');
         // Set the navigation translations
-        this.fuseTranslationLoader.loadTranslations(_navigation_i18n_en__WEBPACK_IMPORTED_MODULE_5__["locale"], _navigation_i18n_tr__WEBPACK_IMPORTED_MODULE_6__["locale"]);
+        this.fuseTranslationLoader.loadTranslations(_navigation_i18n_en__WEBPACK_IMPORTED_MODULE_7__["locale"], _navigation_i18n_tr__WEBPACK_IMPORTED_MODULE_8__["locale"]);
         // Use a language
         this.translate.use('en');
+        // Set the private defaults
+        this._unsubscribeAll = new rxjs__WEBPACK_IMPORTED_MODULE_10__["Subject"]();
     }
     AppComponent.prototype.ngOnInit = function () {
+        var _this = this;
         if (localStorage.getItem("user")) {
             this.authService.user.next(JSON.parse(localStorage.getItem("user")));
         }
+        // Subscribe to config changes
+        this._fuseConfigService.config
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_11__["takeUntil"])(this._unsubscribeAll))
+            .subscribe(function (config) {
+            _this.fuseConfig = config;
+            // Boxed
+            if (_this.fuseConfig.layout.width === 'boxed') {
+                _this.document.body.classList.add('boxed');
+            }
+            else {
+                _this.document.body.classList.remove('boxed');
+            }
+            // Color theme - Use normal for loop for IE11 compatibility
+            for (var i = 0; i < _this.document.body.classList.length; i++) {
+                var className = _this.document.body.classList[i];
+                if (className.startsWith('theme-')) {
+                    _this.document.body.classList.remove(className);
+                }
+            }
+            _this.document.body.classList.add(_this.fuseConfig.colorTheme);
+        });
+    };
+    /**
+     * On destroy
+     */
+    AppComponent.prototype.ngOnDestroy = function () {
+        // Unsubscribe from all subscriptions
+        this._unsubscribeAll.next();
+        this._unsubscribeAll.complete();
     };
     AppComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -6908,11 +6953,13 @@ var AppComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./app.component.html */ "./src/app/app.component.html"),
             styles: [__webpack_require__(/*! ./app.component.scss */ "./src/app/app.component.scss")]
         }),
-        __metadata("design:paramtypes", [_ngx_translate_core__WEBPACK_IMPORTED_MODULE_1__["TranslateService"],
-            _fuse_components_navigation_navigation_service__WEBPACK_IMPORTED_MODULE_4__["FuseNavigationService"],
-            _fuse_services_splash_screen_service__WEBPACK_IMPORTED_MODULE_2__["FuseSplashScreenService"],
-            _fuse_services_translation_loader_service__WEBPACK_IMPORTED_MODULE_3__["FuseTranslationLoaderService"],
-            _services_authentication_service__WEBPACK_IMPORTED_MODULE_7__["AuthenticationService"]])
+        __param(6, Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Inject"])(_angular_common__WEBPACK_IMPORTED_MODULE_1__["DOCUMENT"])),
+        __metadata("design:paramtypes", [_ngx_translate_core__WEBPACK_IMPORTED_MODULE_2__["TranslateService"],
+            _fuse_components_navigation_navigation_service__WEBPACK_IMPORTED_MODULE_5__["FuseNavigationService"],
+            _fuse_services_splash_screen_service__WEBPACK_IMPORTED_MODULE_3__["FuseSplashScreenService"],
+            _fuse_services_translation_loader_service__WEBPACK_IMPORTED_MODULE_4__["FuseTranslationLoaderService"],
+            _services_authentication_service__WEBPACK_IMPORTED_MODULE_9__["AuthenticationService"],
+            _fuse_services_config_service__WEBPACK_IMPORTED_MODULE_6__["FuseConfigService"], Object])
     ], AppComponent);
     return AppComponent;
 }());
@@ -6967,37 +7014,38 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var hammerjs__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(hammerjs__WEBPACK_IMPORTED_MODULE_9__);
 /* harmony import */ var _fuse_fuse_module__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @fuse/fuse.module */ "./src/@fuse/fuse.module.ts");
 /* harmony import */ var _fuse_shared_module__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @fuse/shared.module */ "./src/@fuse/shared.module.ts");
-/* harmony import */ var _fuse_config__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./fuse-config */ "./src/app/fuse-config.ts");
-/* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
-/* harmony import */ var _main_main_module__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./main/main.module */ "./src/app/main/main.module.ts");
-/* harmony import */ var _home_home_module__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./home/home.module */ "./src/app/home/home.module.ts");
-/* harmony import */ var _user_user_module__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./user/user.module */ "./src/app/user/user.module.ts");
-/* harmony import */ var _project_project_module__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./project/project.module */ "./src/app/project/project.module.ts");
-/* harmony import */ var _chat_chat_module__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./chat/chat.module */ "./src/app/chat/chat.module.ts");
-/* harmony import */ var _permissions_permissions_module__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./permissions/permissions.module */ "./src/app/permissions/permissions.module.ts");
-/* harmony import */ var _scrumboard_scrumboard_module__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./scrumboard/scrumboard.module */ "./src/app/scrumboard/scrumboard.module.ts");
-/* harmony import */ var _tasks_tasks_module__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./tasks/tasks.module */ "./src/app/tasks/tasks.module.ts");
-/* harmony import */ var _documents_documents_module__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./documents/documents.module */ "./src/app/documents/documents.module.ts");
-/* harmony import */ var _node_breadcrumbs_node_breadcrumbs_module__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./node-breadcrumbs/node-breadcrumbs.module */ "./src/app/node-breadcrumbs/node-breadcrumbs.module.ts");
-/* harmony import */ var _home_home_component__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./home/home.component */ "./src/app/home/home.component.ts");
-/* harmony import */ var _error_error_component__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./error/error.component */ "./src/app/error/error.component.ts");
-/* harmony import */ var _shared_message_service__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./shared/message.service */ "./src/app/shared/message.service.ts");
-/* harmony import */ var _directives_alert_component__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./_directives/alert.component */ "./src/app/_directives/alert.component.ts");
-/* harmony import */ var _services_alert_service__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./_services/alert.service */ "./src/app/_services/alert.service.ts");
-/* harmony import */ var _services_loading_service__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./_services/loading.service */ "./src/app/_services/loading.service.ts");
-/* harmony import */ var _directives_loading_component__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./_directives/loading.component */ "./src/app/_directives/loading.component.ts");
-/* harmony import */ var _guards_auth_guard__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./_guards/auth.guard */ "./src/app/_guards/auth.guard.ts");
-/* harmony import */ var _services_authentication_service__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./_services/authentication.service */ "./src/app/_services/authentication.service.ts");
-/* harmony import */ var _services_http_cache_service__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./_services/http-cache.service */ "./src/app/_services/http-cache.service.ts");
-/* harmony import */ var _services_cache_interceptor__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./_services/cache.interceptor */ "./src/app/_services/cache.interceptor.ts");
-/* harmony import */ var _helpers_jwt_interceptor__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./_helpers/jwt.interceptor */ "./src/app/_helpers/jwt.interceptor.ts");
-/* harmony import */ var _team_team_module__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./team/team.module */ "./src/app/team/team.module.ts");
-/* harmony import */ var _node_node_module__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./node/node.module */ "./src/app/node/node.module.ts");
-/* harmony import */ var _tree_structure_tree_structure_module__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./tree-structure/tree-structure.module */ "./src/app/tree-structure/tree-structure.module.ts");
-/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
-/* harmony import */ var _services_global_service__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./_services/global.service */ "./src/app/_services/global.service.ts");
-/* harmony import */ var _navigation_navigation_component__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./navigation/navigation.component */ "./src/app/navigation/navigation.component.ts");
-/* harmony import */ var _services_custom_http_service__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./_services/custom-http.service */ "./src/app/_services/custom-http.service.ts");
+/* harmony import */ var _fuse_components__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @fuse/components */ "./src/@fuse/components/index.ts");
+/* harmony import */ var _fuse_config__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./fuse-config */ "./src/app/fuse-config.ts");
+/* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
+/* harmony import */ var _main_main_module__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./main/main.module */ "./src/app/main/main.module.ts");
+/* harmony import */ var _home_home_module__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./home/home.module */ "./src/app/home/home.module.ts");
+/* harmony import */ var _user_user_module__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./user/user.module */ "./src/app/user/user.module.ts");
+/* harmony import */ var _project_project_module__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./project/project.module */ "./src/app/project/project.module.ts");
+/* harmony import */ var _chat_chat_module__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./chat/chat.module */ "./src/app/chat/chat.module.ts");
+/* harmony import */ var _permissions_permissions_module__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./permissions/permissions.module */ "./src/app/permissions/permissions.module.ts");
+/* harmony import */ var _scrumboard_scrumboard_module__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./scrumboard/scrumboard.module */ "./src/app/scrumboard/scrumboard.module.ts");
+/* harmony import */ var _tasks_tasks_module__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./tasks/tasks.module */ "./src/app/tasks/tasks.module.ts");
+/* harmony import */ var _documents_documents_module__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./documents/documents.module */ "./src/app/documents/documents.module.ts");
+/* harmony import */ var _node_breadcrumbs_node_breadcrumbs_module__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./node-breadcrumbs/node-breadcrumbs.module */ "./src/app/node-breadcrumbs/node-breadcrumbs.module.ts");
+/* harmony import */ var _home_home_component__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./home/home.component */ "./src/app/home/home.component.ts");
+/* harmony import */ var _error_error_component__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./error/error.component */ "./src/app/error/error.component.ts");
+/* harmony import */ var _shared_message_service__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./shared/message.service */ "./src/app/shared/message.service.ts");
+/* harmony import */ var _directives_alert_component__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./_directives/alert.component */ "./src/app/_directives/alert.component.ts");
+/* harmony import */ var _services_alert_service__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./_services/alert.service */ "./src/app/_services/alert.service.ts");
+/* harmony import */ var _services_loading_service__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./_services/loading.service */ "./src/app/_services/loading.service.ts");
+/* harmony import */ var _directives_loading_component__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./_directives/loading.component */ "./src/app/_directives/loading.component.ts");
+/* harmony import */ var _guards_auth_guard__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./_guards/auth.guard */ "./src/app/_guards/auth.guard.ts");
+/* harmony import */ var _services_authentication_service__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./_services/authentication.service */ "./src/app/_services/authentication.service.ts");
+/* harmony import */ var _services_http_cache_service__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./_services/http-cache.service */ "./src/app/_services/http-cache.service.ts");
+/* harmony import */ var _services_cache_interceptor__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./_services/cache.interceptor */ "./src/app/_services/cache.interceptor.ts");
+/* harmony import */ var _helpers_jwt_interceptor__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./_helpers/jwt.interceptor */ "./src/app/_helpers/jwt.interceptor.ts");
+/* harmony import */ var _team_team_module__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./team/team.module */ "./src/app/team/team.module.ts");
+/* harmony import */ var _node_node_module__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./node/node.module */ "./src/app/node/node.module.ts");
+/* harmony import */ var _tree_structure_tree_structure_module__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./tree-structure/tree-structure.module */ "./src/app/tree-structure/tree-structure.module.ts");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _services_global_service__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./_services/global.service */ "./src/app/_services/global.service.ts");
+/* harmony import */ var _navigation_navigation_component__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./navigation/navigation.component */ "./src/app/navigation/navigation.component.ts");
+/* harmony import */ var _services_custom_http_service__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./_services/custom-http.service */ "./src/app/_services/custom-http.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7005,6 +7053,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 // Import bugsnag-js and bugsnag-angular
+
 
 
 
@@ -7077,62 +7126,65 @@ var AppModule = /** @class */ (function () {
                 _angular_router__WEBPACK_IMPORTED_MODULE_7__["RouterModule"].forRoot(appRoutes),
                 _ngx_translate_core__WEBPACK_IMPORTED_MODULE_8__["TranslateModule"].forRoot(),
                 // Fuse Main and Shared modules
-                _fuse_fuse_module__WEBPACK_IMPORTED_MODULE_10__["FuseModule"].forRoot(_fuse_config__WEBPACK_IMPORTED_MODULE_12__["fuseConfig"]),
+                _fuse_fuse_module__WEBPACK_IMPORTED_MODULE_10__["FuseModule"].forRoot(_fuse_config__WEBPACK_IMPORTED_MODULE_13__["fuseConfig"]),
                 _fuse_shared_module__WEBPACK_IMPORTED_MODULE_11__["FuseSharedModule"],
-                _main_main_module__WEBPACK_IMPORTED_MODULE_14__["FuseMainModule"],
-                _home_home_module__WEBPACK_IMPORTED_MODULE_15__["HomeModule"],
-                _team_team_module__WEBPACK_IMPORTED_MODULE_36__["TeamModule"],
-                _user_user_module__WEBPACK_IMPORTED_MODULE_16__["UserModule"],
-                _project_project_module__WEBPACK_IMPORTED_MODULE_17__["ProjectModule"],
-                _chat_chat_module__WEBPACK_IMPORTED_MODULE_18__["ChatModule"],
-                _permissions_permissions_module__WEBPACK_IMPORTED_MODULE_19__["PermissionsModule"],
-                _scrumboard_scrumboard_module__WEBPACK_IMPORTED_MODULE_20__["ScrumboardModule"],
-                _tasks_tasks_module__WEBPACK_IMPORTED_MODULE_21__["TasksModule"],
-                _documents_documents_module__WEBPACK_IMPORTED_MODULE_22__["DocumentsModule"],
-                _node_breadcrumbs_node_breadcrumbs_module__WEBPACK_IMPORTED_MODULE_23__["NodeBreadcrumbsModule"],
-                _tree_structure_tree_structure_module__WEBPACK_IMPORTED_MODULE_38__["TreeStructureModule"],
-                _node_node_module__WEBPACK_IMPORTED_MODULE_37__["NodeModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_39__["MatProgressSpinnerModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_39__["MatSnackBarModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_39__["MatInputModule"]
+                _main_main_module__WEBPACK_IMPORTED_MODULE_15__["FuseMainModule"],
+                _fuse_components__WEBPACK_IMPORTED_MODULE_12__["FuseSidebarModule"],
+                _fuse_components__WEBPACK_IMPORTED_MODULE_12__["FuseThemeOptionsModule"],
+                _home_home_module__WEBPACK_IMPORTED_MODULE_16__["HomeModule"],
+                _team_team_module__WEBPACK_IMPORTED_MODULE_37__["TeamModule"],
+                _user_user_module__WEBPACK_IMPORTED_MODULE_17__["UserModule"],
+                _project_project_module__WEBPACK_IMPORTED_MODULE_18__["ProjectModule"],
+                _chat_chat_module__WEBPACK_IMPORTED_MODULE_19__["ChatModule"],
+                _permissions_permissions_module__WEBPACK_IMPORTED_MODULE_20__["PermissionsModule"],
+                _scrumboard_scrumboard_module__WEBPACK_IMPORTED_MODULE_21__["ScrumboardModule"],
+                _tasks_tasks_module__WEBPACK_IMPORTED_MODULE_22__["TasksModule"],
+                _documents_documents_module__WEBPACK_IMPORTED_MODULE_23__["DocumentsModule"],
+                _node_breadcrumbs_node_breadcrumbs_module__WEBPACK_IMPORTED_MODULE_24__["NodeBreadcrumbsModule"],
+                _tree_structure_tree_structure_module__WEBPACK_IMPORTED_MODULE_39__["TreeStructureModule"],
+                _node_node_module__WEBPACK_IMPORTED_MODULE_38__["NodeModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_40__["MatProgressSpinnerModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_40__["MatSnackBarModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_40__["MatInputModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_40__["MatIconModule"]
             ],
             // The components, directives, and pipes that belong to this NgModule
             declarations: [
-                _app_component__WEBPACK_IMPORTED_MODULE_13__["AppComponent"],
-                _home_home_component__WEBPACK_IMPORTED_MODULE_24__["HomeComponent"],
-                _error_error_component__WEBPACK_IMPORTED_MODULE_25__["ErrorComponent"],
-                _directives_alert_component__WEBPACK_IMPORTED_MODULE_27__["AlertComponent"],
-                _directives_loading_component__WEBPACK_IMPORTED_MODULE_30__["LoadingComponent"],
-                _navigation_navigation_component__WEBPACK_IMPORTED_MODULE_41__["NavigationComponent"],
+                _app_component__WEBPACK_IMPORTED_MODULE_14__["AppComponent"],
+                _home_home_component__WEBPACK_IMPORTED_MODULE_25__["HomeComponent"],
+                _error_error_component__WEBPACK_IMPORTED_MODULE_26__["ErrorComponent"],
+                _directives_alert_component__WEBPACK_IMPORTED_MODULE_28__["AlertComponent"],
+                _directives_loading_component__WEBPACK_IMPORTED_MODULE_31__["LoadingComponent"],
+                _navigation_navigation_component__WEBPACK_IMPORTED_MODULE_42__["NavigationComponent"],
             ],
             // The main application view, called the root component, which hosts all other app views
             // Only the root NgModule should set the bootstrap property
             bootstrap: [
-                _app_component__WEBPACK_IMPORTED_MODULE_13__["AppComponent"],
+                _app_component__WEBPACK_IMPORTED_MODULE_14__["AppComponent"],
             ],
             // The subset of declarations that should be visible and 
             // usable in the component templatesof other NgModules
             exports: [
-                _angular_material__WEBPACK_IMPORTED_MODULE_39__["MatButtonModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_39__["MatCardModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_39__["MatListModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_39__["MatIconModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_39__["MatProgressSpinnerModule"]
+                _angular_material__WEBPACK_IMPORTED_MODULE_40__["MatButtonModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_40__["MatCardModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_40__["MatListModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_40__["MatIconModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_40__["MatProgressSpinnerModule"]
             ],
             // Creators of services that this NgModule contributes to the global
             // collection of services; they become accessible in all parts of the app
             providers: [
-                _shared_message_service__WEBPACK_IMPORTED_MODULE_26__["MessageService"],
-                _services_authentication_service__WEBPACK_IMPORTED_MODULE_32__["AuthenticationService"],
-                _services_global_service__WEBPACK_IMPORTED_MODULE_40__["GlobalService"],
-                _guards_auth_guard__WEBPACK_IMPORTED_MODULE_31__["AuthGuard"],
-                _services_alert_service__WEBPACK_IMPORTED_MODULE_28__["AlertService"],
-                _services_loading_service__WEBPACK_IMPORTED_MODULE_29__["LoadingService"],
-                _services_http_cache_service__WEBPACK_IMPORTED_MODULE_33__["HttpCacheService"],
-                _services_custom_http_service__WEBPACK_IMPORTED_MODULE_42__["CustomHttpClient"],
-                { provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_5__["HTTP_INTERCEPTORS"], useClass: _helpers_jwt_interceptor__WEBPACK_IMPORTED_MODULE_35__["JwtInterceptor"], multi: true },
+                _shared_message_service__WEBPACK_IMPORTED_MODULE_27__["MessageService"],
+                _services_authentication_service__WEBPACK_IMPORTED_MODULE_33__["AuthenticationService"],
+                _services_global_service__WEBPACK_IMPORTED_MODULE_41__["GlobalService"],
+                _guards_auth_guard__WEBPACK_IMPORTED_MODULE_32__["AuthGuard"],
+                _services_alert_service__WEBPACK_IMPORTED_MODULE_29__["AlertService"],
+                _services_loading_service__WEBPACK_IMPORTED_MODULE_30__["LoadingService"],
+                _services_http_cache_service__WEBPACK_IMPORTED_MODULE_34__["HttpCacheService"],
+                _services_custom_http_service__WEBPACK_IMPORTED_MODULE_43__["CustomHttpClient"],
+                { provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_5__["HTTP_INTERCEPTORS"], useClass: _helpers_jwt_interceptor__WEBPACK_IMPORTED_MODULE_36__["JwtInterceptor"], multi: true },
                 // { provide: ErrorHandler, useFactory: errorHandlerFactory },
-                { provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_5__["HTTP_INTERCEPTORS"], useClass: _services_cache_interceptor__WEBPACK_IMPORTED_MODULE_34__["CacheInterceptor"], multi: true },
+                { provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_5__["HTTP_INTERCEPTORS"], useClass: _services_cache_interceptor__WEBPACK_IMPORTED_MODULE_35__["CacheInterceptor"], multi: true },
             ],
         })
     ], AppModule);
@@ -11511,7 +11563,7 @@ var ScrumboardAddListComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"dialog-content-wrapper\">\n\n    <mat-toolbar *ngIf=\"card\" matDialogTitle class=\"accent m-0\" fxFlex=\"1 0 auto\" fxLayout=\"row\">\n\n        <div fxFlex fxLayout=\"row\" fxLayoutAlign=\"space-between center\">\n\n            <div fxFlex fxLayout=\"row\" fxLayoutAlign=\"start center\">\n\n                <!-- DUE DATE -->\n                <div class=\"due-date\" fxFlex=\"0 1 auto\">\n\n                    <button *ngIf=\"card.due\" mat-icon-button [matMenuTriggerFor]=\"dueDateMenu\">\n                        <mat-icon>today</mat-icon>\n                    </button>\n\n                    <mat-menu #dueDateMenu=\"matMenu\" [overlapTrigger]=\"false\">\n                        <button mat-menu-item (click)=\"removeDueDate()\">Remove Due Date</button>\n                    </mat-menu>\n\n                    <mat-form-field *ngIf=\"!card.due\">\n                        <input matInput [matDatepicker]=\"menuPicker\" [(ngModel)]=\"card.due\">\n                        <mat-datepicker-toggle matSuffix [for]=\"menuPicker\"></mat-datepicker-toggle>\n                        <mat-datepicker #menuPicker></mat-datepicker>\n                    </mat-form-field>\n\n                </div>\n                <!-- / DUE DATE -->\n\n                <!-- LABELS -->\n                <div class=\"labels\" fxFlex=\"0 1 auto\">\n\n                    <button mat-icon-button [matMenuTriggerFor]=\"labelsMenu\">\n                        <mat-icon>label</mat-icon>\n                    </button>\n\n                    <mat-menu #labelsMenu=\"matMenu\" [overlapTrigger]=\"false\" class=\"scrumboard-labels-menu\">\n\n                        <scrumboard-label-selector [card]=\"card\"\n                                                   (cardLabelsChanged)=\"updateCard()\"></scrumboard-label-selector>\n\n                    </mat-menu>\n\n                </div>\n                <!-- / LABELS -->\n\n                <!-- MEMBERS -->\n                <div class=\"members\" fxFlex=\"0 1 auto\">\n\n                    <button mat-icon-button class=\"\" [matMenuTriggerFor]=\"membersMenu\">\n                        <mat-icon>account_circle</mat-icon>\n                    </button>\n\n                    <mat-menu #membersMenu=\"matMenu\" [overlapTrigger]=\"false\">\n                        <div fxFlex fxLayout=\"column\" class=\"scrumboard-members-menu\"\n                             (click)=\"$event.stopPropagation()\">\n                            <mat-checkbox class=\"member px-16\" [checked]=\"card.idMembers.indexOf(member.id) > -1\"\n                                          *ngFor=\"let member of board.members\"\n                                          (change)=\"toggleInArray(member.id, card.idMembers);updateCard()\">\n                                <div fxLayout=\"row\" fxLayoutAlign=\"start center\">\n                                    <img [alt]=\"member.name\" [src]=\" member.avatar\" class=\"avatar\"/>\n                                    <p class=\"member-name\">{{ member.name }}</p>\n                                </div>\n                            </mat-checkbox>\n                        </div>\n                    </mat-menu>\n\n                </div>\n                <!-- / MEMBERS -->\n\n                <!-- ATTACHMENT -->\n                <button mat-icon-button aria-label=\"Attachment\">\n                    <mat-icon>attachment</mat-icon>\n                </button>\n                <!-- / ATTACHMENT -->\n\n                <!-- CHECKLIST -->\n                <div class=\"due-date \" fxFlex=\"0 1 auto\">\n\n                    <button mat-icon-button class=\"\" [matMenuTriggerFor]=\"checklistMenu\"\n                            #checklistMenuTrigger=\"matMenuTrigger\" (menuOpened)=\"onChecklistMenuOpen()\">\n                        <mat-icon>check_box</mat-icon>\n                    </button>\n\n                    <mat-menu #checklistMenu=\"matMenu\" [overlapTrigger]=\"false\">\n\n                        <form class=\"px-16 py-8\" #newChecklistForm=\"ngForm\" (submit)=\"addChecklist(newChecklistForm)\"\n                              (click)=\"$event.stopPropagation()\"\n                              fxLayout=\"column\" fxLayoutAlign=\"start end\">\n\n                            <mat-form-field appearance=\"outline\" (click)=\"$event.stopPropagation()\" fxFlex>\n                                <mat-label>Checklist title</mat-label>\n                                <input #newCheckListTitleField matInput ngModel #checklistTitle=\"ngModel\"\n                                       name=\"checklistTitle\" required>\n                            </mat-form-field>\n\n                            <button mat-raised-button class=\"mat-accent\" aria-label=\"Add Checklist\"\n                                    [disabled]=\"!newChecklistForm.valid\">Add Checklist\n                            </button>\n\n                        </form>\n\n                    </mat-menu>\n\n                </div>\n                <!-- / CHECKLIST -->\n\n                <!-- SUBSCRIBE -->\n                <div class=\"subscribe \" fxFlex=\"0 1 auto\">\n\n                    <button mat-icon-button [matMenuTriggerFor]=\"subscribeMenu\">\n                        <mat-icon *ngIf=\"card.subscribed\">visibility</mat-icon>\n                        <mat-icon *ngIf=\"!card.subscribed\">visibility_off</mat-icon>\n                    </button>\n\n                    <mat-menu #subscribeMenu=\"matMenu\" [overlapTrigger]=\"false\">\n                        <button *ngIf=\"card.subscribed\" mat-menu-item (click)=\"toggleSubscribe()\">\n                            Unsubscribe\n                        </button>\n                        <button *ngIf=\"!card.subscribed\" mat-menu-item (click)=\"toggleSubscribe()\">\n                            Subscribe\n                        </button>\n                    </mat-menu>\n\n                </div>\n                <!-- / SUBSCRIBE -->\n\n                <!-- OPTIONS -->\n                <div class=\"options \" fxFlex=\"0 1 auto\">\n\n                    <button mat-icon-button class=\"\" [matMenuTriggerFor]=\"optionsMenu\">\n                        <mat-icon>more_horiz</mat-icon>\n                    </button>\n\n                    <mat-menu #optionsMenu=\"matMenu\" [overlapTrigger]=\"false\">\n                        <button mat-menu-item (click)=\"removeCard()\">\n                            Remove Card\n                        </button>\n                    </mat-menu>\n\n                </div>\n                <!-- / OPTIONS -->\n\n            </div>\n\n            <!-- CLOSE DIALOG BUTTON -->\n            <button mat-icon-button (click)=\"matDialogRef.close()\" aria-label=\"Close Dialog\">\n                <mat-icon>close</mat-icon>\n            </button>\n            <!-- / CLOSE DIALOG BUTTON -->\n\n        </div>\n\n    </mat-toolbar>\n\n    <div *ngIf=\"card\" mat-dialog-content class=\"py-24 px-0 m-0\" fusePerfectScrollbar>\n\n        <!-- BREADCRUMB -->\n        <div class=\"card-breadcrumb mt-8 mb-32 px-24\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n            <span>{{board.name}}</span>\n            <mat-icon class=\"s-20\">chevron_right</mat-icon>\n            <span>{{list.name}}</span>\n        </div>\n        <!-- / BREADCRUMB -->\n\n        <div fxLayout=\"row\" fxLayoutAlign=\"start center\">\n\n            <!-- NAME -->\n            <div class=\"card-name px-24\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n                <mat-form-field appearance=\"outline\" class=\"w-100-p\">\n                    <mat-label>Title</mat-label>\n                    <input matInput [(ngModel)]=\"card.name\" required (change)=\"updateCard()\">\n                </mat-form-field>\n            </div>\n            <!-- / NAME -->\n\n            <!-- DUE DATE -->\n            <div *ngIf=\"card.due\" class=\"due-date px-24 pl-0\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n                <mat-form-field appearance=\"outline\" class=\"w-100-p\">\n                    <mat-label>Due Date</mat-label>\n                    <input matInput [matDatepicker]=\"picker\" [(ngModel)]=\"card.due\">\n                    <mat-datepicker-toggle matSuffix [for]=\"picker\"></mat-datepicker-toggle>\n                    <mat-datepicker #picker></mat-datepicker>\n                </mat-form-field>\n            </div>\n            <!-- / DUE DATE -->\n\n        </div>\n\n        <!-- DESCRIPTION -->\n        <div class=\"description px-24 mb-16\">\n            <mat-form-field appearance=\"outline\" class=\"w-100-p\">\n                <mat-label>Description</mat-label>\n                <textarea matInput [(ngModel)]=\"card.description\" columns=\"1\"\n                          mat-maxlength=\"150\" max-rows=\"4\" (change)=\"updateCard()\"></textarea>\n            </mat-form-field>\n        </div>\n        <!-- / DESCRIPTION -->\n\n        <!-- SECTIONS -->\n        <div class=\"sections\">\n\n            <!-- LABELS & MEMBERS SECTION -->\n            <div *ngIf=\"card.idLabels[0] || card.idMembers[0]\" class=\"section\"\n                 fxLayout=\"column\" fxLayout.gt-xs=\"row\">\n\n                <div *ngIf=\"card.idLabels[0]\" fxFlex class=\"labels\">\n\n                    <div class=\"section-header\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n                        <mat-icon class=\"mr-8\">label</mat-icon>\n                        <span class=\"section-title\">Labels</span>\n                    </div>\n\n                    <div class=\"section-content\">\n                        <mat-chip-list class=\"label-chips\">\n                            <mat-chip class=\"label-chip mb-4\"\n                                      *ngFor=\"let labelId of card.idLabels\"\n                                      [ngClass]=\"board.labels | getById:labelId:'color'\"\n                                      fxLayout=\"row\" fxLayoutAlign=\"start center\">\n                                <span>{{board.labels|getById:labelId:'name'}}</span>\n                            </mat-chip>\n                        </mat-chip-list>\n                    </div>\n\n                </div>\n\n                <div *ngIf=\"card.idMembers[0]\" fxFlex class=\"members\">\n\n                    <div class=\"section-header\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n                        <mat-icon class=\"mr-8\">supervisor_account</mat-icon>\n                        <span class=\"section-title\">Members</span>\n                    </div>\n\n                    <div class=\"section-content\">\n                        <div class=\"member-chips\" fxLayout=\"row\" fxLayoutWrap>\n                            <div class=\"member-chip mb-4\" *ngFor=\"let memberId of card.idMembers\"\n                                 fxLayout=\"row\" fxLayoutAlign=\"start center\">\n                                <img class=\"member-chip-avatar\" [src]=\"board.members | getById:memberId:'avatar'\"\n                                     [matTooltip]=\"board.members | getById:memberId:'name'\">\n                            </div>\n                        </div>\n                    </div>\n\n                </div>\n\n            </div>\n            <!-- / LABELS & MEMBERS SECTION -->\n\n            <!-- ATTACHMENTS SECTION -->\n            <div *ngIf=\"card.attachments[0]\" class=\"section\">\n\n                <div class=\"attachments\">\n\n                    <div class=\"section-header\" fxLayout=\"row\" fxLayoutAlign=\"start\">\n                        <mat-icon class=\"mr-8\">attachment</mat-icon>\n                        <span class=\"section-title\">Attachments</span>\n                    </div>\n\n                    <div class=\"section-content\">\n\n                        <div fxLayout=\"column\" fxLayoutAlign=\"start\" fxLayoutWrap fxLayout.gt-sm=\"row\">\n\n                            <div class=\"attachment\" fxFlex=\"33\" *ngFor=\"let item of card.attachments\"\n                                 [ngSwitch]=\"item.type\">\n\n                                <div fxLayout=\"column\" fxLayoutAlign=\"start\" *ngSwitchCase=\"'image'\">\n\n                                    <div class=\"attachment-preview mat-elevation-z1\">\n                                        <img [src]=\"item.src\">\n                                    </div>\n\n                                    <div class=\"attachment-content mt-8\" fxLayout=\"row\"\n                                         fxLayoutAlign=\"start center\">\n\n                                        <div fxFlex>\n\n                                            <div fxLayout=\"row\" fxLayoutAlign=\"start start\">\n                                                <span class=\"attachment-name\">{{item.name}}</span>\n                                                <mat-icon *ngIf=\"card.idAttachmentCover === item.id\"\n                                                          class=\"yellow-700-fg attachment-is-cover\">\n                                                    star\n                                                </mat-icon>\n                                            </div>\n\n                                            <span class=\"attachment-time\">{{item.time}}</span>\n\n                                        </div>\n\n                                        <button mat-icon-button class=\"attachment-actions-button\"\n                                                [matMenuTriggerFor]=\"attachmentActionsMenu\">\n                                            <mat-icon>more_vert</mat-icon>\n                                        </button>\n\n                                        <mat-menu #attachmentActionsMenu=\"matMenu\">\n                                            <button mat-menu-item (click)=\"toggleCoverImage(item.id)\">\n                                                <span *ngIf=\"card.idAttachmentCover !== item.id\">Make Cover</span>\n                                                <span *ngIf=\"card.idAttachmentCover === item.id\">Remove Cover</span>\n                                            </button>\n                                            <button mat-menu-item (click)=\"removeAttachment(item)\">\n                                                Remove Attachment\n                                            </button>\n                                        </mat-menu>\n\n                                    </div>\n\n                                </div>\n\n                                <div *ngSwitchCase=\"'link'\" fxLayout=\"row\">\n                                    <div class=\"attachment-preview mat-elevation-z2\" fxLayout=\"column\"\n                                         fxLayoutAlign=\"center center\">\n                                        <span>LINK</span>\n                                    </div>\n                                    <div class=\"attachment-content\" fxLayout=\"column\">\n                                        <span class=\"attachment-url\">{{item.url}}</span>\n                                        <span class=\"attachment-time\">{{item.time}}</span>\n                                    </div>\n                                </div>\n\n                            </div>\n\n                        </div>\n\n                        <button mat-stroked-button class=\"add-attachment-button\" aria-label=\"add attachment\">\n                            Add an attachment\n                        </button>\n\n                    </div>\n\n                </div>\n\n            </div>\n            <!-- / ATTACHMENTS SECTION -->\n\n            <!-- CHECKLISTS SECTION -->\n            <div class=\"section\" *ngFor=\"let checklist of card.checklists\">\n\n                <div class=\"checklist\">\n\n                    <div class=\"section-header\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n\n                        <mat-icon class=\"mr-8\">check_box</mat-icon>\n                        <span fxFlex class=\"section-title\">{{checklist.name}}</span>\n\n                        <div>\n\n                            <button mat-icon-button class=\"checklist-actions-button\"\n                                    [matMenuTriggerFor]=\"checklistActionsMenu\">\n                                <mat-icon class=\"s-20\">more_vert</mat-icon>\n                            </button>\n\n                            <mat-menu #checklistActionsMenu=\"matMenu\">\n                                <button mat-menu-item (click)=\"removeChecklist(checklist)\">\n                                    <mat-icon>delete</mat-icon>\n                                    <span>Remove Checklist</span>\n                                </button>\n                            </mat-menu>\n\n                        </div>\n\n                    </div>\n\n                    <div class=\"section-content\">\n\n                        <div class=\"checklist-progress\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n\n                            <span class=\"checklist-progress-value\">\n                                {{checklist.checkItemsChecked}} / {{checklist.checkItems.length}}\n                            </span>\n\n                            <mat-progress-bar color=\"accent\" class=\"checklist-progressbar\" mode=\"determinate\"\n                                              value=\"{{100 * checklist.checkItemsChecked / checklist.checkItems.length}}\">\n                            </mat-progress-bar>\n\n                        </div>\n\n                        <div class=\"check-items\">\n\n                            <div class=\"check-item\" *ngFor=\"let checkItem of checklist.checkItems\" fxLayout=\"row\"\n                                 fxLayoutAlign=\"space-between center\">\n\n                                <div fxFlex fxLayout=\"row\" fxLayoutAlign=\"start center\">\n\n                                    <mat-form-field appearance=\"outline\" fxFlex>\n                                        <input matInput [(ngModel)]=\"checkItem.name\">\n                                        <mat-checkbox matPrefix [(ngModel)]=\"checkItem.checked\"\n                                                      (change)=\"updateCheckedCount(checklist)\"\n                                                      aria-label=\"{{checkItem.name}}\">\n                                        </mat-checkbox>\n                                        <button mat-icon-button matSuffix class=\"checklist-actions-button\"\n                                                (click)=\"removeChecklistItem(checkItem, checklist)\">\n                                            <mat-icon class=\"secondary-text\">delete</mat-icon>\n                                        </button>\n                                    </mat-form-field>\n\n                                </div>\n\n                            </div>\n\n                        </div>\n\n                        <form #newCheckItemForm=\"ngForm\" (submit)=\"addCheckItem(newCheckItemForm,checklist)\"\n                              name=\"newCheckItemForm\" class=\"new-check-item-form\"\n                              fxLayout=\"row\" fxLayoutAlign=\"start center\">\n\n                            <div fxLayout=\"row\" fxLayoutAlign=\"start center\" fxFlex>\n\n                                <mat-form-field appearance=\"outline\" class=\"no-errors-spacer mr-16\" fxFlex>\n                                    <input matInput ngModel #checkItem=\"ngModel\" name=\"checkItem\" autocomplete=\"off\"\n                                           placeholder=\"New checklist item\">\n                                </mat-form-field>\n\n                            </div>\n\n                            <button mat-mini-fab color=\"accent\"\n                                    [disabled]=\"!newCheckItemForm.valid || newCheckItemForm.pristine\"\n                                    aria-label=\"Add\">\n                                <mat-icon>add</mat-icon>\n                            </button>\n                        </form>\n\n                    </div>\n                </div>\n            </div>\n            <!-- / CHECKLISTS SECTION -->\n\n            <!-- COMMENTS SECTION -->\n            <div class=\"section\">\n\n                <div class=\"comments\">\n\n                    <div class=\"section-header\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n                        <mat-icon class=\"mr-8\">comment</mat-icon>\n                        <span class=\"section-title\">Comments</span>\n                    </div>\n\n                    <div class=\"section-content\">\n\n                        <form name=\"cardCommentForm\"\n                              #newCommentForm=\"ngForm\" (submit)=\"addNewComment(newCommentForm)\"\n                              class=\"comment new-comment\" fxLayout=\"column\" fxLayoutAlign=\"start\" no-validate>\n\n                            <div fxLayout=\"row\" fxLayoutAlign=\"center center\">\n\n                                <img class=\"comment-member-avatar\" src=\"assets/images/avatars/profile.jpg\">\n\n                                <mat-form-field class=\"mr-12\" appearance=\"outline\" fxFlex>\n                                    <mat-label>Comment</mat-label>\n                                    <input matInput name=\"newComment\" ngModel #newComment=\"ngModel\" required>\n                                </mat-form-field>\n\n                                <button mat-mini-fab class=\"mat-accent\"\n                                        [disabled]=\"!newCommentForm.valid || newCommentForm.pristine\"\n                                        aria-label=\"Add\">\n                                    <mat-icon>add</mat-icon>\n                                </button>\n\n                            </div>\n\n                        </form>\n\n                        <div class=\"comment\" fxLayout=\"row\" fxLayoutAlign=\"start center\"\n                             *ngFor=\"let comment of card.comments\">\n\n                            <img class=\"comment-member-avatar\"\n                                 [src]=\"board.members | getById: comment.idMember:'avatar'\">\n\n                            <div fxLayout=\"column\">\n                                <div class=\"comment-member-name\">\n                                    {{board.members | getById: comment.idMember:'name'}}\n                                </div>\n                                <div class=\"comment-bubble\">{{comment.message}}</div>\n                                <div class=\"comment-time secondary-text\">{{comment.time}}</div>\n                            </div>\n                        </div>\n\n                    </div>\n\n                </div>\n\n            </div>\n            <!-- / COMMENTS SECTION -->\n\n            <!-- ACTIVITIES SECTION -->\n            <div *ngIf=\"card.activities[0]\" class=\"section\">\n\n                <div class=\"activities\">\n\n                    <div class=\"section-header\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n                        <mat-icon class=\"mr-8\">list</mat-icon>\n                        <span class=\"section-title\">Activity</span>\n                    </div>\n\n                    <div class=\"section-content\">\n\n                        <div class=\"activity\" *ngFor=\"let activity of card.activities\" fxLayout=\"row\"\n                             fxLayoutAlign=\"start center\">\n\n                            <img class=\"activity-member-avatar\"\n                                 [src]=\"board.members | getById:activity.idMember:'avatar'\">\n\n                            <div>\n\n                                <div fxLayout=\"row\" fxLayoutAlign=\"start center\">\n\n                                    <div class=\"activity-member-name\">\n                                        {{board.members | getById:activity.idMember:'name'}}\n                                    </div>\n                                    <div class=\"activity-message\">{{activity.message}}</div>\n\n                                </div>\n\n                                <div class=\"activity-time mt-4 secondary-text\">{{activity.time}}</div>\n\n                            </div>\n\n                        </div>\n\n                    </div>\n\n                </div>\n\n            </div>\n            <!-- / ACTIVITIES SECTION -->\n\n        </div>\n        <!-- / SECTIONS -->\n\n    </div>\n\n</div>\n"
+module.exports = "<div class=\"dialog-content-wrapper\">\n\n    <mat-toolbar *ngIf=\"card\" matDialogTitle class=\"accent m-0\" fxFlex=\"1 0 auto\" fxLayout=\"row\">\n\n        <div fxFlex fxLayout=\"row\" fxLayoutAlign=\"space-between center\">\n\n            <div fxFlex fxLayout=\"row\" fxLayoutAlign=\"start center\">\n\n                <!-- DUE DATE -->\n                <div class=\"due-date\" fxFlex=\"0 1 auto\">\n\n                    <!--\n                    <button *ngIf=\"card.due_date\" mat-icon-button [matMenuTriggerFor]=\"dueDateMenu\">\n                        <mat-icon>today</mat-icon>\n                    </button>\n\n                    <mat-menu #dueDateMenu=\"matMenu\" [overlapTrigger]=\"false\">\n                        <button mat-menu-item (click)=\"removeDueDate()\">Remove Due Date</button>\n                    </mat-menu>\n                    -->\n                    <mat-form-field *ngIf=\"card.due_date\">\n                        <input matInput [matDatepicker]=\"menuPicker\" [(ngModel)]=\"card.due_date\" (ngModelChange)=\"updateCard()\">\n                        <mat-datepicker-toggle matSuffix [for]=\"menuPicker\"></mat-datepicker-toggle>\n                        <mat-datepicker #menuPicker></mat-datepicker>\n                    </mat-form-field>\n\n                </div>\n                <!-- / DUE DATE -->\n\n                <!-- OPTIONS -->\n                <div class=\"options \" fxFlex=\"0 1 auto\">\n\n                    <button mat-icon-button class=\"\" [matMenuTriggerFor]=\"optionsMenu\">\n                        <mat-icon>more_horiz</mat-icon>\n                    </button>\n\n                    <mat-menu #optionsMenu=\"matMenu\" [overlapTrigger]=\"false\">\n                        <button mat-menu-item (click)=\"removeCard()\">\n                            Remove Card\n                        </button>\n                    </mat-menu>\n\n                </div>\n                <!-- / OPTIONS -->\n\n            </div>\n\n            <!-- CLOSE DIALOG BUTTON -->\n            <button mat-icon-button (click)=\"matDialogRef.close()\" aria-label=\"Close Dialog\">\n                <mat-icon>close</mat-icon>\n            </button>\n            <!-- / CLOSE DIALOG BUTTON -->\n\n        </div>\n\n    </mat-toolbar>\n\n    <div *ngIf=\"card\" mat-dialog-content class=\"py-24 px-0 m-0\" fusePerfectScrollbar>\n\n        <!-- BREADCRUMB -->\n        <div class=\"card-breadcrumb mt-8 mb-32 px-24\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n            <span>{{list.title}}</span>\n            <mat-icon class=\"s-20\">chevron_right</mat-icon>\n        </div>\n        <!-- / BREADCRUMB -->\n\n        <div fxLayout=\"row\" fxLayoutAlign=\"start center\">\n\n            <!-- NAME -->\n            <div class=\"card-name px-24\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n                <mat-form-field appearance=\"outline\" class=\"w-100-p\">\n                    <mat-label>Title</mat-label>\n                    <input matInput [(ngModel)]=\"card.title\" required (change)=\"updateCard()\">\n                </mat-form-field>\n            </div>\n            <!-- / NAME -->\n\n            <!-- DUE DATE -->\n            <div *ngIf=\"card.due_date\" class=\"due-date px-24 pl-0\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n                <mat-form-field appearance=\"outline\" class=\"w-100-p\">\n                    <mat-label>Due Date</mat-label>\n                    <input matInput [matDatepicker]=\"picker\" [(ngModel)]=\"card.due_date\" (ngModelChange)=\"updateCard()\">\n                    <mat-datepicker-toggle matSuffix [for]=\"picker\"></mat-datepicker-toggle>\n                    <mat-datepicker #picker></mat-datepicker>\n                </mat-form-field>\n            </div>\n            <!-- / DUE DATE -->\n\n        </div>\n\n        <!-- DESCRIPTION -->\n        <div class=\"description px-24 mb-16\">\n            <mat-form-field appearance=\"outline\" class=\"w-100-p\">\n                <mat-label>Description</mat-label>\n                <textarea matInput [(ngModel)]=\"card.content\" columns=\"1\"\n                          mat-maxlength=\"150\" max-rows=\"4\" (change)=\"updateCard()\"></textarea>\n            </mat-form-field>\n        </div>\n        <!-- / DESCRIPTION -->\n\n        <!-- ASSIGNEE -->\n        <user-search appearance=\"outline\" class=\"w-100-p\" class=\"card-assignee px-24\" fxLayout=\"row\" fxLayoutAlign=\"start center\" [preselectedUser]=\"card.assignee.username\" [searchUrl]=\"searchUrl\" (userSelected)=\"assigneeChanged($event)\"></user-search>\n        <!-- / ASSIGNEE -->\n\n        <!-- SECTIONS -->\n        <div class=\"sections\">\n\n\n            <!-- COMMENTS SECTION -->\n            <!-- To be turned into a twilio chat section\n            <div class=\"section\">\n\n                <div class=\"comments\">\n\n                    <div class=\"section-header\" fxLayout=\"row\" fxLayoutAlign=\"start center\">\n                        <mat-icon class=\"mr-8\">comment</mat-icon>\n                        <span class=\"section-title\">Comments</span>\n                    </div>\n\n                    <div class=\"section-content\">\n\n                        <form name=\"cardCommentForm\"\n                              #newCommentForm=\"ngForm\" (submit)=\"addNewComment(newCommentForm)\"\n                              class=\"comment new-comment\" fxLayout=\"column\" fxLayoutAlign=\"start\" no-validate>\n\n                            <div fxLayout=\"row\" fxLayoutAlign=\"center center\">\n\n                                <img class=\"comment-member-avatar\" src=\"assets/images/avatars/profile.jpg\">\n\n                                <mat-form-field class=\"mr-12\" appearance=\"outline\" fxFlex>\n                                    <mat-label>Comment</mat-label>\n                                    <input matInput name=\"newComment\" ngModel #newComment=\"ngModel\" required>\n                                </mat-form-field>\n\n                                <button mat-mini-fab class=\"mat-accent\"\n                                        [disabled]=\"!newCommentForm.valid || newCommentForm.pristine\"\n                                        aria-label=\"Add\">\n                                    <mat-icon>add</mat-icon>\n                                </button>\n\n                            </div>\n\n                        </form>\n\n                        <div class=\"comment\" fxLayout=\"row\" fxLayoutAlign=\"start center\"\n                             *ngFor=\"let comment of card.comments\">\n\n                            <img class=\"comment-member-avatar\"\n                                 [src]=\"board.members | getById: comment.idMember:'avatar'\">\n\n                            <div fxLayout=\"column\">\n                                <div class=\"comment-member-name\">\n                                    {{board.members | getById: comment.idMember:'name'}}\n                                </div>\n                                <div class=\"comment-bubble\">{{comment.message}}</div>\n                                <div class=\"comment-time secondary-text\">{{comment.time}}</div>\n                            </div>\n                        </div>\n\n                    </div>\n\n                </div>\n\n            </div>\n            -->\n            <!-- / COMMENTS SECTION -->\n\n        </div>\n        <!-- / SECTIONS -->\n\n    </div>\n\n</div>\n"
 
 /***/ }),
 
@@ -11542,6 +11594,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _fuse_components_confirm_dialog_confirm_dialog_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @fuse/components/confirm-dialog/confirm-dialog.component */ "./src/@fuse/components/confirm-dialog/confirm-dialog.component.ts");
 /* harmony import */ var _fuse_utils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @fuse/utils */ "./src/@fuse/utils/index.ts");
 /* harmony import */ var _scrumboard_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../scrumboard.service */ "./src/app/scrumboard/scrumboard.service.ts");
+/* harmony import */ var app_app_config__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! app/app.config */ "./src/app/app.config.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -11554,6 +11607,7 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 var __param = (undefined && undefined.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+
 
 
 
@@ -11585,6 +11639,9 @@ var ScrumboardCardDialogComponent = /** @class */ (function () {
      * On init
      */
     ScrumboardCardDialogComponent.prototype.ngOnInit = function () {
+        this.list = this._data.list;
+        this.card = this._data.task;
+        this.searchUrl = "" + app_app_config__WEBPACK_IMPORTED_MODULE_6__["appConfig"].taskApiUrl + '/assignable_task_users/' + this._data.nodeID + '/' + '?nodeType=' + this._data.nodeType + '&search=';
         /*
         this._scrumboardService.onBoardChanged
             .pipe(takeUntil(this._unsubscribeAll))
@@ -11613,21 +11670,7 @@ var ScrumboardCardDialogComponent = /** @class */ (function () {
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
     /**
-     * Remove due date
-     */
-    ScrumboardCardDialogComponent.prototype.removeDueDate = function () {
-        this.card.due = '';
-        this.updateCard();
-    };
-    /**
-     * Toggle subscribe
-     */
-    ScrumboardCardDialogComponent.prototype.toggleSubscribe = function () {
-        this.card.subscribed = !this.card.subscribed;
-        this.updateCard();
-    };
-    /**
-     * Toggle cover image
+     * Toggle cover image - TODO
      *
      * @param attachmentId
      */
@@ -11641,7 +11684,7 @@ var ScrumboardCardDialogComponent = /** @class */ (function () {
         this.updateCard();
     };
     /**
-     * Remove attachment
+     * Remove attachment - TODO
      *
      * @param attachment
      */
@@ -11653,99 +11696,7 @@ var ScrumboardCardDialogComponent = /** @class */ (function () {
         this.updateCard();
     };
     /**
-     * Remove checklist
-     *
-     * @param checklist
-     */
-    ScrumboardCardDialogComponent.prototype.removeChecklist = function (checklist) {
-        this.card.checklists.splice(this.card.checklists.indexOf(checklist), 1);
-        this.updateCard();
-    };
-    /**
-     * Update checked count
-     *
-     * @param list
-     */
-    ScrumboardCardDialogComponent.prototype.updateCheckedCount = function (list) {
-        var checkItems = list.checkItems;
-        var checkedItems = 0;
-        var allCheckedItems = 0;
-        var allCheckItems = 0;
-        for (var _i = 0, checkItems_1 = checkItems; _i < checkItems_1.length; _i++) {
-            var checkItem = checkItems_1[_i];
-            if (checkItem.checked) {
-                checkedItems++;
-            }
-        }
-        list.checkItemsChecked = checkedItems;
-        for (var _a = 0, _b = this.card.checklists; _a < _b.length; _a++) {
-            var item = _b[_a];
-            allCheckItems += item.checkItems.length;
-            allCheckedItems += item.checkItemsChecked;
-        }
-        this.card.checkItems = allCheckItems;
-        this.card.checkItemsChecked = allCheckedItems;
-        this.updateCard();
-    };
-    /**
-     * Remove checklist item
-     *
-     * @param checkItem
-     * @param checklist
-     */
-    ScrumboardCardDialogComponent.prototype.removeChecklistItem = function (checkItem, checklist) {
-        checklist.checkItems.splice(checklist.checkItems.indexOf(checkItem), 1);
-        this.updateCheckedCount(checklist);
-        this.updateCard();
-    };
-    /**
-     * Add check item
-     *
-     * @param {NgForm} form
-     * @param checkList
-     */
-    ScrumboardCardDialogComponent.prototype.addCheckItem = function (form, checkList) {
-        var checkItemVal = form.value.checkItem;
-        if (!checkItemVal || checkItemVal === '') {
-            return;
-        }
-        var newCheckItem = {
-            'name': checkItemVal,
-            'checked': false
-        };
-        checkList.checkItems.push(newCheckItem);
-        this.updateCheckedCount(checkList);
-        form.setValue({ checkItem: '' });
-        this.updateCard();
-    };
-    /**
-     * Add checklist
-     *
-     * @param {NgForm} form
-     */
-    ScrumboardCardDialogComponent.prototype.addChecklist = function (form) {
-        this.card.checklists.push({
-            id: _fuse_utils__WEBPACK_IMPORTED_MODULE_4__["FuseUtils"].generateGUID(),
-            name: form.value.checklistTitle,
-            checkItemsChecked: 0,
-            checkItems: []
-        });
-        form.setValue({ checklistTitle: '' });
-        form.resetForm();
-        this.checklistMenu.closeMenu();
-        this.updateCard();
-    };
-    /**
-     * On checklist menu open
-     */
-    ScrumboardCardDialogComponent.prototype.onChecklistMenuOpen = function () {
-        var _this = this;
-        setTimeout(function () {
-            _this.newCheckListTitleField.nativeElement.focus();
-        });
-    };
-    /**
-     * Add new comment
+     * Add new comment - TODO
      *
      * @param {NgForm} form
      */
@@ -11761,6 +11712,18 @@ var ScrumboardCardDialogComponent = /** @class */ (function () {
         this.updateCard();
     };
     /**
+     * Assignee Changed
+     */
+    ScrumboardCardDialogComponent.prototype.assigneeChanged = function (e) {
+        if (e.filteredUsers && e.filteredUsers.length > 0 && e.selectedUser != this.card.assignee.username) {
+            if (e.filteredUsers.map(function (i) { return i.username; }).indexOf(e.selectedUser) >= 0) {
+                this.card.assignee = e.selectedUser;
+                console.log(e);
+                this.updateCard();
+            }
+        }
+    };
+    /**
      * Remove card
      */
     ScrumboardCardDialogComponent.prototype.removeCard = function () {
@@ -11772,7 +11735,7 @@ var ScrumboardCardDialogComponent = /** @class */ (function () {
         this.confirmDialogRef.afterClosed().subscribe(function (result) {
             if (result) {
                 _this.matDialogRef.close();
-                _this._scrumboardService.removeCard(_this.card.id, _this.list.id);
+                _this._scrumboardService.removeCard(_this.card._id, _this.list._id);
             }
         });
     };
@@ -11780,7 +11743,7 @@ var ScrumboardCardDialogComponent = /** @class */ (function () {
      * Update card
      */
     ScrumboardCardDialogComponent.prototype.updateCard = function () {
-        this._scrumboardService.updateCard(this.card);
+        this._scrumboardService.updateCard(this.card, this.list._id);
     };
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])('checklistMenuTrigger'),
@@ -12300,7 +12263,7 @@ var ScrumboardEditListNameComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"list mat-elevation-z1\" fxLayout=\"column\">\n\n    <!-- LIST HEADER -->\n    <div class=\"list-header\" fxFlex fxLayout=\"row\" fxLayoutAlign=\"space-between center\">\n\n        <scrumboard-edit-list-name\n            fxFlex=\"1 0 auto\"\n            [list]=\"list\"\n            (listNameChanged)=\"onListNameChanged($event)\">\n        </scrumboard-edit-list-name>\n\n        <div fxFlex=\"0 1 auto\">\n            <button mat-icon-button class=\"list-header-option-button\" [matMenuTriggerFor]=\"listMenu\">\n                <mat-icon>more_vert</mat-icon>\n            </button>\n            <mat-menu #listMenu=\"matMenu\">\n                <button mat-menu-item (click)=\"removeList(list._id)\">Remove List</button>\n            </mat-menu>\n        </div>\n\n    </div>\n    <!-- / LIST HEADER -->\n\n    <!-- LIST CONTENT -->\n    <div class=\"list-content\" fxLayout=\"column\">\n\n        <div class=\"list-cards ngx-dnd-container\"\n             [model]=\"list.tasks\" ngxDroppable=\"card\" (drop)=\"onDrop($event)\"\n             fusePerfectScrollbar #listScroll>\n            <scrumboard-card ngxDraggable\n                                   (click)=\"openCardDialog(cardId)\"\n                                   class=\"scrumboard-card ngx-dnd-item\"\n                                   *ngFor=\"let task of list.tasks\"\n                                   [model]=\"task\"\n                                   [card]=\"task\">\n            </scrumboard-card>\n        </div>\n    </div>\n    <!-- / LIST CONTENT -->\n\n    <!-- NEW CARD BUTTON-->\n    <div class=\"list-footer\">\n        <div class=\"add-card-button\"\n            (click)=\"openCardCreateDialog()\"\n            fxLayout=\"row\" fxLayoutAlign=\"start center\">\n            <mat-icon class=\"s-20\">add</mat-icon>\n            <div>Add a card</div>\n        </div>\n        <!--<scrumboard-add-card (cardAdded)=\"onCardAdd($event)\" [nodeID]=\"nodeID\" [nodeType]=\"nodeType\"></scrumboard-add-card>-->\n    </div>\n    <!-- / NEW CARD BUTTON-->\n\n</div>\n"
+module.exports = "<div class=\"list mat-elevation-z1\" fxLayout=\"column\">\n\n    <!-- LIST HEADER -->\n    <div class=\"list-header\" fxFlex fxLayout=\"row\" fxLayoutAlign=\"space-between center\">\n\n        <scrumboard-edit-list-name\n            fxFlex=\"1 0 auto\"\n            [list]=\"list\"\n            (listNameChanged)=\"onListNameChanged($event)\">\n        </scrumboard-edit-list-name>\n\n        <div fxFlex=\"0 1 auto\">\n            <button mat-icon-button class=\"list-header-option-button\" [matMenuTriggerFor]=\"listMenu\">\n                <mat-icon>more_vert</mat-icon>\n            </button>\n            <mat-menu #listMenu=\"matMenu\">\n                <button mat-menu-item (click)=\"removeList(list._id)\">Remove List</button>\n            </mat-menu>\n        </div>\n\n    </div>\n    <!-- / LIST HEADER -->\n\n    <!-- LIST CONTENT -->\n    <div class=\"list-content\" fxLayout=\"column\">\n\n        <div class=\"list-cards ngx-dnd-container\"\n             [model]=\"list.tasks\" ngxDroppable=\"card\" (drop)=\"onDrop($event)\"\n             fusePerfectScrollbar #listScroll>\n            <scrumboard-card ngxDraggable\n                                   (click)=\"openCardDialog(task)\"\n                                   class=\"scrumboard-card ngx-dnd-item\"\n                                   *ngFor=\"let task of list.tasks\"\n                                   [model]=\"task\"\n                                   [card]=\"task\">\n            </scrumboard-card>\n        </div>\n    </div>\n    <!-- / LIST CONTENT -->\n\n    <!-- NEW CARD BUTTON-->\n    <!-- Disabled for now\n    <div class=\"list-footer\">\n        <div class=\"add-card-button\"\n            (click)=\"openCardCreateDialog()\"\n            fxLayout=\"row\" fxLayoutAlign=\"start center\">\n            <mat-icon class=\"s-20\">add</mat-icon>\n            <div>Add a card</div>\n        </div>\n    </div>\n    -->\n    <!-- / NEW CARD BUTTON-->\n\n</div>\n"
 
 /***/ }),
 
@@ -12436,6 +12399,10 @@ var ScrumboardListComponent = /** @class */ (function () {
      */
     ScrumboardListComponent.prototype.removeList = function (listId) {
         var _this = this;
+        if (this.list.tasks.length > 0) {
+            alert('Can not delete a list with tasks.');
+            return;
+        }
         this.confirmDialogRef = this._matDialog.open(_fuse_components_confirm_dialog_confirm_dialog_component__WEBPACK_IMPORTED_MODULE_4__["FuseConfirmDialogComponent"], {
             disableClose: false
         });
@@ -12465,16 +12432,19 @@ var ScrumboardListComponent = /** @class */ (function () {
      *
      * @param cardId
      */
-    ScrumboardListComponent.prototype.openCardDialog = function (cardId) {
+    ScrumboardListComponent.prototype.openCardDialog = function (task) {
         this.dialogRef = this._matDialog.open(_dialogs_card_card_component__WEBPACK_IMPORTED_MODULE_7__["ScrumboardCardDialogComponent"], {
             panelClass: 'scrumboard-card-dialog',
             data: {
-                cardId: cardId,
-                listId: this.list.id
+                task: task,
+                list: this.list,
+                nodeID: this.nodeID,
+                nodeType: this.nodeType
             }
         });
         this.dialogRef.afterClosed()
             .subscribe(function (response) {
+            console.log('Card Detail Dialog closed.');
         });
     };
     /**
@@ -12754,7 +12724,7 @@ var ScrumboardModule = /** @class */ (function () {
                 _scrumboard_service__WEBPACK_IMPORTED_MODULE_7__["ScrumboardService"],
                 _scrumboard_service__WEBPACK_IMPORTED_MODULE_7__["BoardResolve"]
             ],
-            entryComponents: [_list_add_card_add_card_component__WEBPACK_IMPORTED_MODULE_11__["ScrumboardAddCardComponent"]],
+            entryComponents: [_list_add_card_add_card_component__WEBPACK_IMPORTED_MODULE_11__["ScrumboardAddCardComponent"], _dialogs_card_card_component__WEBPACK_IMPORTED_MODULE_14__["ScrumboardCardDialogComponent"]],
             exports: [
                 _scrumboard_component__WEBPACK_IMPORTED_MODULE_8__["ScrumboardComponent"]
             ]
@@ -12936,13 +12906,49 @@ var ScrumboardService = /** @class */ (function () {
      * @param listId
      */
     ScrumboardService.prototype.removeCard = function (cardId, listId) {
+        var _this = this;
+        var data = {
+            _id: cardId
+        };
+        this.http.request('delete', this.createDeleteUpdateTaskUrl + '?nodeType=Project' + '&nodeID=' + this.node._id, data)
+            .subscribe(function (response) {
+            var lists = _this.onListsChanged.value;
+            var list = lists.find(function (list) { return list._id == listId; });
+            var index = lists.indexOf(list);
+            list.tasks.splice(list.tasks.indexOf(list.tasks.find(function (task) { return task._id == cardId; })), 1);
+            lists[index] = list;
+            _this.onListsChanged.next(lists);
+            _this.lists = lists;
+        });
     };
     /**
      * Update card
      *
      * @param newCard
      */
-    ScrumboardService.prototype.updateCard = function (newCard) {
+    ScrumboardService.prototype.updateCard = function (newCard, listId) {
+        var _this = this;
+        var data = {
+            _id: newCard._id,
+            assignee: newCard.assignee,
+            title: newCard.title,
+            status: newCard.status,
+            content: newCard.content,
+            due_date: newCard.due_date
+        };
+        return new Promise(function (resolve, reject) {
+            _this.http.put(_this.createDeleteUpdateTaskUrl + '?nodeType=Project' + '&nodeID=' + _this.node._id, data)
+                .subscribe(function (response) {
+                var lists = _this.onListsChanged.value;
+                var list = lists.find(function (list) { return list._id == listId; });
+                var index = lists.indexOf(list);
+                list.tasks[list.tasks.indexOf(list.tasks.find(function (task) { return task._id == newCard._id; }))] = newCard;
+                lists[index] = list;
+                _this.onListsChanged.next(lists);
+                _this.lists = lists;
+                resolve(_this.lists);
+            }, reject);
+        });
     };
     ScrumboardService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
@@ -13029,7 +13035,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div>\r\n\t<h3>Create Task</h3>\r\n\r\n\t<div>\r\n\t\t<mat-form-field class=\"full-width\">\r\n\t\t  <input [(ngModel)]=\"taskTitle\" matInput placeholder=\"Task Title\">\r\n\t\t</mat-form-field>\r\n\t</div>\r\n\r\n\t<user-search [searchUrl]=\"searchUrl\" (userSelected)=\"userSelected($event)\"></user-search>\r\n\r\n\t<div>\r\n\t\t<mat-form-field class=\"full-width\">\r\n\t\t  <input matInput [matDatepicker]=\"picker\" placeholder=\"Due Date\" [(ngModel)]=\"taskDueDate\">\r\n\t\t  <mat-datepicker-toggle matSuffix [for]=\"picker\"></mat-datepicker-toggle>\r\n\t\t  <mat-datepicker #picker></mat-datepicker>\r\n\t\t</mat-form-field>\r\n\t</div>\r\n\t<div>\r\n\t\t<button [disabled]=\"filteredAssignableUsers.length == 0\" mat-flat-button color=\"primary\" (click)=\"createTask()\">Create Task</button>\r\n\t</div>\r\n</div>"
+module.exports = "<div>\r\n\t<h3>Create Task</h3>\r\n\r\n\t<div>\r\n\t\t<mat-form-field class=\"full-width\">\r\n\t\t  <input [(ngModel)]=\"taskTitle\" matInput placeholder=\"Task Title\">\r\n\t\t</mat-form-field>\r\n\t</div>\r\n\r\n\t<div *ngIf=\"taskLists && taskLists.length > 0\">\r\n\t\t<mat-form-field>\r\n\t\t    <mat-select [(ngModel)]=\"selectedTaskList\">\r\n\t\t        <mat-option *ngFor=\"let taskList of taskLists\" [value]=\"taskList._id\">\r\n\t\t            {{ taskList.title }}\r\n\t\t        </mat-option>\r\n\t\t    </mat-select>\r\n\t\t</mat-form-field>\r\n\t</div>\r\n\r\n\t<user-search [searchUrl]=\"searchUrl\" (userSelected)=\"userSelected($event)\"></user-search>\r\n\r\n\t<div>\r\n\t\t<mat-form-field class=\"full-width\">\r\n\t\t  <input matInput [matDatepicker]=\"picker\" placeholder=\"Due Date\" [(ngModel)]=\"taskDueDate\">\r\n\t\t  <mat-datepicker-toggle matSuffix [for]=\"picker\"></mat-datepicker-toggle>\r\n\t\t  <mat-datepicker #picker></mat-datepicker>\r\n\t\t</mat-form-field>\r\n\t</div>\r\n\t<div>\r\n\t\t<button [disabled]=\"filteredAssignableUsers.length == 0\" mat-flat-button color=\"primary\" (click)=\"createTask()\">Create Task</button>\r\n\t</div>\r\n</div>"
 
 /***/ }),
 
@@ -13064,24 +13070,38 @@ var __param = (undefined && undefined.__param) || function (paramIndex, decorato
 
 
 var CreateTasksComponent = /** @class */ (function () {
-    function CreateTasksComponent(_tasksService, data) {
+    function CreateTasksComponent(_tasksService, dialogRef, data) {
         this._tasksService = _tasksService;
+        this.dialogRef = dialogRef;
         this.data = data;
         this.title = 'Create Tasks';
+        this.taskLists = [];
         this.filteredAssignableUsers = [];
     }
     CreateTasksComponent.prototype.ngOnInit = function () {
         this.nodeID = this.data.nodeID;
         this.nodeType = this.data.nodeType;
         this.searchUrl = "" + _app_config__WEBPACK_IMPORTED_MODULE_3__["appConfig"].taskApiUrl + '/assignable_task_users/' + this.nodeID + '/' + '?nodeType=' + this.nodeType + '&search=';
+        this.getTaskLists(this.nodeID);
+    };
+    CreateTasksComponent.prototype.getTaskLists = function (nodeID) {
+        var _this = this;
+        this._tasksService.getTaskLists(this.nodeID)
+            .subscribe(function (response) {
+            _this.taskLists = response.map(function (list) {
+                return { _id: list._id, title: list.title };
+            });
+        });
     };
     CreateTasksComponent.prototype.createTask = function () {
-        if (!this.taskTitle || !this.taskDueDate || !this.selectedUser || this.filteredAssignableUsers.length == 0) {
+        var _this = this;
+        console.log(this.selectedTaskList);
+        if (!this.taskTitle || !this.taskDueDate || !this.selectedUser || this.filteredAssignableUsers.length == 0 || !this.selectedTaskList) {
             alert('Missing Data');
             return;
         }
-        this._tasksService.createTask(this.nodeID, this.nodeType, this.taskDueDate, this.selectedUser, this.taskTitle)
-            .subscribe(function (resp) { return alert('Task Created'); });
+        this._tasksService.createTask(this.nodeID, this.nodeType, this.taskDueDate, this.selectedUser, this.taskTitle, this.selectedTaskList)
+            .subscribe(function (resp) { return _this.dialogRef.close(); });
     };
     CreateTasksComponent.prototype.userSelected = function (e) {
         this.filteredAssignableUsers = e.filteredUsers;
@@ -13093,8 +13113,9 @@ var CreateTasksComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./create-tasks.component.html */ "./src/app/tasks/create-tasks.component.html"),
             styles: [__webpack_require__(/*! ./create-tasks.component.css */ "./src/app/tasks/create-tasks.component.css")]
         }),
-        __param(1, Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_2__["MAT_DIALOG_DATA"])),
-        __metadata("design:paramtypes", [_tasks_service__WEBPACK_IMPORTED_MODULE_1__["TasksService"], Object])
+        __param(2, Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_2__["MAT_DIALOG_DATA"])),
+        __metadata("design:paramtypes", [_tasks_service__WEBPACK_IMPORTED_MODULE_1__["TasksService"],
+            _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDialogRef"], Object])
     ], CreateTasksComponent);
     return CreateTasksComponent;
 }());
@@ -13217,7 +13238,7 @@ module.exports = ":host {\r\n\twidth: 100%;\r\n}\r\n\r\n.mat-table {\r\n\twidth:
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"nodeID\">\r\n\t<button mat-icon-button class=\"white-icon\" (click)=\"openCreateTasksDialog()\" >\r\n        <mat-icon> add </mat-icon>\r\n    </button>\r\n\r\n\t<table mat-table [dataSource]=\"assignedTasks\" *ngIf=\"getUser()\">\r\n\t\t<ng-container matColumnDef=\"title\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Title </th>\r\n\t        <td mat-cell *matCellDef=\"let task\"> {{ task.title }} </td>\r\n\t    </ng-container>\r\n\t    <ng-container matColumnDef=\"assignee_name\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Assignee </th>\r\n\t        <td mat-cell *matCellDef=\"let task\">\r\n\t        \t<span *ngIf=\"task.assignee\">{{ task.assignee.fullname }}</span>\r\n\t        </td>\r\n\t    </ng-container>\r\n\t    <ng-container matColumnDef=\"due_date\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Due Date </th>\r\n\t        <td mat-cell *matCellDef=\"let task\"> {{ task.due_date }} </td>\r\n\t    </ng-container>\r\n\t    <ng-container matColumnDef=\"status\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Status </th>\r\n\t        <td mat-cell *matCellDef=\"let task\">\r\n\r\n\t        \t<mat-form-field *ngIf=\"getUser()._id == task.assignee._id\">\r\n\t\t\t\t\t<mat-select [(value)]=\"task.status\" (selectionChange)=\"changeTaskStatus($event.value, task)\">\r\n\t\t\t\t\t<mat-option *ngFor=\"let status of taskStatusList\" [value]=\"status.value\">\r\n\t\t\t\t\t\t{{ status.text }}\r\n\t\t\t\t\t</mat-option>\r\n\t\t\t\t\t</mat-select>\r\n\t\t\t\t</mat-form-field>\r\n\r\n\t\t\t\t\t\t<span *ngIf=\"getUser()._id != task.assignee._id\">\r\n\t        \t\t{{ task.status }}\r\n\t        \t</span>\r\n\t        </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"utils\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Utils </th>\r\n\t        <td mat-cell *matCellDef=\"let task\"> \r\n\t        \t<button mat-icon-button class=\"white-icon\" (click)=\"deleteTask(task)\" >\r\n\t\t\t        <mat-icon> delete </mat-icon>\r\n\t\t\t    </button>\r\n\t\t\t    <button mat-icon-button class=\"white-icon\" (click)=\"openEditDialog(task)\" >\r\n\t\t\t        <mat-icon> edit </mat-icon>\r\n\t\t\t    </button>\r\n\t        </td>\r\n\t    </ng-container>\r\n\r\n\t    <tr mat-header-row *matHeaderRowDef=\"displayedColumns\"></tr>\r\n\t    <tr mat-row *matRowDef=\"let row; columns: displayedColumns\"></tr>\r\n\r\n\t</table>\r\n</div>"
+module.exports = "<div *ngIf=\"nodeID\">\r\n\t<button mat-icon-button class=\"white-icon\" (click)=\"openCreateTasksDialog()\" >\r\n        <mat-icon> add </mat-icon>\r\n    </button>\r\n\r\n\t<table mat-table [dataSource]=\"assignedTasks\" *ngIf=\"getUser()\">\r\n\t\t<ng-container matColumnDef=\"title\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Title </th>\r\n\t        <td mat-cell *matCellDef=\"let task\"> {{ task.title }} </td>\r\n\t    </ng-container>\r\n\t    <ng-container matColumnDef=\"assignee_name\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Assignee </th>\r\n\t        <td mat-cell *matCellDef=\"let task\">\r\n\t        \t<span *ngIf=\"task.assignee\">{{ task.assignee.fullname }}</span>\r\n\t        </td>\r\n\t    </ng-container>\r\n\t    <ng-container matColumnDef=\"due_date\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Due Date </th>\r\n\t        <td mat-cell *matCellDef=\"let task\"> {{ task.due_date }} </td>\r\n\t    </ng-container>\r\n\t    <ng-container matColumnDef=\"task_list\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Task List </th>\r\n\t        <td mat-cell *matCellDef=\"let task\"> {{ task.task_list.title }} </td>\r\n\t    </ng-container>\r\n\t    <ng-container matColumnDef=\"status\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Status </th>\r\n\t        <td mat-cell *matCellDef=\"let task\">\r\n\r\n\t        \t<mat-form-field *ngIf=\"getUser()._id == task.assignee._id\">\r\n\t\t\t\t\t<mat-select [(value)]=\"task.status\" (selectionChange)=\"changeTaskStatus($event.value, task)\">\r\n\t\t\t\t\t<mat-option *ngFor=\"let status of taskStatusList\" [value]=\"status.value\">\r\n\t\t\t\t\t\t{{ status.text }}\r\n\t\t\t\t\t</mat-option>\r\n\t\t\t\t\t</mat-select>\r\n\t\t\t\t</mat-form-field>\r\n\r\n\t\t\t\t\t\t<span *ngIf=\"getUser()._id != task.assignee._id\">\r\n\t        \t\t{{ taskStatusMap[task.status] }}\r\n\t        \t</span>\r\n\t        </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"utils\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Utils </th>\r\n\t        <td mat-cell *matCellDef=\"let task\"> \r\n\t        \t<button mat-icon-button class=\"white-icon\" (click)=\"deleteTask(task)\" >\r\n\t\t\t        <mat-icon> delete </mat-icon>\r\n\t\t\t    </button>\r\n\t\t\t    <button mat-icon-button class=\"white-icon\" (click)=\"openEditDialog(task)\" >\r\n\t\t\t        <mat-icon> edit </mat-icon>\r\n\t\t\t    </button>\r\n\t        </td>\r\n\t    </ng-container>\r\n\r\n\t    <tr mat-header-row *matHeaderRowDef=\"displayedColumns\"></tr>\r\n\t    <tr mat-row *matRowDef=\"let row; columns: displayedColumns\"></tr>\r\n\r\n\t</table>\r\n</div>"
 
 /***/ }),
 
@@ -13265,12 +13286,17 @@ var TasksComponent = /** @class */ (function () {
         this.nodeService = nodeService;
         this.title = 'Tasks';
         this.assignedTasks = [];
-        this.displayedColumns = ['title', 'assignee_name', 'due_date', 'status', 'utils'];
+        this.displayedColumns = ['title', 'assignee_name', 'due_date', 'status', 'utils', 'task_list'];
         this.taskStatusList = [
             { value: 'NEW', text: 'New' },
             { value: 'IN_PROGRESS', text: 'In Progress' },
             { value: 'COMPLETE', text: 'Complete' }
         ];
+        this.taskStatusMap = {
+            'NEW': 'New',
+            'IN_PROGRESS': 'In Progress',
+            'COMPLETE': 'Complete'
+        };
     }
     TasksComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -13488,23 +13514,28 @@ var TasksService = /** @class */ (function () {
         this.getAssignedTasksUrl = this.apiUrl + '/list_assigned_tasks/';
         this.getAssignableUsersUrl = this.apiUrl + '/assignable_task_users/';
         this.createDeleteUpdateTaskUrl = this.apiUrl + '/delete_update_create_task/';
+        this.taskListsGetUrl = this.apiUrl + '/assignable_scrumboard_task_lists/';
     }
     TasksService.prototype.getAssignedTasks = function (nodeID) {
         // Returns the list of tasks assigned to the user
         return this.http.get(this.getAssignedTasksUrl + nodeID + '/');
     };
+    TasksService.prototype.getTaskLists = function (nodeID) {
+        return this.http.get(this.taskListsGetUrl + nodeID + '/');
+    };
     TasksService.prototype.getAssignableUsers = function (nodeID, nodeType, searchQuery) {
         // Returns a filtered (searched) observable of a list of users that can be assigned a task for a node
         return this.http.get(this.getAssignableUsersUrl + nodeID + '/?nodeType=' + nodeType + '&search=' + searchQuery);
     };
-    TasksService.prototype.createTask = function (nodeID, nodeType, dueDate, assignee, taskTitle) {
+    TasksService.prototype.createTask = function (nodeID, nodeType, dueDate, assignee, taskTitle, taskList) {
         // Sends a post request with given data to create the task
         var data = {
             due_date: dueDate,
             status: 'NEW',
             title: taskTitle,
             'assignee': assignee,
-            node: nodeID
+            node: nodeID,
+            task_list_id: taskList
         };
         return this.http.post(this.createDeleteUpdateTaskUrl + '?nodeType=' + nodeType + '&nodeID=' + nodeID, data);
     };
