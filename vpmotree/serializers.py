@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework import fields
 
-from .models import Team, Project, Deliverable, Issue, Risk, Meeting
+from .models import Team, Project, Deliverable, Issue, Risk, Meeting, TreeStructure
 from vpmoauth.models import UserRole, MyUser
 from vpmoauth.serializers import UserDetailsSerializer
 from vpmoprj.serializers import *
