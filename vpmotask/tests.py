@@ -224,7 +224,7 @@ class ScrumboardTaskListTestCase(TestCase):
         """ Tests the project GET endpoint for a project's task lists """
         self.test_task_list_create()
 
-        url = reverse("vpmotask:project_scrumboard_task_list", kwargs={"project_id": str(self.project._id)})
+        url = reverse("vpmotask:project_scrumboard_task_list", kwargs={"node_id": str(self.project._id)})
 
         r = self.client.get(url)
 
@@ -235,10 +235,23 @@ class ScrumboardTaskListTestCase(TestCase):
         """ Tests the project task-list index PUT endpoint for task lists """
         self.test_task_list_create()
 
-        url = reverse("vpmotask:project_scrumboard_task_list", kwargs={"project_id": str(self.project._id)})
+        url = reverse("vpmotask:project_scrumboard_task_list", kwargs={"node_id": str(self.project._id)})
 
         data = [self.task_list]
 
         r = self.client.put(url, json.dumps(data), content_type='application/json')
 
         self.assertEqual(r.status_code, 200)
+
+    def test_assignable_task_lists(self):
+        """ Tests the project task-list index PUT endpoint for task lists """
+        self.test_task_list_create()
+
+        url = reverse("vpmotask:assignable_scrumboard_task_listis", kwargs={"node_id": str(self.project._id)})
+
+        data = [self.task_list]
+
+        r = self.client.get(url)
+
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(len(r.json()), 1)

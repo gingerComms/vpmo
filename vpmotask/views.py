@@ -7,10 +7,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from vpmoauth.serializers import UserDetailsSerializer
-from vpmotask.permissions import TaskListPermission, TaskPermission, ProjectTaskListPermissions, TaskReorderPermissions
+from vpmotask.permissions import *
 from vpmotree.models import TreeStructure, Project
 from vpmotask.models import Task, ScrumboardTaskList
-from vpmotask.serializers import TaskSerializer, ScrumboardTaskListWithTasksSerializer, TaskListSerializer
+from vpmotask.serializers import *
 from vpmoauth.models import MyUser, UserRole
 
 from datetime import datetime as dt
@@ -224,10 +224,10 @@ class ProjectScrumboardTaskListView(mixins.UpdateModelMixin, generics.ListAPIVie
         NOTE - For implementation, onInit of the projectScrumboard component in the frontend
             call this endpoint with the project id as input to get all task lists
     """
-    permission_classes = (IsAuthenticated, ProjectTaskListPermissions)
+    permission_classes = (IsAuthenticated, NodeUpdateLevelPermissions)
     serializer_class = ScrumboardTaskListWithTasksSerializer
 
-    def put(self, request, project_id):
+    def put(self, request, node_id):
         """ Updates the index of all project task-lists
             based on the order of appearance in the input task-lists array
         """
@@ -248,11 +248,46 @@ class ProjectScrumboardTaskListView(mixins.UpdateModelMixin, generics.ListAPIVie
 
     def get_queryset(self):
         try:
-            project = Project.objects.get(_id=self.kwargs["project_id"])
+            project = Project.objects.get(_id=self.kwargs["node_id"])
         except Project.DoesNotExist:
             return Response({"message": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
 
         return ScrumboardTaskList.objects.filter(project=project).order_by("index")
+
+
+class AssignableScrumboardListsView(generics.ListAPIView):
+    """ Returns the lists assigined to the first project in
+        the given node's tree branch.
+        For project level nodes, the lists assigned are the lists in 
+            the project itself.
+        For topic level nodes, the lists assigned are the lists in
+            *** the last node in the topic's path ** since the parent of
+            all topics is a project
+    """
+    permission_classes = (IsAuthenticated, NodeUpdateLevelPermissions)
+    serializer_class = ScrumboardTaskListMinimalSerializer
+
+    def get_node(self):
+        """ Returns the node defined in the url parameter """
+        try:
+            return TreeStructure.objects.get(_id=self.kwargs["node_id"])
+        except TreeStructure.DoesNotExist:
+            return None
+
+    def get_queryset(self, request):
+        node = self.get_node()
+        if node is None:
+            return Response({"message": "Node not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        # Conditional using the logic defined in the doc string
+        if node.node_type == "Project":
+            project_id = node._id
+        elif node.node_tye == "Topic":
+            project_id = node.path.split(",")[-2]
+        else:
+            return Response({"message": "Tasks can only be created for Projects and Topics"}, status=status.HTTP_400_BAD_REQUEST)
+
+        return ScrumboardTaskList.objects.filter(project___id=project_id).order_by("index")
 
 
 

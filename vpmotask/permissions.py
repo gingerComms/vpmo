@@ -63,9 +63,9 @@ class TaskReorderPermissions(permissions.BasePermission):
         return False
 
 
-class ProjectTaskListPermissions(permissions.BasePermission):
+class NodeUpdateLevelPermissions(permissions.BasePermission):
     def has_permission(self, request, view):
-        node = view.kwargs["project_id"]
+        node = view.kwargs["node_id"]
         node = TreeStructure.objects.get(_id=node)
         node = node.get_object()
 

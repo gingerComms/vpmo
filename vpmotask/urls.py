@@ -10,5 +10,6 @@ urlpatterns = [
     path(r"api/reorder_tasks/<str:task_list_id>/", TaskIndexUpdateView.as_view(), name="reorder_tasks"),
 
     path(r"api/scrumboard_task_list/", ScrumboardTaskListView.as_view(), name="scrumboard_task_list"),
-    path(r"api/project_scrumboard_task_list/<str:project_id>/", ProjectScrumboardTaskListView.as_view(), name="project_scrumboard_task_list")
+    path(r"api/project_scrumboard_task_list/<str:node_id>/", ProjectScrumboardTaskListView.as_view(), name="project_scrumboard_task_list"),
+    path(r"api/assignable_scrumboard_task_listis/<str:node_id>/", AssignableScrumboardListsView.as_view(), name="assignable_scrumboard_task_listis")
 ]
