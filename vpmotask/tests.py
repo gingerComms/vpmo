@@ -247,7 +247,7 @@ class ScrumboardTaskListTestCase(TestCase):
         """ Tests the assignable task lists for any given node """
         self.test_task_list_create()
 
-        url = reverse("vpmotask:assignable_scrumboard_task_listis", kwargs={"node_id": str(self.project._id)})
+        url = reverse("vpmotask:assignable_scrumboard_task_lists", kwargs={"node_id": str(self.project._id)})
 
         data = [self.task_list]
 
