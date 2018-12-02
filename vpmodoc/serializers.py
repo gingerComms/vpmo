@@ -52,7 +52,7 @@ class TaskDocumentSerializer(BaseDocumentSerializer, serializers.ModelSerializer
 
     def get_document_name(self, instance):
         try:
-            return instance.document.name.replace("{}/".format(str(instance.task._id)), "")
+            return instance.document.name.replace("{}/{}/".format(str(instance.task.node._id), str(instance.task._id)), "")
         except ValueError:
             return None
 
