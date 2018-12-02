@@ -116,7 +116,7 @@ class TaskDocumentsTestCase(TestCase):
         self.project.save()
         self.project_admin.assign_role("project_admin", self.project, test=True)
 
-        self.task = Task(node=project, title="TestTask", assignee=self.project_admin, status="NEW")
+        self.task = Task(node=self.project, title="TestTask", assignee=self.project_admin, status="NEW")
         self.task.save()
 
         self.client.force_login(self.project_admin)
