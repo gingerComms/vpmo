@@ -139,7 +139,7 @@ class TaskDocumentsTestCase(TestCase):
     def test_document_delete(self):
         """ Tests the DELETE endpoint for deleting taskDocs + s3 file """
         new_doc = self.create_document()
-        url = reverse("vpmodoc:delete_task_document", kwargs={"taskID": str(self.task._id), "docID": str(new_doc._id)})
+        url = reverse("vpmodoc:destroy_task_document", kwargs={"taskID": str(self.task._id), "docID": str(new_doc._id)})
 
         r = self.client.delete(url)
 
