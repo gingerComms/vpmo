@@ -6,7 +6,8 @@ from create_base_permissions import create_base_permissions
 
 from vpmotree.models import Project
 from vpmoauth.models import MyUser
-from vpmodoc.models import NodeDocument
+from vpmodoc.models import NodeDocument, TaskDocument
+from vpmotask.models import Task
 
 import json
 
