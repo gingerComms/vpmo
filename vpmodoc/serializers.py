@@ -66,4 +66,4 @@ class TaskDocumentMinimalSerializer(BaseDocumentSerializer, serializers.ModelSer
 
     class Meta:
         model = TaskDocument
-        fields = ["_id", "document_name", "document_url"]
+        fields = ["_id", "document_name", "document_url", "uploaded_at"]
