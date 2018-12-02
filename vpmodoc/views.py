@@ -174,7 +174,7 @@ class CreateTaskDocumentView(generics.CreateAPIView):
 
 		try:
 			create_data = {
-				"document": data["fileName"],
+				"document": TaskDocument.gen_filename(task, data["fileName"]),
 				"task": task,
 				"uploaded_by": request.user
 			}
