@@ -57,7 +57,8 @@ class TaskListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
-        fields = "__all__"
+        fields = ["_id", "node", "created_by", "assignee", "due_date", "task_list", "documents", "title",
+                    "content", "created_at", "status", "closed_at", "task_list_index"]
 
 
 class TaskSerializer(serializers.ModelSerializer):
