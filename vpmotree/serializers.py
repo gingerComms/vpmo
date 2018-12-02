@@ -183,7 +183,7 @@ class MeetingSerializer(serializers.ModelSerializer):
         return data
 
     class Meta:
-        model = Issue
+        model = Meeting
         fields = ["_id", "name", "node_type", "path", "index", "date_time", "content", "venue",
                 "topic_type", "user_permissions", "user_role"]
 
