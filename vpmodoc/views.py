@@ -6,10 +6,12 @@ from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework.views import APIView
 
-from vpmodoc.permissions import IsAdminOrContributor
+from vpmodoc.permissions import IsAdminOrContributor, HasTaskUpdatePermission
 from vpmodoc.serializers import *
 from vpmodoc.models import *
 from vpmodoc import s3_utils
+from vpmotree.models import TreeStructure
+from vpmotask.models import Task
 
 
 # Create your views here.
@@ -23,7 +25,7 @@ class NodeDocumentsListView(generics.ListAPIView):
 		return NodeDocument.objects.filter(node___id=self.kwargs["nodeID"])
 
 
-class DocumentManagementView(APIView):
+class NodeDocumentsManagementView(APIView):
 	permission_classes = (permissions.IsAuthenticated, IsAdminOrContributor,)
 
 	def get_node(self):
@@ -66,23 +68,8 @@ class DocumentManagementView(APIView):
 			"file_name": filename
 			})
 
-	def get(self, request, nodeID):
-		""" Returns the Put_Object presigned url for the given file name """
-		node = self.get_node()
-		if node is None:
-			return Response({"message": "Node not found."}, status=status.HTTP_404_NOT_FOUND)
 
-		doc = self.get_document()	
-		if doc is None:
-			return Response({"message": "Document not found."}, status=status.HTTP_404_NOT_FOUND)
-
-		return Response({
-			"url": s3_utils.generate_file_presigned_url(doc.document.name, client_method="get_object"),
-			"file_name": doc.document.name
-			})
-
-
-class CreateDocumentView(generics.CreateAPIView):
+class CreateNodeDocumentView(generics.CreateAPIView):
 	""" Takes an input node and preuploaded filename as input
 		and creates a Document model linked to the node from it
 	"""
@@ -115,10 +102,10 @@ class CreateDocumentView(generics.CreateAPIView):
 			all_docs = NodeDocument.objects.filter(node___id=nodeID)
 			return Response(self.serializer_class(all_docs, many=True).data, status=status.HTTP_201_CREATED)
 		except:
-			return Response({"message": "Error while creating document"}, status=HTTP_400_BAD_REQUEST)
+			return Response({"message": "Error while creating document"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class DestroyDocumentView(APIView):
+class DestroyNodeDocumentView(APIView):
 	""" Deletes the document and associated fiie object associated with it """
 	permission_classes = (permissions.IsAuthenticated, IsAdminOrContributor,)
 
@@ -128,8 +115,89 @@ class DestroyDocumentView(APIView):
 		except NodeDocument.DoesNotExist:
 			return Response(status=status.HTTP_404_NOT_FOUND)
 
-		# Delete the file from s3 if it exists
+		# Delete the file from s3 if it exists (done by signal)
 		doc.delete()
 
 		return Response({"message": "Document deleted successfully."})
 
+
+class TaskDocumentsManagementView(APIView):
+	""" Implements a POST endpoint to return a presigned AWS url
+		for an attachment upload against a task
+	"""
+	permission_classes = (permissions.IsAuthenticated, HasTaskUpdatePermission,)
+
+	def get_task(self):
+		""" Returns the task by matching ID against the url parameter """
+		try:
+			return Task.objects.get(_id=self.kwargs["taskID"])
+		except Task.DoesNotExist:
+			return None
+
+	def post(self, request, taskID):
+		""" Returns a presigned put_object permission for the given
+			filename combined with the given taskID
+		"""
+		task = self.get_task()
+		if task is None:
+			return Response({"message": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+
+		filename = TaskDocument.gen_filename(task, request.data["fileName"])
+		presigned_url = s3_utils.generate_file_presigned_url(filename, client_method="put_object")
+
+		return Response({
+			"url": presigned_url,
+			"file_name": filename
+			})
+
+
+class CreateTaskDocumentView(generics.CreateAPIView):
+	""" Creates the task document and assigns the s3 file
+		from the fileName given as input
+	"""
+	permission_classes = (permissions.IsAuthenticated, HasTaskUpdatePermission,)
+	serializer_class = TaskDocumentSerializer
+
+	def get_task(self):
+		""" Returns the task by matching ID against the url parameter """
+		try:
+			return Task.objects.get(_id=self.kwargs["taskID"])
+		except Task.DoesNotExist:
+			return None
+
+	def create(self, request, taskID):
+		data = request.data.copy()
+
+		task = self.get_task()
+		if task is None:
+			return Response({"message": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+
+		try:
+			create_data = {
+				"document": data["fileName"],
+				"take": task,
+				"uploaded_by": request.user
+			}
+			doc = TaskDocument(**create_data)
+			doc.save()
+
+			return Response(self.serializer_class(doc).data, status=status.HTTP_201_CREATED)
+		except:
+			raise
+			return Response({"message": "Error while creating document"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DestroyTaskDocumentView(APIView):
+	""" Deletes the document and associated file from the db + s3 """
+	permission_classes = (permissions.IsAuthenticated, HasTaskUpdatePermission,)
+
+	def delete(self, request, taskID=None, docID=None):
+		try:
+			doc = TaskDocument.objects.get(_id=docID)
+		except TaskDocument.DoesNotExist:
+			return Response(status=status.HTTP_404_NOT_FOUND)
+
+		# Delete the file from s3 if it exists (done by signal)
+		doc.delete()
+
+		return Response({"message": "Document deleted successfully."})

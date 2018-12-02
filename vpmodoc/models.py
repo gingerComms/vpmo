@@ -23,7 +23,7 @@ class NodeDocument(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "<Document:{}>".format(self.uploaded_by.username)
+        return "<NodeDocument:{}>".format(self.node.name)
 
     def set_document(self, filename, document):
         """ Document MUST be a bytes object; ex: ContentFile(b'randText') """
@@ -57,3 +57,39 @@ class NodeDocument(models.Model):
     @staticmethod
     def gen_filename(node, filename):
         return "{node_id}/{filename}".format(node_id=str(node._id), filename=filename)
+
+
+class TaskDocument(models.Model):
+    """ Represents a file object attached to any task """
+    _id = models.ObjectIdField()
+    # The task this document was uploaded against
+    task = models.ForeignKey("vpmotask.Task", on_delete=models.CASCADE, related_name="document_task")
+    # The user who uploaded this document against a task
+    uploaded_by = models.ForeignKey("vpmoauth.MyUser", on_delete=models.CASCADE, related_name="document_task_uploaded_by")
+
+    # The file stored on S3 through django-storages (rename functionality not provided)
+    # NOTE - To set this from an existing file, just save the model using document=<path_to_file_on_s3> (key)
+    document = models.FileField()
+
+    # Misc details
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "<TaskDocument:{}>".format(self.task.title)
+
+    def set_document(self, filename, document):
+        """ Document MUST be a bytes object; ex: ContentFile(b'randText') """
+        self.document.save(filename, document)
+
+    def delete_document(self):
+        if self.document:
+            self.document.delete()
+        return True
+
+    @staticmethod
+    def gen_filename(task, filename):
+        return "{node_id}/{task_id}/{filename}".format(
+                                                    node_id=str(task.node._id),
+                                                    task_id=str(task._id),
+                                                    filename=filename
+                                                )
