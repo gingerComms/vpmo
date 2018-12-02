@@ -5,6 +5,8 @@ from vpmotree.models import TreeStructure, Project
 from vpmoauth.models import MyUser
 from vpmoauth.serializers import UserDetailsSerializer
 from vpmotask.models import Task, ScrumboardTaskList
+from vpmodoc.models import TaskDocument
+from vpmodoc.serializers import TaskDocumentMinimalSerializer
 
 
 class ScrumboardTaskListMinimalSerializer(serializers.ModelSerializer):
@@ -47,6 +49,11 @@ class TaskListSerializer(serializers.ModelSerializer):
     assignee = UserDetailsSerializer(required=False)
     due_date = serializers.DateField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d"], allow_null=True, required=False)
     task_list = RelatedObjectIdField(queryset=ScrumboardTaskList.objects.all())
+    documents = serializers.SerializerMethodField(required=False)
+
+    def get_documents(self, instance):
+        queryset = TaskDocument.objects.filter(task=instance)
+        return TaskDocumentMinimalSerializer(queryset, many=True).data
 
     class Meta:
         model = Task
