@@ -50,6 +50,12 @@ class TaskDocumentSerializer(BaseDocumentSerializer, serializers.ModelSerializer
     _id = ObjectIdField(read_only=True)
     task = RelatedObjectIdField(queryset=Task.objects.all())
 
+    def get_document_name(self, instance):
+        try:
+            return instance.document.name.replace("{}/".format(str(instance.task._id)), "")
+        except ValueError:
+            return None
+
     class Meta:
         model = TaskDocument
         fields = ["_id", "task", "uploaded_at", "uploaded_by", "document", "document_name", "document_size", "document_url"]
@@ -63,6 +69,12 @@ class TaskDocumentMinimalSerializer(BaseDocumentSerializer, serializers.ModelSer
     task = None
     uploaded_by = None
     document_size=None
+
+    def get_document_name(self, instance):
+        try:
+            return instance.document.name.replace("{}/".format(str(instance.task._id)), "")
+        except ValueError:
+            return None
 
     class Meta:
         model = TaskDocument
