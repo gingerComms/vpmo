@@ -64,7 +64,7 @@ class TeamSerializer(DashboardCountBaseSerializer, serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
     user_permissions = serializers.SerializerMethodField(required=False)
     user_role = serializers.SerializerMethodField(required=False)
-    projects_count = serializers.SerializerMethodField(rerquired=False)
+    projects_count = serializers.SerializerMethodField(required=False)
 
     def get_user_permissions(self, instance):
         return self.context["request"].user.get_permissions(instance)
