@@ -10,8 +10,30 @@ from django.apps import apps
 from django.db.models import Q
 from rest_framework.fields import CurrentUserDefault
 
+import collections
 
-class ProjectSerializer(serializers.ModelSerializer):
+
+class DashboardCountBaseSerializer(serializers.Serializer):
+    """ Contains all the generic count fields required in the node's
+        Dashboard frontend pages
+    """
+    members_count = serializers.SerializerMethodField(required=False)
+    topic_counts = serializers.SerializerMethodField(required=False)
+
+    def get_topic_counts(self, instance):
+        """ Returns counts of different topic instances
+            that have this node in their heirarchy
+        """
+        all_topics = TreeStructure.objects.filter(node_type="Topic", path__contains=instance._id) \
+                        .values_list("model_name", flat=True)
+        return collections.Counter(all_topics)
+
+    def get_members_count(self, instance):
+        """ Returns the count of users that have at least read permissions for this node """
+        return UserRole.get_user_ids_with_heirarchy_perms(instance).distinct().count()
+
+
+class ProjectSerializer(DashboardCountBaseSerializer, serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
     project_owner = serializers.SerializerMethodField(required=False)
     start = serializers.DateField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d"], allow_null=True, required=False)
@@ -37,7 +59,7 @@ class ProjectSerializer(serializers.ModelSerializer):
                 "created_at", "user_permissions", "user_role"]
 
 
-class TeamSerializer(serializers.ModelSerializer):
+class TeamSerializer(DashboardCountBaseSerializer, serializers.ModelSerializer):
     # projects = ProjectSerializer(read_only=True, many=True)
     _id = ObjectIdField(read_only=True)
     user_permissions = serializers.SerializerMethodField(required=False)
