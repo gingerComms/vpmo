@@ -21,7 +21,7 @@ class AssignableTaskUsersView(generics.ListAPIView):
     serializer_class = UserDetailsSerializer
     permission_classes = (IsAuthenticated,)
     filter_backends = (filters.SearchFilter,)
-    search_fields = ("username",)
+    search_fields = ("username", "email", "fullname",)
 
     def get_queryset(self):
         node = self.kwargs["nodeID"]
