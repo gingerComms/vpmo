@@ -12438,7 +12438,7 @@ var ScrumboardListComponent = /** @class */ (function () {
             panelClass: 'scrumboard-card-dialog',
             data: {
                 task: task,
-                list: { _id: null },
+                list: this.list,
                 nodeID: this.nodeID,
                 nodeType: this.nodeType
             }
