@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="153d1d65-6603-446d-a34b-77334a354c69" name="Default" comment="Merge branch 'master' of https://github.com/alifrad/vpmo&#10;&#10;# Conflicts:&#10;#&#9;Procfile">
-      <change beforePath="$PROJECT_DIR$/vpmotree/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmotree/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vpmotree/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/vpmotree/models.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -13,15 +14,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="serializers.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/vpmotree/serializers.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="646">
-              <caret line="185" column="23" selection-start-line="185" selection-start-column="23" selection-end-line="185" selection-end-column="23" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/vpmotree/views.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -46,11 +38,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/vpmotree/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="403">
-              <caret line="251" column="32" lean-forward="true" selection-start-line="251" selection-start-column="32" selection-end-line="251" selection-end-column="32" />
+            <state relative-caret-position="34">
+              <caret line="217" column="36" lean-forward="true" selection-start-line="217" selection-start-column="36" selection-end-line="217" selection-end-column="36" />
               <folding>
                 <element signature="e#2655#3052#0" />
                 <element signature="e#3897#4372#0" />
@@ -59,6 +51,15 @@
                 <element signature="e#5370#6190#0" />
                 <element signature="e#6224#6269#0" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="serializers.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/vpmotree/serializers.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="85">
+              <caret line="185" column="23" selection-start-line="185" selection-start-column="23" selection-end-line="185" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -146,17 +147,17 @@
         <option value="$PROJECT_DIR$/vpmoauth/views.py" />
         <option value="$PROJECT_DIR$/vpmotree/urls.py" />
         <option value="$PROJECT_DIR$/vpmoprj/serializers.py" />
-        <option value="$PROJECT_DIR$/vpmotree/models.py" />
         <option value="$PROJECT_DIR$/vpmotree/views.py" />
         <option value="$PROJECT_DIR$/vpmotree/serializers.py" />
+        <option value="$PROJECT_DIR$/vpmotree/models.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="174" />
-    <option name="y" value="367" />
-    <option name="width" value="1874" />
-    <option name="height" value="1096" />
+    <option name="x" value="-1474" />
+    <option name="y" value="362" />
+    <option name="width" value="1291" />
+    <option name="height" value="999" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -310,7 +311,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-1288" y="293" width="1296" height="1000" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -604,21 +604,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/vpmotree/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="403">
-          <caret line="251" column="32" lean-forward="true" selection-start-line="251" selection-start-column="32" selection-end-line="251" selection-end-column="32" />
-          <folding>
-            <element signature="e#2655#3052#0" />
-            <element signature="e#3897#4372#0" />
-            <element signature="e#4412#4796#0" />
-            <element signature="e#4842#5323#0" />
-            <element signature="e#5370#6190#0" />
-            <element signature="e#6224#6269#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/vpmoprj/serializers.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
@@ -648,8 +633,23 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/vpmotree/serializers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="646">
+        <state relative-caret-position="85">
           <caret line="185" column="23" selection-start-line="185" selection-start-column="23" selection-end-line="185" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vpmotree/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="217" column="36" lean-forward="true" selection-start-line="217" selection-start-column="36" selection-end-line="217" selection-end-column="36" />
+          <folding>
+            <element signature="e#2655#3052#0" />
+            <element signature="e#3897#4372#0" />
+            <element signature="e#4412#4796#0" />
+            <element signature="e#4842#5323#0" />
+            <element signature="e#5370#6190#0" />
+            <element signature="e#6224#6269#0" />
+          </folding>
         </state>
       </provider>
     </entry>

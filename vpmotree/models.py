@@ -25,6 +25,10 @@ from twilio.rest import Client
 
 class TreeStructure(models.Model):
     """ An implementation of Model Tree Structures with Materialized Paths in Django """
+    STATUS_CHOICES = [
+        (1, 'Open',),
+        (0, 'Closed',)
+    ]
     _id = models.ObjectIdField()
     path = models.CharField(max_length=4048, null=True)
     # The index field is for tracking the location of an object within the heirarchy
@@ -33,7 +37,7 @@ class TreeStructure(models.Model):
     description = models.TextField(blank=True, null=True)
     node_type = models.CharField(max_length=48, default="Team")
     model_name = models.CharField(max_length=48, null=True)
-
+    status = models.IntegerField(choices=STATUS_CHOICES, blank=False, default=1)
     # The twilio channel SID for this node
     channel_sid = models.CharField(max_length=34, blank=False)
 
@@ -196,6 +200,8 @@ class Topic(TreeStructure):
     topic_classes = [
         "Deliverable",
         "Issue",
+        "Risk",
+        "Meeting"
     ]
 
     content = models.TextField(blank=True, null=True)
@@ -208,7 +214,7 @@ class Topic(TreeStructure):
 
 class Deliverable(Topic):
     due_date = models.DateTimeField(auto_now=False, auto_now_add=False)
-
+    assignee = models.ForeignKey("vpmoauth.MyUser", on_delete=models.CASCADE)
     def save(self, *args, **kwargs):
         self.node_type = "Topic"
         self.model_name = "Deliverable"
