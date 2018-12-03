@@ -46,7 +46,7 @@ class AllNodesListView(ListAPIView):
 
         # Filtering by node parent if query is provided
         if self.request.query_params.get("parentNode", None):
-            return model.objects.filter(path__endswith=self.request.query_params["parentNode"])
+            return model.objects.filter(path__endswith=self.request.query_params["parentNodeID"])
 
         return model.objects.all()
 
