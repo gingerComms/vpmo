@@ -28,7 +28,7 @@ class ReadNodeListFilter(filters.BaseFilterBackend):
 
             node_type = query_params["nodeType"]
 
-            if node_type in ["Deliverable"]:
+            if node_type in ["Deliverable", "Issue", "Risk", "Meeting"]:
                 node_type = "Topic"
 
             # Explanation:
@@ -36,7 +36,7 @@ class ReadNodeListFilter(filters.BaseFilterBackend):
             #   permissions__name__contains="read" -> filters the roles that have a read_<target_node_type> permission
             #   At the end, we're left with the nodes that have a direct assignment to the user + access to read_node_type
             assigned_nodes = UserRole.objects.filter(Q(node___id__in=nodes_in_parent_path) | Q(node__path__endswith=parent_node._id),
-                permissions__name__icontains="read_{}".format(node_type), user=request.user).values_list(
+                permissions__name__icontains="read_{}".format(node_type.lower()), user=request.user).values_list(
                 "node___id", flat=True)
 
             # Filtering for objects ending in parentNodeID (directly under the parent node)
