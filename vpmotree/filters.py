@@ -35,7 +35,7 @@ class ReadNodeListFilter(filters.BaseFilterBackend):
             #   Q(node__id__in) | Q(node__path__endswith) -> filters nodes that are either above the parent or directly below it
             #   permissions__name__contains="read" -> filters the roles that have a read_<target_node_type> permission
             #   At the end, we're left with the nodes that have a direct assignment to the user + access to read_node_type
-            assigned_nodes = UserRole.objects.filter(Q(node___id__in=nodes_in_parent_path) | Q(node__path__endswith=parent_node._id),
+            assigned_nodes = UserRole.objects.filter(Q(node___id__in=nodes_in_parent_path) | Q(node__path__endswith=str(parent_node._id)+","),
                 permissions__name__icontains="read_{}".format(node_type.lower()), user=request.user).values_list(
                 "node___id", flat=True)
 
