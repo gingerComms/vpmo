@@ -68,6 +68,11 @@ class TaskSerializer(serializers.ModelSerializer):
     assignee = UserDetailsSerializer(required=False)
     due_date = serializers.DateField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d"], allow_null=True, required=False)
     task_list = ScrumboardTaskListMinimalSerializer(required=False)
+    documents = serializers.SerializerMethodField(required=False)
+
+    def get_documents(self, instance):
+        queryset = TaskDocument.objects.filter(task=instance)
+        return TaskDocumentMinimalSerializer(queryset, many=True).data
 
     def validate(self, data):
         # Getting the assignee from the initial data passed into serializer
@@ -86,4 +91,5 @@ class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
-        fields = "__all__"
+        fields = ["_id", "node", "created_by", "assignee", "due_date", "task_list", "documents", "title",
+                    "content", "created_at", "status", "closed_at", "task_list_index"]
