@@ -24,6 +24,11 @@ from datetime import datetime as dt
 
 
 class AllNodesListView(ListAPIView):
+    """ Returns all nodes that the user has access to
+        if a nodeParent query parameter is provided, returns all 
+        nodes that the user has access to and have the given parent
+        as the last _id in the path
+    """
     permission_classes = [IsAuthenticated]
     filter_backends = [ReadNodeListFilter]
 
@@ -38,6 +43,11 @@ class AllNodesListView(ListAPIView):
 
     def get_queryset(self):
         model = apps.get_model("vpmotree", self.request.query_params["nodeType"])
+
+        # Filtering by node parent if query is provided
+        if self.request.query_params.get("parentNode", None):
+            return model.objects.filter(path__endswith=self.request.query_params["parentNode"])
+
         return model.objects.all()
 
     def get_serializer_class(self):
