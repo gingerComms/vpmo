@@ -30,7 +30,7 @@ class DashboardCountBaseSerializer(serializers.Serializer):
 
     def get_members_count(self, instance):
         """ Returns the count of users that have at least read permissions for this node """
-        return UserRole.get_user_ids_with_heirarchy_perms(instance).distinct().count()
+        return len(UserRole.get_user_ids_with_heirarchy_perms(instance).distinct())
 
 
 class ProjectSerializer(DashboardCountBaseSerializer, serializers.ModelSerializer):
