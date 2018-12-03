@@ -109,7 +109,7 @@ class DeleteUpdateCreateTaskView(APIView):
         # The new assignee must have at least update_node permissions to node, or return 400
         assignee_perms = assigning_to.get_permissions(task.node)
         if not "update_{}".format(request.query_params["nodeType"].lower()) in assignee_perms:
-            return Response({"message": "Assignee doesn't have read perms"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Assignee doesn't have update perms"}, status=status.HTTP_400_BAD_REQUEST)
 
         # Partially updating the task
         data["assignee_id"] = assigning_to._id
