@@ -94,7 +94,7 @@ class DeleteUpdateCreateTaskView(APIView):
 
         try:
             assignee = data.pop("assignee")
-            if type(assignee) == str or type(assignee) == unicode:
+            if type(assignee) == str:
                 assigning_to = MyUser.objects.get(username=assignee)
             else:
                 assigning_to = MyUser.objects.get(username=assignee["_id"])
