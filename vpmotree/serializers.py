@@ -13,12 +13,15 @@ from rest_framework.fields import CurrentUserDefault
 import collections
 
 
-class DashboardCountBaseSerializer(serializers.Serializer):
+class DashboardNodeBaseSerializer(serializers.Serializer):
     """ Contains all the generic count fields required in the node's
         Dashboard frontend pages
+        Also contains a list of children nodeIDs that the user has access to
+        which is used to calculate total unread messages for the node on the frontend
     """
     members_count = serializers.SerializerMethodField(required=False)
     topic_counts = serializers.SerializerMethodField(required=False)
+    child_nodes = serializers.SerializerMethodField(required=False)
 
     def get_topic_counts(self, instance):
         """ Returns counts of different topic instances
@@ -32,8 +35,12 @@ class DashboardCountBaseSerializer(serializers.Serializer):
         """ Returns the count of users that have at least read permissions for this node """
         return len(UserRole.get_user_ids_with_heirarchy_perms(instance).distinct())
 
+    def get_child_nodes(self, instance):
+        """ Returns a list of nodes that the user has "update" access to under this node """
+        return list(UserRole.get_assigned_nodes(self.context["request"].user, str(instance._id)).distinct())
 
-class ProjectSerializer(DashboardCountBaseSerializer, serializers.ModelSerializer):
+
+class ProjectSerializer(DashboardNodeBaseSerializer, serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
     project_owner = serializers.SerializerMethodField(required=False)
     start = serializers.DateField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%d"], allow_null=True, required=False)
@@ -56,10 +63,10 @@ class ProjectSerializer(DashboardCountBaseSerializer, serializers.ModelSerialize
     class Meta:
         model = Project
         fields = ["_id", "name", "description", "content", "start", "finish", "project_owner", "path", "index", "node_type",
-                "created_at", "user_permissions", "user_role", "members_count", "topic_counts"]
+                "created_at", "user_permissions", "user_role", "members_count", "topic_counts", "child_nodes"]
 
 
-class TeamSerializer(DashboardCountBaseSerializer, serializers.ModelSerializer):
+class TeamSerializer(DashboardNodeBaseSerializer, serializers.ModelSerializer):
     # projects = ProjectSerializer(read_only=True, many=True)
     _id = ObjectIdField(read_only=True)
     user_permissions = serializers.SerializerMethodField(required=False)
@@ -79,7 +86,8 @@ class TeamSerializer(DashboardCountBaseSerializer, serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = ["_id", "name", "user_linked", "created_at", "updated_at", "user_team",
-                "node_type", "user_permissions", "user_role", "members_count", "topic_counts", "projects_count"]
+                "node_type", "user_permissions", "user_role", "members_count", "topic_counts", "projects_count",
+                "child_nodes"]
 
 
 class DeliverableSerializer(serializers.ModelSerializer):
