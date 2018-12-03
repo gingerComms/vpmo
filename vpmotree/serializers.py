@@ -56,7 +56,7 @@ class ProjectSerializer(DashboardCountBaseSerializer, serializers.ModelSerialize
     class Meta:
         model = Project
         fields = ["_id", "name", "description", "content", "start", "finish", "project_owner", "path", "index", "node_type",
-                "created_at", "user_permissions", "user_role"]
+                "created_at", "user_permissions", "user_role", "members_count", "topic_counts"]
 
 
 class TeamSerializer(DashboardCountBaseSerializer, serializers.ModelSerializer):
@@ -75,7 +75,7 @@ class TeamSerializer(DashboardCountBaseSerializer, serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = ["_id", "name", "user_linked", "created_at", "updated_at", "user_team",
-                "node_type", "user_permissions", "user_role"]
+                "node_type", "user_permissions", "user_role", "members_count", "topic_counts"]
 
 
 class DeliverableSerializer(serializers.ModelSerializer):
