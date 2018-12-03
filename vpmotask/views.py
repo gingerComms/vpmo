@@ -97,7 +97,7 @@ class DeleteUpdateCreateTaskView(APIView):
             if type(assignee) == str:
                 assigning_to = MyUser.objects.get(username=assignee)
             else:
-                assigning_to = MyUser.objects.get(username=assignee["_id"])
+                assigning_to = MyUser.objects.get(username=assignee["username"])
         except MyUser.DoesNotExist:
             return Response({"message": "Assignee not found"}, status=status.HTTP_404_NOT_FOUND)
 
