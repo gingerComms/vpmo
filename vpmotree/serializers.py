@@ -64,6 +64,7 @@ class TeamSerializer(DashboardCountBaseSerializer, serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
     user_permissions = serializers.SerializerMethodField(required=False)
     user_role = serializers.SerializerMethodField(required=False)
+    projects_count = serializers.SerializerMethodField(rerquired=False)
 
     def get_user_permissions(self, instance):
         return self.context["request"].user.get_permissions(instance)
@@ -72,10 +73,13 @@ class TeamSerializer(DashboardCountBaseSerializer, serializers.ModelSerializer):
         role = self.context["request"].user.get_role(instance)
         return role.role_name if role else None
 
+    def get_projects_count(self, instance):
+        return TreeStructure.objects.filter(node_type="Project", path__contains=instance._id).count()
+
     class Meta:
         model = Team
         fields = ["_id", "name", "user_linked", "created_at", "updated_at", "user_team",
-                "node_type", "user_permissions", "user_role", "members_count", "topic_counts"]
+                "node_type", "user_permissions", "user_role", "members_count", "topic_counts", "projects_count"]
 
 
 class DeliverableSerializer(serializers.ModelSerializer):
