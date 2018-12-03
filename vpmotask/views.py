@@ -113,7 +113,7 @@ class DeleteUpdateCreateTaskView(APIView):
 
         # Partially updating the task
         data["assignee_id"] = assigning_to._id
-        serializer = self.serializer_class(task, data=data, partial=True)
+        serializer = self.serializer_class(task, data=data, partial=True, raise_exception=True)
         if serializer.is_valid():
             task = serializer.save()
             return Response(self.serializer_class(task).data)
