@@ -113,30 +113,8 @@ class TeamSerializer(DashboardNodeBaseSerializer, serializers.ModelSerializer):
                 "child_nodes"]
 
 
-class DeliverableSerializer(serializers.ModelSerializer):
-    _id = ObjectIdField(read_only=True)
-    due_date = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%d %H:%M:%S"], allow_null=True, required=False)
-    topic_type = serializers.SerializerMethodField(required=False)
-    user_permissions = serializers.SerializerMethodField(required=False)
-    user_role = serializers.SerializerMethodField(required=False)
-
-    def get_user_permissions(self, instance):
-        return self.context["request"].user.get_permissions(instance)
-
-    def get_user_role(self, instance):
-        role = self.context["request"].user.get_role(instance)
-        return role.role_name if role else None
-
-    def get_topic_type(self, obj):
-        return "Deliverable"
-
-    class Meta:
-        model = Deliverable
-        fields = ["_id", "name", "node_type", "path", "index", "due_date", "content", "topic_type",
-                "user_permissions", "user_role"]
-
-
-class IssueSerializer(serializers.ModelSerializer):
+class BaseTopicSerializer(serializers.Serializer):
+    """ Base topic serializer containing all common serializer fields """
     _id = ObjectIdField(read_only=True)
     due_date = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%d %H:%M:%S"], allow_null=True, required=False)
     assignee = UserDetailsSerializer(required=False, allow_null=True)
@@ -152,13 +130,32 @@ class IssueSerializer(serializers.ModelSerializer):
         return role.role_name if role else None
 
     def get_topic_type(self, obj):
-        return "Issue"
+        return "Topic"
 
-    def get_assignee_name(self, instance):
-        try:
-            return instance.assignee.fullname
-        except:
-            return None
+
+class DeliverableSerializer(BaseTopicSerializer, serializers.ModelSerializer):
+    def get_topic_type(self, obj):
+        return "Deliverable"
+    
+    def validate(self, data):
+        # Getting the assignee from the initial data passed into serializer
+        assignee_id = self.initial_data.get("assignee_id", None)
+        # Validating the rest of the fields
+        data = super(DeliverableSerializer, self).validate(data)
+        # Setting the foreign key
+        if assignee_id:
+            data["assignee"] = MyUser.objects.get(_id=assignee_id)
+        return data
+
+    class Meta:
+        model = Deliverable
+        fields = ["_id", "name", "node_type", "path", "index", "due_date", "content", "topic_type",
+                "user_permissions", "user_role", "assignee"]
+
+
+class IssueSerializer(BaseTopicSerializer, serializers.ModelSerializer):
+    def get_topic_type(self, obj):
+        return "Issue"
 
     def validate(self, data):
         # Getting the assignee from the initial data passed into serializer
@@ -173,32 +170,12 @@ class IssueSerializer(serializers.ModelSerializer):
     class Meta:
         model = Issue
         fields = ["_id", "name", "node_type", "path", "index", "due_date", "content", "severity", "assignee",
-                "topic_type", "user_permissions", "user_role"]
+                "topic_type", "user_permissions", "user_role", "assignee_name"]
 
 
-class RiskSerializer(serializers.ModelSerializer):
-    _id = ObjectIdField(read_only=True)
-    due_date = serializers.DateTimeField(input_formats=["%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%d %H:%M:%S"], allow_null=True, required=False)
-    assignee = UserDetailsSerializer(required=False, allow_null=True)
-    topic_type = serializers.SerializerMethodField(required=False)
-    user_permissions = serializers.SerializerMethodField(required=False)
-    user_role = serializers.SerializerMethodField(required=False)
-
-    def get_user_permissions(self, instance):
-        return self.context["request"].user.get_permissions(instance)
-
-    def get_user_role(self, instance):
-        role = self.context["request"].user.get_role(instance)
-        return role.role_name if role else None
-
+class RiskSerializer(BaseTopicSerializer, serializers.ModelSerializer):
     def get_topic_type(self, obj):
         return "Risk"
-
-    def get_assignee_name(self, instance):
-        try:
-            return instance.assignee.fullname
-        except:
-            return None
 
     def validate(self, data):
         # Getting the assignee from the initial data passed into serializer
