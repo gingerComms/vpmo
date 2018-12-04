@@ -9894,7 +9894,7 @@ var NodeBreadcrumbsService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<app-nodepage></app-nodepage>\r\n<mat-divider></mat-divider>\r\n\r\n<!-- Dashboard Components -->\r\n<team-dashboard *ngIf=\"contentType=='dashboard' && nodeType == 'Team'\" [nodeID]=\"nodeID\"></team-dashboard>\r\n<project-dashboard *ngIf=\"contentType=='dashboard' && nodeType == 'Project'\"></project-dashboard>\r\n\r\n<app-node-edit *ngIf=\"contentType=='edit'\"></app-node-edit>\r\n<app-chat [nodeID]=\"nodeID\" [nodeType]=\"nodeType\" *ngIf=\"contentType=='chat'\"></app-chat>\r\n<app-tree-structure *ngIf=\"contentType=='tree'\"></app-tree-structure>\r\n<app-permissions *ngIf=\"contentType=='permissions'\"></app-permissions>\r\n<app-documents-list *ngIf=\"contentType=='documents'\"></app-documents-list>\r\n<app-tasks *ngIf=\"contentType=='tasks'\"></app-tasks>\r\n<app-scrumboard *ngIf=\"contentType=='board' && nodeType == 'Project'\"></app-scrumboard>\r\n\r\n\r\n"
+module.exports = "<app-nodepage></app-nodepage>\r\n<mat-divider></mat-divider>\r\n\r\n<!-- Team Dashboard -->\r\n<team-dashboard *ngIf=\"contentType=='dashboard' && nodeType == 'Team'\" [nodeID]=\"nodeID\"></team-dashboard>\r\n\r\n<!-- Project Dashboard + Corresponding topic list -->\r\n<project-dashboard *ngIf=\"contentType=='dashboard' && nodeType == 'Project'\"></project-dashboard>\r\n<topics-list [parentNodeID]=\"nodeID\" [parentNodeType]=\"nodeType\" [topicType]=\"contentType\" *ngIf=\"(contentType=='Deliverable' || contentType=='Risk' || contentType=='Issue') && nodeType == 'Project'\"></topics-list>\r\n\r\n<app-node-edit *ngIf=\"contentType=='edit'\"></app-node-edit>\r\n<app-chat [nodeID]=\"nodeID\" [nodeType]=\"nodeType\" *ngIf=\"contentType=='chat'\"></app-chat>\r\n<app-tree-structure *ngIf=\"contentType=='tree'\"></app-tree-structure>\r\n<app-permissions *ngIf=\"contentType=='permissions'\"></app-permissions>\r\n<app-documents-list *ngIf=\"contentType=='documents'\"></app-documents-list>\r\n<app-tasks *ngIf=\"contentType=='tasks'\"></app-tasks>\r\n<app-scrumboard *ngIf=\"contentType=='board' && nodeType == 'Project'\"></app-scrumboard>\r\n\r\n\r\n"
 
 /***/ }),
 
@@ -11146,7 +11146,7 @@ var ProjectAddComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div>\r\n\t<h1>Project Dashboard</h1>\r\n\r\n  <!-- TASKS CARD -->\r\n\t<mat-card *ngIf=\"node && currentUsername\">\r\n    <mat-card-header>\r\n      <mat-card-title>\r\n        Tasks\r\n      </mat-card-title>\r\n    </mat-card-header>\r\n    <mat-card-content>\r\n      <p>Mine Overdue: {{ overdueCountMine }}</p>\r\n      <p>Mine Due: {{ dueCountMine }}</p>\r\n      <p>All Overdue: {{ overdueCount }}</p>\r\n      <p>All Due: {{ dueCount }}</p> \r\n    </mat-card-content>\r\n    <mat-card-actions>\r\n      <button mat-button>Go to Scrumboard</button>\r\n    </mat-card-actions>\r\n  </mat-card>\r\n  <!-- /TASKS CARD -->\r\n\r\n  <!-- ISSUES CARD -->\r\n  <mat-card *ngIf=\"node\">\r\n    <mat-card-header>\r\n      <mat-card-title>\r\n        ISSUES\r\n      </mat-card-title>\r\n    </mat-card-header>\r\n    <mat-card-content>\r\n      <p>Total Count: {{ node.topic_counts.Issue || 0 }}</p>\r\n    </mat-card-content>\r\n  </mat-card>\r\n  <!-- /ISSUES CARD -->\r\n\r\n  <!-- DELIVERABLES CARD -->\r\n  <mat-card *ngIf=\"node\">\r\n    <mat-card-header>\r\n      <mat-card-title>\r\n        Deliverables\r\n      </mat-card-title>\r\n    </mat-card-header>\r\n    <mat-card-content>\r\n      <p>Total Count: {{ node.topic_counts.Deliverable || 0 }}</p>\r\n    </mat-card-content>\r\n  </mat-card>\r\n  <!-- /DELIVERABLES CARD -->\r\n\r\n  <!-- RISKS CARD -->\r\n  <mat-card *ngIf=\"node\">\r\n    <mat-card-header>\r\n      <mat-card-title>\r\n        Risks\r\n      </mat-card-title>\r\n    </mat-card-header>\r\n    <mat-card-content>\r\n      <p>Total Count: {{ node.topic_counts.Risk || 0 }}</p>\r\n    </mat-card-content>\r\n  </mat-card>\r\n  <!-- /RISKS CARD -->\r\n\r\n</div>"
+module.exports = "<div>\r\n\t<h1>Project Dashboard</h1>\r\n\r\n  <!-- TASKS CARD -->\r\n\t<mat-card *ngIf=\"node && currentUsername\">\r\n    <mat-card-header>\r\n      <mat-card-title>\r\n        Tasks\r\n      </mat-card-title>\r\n    </mat-card-header>\r\n    <mat-card-content>\r\n      <p>Mine Overdue: {{ overdueCountMine }}</p>\r\n      <p>Mine Due: {{ dueCountMine }}</p>\r\n      <p>All Overdue: {{ overdueCount }}</p>\r\n      <p>All Due: {{ dueCount }}</p> \r\n    </mat-card-content>\r\n    <mat-card-actions>\r\n      <button mat-button (click)=\"goToScrumboard()\">Go to Scrumboard</button>\r\n    </mat-card-actions>\r\n  </mat-card>\r\n  <!-- /TASKS CARD -->\r\n\r\n  <!-- ISSUES CARD -->\r\n  <mat-card *ngIf=\"node\">\r\n    <mat-card-header>\r\n      <mat-card-title>\r\n        ISSUES\r\n      </mat-card-title>\r\n    </mat-card-header>\r\n    <mat-card-content>\r\n      <p>Total Count: {{ node.topic_counts.Issue || 0 }}</p>\r\n    </mat-card-content>\r\n    <mat-card-actions>\r\n      <button mat-button (click)=\"goToTopic('Issue')\">Go to Issues List</button>\r\n    </mat-card-actions>\r\n  </mat-card>\r\n  <!-- /ISSUES CARD -->\r\n\r\n  <!-- DELIVERABLES CARD -->\r\n  <mat-card *ngIf=\"node\">\r\n    <mat-card-header>\r\n      <mat-card-title>\r\n        Deliverables\r\n      </mat-card-title>\r\n    </mat-card-header>\r\n    <mat-card-content>\r\n      <p>Total Count: {{ node.topic_counts.Deliverable || 0 }}</p>\r\n    </mat-card-content>\r\n    <mat-card-actions>\r\n      <button mat-button (click)=\"goToTopic('Deliverable')\">Go to Deliverables List</button>\r\n    </mat-card-actions>\r\n  </mat-card>\r\n  <!-- /DELIVERABLES CARD -->\r\n\r\n  <!-- RISKS CARD -->\r\n  <mat-card *ngIf=\"node\">\r\n    <mat-card-header>\r\n      <mat-card-title>\r\n        Risks\r\n      </mat-card-title>\r\n    </mat-card-header>\r\n    <mat-card-content>\r\n      <p>Total Count: {{ node.topic_counts.Risk || 0 }}</p>\r\n    </mat-card-content>\r\n    <mat-card-actions>\r\n      <button mat-button (click)=\"goToTopic('Risk')\">Go to Risks List</button>\r\n    </mat-card-actions>\r\n  </mat-card>\r\n  <!-- /RISKS CARD -->\r\n\r\n</div>"
 
 /***/ }),
 
@@ -11172,10 +11172,11 @@ module.exports = "mat-card {\n  margin-bottom: 1em; }\n"
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ProjectDashboardComponent", function() { return ProjectDashboardComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _node_node_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../node/node.service */ "./src/app/node/node.service.ts");
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
-/* harmony import */ var _services_authentication_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../_services/authentication.service */ "./src/app/_services/authentication.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _node_node_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../node/node.service */ "./src/app/node/node.service.ts");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _services_authentication_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../_services/authentication.service */ "./src/app/_services/authentication.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -11190,26 +11191,28 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var ProjectDashboardComponent = /** @class */ (function () {
-    function ProjectDashboardComponent(nodeService, authService) {
+    function ProjectDashboardComponent(nodeService, authService, router) {
         this.nodeService = nodeService;
         this.authService = authService;
+        this.router = router;
         this.overdueCountMine = 0;
         this.overdueCount = 0;
         this.dueCountMine = 0;
         this.dueCount = 0;
-        this._unsubscribeAll = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
+        this._unsubscribeAll = new rxjs__WEBPACK_IMPORTED_MODULE_3__["Subject"]();
     }
     ProjectDashboardComponent.prototype.ngOnInit = function () {
         var _this = this;
         var node = this.nodeService.node;
         var user = this.authService.user;
-        var combined = Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["combineLatest"])(node, user);
+        var combined = Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["combineLatest"])(node, user);
         combined
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["takeUntil"])(this._unsubscribeAll))
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["takeUntil"])(this._unsubscribeAll))
             .subscribe(function (_a) {
             var node = _a[0], user = _a[1];
-            if (node && user) {
+            if (node !== null && user) {
                 _this.node = node;
                 _this.currentUsername = user.username;
                 _this.setTaskCount();
@@ -11243,14 +11246,21 @@ var ProjectDashboardComponent = /** @class */ (function () {
             }
         }
     };
+    ProjectDashboardComponent.prototype.goToScrumboard = function () {
+        this.router.navigate(['node/' + this.node.node_type + '/' + this.node._id + '/board']);
+    };
+    ProjectDashboardComponent.prototype.goToTopic = function (topicType) {
+        this.router.navigate(['node/' + this.node.node_type + '/' + this.node._id + '/' + topicType]);
+    };
     ProjectDashboardComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'project-dashboard',
             template: __webpack_require__(/*! ./project-dashboard.component.html */ "./src/app/project/project-dashboard.component.html"),
             styles: [__webpack_require__(/*! ./project-dashboard.component.scss */ "./src/app/project/project-dashboard.component.scss")]
         }),
-        __metadata("design:paramtypes", [_node_node_service__WEBPACK_IMPORTED_MODULE_1__["NodeService"],
-            _services_authentication_service__WEBPACK_IMPORTED_MODULE_4__["AuthenticationService"]])
+        __metadata("design:paramtypes", [_node_node_service__WEBPACK_IMPORTED_MODULE_2__["NodeService"],
+            _services_authentication_service__WEBPACK_IMPORTED_MODULE_5__["AuthenticationService"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_1__["Router"]])
     ], ProjectDashboardComponent);
     return ProjectDashboardComponent;
 }());
@@ -11442,13 +11452,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
 /* harmony import */ var _guards_auth_guard__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../_guards/auth.guard */ "./src/app/_guards/auth.guard.ts");
 /* harmony import */ var _project_list_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./project-list.component */ "./src/app/project/project-list.component.ts");
-/* harmony import */ var ngx_quill__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ngx-quill */ "./node_modules/ngx-quill/fesm5/ngx-quill.js");
+/* harmony import */ var _topics_list_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./topics-list.component */ "./src/app/project/topics-list.component.ts");
+/* harmony import */ var ngx_quill__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ngx-quill */ "./node_modules/ngx-quill/fesm5/ngx-quill.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -11493,19 +11505,22 @@ var ProjectModule = /** @class */ (function () {
                 _angular_material__WEBPACK_IMPORTED_MODULE_9__["MatCardModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_9__["MatListModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_9__["MatIconModule"],
-                ngx_quill__WEBPACK_IMPORTED_MODULE_12__["QuillModule"]
+                _angular_material__WEBPACK_IMPORTED_MODULE_9__["MatTableModule"],
+                ngx_quill__WEBPACK_IMPORTED_MODULE_13__["QuillModule"]
             ],
             declarations: [
                 _project_component__WEBPACK_IMPORTED_MODULE_7__["ProjectComponent"],
                 _project_add_component__WEBPACK_IMPORTED_MODULE_5__["ProjectAddComponent"],
                 _project_list_component__WEBPACK_IMPORTED_MODULE_11__["ProjectListComponent"],
-                _project_dashboard_component__WEBPACK_IMPORTED_MODULE_8__["ProjectDashboardComponent"]
+                _project_dashboard_component__WEBPACK_IMPORTED_MODULE_8__["ProjectDashboardComponent"],
+                _topics_list_component__WEBPACK_IMPORTED_MODULE_12__["TopicsListComponent"]
             ],
             providers: [
                 _project_service__WEBPACK_IMPORTED_MODULE_6__["ProjectService"],
             ],
             exports: [
-                _project_dashboard_component__WEBPACK_IMPORTED_MODULE_8__["ProjectDashboardComponent"]
+                _project_dashboard_component__WEBPACK_IMPORTED_MODULE_8__["ProjectDashboardComponent"],
+                _topics_list_component__WEBPACK_IMPORTED_MODULE_12__["TopicsListComponent"]
             ],
         })
     ], ProjectModule);
@@ -11570,11 +11585,131 @@ var ProjectService = /** @class */ (function () {
     ProjectService.prototype.create = function (project) {
         return this.http.post(this.projectsUrl + '/add', project);
     };
+    ProjectService.prototype.getTopicsUnderProject = function (parentNodeID, topicType) {
+        return this.http.get(_app_config__WEBPACK_IMPORTED_MODULE_4__["appConfig"].apiUrl + '/nodes/?nodeType=' + topicType + '&parentNodeID=' + parentNodeID);
+    };
     ProjectService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
         __metadata("design:paramtypes", [_services_custom_http_service__WEBPACK_IMPORTED_MODULE_6__["CustomHttpClient"], _services__WEBPACK_IMPORTED_MODULE_5__["AuthenticationService"]])
     ], ProjectService);
     return ProjectService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/project/topics-list.component.html":
+/*!****************************************************!*\
+  !*** ./src/app/project/topics-list.component.html ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div>\r\n\t<div>\r\n\t\t<button mat-button (click)=\"navigateBack()\">Back</button>\r\n\t</div>\r\n\t<table mat-table [dataSource]=\"topics\">\r\n\t\t<ng-container matColumnDef=\"name\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Name </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ topic.name }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"description\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Description </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ topic.content || '-' }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"status\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Status </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ topic.status }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"assignee\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Assignee </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\">\r\n\t        \t<span *ngIf=\"topic.assignee && topic.assignee.fullname\">{{ topic.assignee.fullname }}</span>\r\n\t        \t<span *ngIf=\"!topic.assignee\">N/A</span>\r\n\t        </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"due_date\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Due Date </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ topic.due_date | date:'short' }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"created_at\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Created At </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ topic.created_at | date:'short' }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"unreadMessages\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Unread Messages </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ unreadMessages[topic._id] || 0 }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"severity\" *ngIf=\"topicType == 'Issue'\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Severity </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ topic.severity }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"impact\" *ngIf=\"topicType == 'Risk'\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Impact </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ topic.impact }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"probability\" *ngIf=\"topicType == 'Risk'\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Probability </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ topic.probability }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <tr mat-header-row *matHeaderRowDef=\"displayedColumns\"></tr>\r\n\t    <tr mat-row *matRowDef=\"let row; columns: displayedColumns\"></tr>\r\n\r\n\t</table>\r\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/project/topics-list.component.scss":
+/*!****************************************************!*\
+  !*** ./src/app/project/topics-list.component.scss ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ":host {\n  width: 100%; }\n\n.mat-table {\n  width: 100%; }\n"
+
+/***/ }),
+
+/***/ "./src/app/project/topics-list.component.ts":
+/*!**************************************************!*\
+  !*** ./src/app/project/topics-list.component.ts ***!
+  \**************************************************/
+/*! exports provided: TopicsListComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TopicsListComponent", function() { return TopicsListComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _project_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./project.service */ "./src/app/project/project.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _chat_chat_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../chat/chat.service */ "./src/app/chat/chat.service.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+var TopicsListComponent = /** @class */ (function () {
+    function TopicsListComponent(projectService, router, chatService) {
+        this.projectService = projectService;
+        this.router = router;
+        this.chatService = chatService;
+        this.topics = [];
+        this.displayedColumns = [];
+    }
+    TopicsListComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.projectService.getTopicsUnderProject(this.parentNodeID, this.topicType)
+            .subscribe(function (response) {
+            _this.topics = response;
+        });
+        this.unreadMessagesSubscription = this.chatService.unreadMessageTracker
+            .subscribe(function (unreadMessages) { return _this.unreadMessages = unreadMessages; });
+    };
+    TopicsListComponent.prototype.ngOnChanges = function (changes) {
+        if (changes['topicType'] != undefined) {
+            this.setDisplayedColumns(changes['topicType'].currentValue);
+        }
+    };
+    TopicsListComponent.prototype.ngOnDestroy = function () {
+        this.unreadMessagesSubscription.unsubscribe();
+    };
+    TopicsListComponent.prototype.setDisplayedColumns = function (topicType) {
+        // Setting columns common to all topic types
+        this.displayedColumns = ['name', 'description', 'status', 'assignee', 'due_date', 'created_at',
+            'unreadMessages'];
+        if (topicType == 'Issue') {
+            this.displayedColumns.push('severity');
+        }
+        else if (topicType == 'Risk') {
+            this.displayedColumns = this.displayedColumns.concat(['impact', 'probability']);
+        }
+    };
+    TopicsListComponent.prototype.navigateBack = function () {
+        this.router.navigate(['node/' + this.parentNodeType + '/' + this.parentNodeID + '/dashboard']);
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", String)
+    ], TopicsListComponent.prototype, "parentNodeID", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", String)
+    ], TopicsListComponent.prototype, "parentNodeType", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", String)
+    ], TopicsListComponent.prototype, "topicType", void 0);
+    TopicsListComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'topics-list',
+            template: __webpack_require__(/*! ./topics-list.component.html */ "./src/app/project/topics-list.component.html"),
+            styles: [__webpack_require__(/*! ./topics-list.component.scss */ "./src/app/project/topics-list.component.scss")]
+        }),
+        __metadata("design:paramtypes", [_project_service__WEBPACK_IMPORTED_MODULE_1__["ProjectService"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
+            _chat_chat_service__WEBPACK_IMPORTED_MODULE_3__["ChatService"]])
+    ], TopicsListComponent);
+    return TopicsListComponent;
 }());
 
 
