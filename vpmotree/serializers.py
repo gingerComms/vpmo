@@ -150,7 +150,7 @@ class DeliverableSerializer(BaseTopicSerializer, serializers.ModelSerializer):
     class Meta:
         model = Deliverable
         fields = ["_id", "name", "node_type", "path", "index", "due_date", "content", "topic_type",
-                "user_permissions", "user_role", "assignee"]
+                "user_permissions", "user_role", "assignee", "status"]
 
 
 class IssueSerializer(BaseTopicSerializer, serializers.ModelSerializer):
@@ -170,7 +170,7 @@ class IssueSerializer(BaseTopicSerializer, serializers.ModelSerializer):
     class Meta:
         model = Issue
         fields = ["_id", "name", "node_type", "path", "index", "due_date", "content", "severity", "assignee",
-                "topic_type", "user_permissions", "user_role", "assignee_name"]
+                "topic_type", "user_permissions", "user_role", "assignee_name", "status"]
 
 
 class RiskSerializer(BaseTopicSerializer, serializers.ModelSerializer):
@@ -190,7 +190,7 @@ class RiskSerializer(BaseTopicSerializer, serializers.ModelSerializer):
     class Meta:
         model = Risk
         fields = ["_id", "name", "node_type", "path", "index", "due_date", "content", "impact", "probability", "assignee",
-                "topic_type", "user_permissions", "user_role"]
+                "topic_type", "user_permissions", "user_role", "status"]
 
 
 class MeetingSerializer(serializers.ModelSerializer):
