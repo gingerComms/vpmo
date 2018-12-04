@@ -51,10 +51,10 @@ class ProjectSerializer(DashboardNodeBaseSerializer, serializers.ModelSerializer
     user_role = serializers.SerializerMethodField(required=False)
 
     # Counts for the frontend
-    tasks_overdue_count = serializers.SerializerMethodField(required=False)
-    tasks_due_count = serializers.SerializerMethodField(required=False)
+    tasks_overdue = serializers.SerializerMethodField(required=False)
+    tasks_due = serializers.SerializerMethodField(required=False)
 
-    def get_tasks_overdue_count(self, instance):
+    def get_tasks_overdue(self, instance):
         """ Returns tasks that belong to a node under this project (or this project itself)
             that have a due date earlier than right now
         """
@@ -62,7 +62,7 @@ class ProjectSerializer(DashboardNodeBaseSerializer, serializers.ModelSerializer
         return Task.objects.filter(node_condition, due_date__lte=timezone.now().date()) \
                     .values("title", "assignee___id")
 
-    def get_tasks_due_count(self, instance):
+    def get_tasks_due(self, instance):
         """ Returns tasks that belong to a node under this project (or this project itself)
             that have a due date later than right now
         """
@@ -86,7 +86,7 @@ class ProjectSerializer(DashboardNodeBaseSerializer, serializers.ModelSerializer
         model = Project
         fields = ["_id", "name", "description", "content", "start", "finish", "project_owner", "path", "index", "node_type",
                 "created_at", "user_permissions", "user_role", "members_count", "topic_counts", "child_nodes",
-                "tasks_overdue_count", "tasks_due_count"]
+                "tasks_overdue", "tasks_due"]
 
 
 class TeamSerializer(DashboardNodeBaseSerializer, serializers.ModelSerializer):
