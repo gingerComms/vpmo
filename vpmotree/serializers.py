@@ -1,8 +1,10 @@
+from django.utils import timezone
 from rest_framework import serializers
 from rest_framework import fields
 
 from .models import Team, Project, Deliverable, Issue, Risk, Meeting, TreeStructure
 from vpmoauth.models import UserRole, MyUser
+from vpmotask.models import Task
 from vpmoauth.serializers import UserDetailsSerializer
 from vpmoprj.serializers import *
 
@@ -48,6 +50,24 @@ class ProjectSerializer(DashboardNodeBaseSerializer, serializers.ModelSerializer
     user_permissions = serializers.SerializerMethodField(required=False)
     user_role = serializers.SerializerMethodField(required=False)
 
+    # Counts for the frontend
+    tasks_overdue_count = serializers.SerializerMethodField(required=False)
+    tasks_due_count = serializers.SerializerMethodField(required=False)
+
+    def get_tasks_overdue_count(self, instance):
+        """ Returns tasks that belong to a node under this project (or this project itself)
+            that have a due date earlier than right now
+        """
+        node_condition = Q(node__path__contains=instance._id) | Q(node___id=instance._id)
+        return Task.objects.filter(node_condition, due_date__lte=timezone.now().date())
+
+    def get_tasks_due_count(self, instance):
+        """ Returns tasks that belong to a node under this project (or this project itself)
+            that have a due date later than right now
+        """
+        node_condition = Q(node__path__contains=instance._id) | Q(node___id=instance._id)
+        return Task.objects.filter(node_condition, due_date__gte=timezone.now().date())
+
     def get_user_permissions(self, instance):
         return self.context["request"].user.get_permissions(instance)
 
@@ -63,7 +83,8 @@ class ProjectSerializer(DashboardNodeBaseSerializer, serializers.ModelSerializer
     class Meta:
         model = Project
         fields = ["_id", "name", "description", "content", "start", "finish", "project_owner", "path", "index", "node_type",
-                "created_at", "user_permissions", "user_role", "members_count", "topic_counts", "child_nodes"]
+                "created_at", "user_permissions", "user_role", "members_count", "topic_counts", "child_nodes",
+                "tasks_overdue_count", "tasks_due_count"]
 
 
 class TeamSerializer(DashboardNodeBaseSerializer, serializers.ModelSerializer):
