@@ -9894,7 +9894,7 @@ var NodeBreadcrumbsService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<app-nodepage></app-nodepage>\r\n<mat-divider></mat-divider>\r\n\r\n<!-- Dashboard Components -->\r\n<team-dashboard *ngIf=\"contentType=='dashboard' && nodeType == 'Team'\" [nodeID]=\"nodeID\"></team-dashboard>\r\n\r\n<app-node-edit *ngIf=\"contentType=='edit'\"></app-node-edit>\r\n<app-chat [nodeID]=\"nodeID\" [nodeType]=\"nodeType\" *ngIf=\"contentType=='chat'\"></app-chat>\r\n<app-tree-structure *ngIf=\"contentType=='tree'\"></app-tree-structure>\r\n<app-permissions *ngIf=\"contentType=='permissions'\"></app-permissions>\r\n<app-documents-list *ngIf=\"contentType=='documents'\"></app-documents-list>\r\n<app-tasks *ngIf=\"contentType=='tasks'\"></app-tasks>\r\n<app-scrumboard *ngIf=\"contentType=='board' && nodeType == 'Project'\"></app-scrumboard>\r\n\r\n\r\n"
+module.exports = "<app-nodepage></app-nodepage>\r\n<mat-divider></mat-divider>\r\n\r\n<!-- Dashboard Components -->\r\n<team-dashboard *ngIf=\"contentType=='dashboard' && nodeType == 'Team'\" [nodeID]=\"nodeID\"></team-dashboard>\r\n<project-dashboard *ngIf=\"contentType=='dashboard' && nodeType == 'Project'\"></project-dashboard>\r\n\r\n<app-node-edit *ngIf=\"contentType=='edit'\"></app-node-edit>\r\n<app-chat [nodeID]=\"nodeID\" [nodeType]=\"nodeType\" *ngIf=\"contentType=='chat'\"></app-chat>\r\n<app-tree-structure *ngIf=\"contentType=='tree'\"></app-tree-structure>\r\n<app-permissions *ngIf=\"contentType=='permissions'\"></app-permissions>\r\n<app-documents-list *ngIf=\"contentType=='documents'\"></app-documents-list>\r\n<app-tasks *ngIf=\"contentType=='tasks'\"></app-tasks>\r\n<app-scrumboard *ngIf=\"contentType=='board' && nodeType == 'Project'\"></app-scrumboard>\r\n\r\n\r\n"
 
 /***/ }),
 
@@ -11139,6 +11139,126 @@ var ProjectAddComponent = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/project/project-dashboard.component.html":
+/*!**********************************************************!*\
+  !*** ./src/app/project/project-dashboard.component.html ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div>\r\n\t<h1>Project Dashboard</h1>\r\n\r\n  <!-- TASKS CARD -->\r\n\t<mat-card *ngIf=\"node && currentUsername\">\r\n    <mat-card-header>\r\n      <mat-card-title>\r\n        Tasks\r\n      </mat-card-title>\r\n    </mat-card-header>\r\n    <mat-card-content>\r\n      <p>Mine Overdue: {{ overdueCountMine }}</p>\r\n      <p>Mine Due: {{ dueCountMine }}</p>\r\n      <p>All Overdue: {{ overdueCount }}</p>\r\n      <p>All Due: {{ dueCount }}</p> \r\n    </mat-card-content>\r\n    <mat-card-actions>\r\n      <button mat-button>Go to Scrumboard</button>\r\n    </mat-card-actions>\r\n  </mat-card>\r\n  <!-- /TASKS CARD -->\r\n\r\n  <!-- ISSUES CARD -->\r\n  <mat-card *ngIf=\"node\">\r\n    <mat-card-header>\r\n      <mat-card-title>\r\n        ISSUES\r\n      </mat-card-title>\r\n    </mat-card-header>\r\n    <mat-card-content>\r\n      <p>Total Count: {{ node.topic_counts.Issue || 0 }}</p>\r\n    </mat-card-content>\r\n  </mat-card>\r\n  <!-- /ISSUES CARD -->\r\n\r\n  <!-- DELIVERABLES CARD -->\r\n  <mat-card *ngIf=\"node\">\r\n    <mat-card-header>\r\n      <mat-card-title>\r\n        Deliverables\r\n      </mat-card-title>\r\n    </mat-card-header>\r\n    <mat-card-content>\r\n      <p>Total Count: {{ node.topic_counts.Deliverable || 0 }}</p>\r\n    </mat-card-content>\r\n  </mat-card>\r\n  <!-- /DELIVERABLES CARD -->\r\n\r\n  <!-- RISKS CARD -->\r\n  <mat-card *ngIf=\"node\">\r\n    <mat-card-header>\r\n      <mat-card-title>\r\n        Risks\r\n      </mat-card-title>\r\n    </mat-card-header>\r\n    <mat-card-content>\r\n      <p>Total Count: {{ node.topic_counts.Risk || 0 }}</p>\r\n    </mat-card-content>\r\n  </mat-card>\r\n  <!-- /RISKS CARD -->\r\n\r\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/project/project-dashboard.component.scss":
+/*!**********************************************************!*\
+  !*** ./src/app/project/project-dashboard.component.scss ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "mat-card {\n  margin-bottom: 1em; }\n"
+
+/***/ }),
+
+/***/ "./src/app/project/project-dashboard.component.ts":
+/*!********************************************************!*\
+  !*** ./src/app/project/project-dashboard.component.ts ***!
+  \********************************************************/
+/*! exports provided: ProjectDashboardComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ProjectDashboardComponent", function() { return ProjectDashboardComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _node_node_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../node/node.service */ "./src/app/node/node.service.ts");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _services_authentication_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../_services/authentication.service */ "./src/app/_services/authentication.service.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+var ProjectDashboardComponent = /** @class */ (function () {
+    function ProjectDashboardComponent(nodeService, authService) {
+        this.nodeService = nodeService;
+        this.authService = authService;
+        this.overdueCountMine = 0;
+        this.overdueCount = 0;
+        this.dueCountMine = 0;
+        this.dueCount = 0;
+        this._unsubscribeAll = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
+    }
+    ProjectDashboardComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        var node = this.nodeService.node;
+        var user = this.authService.user;
+        var combined = Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["combineLatest"])(node, user);
+        combined
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["takeUntil"])(this._unsubscribeAll))
+            .subscribe(function (_a) {
+            var node = _a[0], user = _a[1];
+            if (node && user) {
+                _this.node = node;
+                _this.currentUsername = user.username;
+                _this.setTaskCount();
+            }
+        });
+    };
+    ProjectDashboardComponent.prototype.ngOnDestroy = function () {
+        this._unsubscribeAll.next();
+        this._unsubscribeAll.complete();
+    };
+    ProjectDashboardComponent.prototype.setTaskCount = function () {
+        // Resetting counts before update
+        this.dueCountMine = 0;
+        this.dueCount = 0;
+        this.overdueCountMine = 0;
+        this.overdueCount = 0;
+        for (var dueTask = 0; dueTask < this.node.tasks_due.length; dueTask++) {
+            if (this.node.tasks_due[dueTask].assignee__username == this.currentUsername) {
+                this.dueCountMine += 1;
+            }
+            else {
+                this.dueCount += 1;
+            }
+        }
+        for (var overdueTask = 0; overdueTask < this.node.tasks_overdue.length; overdueTask++) {
+            if (this.node.tasks_overdue[overdueTask].assignee__username == this.currentUsername) {
+                this.overdueCountMine += 1;
+            }
+            else {
+                this.overdueCount += 1;
+            }
+        }
+    };
+    ProjectDashboardComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'project-dashboard',
+            template: __webpack_require__(/*! ./project-dashboard.component.html */ "./src/app/project/project-dashboard.component.html"),
+            styles: [__webpack_require__(/*! ./project-dashboard.component.scss */ "./src/app/project/project-dashboard.component.scss")]
+        }),
+        __metadata("design:paramtypes", [_node_node_service__WEBPACK_IMPORTED_MODULE_1__["NodeService"],
+            _services_authentication_service__WEBPACK_IMPORTED_MODULE_4__["AuthenticationService"]])
+    ], ProjectDashboardComponent);
+    return ProjectDashboardComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/project/project-list.component.html":
 /*!*****************************************************!*\
   !*** ./src/app/project/project-list.component.html ***!
@@ -11318,16 +11438,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _project_add_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./project-add.component */ "./src/app/project/project-add.component.ts");
 /* harmony import */ var _project_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./project.service */ "./src/app/project/project.service.ts");
 /* harmony import */ var _project_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./project.component */ "./src/app/project/project.component.ts");
-/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
-/* harmony import */ var _guards_auth_guard__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../_guards/auth.guard */ "./src/app/_guards/auth.guard.ts");
-/* harmony import */ var _project_list_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./project-list.component */ "./src/app/project/project-list.component.ts");
-/* harmony import */ var ngx_quill__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ngx-quill */ "./node_modules/ngx-quill/fesm5/ngx-quill.js");
+/* harmony import */ var _project_dashboard_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./project-dashboard.component */ "./src/app/project/project-dashboard.component.ts");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _guards_auth_guard__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../_guards/auth.guard */ "./src/app/_guards/auth.guard.ts");
+/* harmony import */ var _project_list_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./project-list.component */ "./src/app/project/project-list.component.ts");
+/* harmony import */ var ngx_quill__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ngx-quill */ "./node_modules/ngx-quill/fesm5/ngx-quill.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -11347,9 +11469,9 @@ var ProjectRoutes = [
         // component: ProjectComponent,
         children: [
             { path: 'add', component: _project_add_component__WEBPACK_IMPORTED_MODULE_5__["ProjectAddComponent"] },
-            { path: '', component: _project_list_component__WEBPACK_IMPORTED_MODULE_10__["ProjectListComponent"] },
+            { path: '', component: _project_list_component__WEBPACK_IMPORTED_MODULE_11__["ProjectListComponent"] },
         ],
-        canActivate: [_guards_auth_guard__WEBPACK_IMPORTED_MODULE_9__["AuthGuard"]],
+        canActivate: [_guards_auth_guard__WEBPACK_IMPORTED_MODULE_10__["AuthGuard"]],
     },
 ];
 var ProjectModule = /** @class */ (function () {
@@ -11362,26 +11484,29 @@ var ProjectModule = /** @class */ (function () {
                 _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormsModule"],
                 _angular_router__WEBPACK_IMPORTED_MODULE_2__["RouterModule"].forChild(ProjectRoutes),
                 _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClientModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatDatepickerModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatNativeDateModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatIconModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatFormFieldModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatInputModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatButtonModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatCardModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatListModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_8__["MatIconModule"],
-                ngx_quill__WEBPACK_IMPORTED_MODULE_11__["QuillModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_9__["MatDatepickerModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_9__["MatNativeDateModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_9__["MatIconModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_9__["MatFormFieldModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_9__["MatInputModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_9__["MatButtonModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_9__["MatCardModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_9__["MatListModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_9__["MatIconModule"],
+                ngx_quill__WEBPACK_IMPORTED_MODULE_12__["QuillModule"]
             ],
             declarations: [
                 _project_component__WEBPACK_IMPORTED_MODULE_7__["ProjectComponent"],
                 _project_add_component__WEBPACK_IMPORTED_MODULE_5__["ProjectAddComponent"],
-                _project_list_component__WEBPACK_IMPORTED_MODULE_10__["ProjectListComponent"]
+                _project_list_component__WEBPACK_IMPORTED_MODULE_11__["ProjectListComponent"],
+                _project_dashboard_component__WEBPACK_IMPORTED_MODULE_8__["ProjectDashboardComponent"]
             ],
             providers: [
                 _project_service__WEBPACK_IMPORTED_MODULE_6__["ProjectService"],
             ],
-            exports: [],
+            exports: [
+                _project_dashboard_component__WEBPACK_IMPORTED_MODULE_8__["ProjectDashboardComponent"]
+            ],
         })
     ], ProjectModule);
     return ProjectModule;
@@ -13713,7 +13838,7 @@ var TeamDashboardComponent = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'team-dashboard',
             template: __webpack_require__(/*! ./team-dashboard.component.html */ "./src/app/team/team-dashboard.component.html"),
-            styles: [__webpack_require__(/*! ./team-dashboard.component.scss */ "./src/app/team/team-dashboard.component.scss"), __webpack_require__(/*! ./teams.component.scss */ "./src/app/team/teams.component.scss")]
+            styles: [__webpack_require__(/*! ./team-dashboard.component.scss */ "./src/app/team/team-dashboard.component.scss"), __webpack_require__(/*! ./teams-list.component.scss */ "./src/app/team/teams-list.component.scss")]
         }),
         __metadata("design:paramtypes", [_team_service__WEBPACK_IMPORTED_MODULE_1__["TeamService"],
             _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
@@ -13737,7 +13862,7 @@ var TeamDashboardComponent = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TeamModule", function() { return TeamModule; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _teams_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./teams.component */ "./src/app/team/teams.component.ts");
+/* harmony import */ var _teams_list_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./teams-list.component */ "./src/app/team/teams-list.component.ts");
 /* harmony import */ var _team_dashboard_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./team-dashboard.component */ "./src/app/team/team-dashboard.component.ts");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
@@ -13764,7 +13889,7 @@ var TeamRoutes = [
         // component: UserComponent,
         children: [
             // { path: 'tree', component: SignUpComponent },
-            { path: 'all', component: _teams_component__WEBPACK_IMPORTED_MODULE_1__["TeamsComponent"] },
+            { path: 'all', component: _teams_list_component__WEBPACK_IMPORTED_MODULE_1__["TeamsListComponent"] },
         ],
         canActivate: [_guards_auth_guard__WEBPACK_IMPORTED_MODULE_5__["AuthGuard"]],
     },
@@ -13789,11 +13914,11 @@ var TeamModule = /** @class */ (function () {
                 _angular_material__WEBPACK_IMPORTED_MODULE_7__["MatGridListModule"]
             ],
             exports: [
-                _teams_component__WEBPACK_IMPORTED_MODULE_1__["TeamsComponent"],
+                _teams_list_component__WEBPACK_IMPORTED_MODULE_1__["TeamsListComponent"],
                 _team_dashboard_component__WEBPACK_IMPORTED_MODULE_2__["TeamDashboardComponent"]
             ],
             declarations: [
-                _teams_component__WEBPACK_IMPORTED_MODULE_1__["TeamsComponent"],
+                _teams_list_component__WEBPACK_IMPORTED_MODULE_1__["TeamsListComponent"],
                 _team_dashboard_component__WEBPACK_IMPORTED_MODULE_2__["TeamDashboardComponent"]
             ],
             providers: [],
@@ -13889,10 +14014,10 @@ var TeamService = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./src/app/team/teams.component.html":
-/*!*******************************************!*\
-  !*** ./src/app/team/teams.component.html ***!
-  \*******************************************/
+/***/ "./src/app/team/teams-list.component.html":
+/*!************************************************!*\
+  !*** ./src/app/team/teams-list.component.html ***!
+  \************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13900,10 +14025,10 @@ module.exports = "\r\n<div>\r\n  <h1>My Teams\r\n      <button mat-icon-button c
 
 /***/ }),
 
-/***/ "./src/app/team/teams.component.scss":
-/*!*******************************************!*\
-  !*** ./src/app/team/teams.component.scss ***!
-  \*******************************************/
+/***/ "./src/app/team/teams-list.component.scss":
+/*!************************************************!*\
+  !*** ./src/app/team/teams-list.component.scss ***!
+  \************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13911,16 +14036,16 @@ module.exports = "/**\n * Applies styles for users in high contrast mode. Note t
 
 /***/ }),
 
-/***/ "./src/app/team/teams.component.ts":
-/*!*****************************************!*\
-  !*** ./src/app/team/teams.component.ts ***!
-  \*****************************************/
-/*! exports provided: TeamsComponent */
+/***/ "./src/app/team/teams-list.component.ts":
+/*!**********************************************!*\
+  !*** ./src/app/team/teams-list.component.ts ***!
+  \**********************************************/
+/*! exports provided: TeamsListComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TeamsComponent", function() { return TeamsComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TeamsListComponent", function() { return TeamsListComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var app_services_authentication_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! app/_services/authentication.service */ "./src/app/_services/authentication.service.ts");
 /* harmony import */ var _team_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./team.service */ "./src/app/team/team.service.ts");
@@ -13944,8 +14069,8 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
-var TeamsComponent = /** @class */ (function () {
-    function TeamsComponent(authenticationService, teamService, router, globalService, dialog, chatService) {
+var TeamsListComponent = /** @class */ (function () {
+    function TeamsListComponent(authenticationService, teamService, router, globalService, dialog, chatService) {
         this.authenticationService = authenticationService;
         this.teamService = teamService;
         this.router = router;
@@ -13954,17 +14079,17 @@ var TeamsComponent = /** @class */ (function () {
         this.chatService = chatService;
         this.teams = [];
     }
-    TeamsComponent.prototype.teamTree = function (team) {
+    TeamsListComponent.prototype.teamTree = function (team) {
         // debugger;
         localStorage.setItem('nodeType', 'Team');
         // this.globalService.team = JSON.stringify(team);
         // this.globalService.node = JSON.stringify(team);
         this.router.navigate(['/node/Team/' + team._id + '/tree']);
     };
-    TeamsComponent.prototype.getNode = function (nodeId) {
+    TeamsListComponent.prototype.getNode = function (nodeId) {
         this.router.navigate(['/node/Team/' + nodeId + '/dashboard']);
     };
-    TeamsComponent.prototype.ngOnInit = function () {
+    TeamsListComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.getTeams();
         this.unreadMessageSubscription = this.chatService.unreadMessageTracker.subscribe(function (unreadMessages) {
@@ -13972,10 +14097,10 @@ var TeamsComponent = /** @class */ (function () {
             _this.setUnreadMessages();
         });
     };
-    TeamsComponent.prototype.ngOnDestroy = function () {
+    TeamsListComponent.prototype.ngOnDestroy = function () {
         this.unreadMessageSubscription.unsubscribe();
     };
-    TeamsComponent.prototype.getTeams = function () {
+    TeamsListComponent.prototype.getTeams = function () {
         var _this = this;
         this.teamService.getTeams().subscribe(function (teams) {
             _this.teams = teams;
@@ -13985,7 +14110,7 @@ var TeamsComponent = /** @class */ (function () {
     /*
      * Goes over all teams and sets unread messages on each
      */
-    TeamsComponent.prototype.setUnreadMessages = function () {
+    TeamsListComponent.prototype.setUnreadMessages = function () {
         for (var team = 0; team < this.teams.length; team++) {
             this.teams[team].unreadMessages = 0;
             if (this.unreadMessages[this.teams[team]._id] != undefined) {
@@ -13998,7 +14123,7 @@ var TeamsComponent = /** @class */ (function () {
             }
         }
     };
-    TeamsComponent.prototype.openTeamCreateDialog = function (templateRef) {
+    TeamsListComponent.prototype.openTeamCreateDialog = function (templateRef) {
         var dialogRef = this.dialog.open(templateRef, {
             width: '250px',
         });
@@ -14010,7 +14135,7 @@ var TeamsComponent = /** @class */ (function () {
             self.getTeams();
         });
     };
-    TeamsComponent.prototype.createNewTeam = function () {
+    TeamsListComponent.prototype.createNewTeam = function () {
         if (!this.newTeamName) {
             alert('Please type in a team name');
             return;
@@ -14022,11 +14147,11 @@ var TeamsComponent = /** @class */ (function () {
             self.dialogRef.close();
         });
     };
-    TeamsComponent = __decorate([
+    TeamsListComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
-            selector: 'app-teams',
-            template: __webpack_require__(/*! ./teams.component.html */ "./src/app/team/teams.component.html"),
-            styles: [__webpack_require__(/*! ./teams.component.scss */ "./src/app/team/teams.component.scss")]
+            selector: 'teams-list',
+            template: __webpack_require__(/*! ./teams-list.component.html */ "./src/app/team/teams-list.component.html"),
+            styles: [__webpack_require__(/*! ./teams-list.component.scss */ "./src/app/team/teams-list.component.scss")]
         }),
         __metadata("design:paramtypes", [app_services_authentication_service__WEBPACK_IMPORTED_MODULE_1__["AuthenticationService"],
             _team_service__WEBPACK_IMPORTED_MODULE_2__["TeamService"],
@@ -14034,8 +14159,8 @@ var TeamsComponent = /** @class */ (function () {
             _services_global_service__WEBPACK_IMPORTED_MODULE_4__["GlobalService"],
             _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatDialog"],
             app_chat_chat_service__WEBPACK_IMPORTED_MODULE_6__["ChatService"]])
-    ], TeamsComponent);
-    return TeamsComponent;
+    ], TeamsListComponent);
+    return TeamsListComponent;
 }());
 
 
@@ -14257,7 +14382,6 @@ var TreeStructureHttpService = /** @class */ (function () {
     };
     // update bunch of nodes
     TreeStructureHttpService.prototype.updateNodeList = function (nodeList, teamId) {
-        console.log('updateNodeList ', nodeList);
         return this.http.put(this.nodesTreeUrl + teamId + '/', nodeList).subscribe();
     };
     TreeStructureHttpService.prototype.createNode = function (formData, nodeType) {
@@ -14692,7 +14816,6 @@ var TreeStructureService = /** @class */ (function () {
                 var x = treeModel.getNodeById(nodeId);
                 changedNode.push(x.data);
             }
-            console.log(changedNode);
             return changedNode;
         };
     }
@@ -14729,14 +14852,18 @@ var TreeStructureService = /** @class */ (function () {
         return newData;
     };
     TreeStructureService.prototype.getPath = function (node) {
+        console.log(node);
         if (node == null) {
             return '';
         }
-        if (node.parent == null || node.parent.data.virtual) {
+        if (node.data.path == null) {
             return ',' + node.data._id + ',';
         }
-        var res = this.getPath(node.parent) + node.data._id + ',';
-        return res;
+        else {
+            return node.data.path + node.data._id + ',';
+        }
+        // const res = this.getPath(node.parent) + node.data._id + ',';
+        // return res;
     };
     TreeStructureService.prototype.updateDataFields = function (node) {
         var data = node.data;
@@ -14804,7 +14931,7 @@ module.exports = ":host {\r\n\twidth: 100%;\r\n}"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"index-banner\" class=\"parallax-container\">\r\n  <div class=\"section no-pad-bot\">\r\n    <div class=\"container\">\r\n      <br><br>\r\n      <ul>\r\n      \t<li *ngFor=\"let channel of channels()\">\r\n      \t\t{{ channel }} {{ unreadMessages[channel] }}\r\n      \t</li>\r\n      </ul>\r\n\r\n      <!--<app-team-card></app-team-card>-->\r\n      <app-teams style=\"width: 100%;\"></app-teams>\r\n    </div>\r\n  </div>\r\n</div>\r\n"
+module.exports = "<div id=\"index-banner\" class=\"parallax-container\">\r\n  <div class=\"section no-pad-bot\">\r\n    <div class=\"container\">\r\n      <br><br>\r\n      <ul>\r\n      \t<li *ngFor=\"let channel of channels()\">\r\n      \t\t{{ channel }} {{ unreadMessages[channel] }}\r\n      \t</li>\r\n      </ul>\r\n\r\n      <!--<app-team-card></app-team-card>-->\r\n      <teams-list style=\"width: 100%;\"></teams-list>\r\n    </div>\r\n  </div>\r\n</div>\r\n"
 
 /***/ }),
 
