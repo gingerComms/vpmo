@@ -59,7 +59,7 @@ class ProjectSerializer(DashboardNodeBaseSerializer, serializers.ModelSerializer
             that have a due date earlier than right now
         """
         node_condition = Q(node__path__contains=instance._id) | Q(node___id=instance._id)
-        return Task.objects.filter(node_condition, due_date__lte=timezone.now().date()) \
+        return Task.objects.filter(node_condition, due_date__lt=timezone.now().date()) \
                     .values("title", "assignee__username")
 
     def get_tasks_due(self, instance):
