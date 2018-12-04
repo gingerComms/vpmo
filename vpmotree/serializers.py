@@ -15,6 +15,9 @@ from rest_framework.fields import CurrentUserDefault
 import collections
 
 
+# TODO: Create a base serializer that contains all required fields in the TreeStructure model(s)
+
+
 class DashboardNodeBaseSerializer(serializers.Serializer):
     """ Contains all the generic count fields required in the node's
         Dashboard frontend pages
@@ -150,7 +153,7 @@ class DeliverableSerializer(BaseTopicSerializer, serializers.ModelSerializer):
     class Meta:
         model = Deliverable
         fields = ["_id", "name", "node_type", "path", "index", "due_date", "content", "topic_type",
-                "user_permissions", "user_role", "assignee", "status"]
+                "user_permissions", "user_role", "assignee", "status", "created_at"]
 
 
 class IssueSerializer(BaseTopicSerializer, serializers.ModelSerializer):
@@ -170,7 +173,7 @@ class IssueSerializer(BaseTopicSerializer, serializers.ModelSerializer):
     class Meta:
         model = Issue
         fields = ["_id", "name", "node_type", "path", "index", "due_date", "content", "severity", "assignee",
-                "topic_type", "user_permissions", "user_role", "assignee_name", "status"]
+                "topic_type", "user_permissions", "user_role", "assignee_name", "status", "created_at"]
 
 
 class RiskSerializer(BaseTopicSerializer, serializers.ModelSerializer):
@@ -190,7 +193,7 @@ class RiskSerializer(BaseTopicSerializer, serializers.ModelSerializer):
     class Meta:
         model = Risk
         fields = ["_id", "name", "node_type", "path", "index", "due_date", "content", "impact", "probability", "assignee",
-                "topic_type", "user_permissions", "user_role", "status"]
+                "topic_type", "user_permissions", "user_role", "status", "created_at"]
 
 
 class MeetingSerializer(serializers.ModelSerializer):
