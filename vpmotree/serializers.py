@@ -60,7 +60,7 @@ class ProjectSerializer(DashboardNodeBaseSerializer, serializers.ModelSerializer
         """
         node_condition = Q(node__path__contains=instance._id) | Q(node___id=instance._id)
         return Task.objects.filter(node_condition, due_date__lte=timezone.now().date()) \
-                    .values("title", "assignee___id")
+                    .values("title", "assignee__username")
 
     def get_tasks_due(self, instance):
         """ Returns tasks that belong to a node under this project (or this project itself)
@@ -68,7 +68,7 @@ class ProjectSerializer(DashboardNodeBaseSerializer, serializers.ModelSerializer
         """
         node_condition = Q(node__path__contains=instance._id) | Q(node___id=instance._id)
         return Task.objects.filter(node_condition, due_date__gte=timezone.now().date()) \
-                    .values("title", "assignee___username")
+                    .values("title", "assignee__username")
 
     def get_user_permissions(self, instance):
         return self.context["request"].user.get_permissions(instance)
