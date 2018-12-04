@@ -59,14 +59,14 @@ class ProjectSerializer(DashboardNodeBaseSerializer, serializers.ModelSerializer
             that have a due date earlier than right now
         """
         node_condition = Q(node__path__contains=instance._id) | Q(node___id=instance._id)
-        return Task.objects.filter(node_condition, due_date__lte=timezone.now().date())
+        return Task.objects.filter(node_condition, due_date__lte=timezone.now().date()).count()
 
     def get_tasks_due_count(self, instance):
         """ Returns tasks that belong to a node under this project (or this project itself)
             that have a due date later than right now
         """
         node_condition = Q(node__path__contains=instance._id) | Q(node___id=instance._id)
-        return Task.objects.filter(node_condition, due_date__gte=timezone.now().date())
+        return Task.objects.filter(node_condition, due_date__gte=timezone.now().date()).count()
 
     def get_user_permissions(self, instance):
         return self.context["request"].user.get_permissions(instance)
