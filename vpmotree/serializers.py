@@ -173,7 +173,7 @@ class IssueSerializer(BaseTopicSerializer, serializers.ModelSerializer):
     class Meta:
         model = Issue
         fields = ["_id", "name", "node_type", "path", "index", "due_date", "content", "severity", "assignee",
-                "topic_type", "user_permissions", "user_role", "assignee_name", "status", "created_at"]
+                "topic_type", "user_permissions", "user_role", "status", "created_at"]
 
 
 class RiskSerializer(BaseTopicSerializer, serializers.ModelSerializer):
