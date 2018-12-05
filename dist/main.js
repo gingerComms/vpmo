@@ -12428,7 +12428,7 @@ var ScrumboardCardComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div fxFlex=\"1 0 auto\" *ngIf=\"!formActive\" class=\"list-header-name\" (click)=\"openForm()\">\n    {{list.title}} {{ list.index }}\n</div>\n\n<form [formGroup]=\"form\" (ngSubmit)=\"onFormSubmit()\"\n      class=\"list-header-name-form\" fxLayout=\"row\" fxFlex=\"1 0 auto\"\n      *ngIf=\"formActive\">\n\n    <input formControlName=\"title\" #nameInput fxFlex placeholder=\"Write a list Name\">\n\n    <button mat-icon-button fxFlex=\"0 1 auto\">\n        <mat-icon>check</mat-icon>\n    </button>\n    <button mat-icon-button fxFlex=\"0 1 auto\" (click)=\"closeForm()\" type=\"button\">\n        <mat-icon>close</mat-icon>\n    </button>\n</form>\n"
+module.exports = "<div fxFlex=\"1 0 auto\" *ngIf=\"!formActive\" class=\"list-header-name\" (click)=\"openForm()\">\n    {{list.title}}\n</div>\n\n<form [formGroup]=\"form\" (ngSubmit)=\"onFormSubmit()\"\n      class=\"list-header-name-form\" fxLayout=\"row\" fxFlex=\"1 0 auto\"\n      *ngIf=\"formActive\">\n\n    <input formControlName=\"title\" #nameInput fxFlex placeholder=\"Write a list Name\">\n\n    <button mat-icon-button fxFlex=\"0 1 auto\">\n        <mat-icon>check</mat-icon>\n    </button>\n    <button mat-icon-button fxFlex=\"0 1 auto\" (click)=\"closeForm()\" type=\"button\">\n        <mat-icon>close</mat-icon>\n    </button>\n</form>\n"
 
 /***/ }),
 
