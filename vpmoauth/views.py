@@ -316,6 +316,9 @@ class UserExistsView(APIView):
         query_field = request.query_params["query_field"]
         query = request.query_params["query"]
 
+        if not query_field.endswith("__iexact"):
+            query_field = "{query}__iexact".format(query=query_field)
+
         # Filtering for the first existing user
         filter_d = {query_field: query}
         user_exists = MyUser.objects.filter(**filter_d).count() > 0

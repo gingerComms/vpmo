@@ -14188,6 +14188,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_global_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../_services/global.service */ "./src/app/_services/global.service.ts");
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
 /* harmony import */ var app_chat_chat_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! app/chat/chat.service */ "./src/app/chat/chat.service.ts");
+/* harmony import */ var _services_loading_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../_services/loading.service */ "./src/app/_services/loading.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -14204,14 +14205,16 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var TeamsListComponent = /** @class */ (function () {
-    function TeamsListComponent(authenticationService, teamService, router, globalService, dialog, chatService) {
+    function TeamsListComponent(authenticationService, teamService, router, globalService, dialog, chatService, loadingService) {
         this.authenticationService = authenticationService;
         this.teamService = teamService;
         this.router = router;
         this.globalService = globalService;
         this.dialog = dialog;
         this.chatService = chatService;
+        this.loadingService = loadingService;
         this.teams = [];
     }
     TeamsListComponent.prototype.teamTree = function (team) {
@@ -14246,14 +14249,16 @@ var TeamsListComponent = /** @class */ (function () {
      * Goes over all teams and sets unread messages on each
      */
     TeamsListComponent.prototype.setUnreadMessages = function () {
-        for (var team = 0; team < this.teams.length; team++) {
-            this.teams[team].unreadMessages = 0;
-            if (this.unreadMessages[this.teams[team]._id] != undefined) {
-                this.teams[team].unreadMessages += this.unreadMessages[this.teams[team]._id];
-            }
-            for (var child = 0; child < this.teams[team].child_nodes.length; child++) {
-                if (this.unreadMessages[this.teams[team].child_nodes[child]] != undefined) {
-                    this.teams[team].unreadMessages += this.unreadMessages[this.teams[team].child_nodes[child]];
+        if (this.unreadMessages) {
+            for (var team = 0; team < this.teams.length; team++) {
+                this.teams[team].unreadMessages = 0;
+                if (this.unreadMessages[this.teams[team]._id] != undefined) {
+                    this.teams[team].unreadMessages += this.unreadMessages[this.teams[team]._id];
+                }
+                for (var child = 0; child < this.teams[team].child_nodes.length; child++) {
+                    if (this.unreadMessages[this.teams[team].child_nodes[child]] != undefined) {
+                        this.teams[team].unreadMessages += this.unreadMessages[this.teams[team].child_nodes[child]];
+                    }
                 }
             }
         }
@@ -14271,14 +14276,16 @@ var TeamsListComponent = /** @class */ (function () {
         });
     };
     TeamsListComponent.prototype.createNewTeam = function () {
+        var _this = this;
         if (!this.newTeamName) {
             alert('Please type in a team name');
             return;
         }
         var self = this;
+        this.loadingService.show();
         this.teamService.createTeam(this.newTeamName)
             .subscribe(function (createdTeam) {
-            alert('Team Created');
+            _this.loadingService.hide();
             self.dialogRef.close();
         });
     };
@@ -14293,7 +14300,8 @@ var TeamsListComponent = /** @class */ (function () {
             _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"],
             _services_global_service__WEBPACK_IMPORTED_MODULE_4__["GlobalService"],
             _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatDialog"],
-            app_chat_chat_service__WEBPACK_IMPORTED_MODULE_6__["ChatService"]])
+            app_chat_chat_service__WEBPACK_IMPORTED_MODULE_6__["ChatService"],
+            _services_loading_service__WEBPACK_IMPORTED_MODULE_7__["LoadingService"]])
     ], TeamsListComponent);
     return TeamsListComponent;
 }());
@@ -15066,7 +15074,7 @@ module.exports = ":host {\r\n\twidth: 100%;\r\n}"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"index-banner\" class=\"parallax-container\">\r\n  <div class=\"section no-pad-bot\">\r\n    <div class=\"container\">\r\n      <br><br>\r\n      <ul>\r\n      \t<li *ngFor=\"let channel of channels()\">\r\n      \t\t{{ channel }} {{ unreadMessages[channel] }}\r\n      \t</li>\r\n      </ul>\r\n\r\n      <!--<app-team-card></app-team-card>-->\r\n      <teams-list style=\"width: 100%;\"></teams-list>\r\n    </div>\r\n  </div>\r\n</div>\r\n"
+module.exports = "<div id=\"index-banner\" class=\"parallax-container\">\r\n  <div class=\"section no-pad-bot\">\r\n    <div class=\"container\">\r\n      <br><br>\r\n      <!--<app-team-card></app-team-card>-->\r\n      <teams-list style=\"width: 100%;\"></teams-list>\r\n    </div>\r\n  </div>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -15100,17 +15108,7 @@ var DashboardComponent = /** @class */ (function () {
         this.authService = authService;
         this.chatService = chatService;
     }
-    DashboardComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        this.fullname = this.authService.getUser().fullname;
-        console.log(this.fullname);
-        this.chatService.unreadMessageTracker.subscribe(function (unreadMessages) {
-            _this.unreadMessages = unreadMessages;
-        });
-    };
-    DashboardComponent.prototype.channels = function () {
-        return Object.keys(this.unreadMessages);
-    };
+    DashboardComponent.prototype.ngOnInit = function () { };
     DashboardComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'app-dashboard',
