@@ -11212,7 +11212,7 @@ var ProjectDashboardComponent = /** @class */ (function () {
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["takeUntil"])(this._unsubscribeAll))
             .subscribe(function (_a) {
             var node = _a[0], user = _a[1];
-            if (node !== null && user) {
+            if (node !== null && node.tasks_due != undefined && user) {
                 _this.node = node;
                 _this.currentUsername = user.username;
                 _this.setTaskCount();
