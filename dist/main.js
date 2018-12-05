@@ -11606,7 +11606,7 @@ var ProjectService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div>\r\n\t<div>\r\n\t\t<button mat-button (click)=\"navigateBack()\">Back</button>\r\n\t</div>\r\n\t<table mat-table [dataSource]=\"topics\">\r\n\t\t<ng-container matColumnDef=\"name\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Name </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ topic.name }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"description\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Description </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ topic.content || '-' }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"status\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Status </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ topic.status }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"assignee\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Assignee </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\">\r\n\t        \t<span *ngIf=\"topic.assignee && topic.assignee.fullname\">{{ topic.assignee.fullname }}</span>\r\n\t        \t<span *ngIf=\"!topic.assignee\">N/A</span>\r\n\t        </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"due_date\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Due Date </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ topic.due_date | date:'short' }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"created_at\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Created At </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ topic.created_at | date:'short' }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"unreadMessages\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Unread Messages </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ unreadMessages[topic._id] || 0 }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"severity\" *ngIf=\"topicType == 'Issue'\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Severity </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ topic.severity }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"impact\" *ngIf=\"topicType == 'Risk'\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Impact </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ topic.impact }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"probability\" *ngIf=\"topicType == 'Risk'\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Probability </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ topic.probability }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <tr mat-header-row *matHeaderRowDef=\"displayedColumns\"></tr>\r\n\t    <tr mat-row *matRowDef=\"let row; columns: displayedColumns\"></tr>\r\n\r\n\t</table>\r\n</div>"
+module.exports = "<div>\r\n\t<div>\r\n\t\t<button mat-button (click)=\"navigateBack()\">Back</button>\r\n\t</div>\r\n\t<table mat-table [dataSource]=\"topics\">\r\n\t\t<ng-container matColumnDef=\"name\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Name </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ topic.name }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"description\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Description </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ topic.content || '-' }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"status\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Status </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ STATUS_MAP[topic.status] }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"assignee\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Assignee </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\">\r\n\t        \t<span *ngIf=\"topic.assignee && topic.assignee.fullname\">{{ topic.assignee.fullname }}</span>\r\n\t        \t<span *ngIf=\"!topic.assignee\">N/A</span>\r\n\t        </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"due_date\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Due Date </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ topic.due_date | date:'short' }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"created_at\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Created At </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ topic.created_at | date:'short' }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"unreadMessages\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Unread Messages </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ unreadMessages[topic._id] || 0 }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"severity\" *ngIf=\"topicType == 'Issue'\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Severity </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ SEVERITY_MAP[topic.severity] }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"impact\" *ngIf=\"topicType == 'Risk'\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Impact </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ IMPACT_MAP[topic.impact] }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <ng-container matColumnDef=\"probability\" *ngIf=\"topicType == 'Risk'\">\r\n\t        <th mat-header-cell *matHeaderCellDef> Probability </th>\r\n\t        <td mat-cell *matCellDef=\"let topic\"> {{ PROBABILITY_MAP[topic.probability] }} </td>\r\n\t    </ng-container>\r\n\r\n\t    <tr mat-header-row *matHeaderRowDef=\"displayedColumns\"></tr>\r\n\t    <tr mat-row *matRowDef=\"let row; columns: displayedColumns\"></tr>\r\n\r\n\t</table>\r\n</div>"
 
 /***/ }),
 
@@ -11655,6 +11655,25 @@ var TopicsListComponent = /** @class */ (function () {
         this.chatService = chatService;
         this.topics = [];
         this.displayedColumns = [];
+        this.STATUS_MAP = {
+            1: 'Open',
+            0: 'Closed'
+        };
+        this.SEVERITY_MAP = {
+            1: 'Low',
+            2: 'Medium',
+            3: 'High'
+        };
+        this.IMPACT_MAP = {
+            1: 'Minor',
+            2: "Moderate",
+            3: 'High'
+        };
+        this.PROBABILITY_MAP = {
+            1: 'Low Probability',
+            2: 'Medium Probability',
+            3: 'High Probability'
+        };
     }
     TopicsListComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -14682,21 +14701,13 @@ var TreeStructureComponent = /** @class */ (function () {
             console.log('Opening Node', node);
             localStorage.setItem('nodeID', nodeId);
             localStorage.setItem('nodeType', nodeType);
-            /*
-            this.globalService.node = JSON.stringify({ _id: nodeId, name: nodeName });
-            
-            if (nodeType === 'Team') {
-              this.globalService.team = JSON.stringify({ _id: nodeId, name: nodeName });
-              // localStorage.setItem('teamID', nodeId);
-            } else if (nodeType === 'Project') {
-              this.globalService.project = JSON.stringify({ _id: nodeId, name: nodeName });
-            } else {
-              this.globalService.topic = JSON.stringify({ _id: nodeId, name: nodeName });
-            }
-            */
-            // this.router.navigate(['node/details']);
             console.log('node/' + nodeType + '/' + nodeId);
-            _this.router.navigate(['node/' + nodeType + '/' + nodeId + '/tree']);
+            if (nodeType == 'Topic') {
+                _this.router.navigate(['node/' + nodeType + '/' + nodeId + '/edit']);
+            }
+            else {
+                _this.router.navigate(['node/' + nodeType + '/' + nodeId + '/tree']);
+            }
         };
     }
     TreeStructureComponent.prototype.resetRenameAttrs = function () {

@@ -32,7 +32,7 @@ class DashboardNodeBaseSerializer(serializers.Serializer):
         """ Returns counts of different topic instances
             that have this node in their heirarchy
         """
-        all_topics = TreeStructure.objects.filter(node_type="Topic", path__contains=instance._id) \
+        all_topics = TreeStructure.objects.filter(node_type="Topic", status=1, path__contains=instance._id) \
                         .values_list("model_name", flat=True)
         return collections.Counter(all_topics)
 
@@ -63,6 +63,7 @@ class ProjectSerializer(DashboardNodeBaseSerializer, serializers.ModelSerializer
         """
         node_condition = Q(node__path__contains=instance._id) | Q(node___id=instance._id)
         return Task.objects.filter(node_condition, due_date__lt=timezone.now().date()) \
+                    .exclude(status="COMPLETE") \
                     .values("title", "assignee__username")
 
     def get_tasks_due(self, instance):
@@ -71,6 +72,7 @@ class ProjectSerializer(DashboardNodeBaseSerializer, serializers.ModelSerializer
         """
         node_condition = Q(node__path__contains=instance._id) | Q(node___id=instance._id)
         return Task.objects.filter(node_condition, due_date__gte=timezone.now().date()) \
+                    .exclude(status="COMPLETE") \
                     .values("title", "assignee__username")
 
     def get_user_permissions(self, instance):
