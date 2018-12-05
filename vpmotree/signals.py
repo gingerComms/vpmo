@@ -12,6 +12,6 @@ def delete_node_channel(sender, instance, using, **kwargs):
 def create_project_list(sender, instance, *args, **kwargs):
 	""" Creates a task list if a project has no lists - to prevent errors during task creation """
 	existing_task_lists = ScrumboardTaskList.objects.filter(project=instance).first()
-	if existing_task_lists.first() is None:
+	if existing_task_lists is None:
 		created_task_list = ScrumboardTaskList(project=instance, title="Default List")
 		created_task_list.save()
