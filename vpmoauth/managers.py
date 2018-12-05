@@ -40,6 +40,6 @@ class MyUserManager(BaseUserManager):
         # acquire token to be able to create team
         return user
 
-    def get_by_natural_key(self, email):
-        return self.get(email=email)
+    def get_by_natural_key(self, username):
+        return self.get(email=username)
 
