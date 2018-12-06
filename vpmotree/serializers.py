@@ -272,13 +272,17 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
 
         self.user =  self.context['request'].user
 
+        """
         permissions = self.user.get_permissions(instance, all_types=True)
         allowed_node_types = [i.split("_")[-1].capitalize() for i in permissions if "read_" in i]
 
-        child_condition = Q(path__startswith=","+str(instance._id)) | Q(path__icontains=str(instance._id))
+        child_condition = Q(path__startswith=","+str(instance._id)) | Q(path__contains=str(instance._id))
         role_condition = Q(node_type__in=allowed_node_types) | Q(user_role_node__user=self.user)
         
         self.all_children = TreeStructure.objects.filter(child_condition, role_condition).distinct()
+        """
+        self.all_children = UserRole.get_assigned_nodes(self.user, str(instance._id), perm_type="read")
+        self.all_children = TreeStructure.objects.filter(_id__in=self.all_children)
 
         if instance.node_type == "Team":
             # All objects starting from the current ROOT (Team)
