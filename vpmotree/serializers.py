@@ -281,8 +281,14 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
         
         self.all_children = TreeStructure.objects.filter(child_condition, role_condition).distinct()
         """
-        self.all_children = UserRole.get_assigned_nodes(self.user, str(instance._id), perm_type="read")
-        self.all_children = TreeStructure.objects.filter(_id__in=self.all_children)
+        if instance.path is None:
+            self.all_children = UserRole.get_assigned_nodes(self.user, str(instance._id), perm_type="read")
+            self.all_children = TreeStructure.objects.filter(_id__in=self.all_children)
+        else:
+            parent_node_id = instance.path.split(',')[1]
+            self.all_children = UserRole.get_assigned_nodes(self.user, str(parent_node_id), perm_type="read")
+            self.all_children = TreeStructure.objects.filter(_id__in=self.all_children, path__endswith=str(instance._id)+",")
+        
 
         if instance.node_type == "Team":
             # All objects starting from the current ROOT (Team)
