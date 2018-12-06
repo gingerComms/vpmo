@@ -25,6 +25,8 @@ class ReadNodeListFilter(filters.BaseFilterBackend):
             #   permissions__name__contains="read" -> filters the roles that have a read_<target_node_type> permission
             #   At the end, we're left with the nodes that have a direct assignment to the user + access to read_node_type
             # A list of all node ids that the user has access to under this node
+            parent_node = TreeStructure.objects.get(_id=query_params["parentNodeID"])
+            
             assigned_nodes = UserRole.get_assigned_nodes(request.user, str(parent_node._id), perm_type="read")
 
             return queryset.filter(_id__in=assigned_nodes)
@@ -34,7 +36,6 @@ class ReadNodeListFilter(filters.BaseFilterBackend):
                 permissions__name__icontains="read_{}".format(node_type.lower()), user=request.user).values_list(
                 "node___id", flat=True)
 
-            parent_node = TreeStructure.objects.get(_id=query_params["parentNodeID"])
             nodes_in_parent_path = list(filter(lambda x: x.strip(), parent_node.path.split(",") if parent_node.path else []))
             # Adding the parent node itself into the array
             nodes_in_parent_path.append(str(parent_node._id))
