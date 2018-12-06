@@ -29,10 +29,10 @@ class ReadNodeListFilter(filters.BaseFilterBackend):
             if parent_node.path is None:
                 assigned_nodes = UserRole.get_assigned_nodes(request.user, str(parent_node._id), perm_type="read")
             else:
-                parent_node = parent_node.path.split(',')[1]
-                assigned_nodes = UserRole.get_assigned_nodes(request.user, str(parent_node), perm_type="read")
+                parent_node_id = parent_node.path.split(',')[1]
+                assigned_nodes = UserRole.get_assigned_nodes(request.user, str(parent_node_id), perm_type="read")
 
-            return queryset.filter(_id__in=assigned_nodes)
+            return queryset.filter(_id__in=assigned_nodes, path__contains=str(parent_node._id))
 
             """
             assigned_nodes = UserRole.objects.filter(Q(node___id__in=nodes_in_parent_path) | Q(node__path__endswith=str(parent_node._id)+","),
