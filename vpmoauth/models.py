@@ -82,9 +82,7 @@ class UserRole(models.Model):
             assigned_condition |= Q(path__contains=node_id)
 
         if node_type is not None:
-            assigned_condition &= Q(permissions__name="{perm_type}_{node_type}".format(
-                                        perm_type=perm_type, node_type=node_type
-                                    ))
+            assigned_condition &= Q(node_type=node_type)
 
         return TreeStructure.objects.filter(assigned_condition).values_list("_id", flat=True)
 
