@@ -61,10 +61,9 @@ class UserRole(models.Model):
             -> parent_node is the ID of the parent node
         """
         parent_node_condition = Q(node___id=parent_node) | Q(node__path__contains=parent_node)
-        if node_type is None:
-            permission_condition = Q(permissions__name=perm_type+"_team") \
-                                    | Q(permissions__name=perm_type+"_project") \
-                                    | Q(permissions__name=perm_type+"_topic")
+        permission_condition = Q(permissions__name=perm_type+"_team") \
+                                | Q(permissions__name=perm_type+"_project") \
+                                | Q(permissions__name=perm_type+"_topic")
 
         # Getting a list of all node ids that the user has direct access to 
         assigned_node_ids = UserRole.objects.filter(
