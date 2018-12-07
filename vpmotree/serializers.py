@@ -10,6 +10,7 @@ from vpmoprj.serializers import *
 
 from django.apps import apps
 from django.db.models import Q
+from django
 from rest_framework.fields import CurrentUserDefault
 
 import collections
@@ -282,33 +283,32 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
         
         self.all_children = TreeStructure.objects.filter(child_condition, role_condition).distinct()
         """
-        if instance.path is None:
-            # Filtering assigned nodes to Projects for teams, since teams can only have projects as direct children
-            self.all_children = UserRole.get_assigned_nodes(self.user, str(instance._id), perm_type="read", node_type="Project")
-            self.all_children = TreeStructure.objects.filter(_id__in=self.all_children)
-        else:
-            parent_node_id = instance.path.split(',')[1]
-            self.all_children = UserRole.get_assigned_nodes(self.user, str(parent_node_id), perm_type="read")
-            self.all_children = TreeStructure.objects.filter(_id__in=self.all_children, path__endswith=str(instance._id)+",")
-        
+        with transaction.atomic():
+            if instance.path is None:
+                # Filtering assigned nodes to Projects for teams, since teams can only have projects as direct children
+                self.all_children = UserRole.get_assigned_nodes(self.user, str(instance._id), perm_type="read", node_type="Project")
+                self.all_children = TreeStructure.objects.filter(_id__in=self.all_children)
+            else:
+                parent_node_id = instance.path.split(',')[1]
+                self.all_children = UserRole.get_assigned_nodes(self.user, str(parent_node_id), perm_type="read")
+                self.all_children = TreeStructure.objects.filter(_id__in=self.all_children, path__endswith=str(instance._id)+",")
+            
 
-        logging.error(self.all_children)
-        if instance.node_type == "Team":
-            # All objects starting from the current ROOT (Team)
-            self.all_children = TreeStructureWithoutChildrenSerializer(self.all_children, many=True).data
-            # Finding the first branches from the root (Projects)
-            top_level = 2
-        else:
-            if instance.node_type == "Project":
+            logging.error(self.all_children)
+            if instance.node_type == "Team":
+                # All objects starting from the current ROOT (Team)
                 self.all_children = TreeStructureWithoutChildrenSerializer(self.all_children, many=True).data
+                # Finding the first branches from the root (Projects)
+                top_level = 2
+            elif instance.node_type == "Project":
                 top_level = instance.path.count(",") + 1
 
-        first_branches = filter(lambda x: x["path"].count(",") == top_level, self.all_children)
-        first_branches = sorted(first_branches, key=lambda x: x["index"])
+            first_branches = filter(lambda x: x["path"].count(",") == top_level, self.all_children)
+            first_branches = sorted(first_branches, key=lambda x: x["index"])
 
-        for branch in first_branches:
-            branch["children"] = self.get_branch_extensions(branch, top_level)
-            children.append(branch)
+            for branch in first_branches:
+                branch["children"] = self.get_branch_extensions(branch, top_level)
+                children.append(branch)
 
         return children
 
