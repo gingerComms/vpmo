@@ -65,10 +65,6 @@ class UserRole(models.Model):
             permission_condition = Q(permissions__name=perm_type+"_team") \
                                     | Q(permissions__name=perm_type+"_project") \
                                     | Q(permissions__name=perm_type+"_topic")
-        else:
-            permission_condition = Q(permissions__name="{perm_type}_{node_type}".format(
-                                        perm_type=perm_type, node_type=node_type.lower()
-                                    ))
 
         # Getting a list of all node ids that the user has direct access to 
         assigned_node_ids = UserRole.objects.filter(
@@ -85,6 +81,11 @@ class UserRole(models.Model):
         # Or permissions to ANY one of the parents of the node
         for node_id in assigned_node_ids:
             assigned_condition |= Q(path__contains=node_id)
+
+        if node_type is not None:
+            assigned_condition &= Q(permissions__name="{perm_type}_{node_type}".format(
+                                        perm_type=perm_type, node_type=node_type
+                                    ))
 
         return TreeStructure.objects.filter(assigned_condition).values_list("_id", flat=True)
 
