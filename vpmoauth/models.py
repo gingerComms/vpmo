@@ -66,14 +66,11 @@ class UserRole(models.Model):
                                 | Q(permissions__name=perm_type+"_topic")
 
         # Getting a list of all node ids that the user has direct access to 
-        assigned_node_ids = UserRole.objects.filter(
+        assigned_node_ids = list(UserRole.objects.filter(
                         parent_node_condition,
                         permission_condition,
                         user=user
-                    ).values_list("node___id", flat=True)
-
-        # Getting a queryset of all nodes that fall under the parent node
-        all_nodes_in_tree = TreeStructure.objects.filter(Q(_id=parent_node) | Q(path__contains=parent_node))
+                    ).values_list("node___id", flat=True))
 
         # Creating a condition that checks if the user has either direct permissions
         assigned_condition = Q(_id__in=assigned_node_ids)
