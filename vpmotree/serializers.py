@@ -13,6 +13,7 @@ from django.db.models import Q
 from rest_framework.fields import CurrentUserDefault
 
 import collections
+import logging
 
 
 # TODO: Create a base serializer that contains all required fields in the TreeStructure model(s)
@@ -291,6 +292,7 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
             self.all_children = TreeStructure.objects.filter(_id__in=self.all_children, path__endswith=str(instance._id)+",")
         
 
+        logging.error(self.all_children)
         if instance.node_type == "Team":
             # All objects starting from the current ROOT (Team)
             self.all_children = TreeStructureWithoutChildrenSerializer(self.all_children, many=True).data
