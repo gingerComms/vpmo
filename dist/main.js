@@ -5836,7 +5836,7 @@ module.exports = "#spinner-div {\r\n\tposition: fixed;\r\n    width: 100vw;\r\n 
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"showOverlay\" id=\"spinner-div\"><mat-spinner></mat-spinner></div>"
+module.exports = "<div *ngIf=\"loadingObjects.length > 0\" id=\"spinner-div\"><mat-spinner></mat-spinner></div>"
 
 /***/ }),
 
@@ -5867,17 +5867,26 @@ var LoadingComponent = /** @class */ (function () {
     function LoadingComponent(_loadingService) {
         this._loadingService = _loadingService;
         this.message = 'Loading!';
+        this.loadingObjects = [];
     }
     LoadingComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this._loadingService.showOverlay.subscribe(function (value) {
-            _this.showOverlay = value;
+        this._loadingService.onLoadStarted.subscribe(function (loadingObject) {
+            console.log('LOADING', _this.loadingObjects);
+            if (loadingObject !== null && loadingObject !== 'CLEAR') {
+                var index = _this.loadingObjects.indexOf(loadingObject);
+                if (index < 0) {
+                    _this.loadingObjects.push(loadingObject);
+                }
+                else {
+                    _this.loadingObjects.splice(index, 1);
+                }
+            }
+            else if (loadingObject == 'CLEAR') {
+                _this.loadingObjects = [];
+            }
         });
     };
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", Boolean)
-    ], LoadingComponent.prototype, "showOverlay", void 0);
     LoadingComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             // moduleId: module.id,
@@ -5965,6 +5974,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rxjs_Observable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs/Observable */ "./node_modules/rxjs-compat/_esm5/Observable.js");
 /* harmony import */ var _app_config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../app.config */ "./src/app/app.config.ts");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _services_loading_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../_services/loading.service */ "./src/app/_services/loading.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -5979,15 +5989,18 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var JwtInterceptor = /** @class */ (function () {
-    function JwtInterceptor(router) {
+    function JwtInterceptor(router, loadingService) {
         this.router = router;
+        this.loadingService = loadingService;
     }
     JwtInterceptor.prototype.handleAuthError = function (err) {
         //handle your auth error or rethrow
         if (err.status === 401 || err.status === 403) {
             //navigate /delete cookies or whatever
             this.router.navigateByUrl("/user/login");
+            this.loadingService.clearTasks();
             // if you've caught / handled the error, you don't want to rethrow it unless you also want downstream consumers to have to handle it as well.
             return rxjs_Observable__WEBPACK_IMPORTED_MODULE_2__["Observable"].of(err.message);
         }
@@ -6013,7 +6026,8 @@ var JwtInterceptor = /** @class */ (function () {
     };
     JwtInterceptor = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
-        __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"]])
+        __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"],
+            _services_loading_service__WEBPACK_IMPORTED_MODULE_5__["LoadingService"]])
     ], JwtInterceptor);
     return JwtInterceptor;
 }());
@@ -6325,6 +6339,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _alert_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./alert.service */ "./src/app/_services/alert.service.ts");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _loading_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./loading.service */ "./src/app/_services/loading.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -6340,13 +6355,15 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var CustomHttpClient = /** @class */ (function () {
-    function CustomHttpClient(http, router, authService, alertService) {
+    function CustomHttpClient(http, router, authService, alertService, loadingService) {
         var _this = this;
         this.http = http;
         this.router = router;
         this.authService = authService;
         this.alertService = alertService;
+        this.loadingService = loadingService;
         this.token = '';
         authService.user.subscribe(function (user) {
             if (user) {
@@ -6430,6 +6447,8 @@ var CustomHttpClient = /** @class */ (function () {
         if (err.status == 401) {
             this.router.navigate(['/user/logout']);
         }
+        // Clearing all tasks to hide the loading component in case of an error
+        this.loadingService.clearTasks();
         return rxjs__WEBPACK_IMPORTED_MODULE_4__["Observable"].throw(err.message);
     };
     CustomHttpClient = __decorate([
@@ -6437,7 +6456,8 @@ var CustomHttpClient = /** @class */ (function () {
         __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"],
             _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"],
             _authentication_service__WEBPACK_IMPORTED_MODULE_2__["AuthenticationService"],
-            _alert_service__WEBPACK_IMPORTED_MODULE_3__["AlertService"]])
+            _alert_service__WEBPACK_IMPORTED_MODULE_3__["AlertService"],
+            _loading_service__WEBPACK_IMPORTED_MODULE_6__["LoadingService"]])
     ], CustomHttpClient);
     return CustomHttpClient;
 }());
@@ -6805,13 +6825,29 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 var LoadingService = /** @class */ (function () {
     function LoadingService() {
-        this.showOverlay = new rxjs_index__WEBPACK_IMPORTED_MODULE_1__["BehaviorSubject"](false);
+        this.onLoadStarted = new rxjs_index__WEBPACK_IMPORTED_MODULE_1__["BehaviorSubject"](null);
     }
-    LoadingService.prototype.hide = function () {
-        this.showOverlay.next(false);
+    LoadingService.prototype.taskFinished = function (taskID) {
+        this.onLoadStarted.next(taskID);
     };
-    LoadingService.prototype.show = function () {
-        this.showOverlay.next(true);
+    LoadingService.prototype.generateUUID = function () {
+        var d = new Date().getTime();
+        if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+            d += performance.now(); //use high-precision timer if available
+        }
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = (d + Math.random() * 16) % 16 | 0;
+            d = Math.floor(d / 16);
+            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+    };
+    LoadingService.prototype.startTask = function () {
+        var taskID = this.generateUUID();
+        this.onLoadStarted.next(taskID);
+        return taskID;
+    };
+    LoadingService.prototype.clearTasks = function () {
+        this.onLoadStarted.next('CLEAR');
     };
     LoadingService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])()
@@ -7606,13 +7642,12 @@ var ChatService = /** @class */ (function () {
     // This is called whenever there is a new login
     ChatService.prototype.getChatClient = function (user) {
         var that = this;
-        this.loadingService.show();
+        var taskID = this.loadingService.startTask();
         this.getToken(user).subscribe(function (response) {
             var token = response.token;
             Twilio.Chat.Client.create(token).then(function (client) {
                 that.getUserChannels(client);
                 that.chatClient.next(client);
-                that.loadingService.hide();
                 client.on('messageAdded', function (message) {
                     var unreadMessages = that.unreadMessageTracker.value;
                     if (unreadMessages[message.channel.uniqueName] !== undefined) {
@@ -7627,8 +7662,10 @@ var ChatService = /** @class */ (function () {
                 client.on('channelJoined', function (channel) {
                     that.channelAdded(channel);
                 });
-                // Add listener for client.on('tokenAboutToExpire', xx) 
-                //  To update chat token when it's about to expire
+                console.log('Stopping channel client task');
+                that.loadingService.taskFinished(taskID);
+                //  TODO Add listener for client.on('tokenAboutToExpire', xx) 
+                //    To update chat token when it's about to expire
             });
         });
     };
@@ -7645,6 +7682,7 @@ var ChatService = /** @class */ (function () {
     ChatService.prototype.channelAdded = function (channel) {
         var that = this;
         var userChannels = that.userChannels.value;
+        var taskID = this.loadingService.startTask();
         if (userChannels.filter(function (i) { return i.uniqueName == channel.uniqueName; }).length == 0) {
             that.userChannels.next(userChannels.concat([channel]));
         }
@@ -7652,6 +7690,7 @@ var ChatService = /** @class */ (function () {
             userChannels[userChannels.indexOf(userChannels.filter(function (i) { return i.uniqueName == channel.uniqueName; }))] = channel;
             that.userChannels.next(userChannels);
         }
+        that.loadingService.taskFinished(taskID);
         that.updateChannelUnread(channel);
     };
     ChatService.prototype.updateChannelUnread = function (channel) {
@@ -10473,7 +10512,7 @@ var NodeService = /** @class */ (function () {
     }
     NodeService.prototype.getNodeDetails = function (nodeID) {
         var _this = this;
-        this.loadingService.show();
+        var taskID = this.loadingService.startTask();
         if (nodeID) {
             this.http.get(this.nodeRetrieveUpdateUrl + nodeID + '/')
                 .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_9__["mergeMap"])(function (node) {
@@ -10487,10 +10526,11 @@ var NodeService = /** @class */ (function () {
             }))
                 .subscribe(function (nodeParents) {
                 _this.nodeParents.next(nodeParents);
-                _this.loadingService.hide();
+                _this.loadingService.taskFinished(taskID);
             });
         }
     };
+    /* UNUSED */
     NodeService.prototype.getNodeParents = function (node) {
         var _this = this;
         if (node._id !== undefined) {
@@ -10499,6 +10539,7 @@ var NodeService = /** @class */ (function () {
             });
         }
     };
+    /* UNUSED */
     NodeService.prototype.setSubjects = function (node, nodeParents) {
         this.node.next(node);
         localStorage.setItem('node', JSON.stringify(node));
@@ -10507,7 +10548,6 @@ var NodeService = /** @class */ (function () {
             role: node.user_role
         });
         this.nodeParents.next(nodeParents);
-        this.loadingService.hide();
     };
     NodeService.prototype.getUserPermissions = function (nodeID, nodeType) {
         var _this = this;
@@ -10736,10 +10776,10 @@ var AddPermissionsComponent = /** @class */ (function () {
             return;
         }
         console.log(this.selectedUser, role);
-        this.loadingService.show();
+        var taskID = this.loadingService.startTask();
         this._permissionsService.assignUserToNode(this.nodeID, this.nodeType, this.selectedUser, role)
             .subscribe(function (response) {
-            _this.loadingService.hide();
+            _this.loadingService.taskFinished(taskID);
             _this.usersList = _this.usersList.filter(function (item) { return item._id !== _this.selectedUser; });
             _this.dialogRef.close();
         });
@@ -10886,11 +10926,12 @@ var PermissionsComponent = /** @class */ (function () {
         });
     };
     PermissionsComponent.prototype.assignRole = function (newRole, user) {
+        var _this = this;
         var self = this;
-        this.loadingService.show();
+        var taskID = this.loadingService.startTask();
         this._permissionsService.assignUserToNode(this.nodeID, this.nodeType, user.username, newRole)
             .subscribe(function (response) {
-            self.loadingService.hide();
+            _this.loadingService.taskFinished(taskID);
             if (user._id === self.authService.getUser()._id) {
                 self.nodeService.getUserPermissions(self.nodeID, self.nodeType);
             }
@@ -10945,10 +10986,10 @@ var PermissionsComponent = /** @class */ (function () {
     // Use it in add permissions to set the base role when adding a user
     PermissionsComponent.prototype.removeUserPermissions = function (user) {
         var _this = this;
-        this.loadingService.show();
+        var taskID = this.loadingService.startTask();
         this._permissionsService.removeUserPermissions(this.nodeID, this.nodeType, user._id)
             .subscribe(function (response) {
-            _this.loadingService.hide();
+            _this.loadingService.taskFinished(taskID);
             _this.userList = _this.userList.filter(function (item) { return item._id !== user._id; });
             // this.userList.splice(this.userList.indexOf(user), 1)
         });
@@ -14404,10 +14445,10 @@ var TeamsListComponent = /** @class */ (function () {
             return;
         }
         var self = this;
-        this.loadingService.show();
+        var taskID = this.loadingService.startTask();
         this.teamService.createTeam(this.newTeamName)
             .subscribe(function (createdTeam) {
-            _this.loadingService.hide();
+            _this.loadingService.taskFinished(taskID);
             self.dialogRef.close();
         });
     };
@@ -14569,10 +14610,10 @@ var CreateNodeComponent = /** @class */ (function () {
     };
     CreateNodeComponent.prototype.createNode = function () {
         var self = this;
-        this.loadingService.show();
+        var taskID = this.loadingService.startTask();
         this.treeStructureHttpService.createNode(this.createNodeFormData, this.selectedNodeType)
             .subscribe(function (response) {
-            self.loadingService.hide();
+            self.loadingService.taskFinished(taskID);
             self.onCreate.emit(response);
         });
     };
@@ -15408,7 +15449,7 @@ var LoginComponent = /** @class */ (function () {
         this.loginForm.valueChanges.subscribe(function () {
             _this.onLoginFormValuesChanged();
         });
-        this.loadingService.hide();
+        this.loadingService.clearTasks();
     };
     LoginComponent.prototype.login = function () {
         var _this = this;
