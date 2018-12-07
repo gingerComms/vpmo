@@ -293,15 +293,14 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
                 self.all_children = UserRole.get_assigned_nodes(self.user, str(parent_node_id), perm_type="read")
                 self.all_children = TreeStructure.objects.filter(_id__in=self.all_children, path__endswith=str(instance._id)+",")
             
-
-            logging.error(self.all_children)
             if instance.node_type == "Team":
-                # All objects starting from the current ROOT (Team)
-                self.all_children = TreeStructureWithoutChildrenSerializer(self.all_children, many=True).data
                 # Finding the first branches from the root (Projects)
                 top_level = 2
             elif instance.node_type == "Project":
                 top_level = instance.path.count(",") + 1
+
+            # All objects starting from the current ROOT (Team)
+            self.all_children = TreeStructureWithoutChildrenSerializer(self.all_children, many=True).data
 
             first_branches = filter(lambda x: x["path"].count(",") == top_level, self.all_children)
             first_branches = sorted(first_branches, key=lambda x: x["index"])
