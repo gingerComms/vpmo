@@ -10,7 +10,7 @@ from vpmoprj.serializers import *
 
 from django.apps import apps
 from django.db.models import Q
-from django
+from django.models import transaction
 from rest_framework.fields import CurrentUserDefault
 
 import collections
