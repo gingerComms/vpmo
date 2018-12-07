@@ -282,7 +282,8 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
         self.all_children = TreeStructure.objects.filter(child_condition, role_condition).distinct()
         """
         if instance.path is None:
-            self.all_children = UserRole.get_assigned_nodes(self.user, str(instance._id), perm_type="read")
+            # Filtering assigned nodes to Projects for teams, since teams can only have projects as direct children
+            self.all_children = UserRole.get_assigned_nodes(self.user, str(instance._id), perm_type="read", node_type="Project")
             self.all_children = TreeStructure.objects.filter(_id__in=self.all_children)
         else:
             parent_node_id = instance.path.split(',')[1]
@@ -292,8 +293,7 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
 
         if instance.node_type == "Team":
             # All objects starting from the current ROOT (Team)
-            self.all_children = TreeStructureWithoutChildrenSerializer(self.all_children.filter(
-                node_type="Project"), many=True).data
+            self.all_children = TreeStructureWithoutChildrenSerializer(self.all_children, many=True).data
             # Finding the first branches from the root (Projects)
             top_level = 2
         else:

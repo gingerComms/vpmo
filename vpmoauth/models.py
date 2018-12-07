@@ -56,14 +56,19 @@ class UserRole(models.Model):
         return user_ids
 
     @staticmethod
-    def get_assigned_nodes(user, parent_node, perm_type="update"):
+    def get_assigned_nodes(user, parent_node, perm_type="update", node_type=None):
         """ Returns all nodes the user has the `perm_type` permission for
             -> parent_node is the ID of the parent node
         """
         parent_node_condition = Q(node___id=parent_node) | Q(node__path__contains=parent_node)
-        permission_condition = Q(permissions__name=perm_type+"_team") \
-                                | Q(permissions__name=perm_type+"_project") \
-                                | Q(permissions__name=perm_type+"_topic")
+        if node_type is None:
+            permission_condition = Q(permissions__name=perm_type+"_team") \
+                                    | Q(permissions__name=perm_type+"_project") \
+                                    | Q(permissions__name=perm_type+"_topic")
+        else:
+            permission_condition = Q(permissions__name="{perm_type}_{node_type}".format(
+                                        perm_type=perm_type, node_type=node_type.lower()
+                                    ))
 
         # Getting a list of all node ids that the user has direct access to 
         assigned_node_ids = UserRole.objects.filter(
