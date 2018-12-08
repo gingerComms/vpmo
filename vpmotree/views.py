@@ -178,7 +178,7 @@ class CreateNodeView(CreateAPIView):
 
 
 class RetrieveUpdateNodeView(RetrieveUpdateAPIView):
-    permission_classes = (IsAuthenticated, GeneralNodePermission,)
+    permission_classes = (AllowAny,) #(IsAuthenticated, GeneralNodePermission,)
 
     def get_object(self):
         try:
