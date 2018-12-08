@@ -178,12 +178,11 @@ class CreateNodeView(CreateAPIView):
 
 
 class RetrieveUpdateNodeView(RetrieveUpdateAPIView):
-    permission_classes = (AllowAny,) #(IsAuthenticated, GeneralNodePermission,)
+    permission_classes = (IsAuthenticated, GeneralNodePermission,)
 
     def get_object(self):
         try:
             node = TreeStructure.objects.get(_id=self.kwargs["nodeID"]).get_object()
-            #self.check_object_permissions(self.request, node)
             return node
         except TreeStructure.DoesNotExist:
             return None
