@@ -44,7 +44,11 @@ class DashboardNodeBaseSerializer(serializers.Serializer):
 
     def get_child_nodes(self, instance):
         """ Returns a list of nodes that the user has "update" access to under this node """
-        return [str(i) for i in list(UserRole.get_assigned_nodes(self.context["request"].user, str(instance._id)).distinct())]
+        return [str(i) for i in list(
+                        UserRole.get_assigned_nodes(
+                            self.context["request"].user, str(instance._id)
+                        ).distinct()
+                    ) if str(i) != str(instance._id)]
 
 
 class ProjectSerializer(DashboardNodeBaseSerializer, serializers.ModelSerializer):
