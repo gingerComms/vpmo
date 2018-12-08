@@ -5868,15 +5868,28 @@ var LoadingComponent = /** @class */ (function () {
         this._loadingService = _loadingService;
         this.message = 'Loading!';
         this.loadingObjects = [];
+        // Timeout of 10 seconds
+        this.timeout = 1000;
     }
     LoadingComponent.prototype.ngOnInit = function () {
         var _this = this;
         this._loadingService.onLoadStarted.subscribe(function (loadingObject) {
-            console.log('LOADING', _this.loadingObjects);
-            if (loadingObject !== null && loadingObject !== 'CLEAR') {
+            if (loadingObject !== null && typeof (loadingObject) != 'string') {
+                // Only timeout reasons have object loadingObjects
+                if (_this.loadingObjects.indexOf(loadingObject.taskID) >= 0) {
+                    var index = _this.loadingObjects.indexOf(loadingObject.taskID);
+                    _this.loadingObjects.splice(index, 1);
+                }
+            }
+            else if (loadingObject !== null && loadingObject !== 'CLEAR') {
                 var index = _this.loadingObjects.indexOf(loadingObject);
                 if (index < 0) {
                     _this.loadingObjects.push(loadingObject);
+                    var that = _this;
+                    // Set interval to toggle the loading task OFF after a specified timeout
+                    setInterval(function () {
+                        that._loadingService.taskTimedout(loadingObject);
+                    }, _this.timeout);
                 }
                 else {
                     _this.loadingObjects.splice(index, 1);
@@ -6831,6 +6844,7 @@ var LoadingService = /** @class */ (function () {
         this.onLoadStarted.next(taskID);
     };
     LoadingService.prototype.generateUUID = function () {
+        // SOURCE: https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
         var d = new Date().getTime();
         if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
             d += performance.now(); //use high-precision timer if available
@@ -6839,6 +6853,12 @@ var LoadingService = /** @class */ (function () {
             var r = (d + Math.random() * 16) % 16 | 0;
             d = Math.floor(d / 16);
             return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+    };
+    LoadingService.prototype.taskTimedout = function (taskID) {
+        this.onLoadStarted.next({
+            taskID: taskID,
+            reason: 'TIMEOUT'
         });
     };
     LoadingService.prototype.startTask = function () {
@@ -7264,6 +7284,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _chat_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./chat.service */ "./src/app/chat/chat.service.ts");
 /* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../_services */ "./src/app/_services/index.ts");
 /* harmony import */ var _node_node_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../node/node.service */ "./src/app/node/node.service.ts");
+/* harmony import */ var _services_loading_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../_services/loading.service */ "./src/app/_services/loading.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7278,13 +7299,15 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var ChatComponent = /** @class */ (function () {
-    function ChatComponent(router, _chatService, authService, route, nodeService, differs) {
+    function ChatComponent(router, _chatService, authService, route, nodeService, differs, loadingService) {
         this.router = router;
         this._chatService = _chatService;
         this.authService = authService;
         this.route = route;
         this.nodeService = nodeService;
+        this.loadingService = loadingService;
         this.messages = [];
         this.channel = null;
         this.pageSize = 15;
@@ -7358,16 +7381,19 @@ var ChatComponent = /** @class */ (function () {
         }
     };
     ChatComponent.prototype.getChannel = function () {
+        var taskID = this.loadingService.startTask();
         var that = this;
         this.chatClient.getChannelByUniqueName(this.nodeID)
             .then(function (channel) {
             that.channel = channel;
             that.setupChannel();
+            that.loadingService.taskFinished(taskID);
         });
     };
     ChatComponent.prototype.setupChannel = function () {
         var that = this;
         var lastSeenIndex = this.channel.lastConsumedMessageIndex || 0;
+        var taskID = this.loadingService.startTask();
         if (lastSeenIndex == 0) {
             this.getTotalMessageCount();
         }
@@ -7388,17 +7414,7 @@ var ChatComponent = /** @class */ (function () {
             // Otherwise, get from the last seen page
             this.getMessages(lastSeenIndex, 'forwards');
         }
-        /*
-        this.channel.on('messageAdded', function (message) {
-          if (that.messages.length == 0 || message.index == that.messages[that.messages.length-1].index+1) {
-            that.messages.push(message)
-    
-            that.updateLastConsumed(message.index)
-    
-            that.scrollToBottom()
-          }
-        })
-        */
+        this.loadingService.taskFinished(taskID);
     };
     ChatComponent.prototype.getTotalMessageCount = function () {
         var that = this;
@@ -7419,6 +7435,7 @@ var ChatComponent = /** @class */ (function () {
     };
     ChatComponent.prototype.getMessages = function (fromIndex, direction) {
         var that = this;
+        var taskID = this.loadingService.startTask();
         that.channel.getMessages(that.pageSize, fromIndex, direction).then(function (messages) {
             if (messages.items.length > 0) {
                 // Adding to the back of the array if we're scrolling up (lastPage)
@@ -7436,6 +7453,7 @@ var ChatComponent = /** @class */ (function () {
                 }
                 that.updateLastConsumed(that.messages[that.messages.length - 1].index);
             }
+            that.loadingService.taskFinished(taskID);
         });
     };
     ChatComponent.prototype.updateLastConsumed = function (index) {
@@ -7486,7 +7504,8 @@ var ChatComponent = /** @class */ (function () {
             _services__WEBPACK_IMPORTED_MODULE_3__["AuthenticationService"],
             _angular_router__WEBPACK_IMPORTED_MODULE_1__["ActivatedRoute"],
             _node_node_service__WEBPACK_IMPORTED_MODULE_4__["NodeService"],
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["IterableDiffers"]])
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["IterableDiffers"],
+            _services_loading_service__WEBPACK_IMPORTED_MODULE_5__["LoadingService"]])
     ], ChatComponent);
     return ChatComponent;
 }());
@@ -7662,7 +7681,6 @@ var ChatService = /** @class */ (function () {
                 client.on('channelJoined', function (channel) {
                     that.channelAdded(channel);
                 });
-                console.log('Stopping channel client task');
                 that.loadingService.taskFinished(taskID);
                 //  TODO Add listener for client.on('tokenAboutToExpire', xx) 
                 //    To update chat token when it's about to expire
@@ -7671,12 +7689,14 @@ var ChatService = /** @class */ (function () {
     };
     ChatService.prototype.getUserChannels = function (client) {
         var that = this;
+        var taskID = this.loadingService.startTask();
         client.getUserChannelDescriptors().then(function (channelDescriptors) {
             for (var i = 0; i < channelDescriptors.items.length; i++) {
                 channelDescriptors.items[i].getChannel().then(function (channel) {
                     that.channelAdded(channel);
                 });
             }
+            that.loadingService.taskFinished(taskID);
         });
     };
     ChatService.prototype.channelAdded = function (channel) {
@@ -7696,6 +7716,10 @@ var ChatService = /** @class */ (function () {
     ChatService.prototype.updateChannelUnread = function (channel) {
         var that = this;
         var unreadMessages = that.unreadMessageTracker.value;
+        var taskID = null;
+        if (Object.keys(unreadMessages).length == 0) {
+            taskID = this.loadingService.startTask();
+        }
         channel.getUnconsumedMessagesCount().then(function (c) {
             if (c == null) {
                 if (channel.lastMessage == undefined) {
@@ -7709,6 +7733,9 @@ var ChatService = /** @class */ (function () {
                 unreadMessages[channel.uniqueName] = c;
             }
             that.unreadMessageTracker.next(unreadMessages);
+            if (taskID !== null) {
+                that.loadingService.taskFinished(taskID);
+            }
         });
     };
     ChatService.prototype.getToken = function (user) {
@@ -10590,7 +10617,7 @@ var NodeService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"node\">\r\n  <app-node-breadcrumbs></app-node-breadcrumbs>\r\n\r\n  <div>\r\n    <small>{{node._id}}</small>\r\n  </div>\r\n\r\n  <mat-accordion class=\"headers-align\">\r\n    <mat-expansion-panel [expanded]=\"step === 0\" (opened)=\"setStep(0)\" hideToggle>\r\n      <mat-expansion-panel-header>\r\n        <mat-panel-title>\r\n          Content\r\n        </mat-panel-title>\r\n        <mat-panel-description>\r\n          Details about the topic\r\n          <mat-icon>account_circle</mat-icon>\r\n        </mat-panel-description>\r\n      </mat-expansion-panel-header>\r\n  \r\n      <app-node-edit></app-node-edit> \r\n          \r\n      <mat-action-row>\r\n        <button mat-button color=\"primary\" (click)=\"nextStep()\">Next</button>\r\n      </mat-action-row>\r\n    </mat-expansion-panel>\r\n  \r\n    <mat-expansion-panel [expanded]=\"step === 1\" (opened)=\"setStep(1)\" hideToggle>\r\n      <mat-expansion-panel-header>\r\n        <mat-panel-title>\r\n          Dashboard\r\n        </mat-panel-title>\r\n        <mat-panel-description>\r\n          High-level statistics about the topic\r\n          <mat-icon>map</mat-icon>\r\n        </mat-panel-description>\r\n      </mat-expansion-panel-header>\r\n  \r\n      \r\n      <mat-action-row>\r\n        <button mat-button color=\"warn\" (click)=\"prevStep()\">Previous</button>\r\n        <button mat-button color=\"primary\" (click)=\"nextStep()\">Next</button>\r\n      </mat-action-row>\r\n    </mat-expansion-panel>\r\n  \r\n    <mat-expansion-panel [expanded]=\"step === 2\" (opened)=\"setStep(2)\" hideToggle>\r\n      <mat-expansion-panel-header>\r\n        <mat-panel-title>\r\n          Tree\r\n        </mat-panel-title>\r\n        <mat-panel-description>\r\n          list of children topics\r\n          <mat-icon>date_range</mat-icon>\r\n        </mat-panel-description>\r\n      </mat-expansion-panel-header>\r\n  \r\n      <app-tree-structure></app-tree-structure>\r\n      <mat-action-row>\r\n        <button mat-button color=\"warn\" (click)=\"prevStep()\">Previous</button>\r\n        <button mat-button color=\"primary\" (click)=\"nextStep()\">End</button>\r\n      </mat-action-row>\r\n    </mat-expansion-panel>\r\n  \r\n  </mat-accordion>\r\n\r\n</div>\r\n\r\n\r\n"
+module.exports = "<div *ngIf=\"node\">\r\n  <app-node-breadcrumbs></app-node-breadcrumbs>\r\n\r\n  <div>\r\n    <small>{{node._id}}</small>\r\n  </div>\r\n\r\n \r\n\r\n</div>\r\n\r\n\r\n"
 
 /***/ }),
 
@@ -10644,7 +10671,6 @@ var NodepageComponent = /** @class */ (function () {
         this._nodeService = _nodeService;
         this.loadingService = loadingService;
         this.authService = authService;
-        this.step = 0;
     }
     NodepageComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -10667,15 +10693,6 @@ var NodepageComponent = /** @class */ (function () {
         else {
             return this.selectedIndex == 1;
         }
-    };
-    NodepageComponent.prototype.setStep = function (index) {
-        this.step = index;
-    };
-    NodepageComponent.prototype.nextStep = function () {
-        this.step++;
-    };
-    NodepageComponent.prototype.prevStep = function () {
-        this.step--;
     };
     NodepageComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -14873,7 +14890,7 @@ var TreeStructureComponent = /** @class */ (function () {
     };
     // IMPORTANT update is needed
     TreeStructureComponent.prototype.onMoveNode = function ($event) {
-        console.log('On Move', $event.node);
+        console.log('On Move', $event);
         var movedNode = this.tree.treeModel.getNodeById($event.node._id);
         var updatedList = this.treeStructureService.updateModel(movedNode, this.tree.treeModel);
         var updatedListDto = this.treeStructureService.converVisualNodeToDtoList(updatedList, false);
