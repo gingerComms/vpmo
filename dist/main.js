@@ -7660,14 +7660,16 @@ var ChatService = /** @class */ (function () {
     }
     // This is called whenever there is a new login
     ChatService.prototype.getChatClient = function (user) {
+        var _this = this;
         var that = this;
         var taskID = this.loadingService.startTask();
         this.getToken(user).subscribe(function (response) {
             var token = response.token;
             Twilio.Chat.Client.create(token).then(function (client) {
-                that.getUserChannels(client);
-                that.chatClient.next(client);
-                client.on('messageAdded', function (message) {
+                _this.client = client;
+                that.getUserChannels(_this.client);
+                that.chatClient.next(_this.client);
+                _this.newMessageEventHandler = _this.client.on('messageAdded', function (message) {
                     var unreadMessages = that.unreadMessageTracker.value;
                     if (unreadMessages[message.channel.uniqueName] !== undefined) {
                         unreadMessages[message.channel.uniqueName] = unreadMessages[message.channel.uniqueName] + 1;
@@ -7675,14 +7677,14 @@ var ChatService = /** @class */ (function () {
                     that.unreadMessageTracker.next(unreadMessages);
                     that.messages.next(message);
                 });
-                client.on('channelAdded', function (channel) {
+                _this.client.on('channelAdded', function (channel) {
                     that.channelAdded(channel);
                 });
-                client.on('channelJoined', function (channel) {
+                _this.client.on('channelJoined', function (channel) {
                     that.channelAdded(channel);
                 });
                 that.loadingService.taskFinished(taskID);
-                //  TODO Add listener for client.on('tokenAboutToExpire', xx) 
+                //  TODO Add listener for this.client.on('tokenAboutToExpire', xx) 
                 //    To update chat token when it's about to expire
             });
         });
