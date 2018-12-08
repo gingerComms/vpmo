@@ -14826,7 +14826,14 @@ var TreeStructureComponent = /** @class */ (function () {
             //
             allowDrag: true,
             allowDrop: function (element, to) {
-                return !to.parent.data.virtual;
+                // Disabling dropping into topic nodes
+                if (to.parent.data.node_type == 'Topic') {
+                    return false;
+                }
+                else {
+                    return true;
+                }
+                // return !to.parent.data.virtual;
             },
         };
         // user start add new node
@@ -14890,12 +14897,15 @@ var TreeStructureComponent = /** @class */ (function () {
     };
     // IMPORTANT update is needed
     TreeStructureComponent.prototype.onMoveNode = function ($event) {
-        console.log('On Move', $event);
-        var movedNode = this.tree.treeModel.getNodeById($event.node._id);
-        var updatedList = this.treeStructureService.updateModel(movedNode, this.tree.treeModel);
-        var updatedListDto = this.treeStructureService.converVisualNodeToDtoList(updatedList, false);
-        // this line should change to accomodate the changes to structure when the top node is a project
-        this.treeStructureHttpService.updateNodeList(updatedListDto, this.getTopNode());
+        // Cancel the event if the node is being moved into a topic
+        if ($event.to.parent.node_type != 'Topic') {
+            console.log('On Move', $event);
+            var movedNode = this.tree.treeModel.getNodeById($event.node._id);
+            var updatedList = this.treeStructureService.updateModel(movedNode, this.tree.treeModel);
+            var updatedListDto = this.treeStructureService.converVisualNodeToDtoList(updatedList, false);
+            // this line should change to accomodate the changes to structure when the top node is a project
+            this.treeStructureHttpService.updateNodeList(updatedListDto, this.getTopNode());
+        }
     };
     TreeStructureComponent.prototype.getTopNode = function () {
         // this.treeRoot = JSON.parse(localStorage.getItem('node'));
@@ -15172,7 +15182,6 @@ var TreeStructureService = /** @class */ (function () {
         return newData;
     };
     TreeStructureService.prototype.getPath = function (node) {
-        console.log(node);
         if (node == null) {
             return '';
         }
