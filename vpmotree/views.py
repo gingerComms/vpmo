@@ -182,8 +182,8 @@ class RetrieveUpdateNodeView(RetrieveUpdateAPIView):
 
     def get_object(self):
         try:
-            node = TreeStructure.objects.get(_id=self.kwargs["nodeID"]).get_object()
-            return node
+            node = TreeStructure.objects.get(_id=self.kwargs["nodeID"])
+            return getattr(node, node.model_name.lower())
         except TreeStructure.DoesNotExist:
             raise
             logging.error("TreeStructure DoesNotExist error", self.kwargs["nodeID"])
