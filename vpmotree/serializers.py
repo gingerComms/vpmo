@@ -290,11 +290,11 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
         with transaction.atomic():
             if instance.path is None:
                 # Filtering assigned nodes to Projects for teams, since teams can only have projects as direct children
-                self.all_children = UserRole.get_assigned_nodes(self.user, str(instance._id), perm_type="read", node_type="Project")
+                self.all_children = list(UserRole.get_assigned_nodes(self.user, str(instance._id), perm_type="read", node_type="Project"))
                 self.all_children = TreeStructure.objects.filter(_id__in=self.all_children)
             else:
                 parent_node_id = instance.path.split(',')[1]
-                self.all_children = UserRole.get_assigned_nodes(self.user, str(parent_node_id), perm_type="read")
+                self.all_children = list(UserRole.get_assigned_nodes(self.user, str(parent_node_id), perm_type="read"))
                 self.all_children = TreeStructure.objects.filter(_id__in=self.all_children, path__endswith=str(instance._id)+",")
             
             if instance.node_type == "Team":
