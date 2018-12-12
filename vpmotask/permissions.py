@@ -14,7 +14,7 @@ class TaskPermission(permissions.BasePermission):
         node = TreeStructure.objects.get(_id=node)
         node = node.get_object()
 
-        perms = list(request.user.get_permissions(node))
+        perms = request.user.get_permissions(node)
 
         if "update_{}".format(node.node_type.lower()) in perms:
             return True
@@ -33,7 +33,7 @@ class TaskListPermission(permissions.BasePermission):
         node = TreeStructure.objects.get(_id=node)
         node = node.get_object()
 
-        perms = list(request.user.get_permissions(node))
+        perms = request.user.get_permissions(node)
 
         # If request is a GET, return for only view level perms, otherwise look for update perms
         if request.method == "GET":
@@ -50,7 +50,7 @@ class TaskReorderPermissions(permissions.BasePermission):
     def has_permission(self, request, view):
         node = ScrumboardTaskList.objects.get(_id=view.kwargs["task_list_id"]).project
 
-        perms = list(request.user.get_permissions(node))
+        perms = request.user.get_permissions(node)
 
         # If request is a GET, return for only view level perms, otherwise look for update perms
         if request.method == "GET":
@@ -69,7 +69,7 @@ class NodeUpdateLevelPermissions(permissions.BasePermission):
         node = TreeStructure.objects.get(_id=node)
         node = node.get_object()
 
-        perms = list(request.user.get_permissions(node))
+        perms = request.user.get_permissions(node)
 
         # If request is a GET, return for only view level perms, otherwise look for update perms
         if request.method == "GET":

@@ -278,7 +278,7 @@ class MyUser(AbstractBaseUser):
             filters["permissions__name__icontains"] = node.node_type
 
         permissions = UserRole.objects.filter(**filters).values_list("permissions__name", flat=True).distinct()
-        return permissions
+        return list(permissions)
 
     def get_role(self, node):
         """ Returns the role the user has for this node - only direct role """
