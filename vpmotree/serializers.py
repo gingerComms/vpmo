@@ -43,12 +43,15 @@ class DashboardNodeBaseSerializer(serializers.Serializer):
         return len(UserRole.get_user_ids_with_heirarchy_perms(instance).distinct())
 
     def get_child_nodes(self, instance):
-        """ Returns a list of nodes that the user has "update" access to under this node """
-        return [str(i) for i in list(
+        """ Returns a list of minimal-serialized nodes that the user has "update" access to under this node
+            - These are used for calculating a sum of unread messages for this node and its children
+        """
+        nodes = [str(i) for i in list(
                         UserRole.get_assigned_nodes(
                             self.context["request"].user, str(instance._id)
                         ).distinct()
                     ) if str(i) != str(instance._id)]
+        return MinimalNodeSerializer(nodes, many=True).data
 
 
 class ProjectSerializer(DashboardNodeBaseSerializer, serializers.ModelSerializer):
