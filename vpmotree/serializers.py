@@ -51,6 +51,7 @@ class DashboardNodeBaseSerializer(serializers.Serializer):
                             self.context["request"].user, str(instance._id)
                         ).distinct()
                     ) if str(i) != str(instance._id)]
+        nodes = TreeStructure.objects.filter(_id__in=nodes)
         return MinimalNodeSerializer(nodes, many=True).data
 
 
