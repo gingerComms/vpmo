@@ -54,7 +54,7 @@ class AllNodesListView(ListAPIView):
         # Filter queryset to the user if search query is present and is a topic type
         if self.request.query_params.get("assignedToUser", False) and \
             self.request.query_params["nodeType"] in ["Issue", "Risk", "Deliverable"]:
-            qs = qs.filter(assignee=request.user)
+            qs = qs.filter(assignee=self.request.user)
 
         return qs
 
