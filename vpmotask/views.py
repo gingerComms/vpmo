@@ -45,6 +45,9 @@ class AssignedTasksListView(generics.ListAPIView):
     search_fields = ("assignee__username",)
 
     def get_queryset(self):
+        if self.request.query_params.get("blanketSearch", False):
+            return Task.objects.filter(node__path__contains=self.kwargs["nodeID"]).order_by("-created_at")
+
         return Task.objects.filter(node___id=self.kwargs["nodeID"]).order_by("-created_at")
 
 
