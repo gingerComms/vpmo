@@ -56,7 +56,7 @@ class UserRole(models.Model):
         return user_ids
 
     @staticmethod
-    def get_assigned_nodes(user, parent_node, perm_type="update"):
+    def get_assigned_nodes(user, parent_node, perm_type="update", node_type=None):
         """ Returns all nodes the user has the `perm_type` permission for
             -> parent_node is the ID of the parent node
         """
@@ -66,20 +66,20 @@ class UserRole(models.Model):
                                 | Q(permissions__name=perm_type+"_topic")
 
         # Getting a list of all node ids that the user has direct access to 
-        assigned_node_ids = UserRole.objects.filter(
+        assigned_node_ids = list(UserRole.objects.filter(
                         parent_node_condition,
                         permission_condition,
                         user=user
-                    ).values_list("node___id", flat=True)
-
-        # Getting a queryset of all nodes that fall under the parent node
-        all_nodes_in_tree = TreeStructure.objects.filter(Q(_id=parent_node) | Q(path__contains=parent_node))
+                    ).values_list("node___id", flat=True))
 
         # Creating a condition that checks if the user has either direct permissions
         assigned_condition = Q(_id__in=assigned_node_ids)
         # Or permissions to ANY one of the parents of the node
         for node_id in assigned_node_ids:
             assigned_condition |= Q(path__contains=node_id)
+
+        if node_type is not None:
+            assigned_condition &= Q(node_type=node_type)
 
         return TreeStructure.objects.filter(assigned_condition).values_list("_id", flat=True)
 
@@ -278,7 +278,7 @@ class MyUser(AbstractBaseUser):
             filters["permissions__name__icontains"] = node.node_type
 
         permissions = UserRole.objects.filter(**filters).values_list("permissions__name", flat=True).distinct()
-        return permissions
+        return list(permissions)
 
     def get_role(self, node):
         """ Returns the role the user has for this node - only direct role """

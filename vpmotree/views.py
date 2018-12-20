@@ -43,12 +43,20 @@ class AllNodesListView(ListAPIView):
 
     def get_queryset(self):
         model = apps.get_model("vpmotree", self.request.query_params["nodeType"])
-
+        qs = model.objects.all()
         # Filtering by node parent if query is provided
         if self.request.query_params.get("parentNode", None):
-            return model.objects.filter(path__endswith=self.request.query_params["parentNodeID"]+",")
+            # Do a blanket search if query param is provided
+            if self.request.query_params.get("blanketSearch", None) is not None:
+                qs = qs.filter(path__contains=self.request.query_params["parentNodeID"])
+            qs = qs.filter(path__endswith=self.request.query_params["parentNodeID"]+",")
 
-        return model.objects.all()
+        # Filter queryset to the user if search query is present and is a topic type
+        if self.request.query_params.get("assignedToUser", False) and \
+            self.request.query_params["nodeType"] in ["Issue", "Risk", "Deliverable"]:
+            qs = qs.filter(assignee=self.request.user)
+
+        return qs
 
     def get_serializer_class(self):
         return self.serializers[self.request.query_params["nodeType"]]
@@ -182,10 +190,11 @@ class RetrieveUpdateNodeView(RetrieveUpdateAPIView):
 
     def get_object(self):
         try:
-            node = TreeStructure.objects.get(_id=self.kwargs["nodeID"]).get_object()
-            self.check_object_permissions(self.request, node)
-            return node
+            node = TreeStructure.objects.get(_id=self.kwargs["nodeID"])
+            return getattr(node, node.model_name.lower())
         except TreeStructure.DoesNotExist:
+            raise
+            logging.error("TreeStructure DoesNotExist error", self.kwargs["nodeID"])
             return None
 
     def get_model(self):

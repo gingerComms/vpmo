@@ -10,9 +10,11 @@ from vpmoprj.serializers import *
 
 from django.apps import apps
 from django.db.models import Q
+from django.db import transaction
 from rest_framework.fields import CurrentUserDefault
 
 import collections
+import logging
 
 
 # TODO: Create a base serializer that contains all required fields in the TreeStructure model(s)
@@ -41,8 +43,16 @@ class DashboardNodeBaseSerializer(serializers.Serializer):
         return len(UserRole.get_user_ids_with_heirarchy_perms(instance).distinct())
 
     def get_child_nodes(self, instance):
-        """ Returns a list of nodes that the user has "update" access to under this node """
-        return [str(i) for i in list(UserRole.get_assigned_nodes(self.context["request"].user, str(instance._id)).distinct())]
+        """ Returns a list of minimal-serialized nodes that the user has "update" access to under this node
+            - These are used for calculating a sum of unread messages for this node and its children
+        """
+        nodes = [str(i) for i in list(
+                        UserRole.get_assigned_nodes(
+                            self.context["request"].user, str(instance._id)
+                        ).distinct()
+                    ) if str(i) != str(instance._id)]
+        nodes = TreeStructure.objects.filter(_id__in=nodes)
+        return MinimalNodeSerializer(nodes, many=True).data
 
 
 class ProjectSerializer(DashboardNodeBaseSerializer, serializers.ModelSerializer):
@@ -272,31 +282,40 @@ class TreeStructureWithChildrenSerializer(serializers.Serializer):
 
         self.user =  self.context['request'].user
 
+        """
         permissions = self.user.get_permissions(instance, all_types=True)
         allowed_node_types = [i.split("_")[-1].capitalize() for i in permissions if "read_" in i]
 
-        child_condition = Q(path__startswith=","+str(instance._id)) | Q(path__icontains=str(instance._id))
+        child_condition = Q(path__startswith=","+str(instance._id)) | Q(path__contains=str(instance._id))
         role_condition = Q(node_type__in=allowed_node_types) | Q(user_role_node__user=self.user)
         
         self.all_children = TreeStructure.objects.filter(child_condition, role_condition).distinct()
-
-        if instance.node_type == "Team":
-            # All objects starting from the current ROOT (Team)
-            self.all_children = TreeStructureWithoutChildrenSerializer(self.all_children.filter(
-                node_type="Project"), many=True).data
-            # Finding the first branches from the root (Projects)
-            top_level = 2
-        else:
-            if instance.node_type == "Project":
-                self.all_children = TreeStructureWithoutChildrenSerializer(self.all_children, many=True).data
+        """
+        with transaction.atomic():
+            if instance.path is None:
+                # Filtering assigned nodes to Projects for teams, since teams can only have projects as direct children
+                self.all_children = list(UserRole.get_assigned_nodes(self.user, str(instance._id), perm_type="read", node_type="Project"))
+                self.all_children = TreeStructure.objects.filter(_id__in=self.all_children)
+            else:
+                parent_node_id = instance.path.split(',')[1]
+                self.all_children = list(UserRole.get_assigned_nodes(self.user, str(parent_node_id), perm_type="read"))
+                self.all_children = TreeStructure.objects.filter(_id__in=self.all_children, path__endswith=str(instance._id)+",")
+            
+            if instance.node_type == "Team":
+                # Finding the first branches from the root (Projects)
+                top_level = 2
+            elif instance.node_type == "Project":
                 top_level = instance.path.count(",") + 1
 
-        first_branches = filter(lambda x: x["path"].count(",") == top_level, self.all_children)
-        first_branches = sorted(first_branches, key=lambda x: x["index"])
+            # All objects starting from the current ROOT (Team)
+            self.all_children = TreeStructureWithoutChildrenSerializer(self.all_children, many=True).data
 
-        for branch in first_branches:
-            branch["children"] = self.get_branch_extensions(branch, top_level)
-            children.append(branch)
+            first_branches = filter(lambda x: x["path"].count(",") == top_level, self.all_children)
+            first_branches = sorted(first_branches, key=lambda x: x["index"])
+
+            for branch in first_branches:
+                branch["children"] = self.get_branch_extensions(branch, top_level)
+                children.append(branch)
 
         return children
 

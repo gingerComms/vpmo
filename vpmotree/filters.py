@@ -20,7 +20,25 @@ class ReadNodeListFilter(filters.BaseFilterBackend):
                 queryset = queryset.filter(_id__in=assigned_teams)
                 return queryset
 
+            # Explanation:
+            #   Q(node__id__in) | Q(node__path__endswith) -> filters nodes that are either above the parent or directly below it
+            #   permissions__name__contains="read" -> filters the roles that have a read_<target_node_type> permission
+            #   At the end, we're left with the nodes that have a direct assignment to the user + access to read_node_type
+            # A list of all node ids that the user has access to under this node
             parent_node = TreeStructure.objects.get(_id=query_params["parentNodeID"])
+            if parent_node.path is None:
+                assigned_nodes = UserRole.get_assigned_nodes(request.user, str(parent_node._id), perm_type="read")
+            else:
+                parent_node_id = parent_node.path.split(',')[1]
+                assigned_nodes = UserRole.get_assigned_nodes(request.user, str(parent_node_id), perm_type="read")
+
+            return queryset.filter(_id__in=assigned_nodes, path__contains=str(parent_node._id))
+
+            """
+            assigned_nodes = UserRole.objects.filter(Q(node___id__in=nodes_in_parent_path) | Q(node__path__endswith=str(parent_node._id)+","),
+                permissions__name__icontains="read_{}".format(node_type.lower()), user=request.user).values_list(
+                "node___id", flat=True)
+
             nodes_in_parent_path = list(filter(lambda x: x.strip(), parent_node.path.split(",") if parent_node.path else []))
             # Adding the parent node itself into the array
             nodes_in_parent_path.append(str(parent_node._id))
@@ -30,14 +48,6 @@ class ReadNodeListFilter(filters.BaseFilterBackend):
 
             if node_type in ["Deliverable", "Issue", "Risk", "Meeting"]:
                 node_type = "Topic"
-
-            # Explanation:
-            #   Q(node__id__in) | Q(node__path__endswith) -> filters nodes that are either above the parent or directly below it
-            #   permissions__name__contains="read" -> filters the roles that have a read_<target_node_type> permission
-            #   At the end, we're left with the nodes that have a direct assignment to the user + access to read_node_type
-            assigned_nodes = UserRole.objects.filter(Q(node___id__in=nodes_in_parent_path) | Q(node__path__endswith=str(parent_node._id)+","),
-                permissions__name__icontains="read_{}".format(node_type.lower()), user=request.user).values_list(
-                "node___id", flat=True)
 
             # Filtering for objects ending in parentNodeID (directly under the parent node)
             queryset = queryset.filter(path__endswith="{},".format(str(parent_node._id)))
@@ -50,5 +60,6 @@ class ReadNodeListFilter(filters.BaseFilterBackend):
 
             # This makes the final query to the DB by filtering on the condition
             return queryset.filter(condition)
+            """
 
         return []

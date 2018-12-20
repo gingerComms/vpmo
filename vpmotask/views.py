@@ -41,8 +41,13 @@ class AssignedTasksListView(generics.ListAPIView):
     """ Returns a list of tasks for the current node """
     serializer_class = TaskSerializer
     permission_classes = (IsAuthenticated,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ("assignee__username",)
 
     def get_queryset(self):
+        if self.request.query_params.get("blanketSearch", False):
+            return Task.objects.filter(node__path__contains=self.kwargs["nodeID"]).order_by("-created_at")
+
         return Task.objects.filter(node___id=self.kwargs["nodeID"]).order_by("-created_at")
 
 

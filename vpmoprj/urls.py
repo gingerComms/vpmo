@@ -33,7 +33,7 @@ urlpatterns = [
     path(r"chat/", include("chat.urls")),
     path(r"vpmotask/", include("vpmotask.urls")),
     # Paths to allow serving the template + static files from ng's build folder
-    path(r"", serve, kwargs={'path': 'index.html'}),
     re_path(r'^(?!/?static/)(?!/?media/)(?P<path>.*\..*)$',
-        RedirectView.as_view(url='/static/%(path)s', permanent=False))
+        RedirectView.as_view(url='/static/%(path)s', permanent=False)),
+    re_path(r"^.*$", serve, kwargs={'path': 'index.html'}),
 ]
