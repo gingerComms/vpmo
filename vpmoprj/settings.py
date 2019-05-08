@@ -121,11 +121,13 @@ TEMPLATES = [
 #     'http://localhost:4200/',
 #     ]
 
-# CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = False
 
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:4200'
-)
+#CORS_ORIGIN_WHITELIST = (
+#    'http://localhost:4200',
+#    "http://localhost:5000",
+#)
 
 CORS_ALLOW_METHODS = (
     'DELETE',
@@ -135,7 +137,6 @@ CORS_ALLOW_METHODS = (
     'POST',
     'PUT',
 )
-
 
 WSGI_APPLICATION = 'vpmoprj.wsgi.application'
 
@@ -155,9 +156,8 @@ WSGI_APPLICATION = 'vpmoprj.wsgi.application'
 DATABASES = {
         "default": {
             "ENGINE": "djongo",
-            "NAME": "test-example-32",
-            "HOST": "13.239.32.74",
-            "PORT": 27017
+            "NAME": "test-example",
+            "HOST": f'mongodb://{os.environ["DB_USER"]}:{os.environ["DB_PASS"]}@13.239.32.74:27017/test-example',
         }
     }
 
