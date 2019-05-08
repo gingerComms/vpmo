@@ -7,7 +7,7 @@ def create_base_permissions():
 	""" Creates the base permissions required for the roles implementation """
 	perms = set([item for sublist in ROLES_MAP.values() for item in sublist])
 
-	existing = UserRolePermission.objects.filter(name__in=perms).values_list('name', flat=True)
+	existing = list(UserRolePermission.objects.filter(name__in=perms).values_list('name', flat=True))
 
 	to_create = [i for i in perms if i not in existing]
 
