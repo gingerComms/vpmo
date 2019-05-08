@@ -255,8 +255,8 @@ class CreateUserView(generics.CreateAPIView):
             avatar = BytesIO(base64.b64decode(b64_string))
             avatar.seek(0)
             # Return an error if avatar size is too big (bigger than 25kb)
-            if avatar.getbuffer().nbytes > 25000:
-                return Response({"message": "Avatar too big - must be below 25kb."}, status=status.HTTP_400_BAD_REQUEST)
+            if avatar.getbuffer().nbytes > 2630000:
+                return Response({"message": "Avatar too big - must be below 2.5mb."}, status=status.HTTP_400_BAD_REQUEST)
             avatar.seek(0)
             data.pop("avatar")
 
