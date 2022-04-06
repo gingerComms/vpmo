@@ -50,7 +50,7 @@ s3transfer==0.1.13
 six==1.11.0
 sqlparse==0.2.4
 sshtunnel==0.1.4
-Twisted==18.7.0
+Twisted==21.2.0
 txaio==18.8.1
 typing==3.6.4
 urllib3==1.24
